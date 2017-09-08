@@ -1,0 +1,555 @@
+var _user$project$Main$showUserProfile = function (user) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text(user.name),
+			_1: {ctor: '[]'}
+		});
+};
+var _user$project$Main$getPosition = function (model) {
+	var _p0 = model.move;
+	if (_p0.ctor === 'Nothing') {
+		return model.position;
+	} else {
+		var _p2 = _p0._0.start;
+		var _p1 = _p0._0.current;
+		return A2(_elm_lang$mouse$Mouse$Position, (model.position.x + _p1.x) - _p2.x, (model.position.y + _p1.y) - _p2.y);
+	}
+};
+var _user$project$Main$px = function (number) {
+	return A2(
+		_elm_lang$core$Basics_ops['++'],
+		_elm_lang$core$Basics$toString(number),
+		'px');
+};
+var _user$project$Main$tachyonsCSS = 'https://cdnjs.cloudflare.com/ajax/libs/tachyons/4.8.1/tachyons.min.css';
+var _user$project$Main_ops = _user$project$Main_ops || {};
+_user$project$Main_ops['=>'] = F2(
+	function (v0, v1) {
+		return {ctor: '_Tuple2', _0: v0, _1: v1};
+	});
+var _user$project$Main$tubeUser = function (user) {
+	var _p3 = user;
+	if (_p3.ctor === 'Just') {
+		var _p4 = _p3._0;
+		return A2(
+			_elm_lang$html$Html$div,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$style(
+					{
+						ctor: '::',
+						_0: A2(
+							_user$project$Main_ops['=>'],
+							'background',
+							A2(
+								_elm_lang$core$Basics_ops['++'],
+								'url(\'',
+								A2(_elm_lang$core$Basics_ops['++'], _p4.pic, '\')'))),
+						_1: {
+							ctor: '::',
+							_0: A2(_user$project$Main_ops['=>'], 'height', '100%'),
+							_1: {
+								ctor: '::',
+								_0: A2(_user$project$Main_ops['=>'], 'width', '100%'),
+								_1: {
+									ctor: '::',
+									_0: A2(_user$project$Main_ops['=>'], 'background-size', 'cover'),
+									_1: {ctor: '[]'}
+								}
+							}
+						}
+					}),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: _user$project$Main$showUserProfile(_p4),
+				_1: {ctor: '[]'}
+			});
+	} else {
+		return A2(
+			_elm_lang$html$Html$div,
+			{ctor: '[]'},
+			{ctor: '[]'});
+	}
+};
+var _user$project$Main$initialPosition = {x: 0, y: 0};
+var _user$project$Main$spaceY = function (spacing) {
+	return _elm_lang$core$Basics$round(
+		A2(
+			F2(
+				function (x, y) {
+					return x * y;
+				}),
+			_elm_lang$core$Basics$sin(
+				_elm_lang$core$Basics$degrees(30)),
+			_elm_lang$core$Basics$toFloat(spacing)) / 2);
+};
+var _user$project$Main$staggerTubes = F3(
+	function (x, y, spacing) {
+		var otherRow = A2(
+			_elm_lang$core$Basics_ops['%'],
+			(y / _user$project$Main$spaceY(spacing)) | 0,
+			2);
+		var _p5 = otherRow;
+		if (_p5 === 1) {
+			return A2(_elm_lang$mouse$Mouse$Position, x + ((spacing / 2) | 0), y);
+		} else {
+			return A2(_elm_lang$mouse$Mouse$Position, x, y);
+		}
+	});
+var _user$project$Main$initialRing = {width: 2, padding: 3};
+var _user$project$Main$initialTube = {diameter: 100, ring: _user$project$Main$initialRing, spacing: 300, pop: 110};
+var _user$project$Main$Model = F6(
+	function (a, b, c, d, e, f) {
+		return {position: a, move: b, tube: c, windowSize: d, tubers: e, users: f};
+	});
+var _user$project$Main$Move = F2(
+	function (a, b) {
+		return {start: a, current: b};
+	});
+var _user$project$Main$Tube = F4(
+	function (a, b, c, d) {
+		return {diameter: a, ring: b, spacing: c, pop: d};
+	});
+var _user$project$Main$tubePop = function (tube) {
+	return A4(_user$project$Main$Tube, tube.pop, tube.ring, tube.spacing, tube.diameter);
+};
+var _user$project$Main$Ring = F2(
+	function (a, b) {
+		return {width: a, padding: b};
+	});
+var _user$project$Main$Tuber = F2(
+	function (a, b) {
+		return {uniqueID: a, offset: b};
+	});
+var _user$project$Main$loremTubers = {
+	ctor: '::',
+	_0: A2(
+		_user$project$Main$Tuber,
+		1,
+		A2(_elm_lang$mouse$Mouse$Position, 0, 0)),
+	_1: {
+		ctor: '::',
+		_0: A2(
+			_user$project$Main$Tuber,
+			2,
+			A2(_elm_lang$mouse$Mouse$Position, 300, 300)),
+		_1: {
+			ctor: '::',
+			_0: A2(
+				_user$project$Main$Tuber,
+				3,
+				A2(_elm_lang$mouse$Mouse$Position, 600, 600)),
+			_1: {ctor: '[]'}
+		}
+	}
+};
+var _user$project$Main$User = F6(
+	function (a, b, c, d, e, f) {
+		return {uniqueID: a, name: b, pic: c, online: d, chattor: e, chattee: f};
+	});
+var _user$project$Main$loremUsers = {
+	ctor: '::',
+	_0: A6(_user$project$Main$User, 1, 'doug', 'https://randomuser.me/api/portraits/men/1.jpg', true, true, true),
+	_1: {
+		ctor: '::',
+		_0: A6(_user$project$Main$User, 2, 'lillith', 'https://randomuser.me/api/portraits/men/2.jpg', true, true, true),
+		_1: {
+			ctor: '::',
+			_0: A6(_user$project$Main$User, 3, 'kyle', 'https://randomuser.me/api/portraits/men/3.jpg', true, true, true),
+			_1: {
+				ctor: '::',
+				_0: A6(_user$project$Main$User, 4, 'borf', 'https://randomuser.me/api/portraits/men/4.jpg', true, true, true),
+				_1: {ctor: '[]'}
+			}
+		}
+	}
+};
+var _user$project$Main$Size = F2(
+	function (a, b) {
+		return {width: a, height: b};
+	});
+var _user$project$Main$initialModel = {
+	position: _user$project$Main$initialPosition,
+	move: _elm_lang$core$Maybe$Nothing,
+	tube: _user$project$Main$initialTube,
+	windowSize: A2(_user$project$Main$Size, 140, 140),
+	tubers: _user$project$Main$loremTubers,
+	users: _user$project$Main$loremUsers
+};
+var _user$project$Main$poolSize = function (model) {
+	var paddedHeight = _elm_lang$core$Basics$toFloat(model.windowSize.height + model.tube.diameter);
+	var paddedWidth = _elm_lang$core$Basics$toFloat(model.windowSize.width + model.tube.diameter);
+	var spacingY = _user$project$Main$spaceY(model.tube.spacing) * 2;
+	var spacingX = model.tube.spacing;
+	return A2(
+		_user$project$Main$Size,
+		_elm_lang$core$Basics$ceiling(
+			paddedWidth / _elm_lang$core$Basics$toFloat(spacingX)) * spacingX,
+		_elm_lang$core$Basics$ceiling(
+			paddedHeight / _elm_lang$core$Basics$toFloat(spacingY)) * spacingY);
+};
+var _user$project$Main$determineTubers = function (model) {
+	var poolCols = A2(
+		_elm_lang$core$List$range,
+		0,
+		(function (_) {
+			return _.height;
+		}(
+			_user$project$Main$poolSize(model)) / _user$project$Main$spaceY(model.tube.spacing)) | 0);
+	var poolRows = A2(
+		_elm_lang$core$List$range,
+		0,
+		(function (_) {
+			return _.width;
+		}(
+			_user$project$Main$poolSize(model)) / model.tube.spacing) | 0);
+	return A2(
+		_elm_lang$core$List$indexedMap,
+		_user$project$Main$Tuber,
+		A2(
+			_elm_lang$core$List$concatMap,
+			function (x) {
+				return A2(
+					_elm_lang$core$List$map,
+					function (y) {
+						return A3(_user$project$Main$staggerTubes, x, y, model.tube.spacing);
+					},
+					A2(
+						_elm_lang$core$List$map,
+						F2(
+							function (x, y) {
+								return x * y;
+							})(
+							_user$project$Main$spaceY(model.tube.spacing)),
+						poolCols));
+			},
+			A2(
+				_elm_lang$core$List$map,
+				F2(
+					function (x, y) {
+						return x * y;
+					})(model.tube.spacing),
+				poolRows)));
+};
+var _user$project$Main$updateHelp = F2(
+	function (msg, _p6) {
+		var _p7 = _p6;
+		var _p18 = _p7.windowSize;
+		var _p17 = _p7.users;
+		var _p16 = _p7.tubers;
+		var _p15 = _p7.tube;
+		var _p14 = _p7.position;
+		var _p13 = _p7.move;
+		var _p12 = _p7;
+		var _p8 = msg;
+		switch (_p8.ctor) {
+			case 'MoveStart':
+				var _p9 = _p8._0;
+				return A6(
+					_user$project$Main$Model,
+					_p14,
+					_elm_lang$core$Maybe$Just(
+						A2(_user$project$Main$Move, _p9, _p9)),
+					_user$project$Main$tubePop(_p15),
+					_p18,
+					_p16,
+					_p17);
+			case 'MoveAt':
+				return A6(
+					_user$project$Main$Model,
+					_p14,
+					A2(
+						_elm_lang$core$Maybe$map,
+						function (_p10) {
+							var _p11 = _p10;
+							return A2(_user$project$Main$Move, _p11.start, _p8._0);
+						},
+						_p13),
+					_p15,
+					_p18,
+					_p16,
+					_p17);
+			case 'MoveEnd':
+				return A6(
+					_user$project$Main$Model,
+					_user$project$Main$getPosition(_p12),
+					_elm_lang$core$Maybe$Nothing,
+					_user$project$Main$tubePop(_p15),
+					_p18,
+					_p16,
+					_p17);
+			case 'ResizePool':
+				return A6(
+					_user$project$Main$Model,
+					_p14,
+					_p13,
+					_p15,
+					_p8._0,
+					_user$project$Main$determineTubers(_p12),
+					_p17);
+			default:
+				return A6(
+					_user$project$Main$Model,
+					_p14,
+					_p13,
+					_p15,
+					_p8._0,
+					_user$project$Main$determineTubers(_p12),
+					_p17);
+		}
+	});
+var _user$project$Main$update = F2(
+	function (msg, model) {
+		return {
+			ctor: '_Tuple2',
+			_0: A2(_user$project$Main$updateHelp, msg, model),
+			_1: _elm_lang$core$Platform_Cmd$none
+		};
+	});
+var _user$project$Main$modelTube = F2(
+	function (model, tuber) {
+		var y = A2(
+			F2(
+				function (x, y) {
+					return A2(_elm_lang$core$Basics_ops['%'], x, y);
+				}),
+			tuber.offset.y + function (_) {
+				return _.y;
+			}(
+				_user$project$Main$getPosition(model)),
+			function (_) {
+				return _.height;
+			}(
+				_user$project$Main$poolSize(model))) - ((model.tube.diameter / 2) | 0);
+		var x = A2(
+			F2(
+				function (x, y) {
+					return A2(_elm_lang$core$Basics_ops['%'], x, y);
+				}),
+			tuber.offset.x + function (_) {
+				return _.x;
+			}(
+				_user$project$Main$getPosition(model)),
+			function (_) {
+				return _.width;
+			}(
+				_user$project$Main$poolSize(model))) - ((model.tube.diameter / 2) | 0);
+		return A2(
+			_elm_lang$html$Html$div,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$style(
+					{
+						ctor: '::',
+						_0: A2(_user$project$Main_ops['=>'], 'padding', '5px'),
+						_1: {
+							ctor: '::',
+							_0: A2(_user$project$Main_ops['=>'], 'box-sizing', 'border-box'),
+							_1: {
+								ctor: '::',
+								_0: A2(_user$project$Main_ops['=>'], 'border', '2px solid green'),
+								_1: {
+									ctor: '::',
+									_0: A2(_user$project$Main_ops['=>'], 'transform', 'translate(-50%, -50%)'),
+									_1: {
+										ctor: '::',
+										_0: A2(_user$project$Main_ops['=>'], 'border-radius', '50%'),
+										_1: {
+											ctor: '::',
+											_0: A2(_user$project$Main_ops['=>'], 'position', 'absolute'),
+											_1: {
+												ctor: '::',
+												_0: A2(_user$project$Main_ops['=>'], 'overflow', 'hidden'),
+												_1: {
+													ctor: '::',
+													_0: A2(
+														_user$project$Main_ops['=>'],
+														'left',
+														_user$project$Main$px(x)),
+													_1: {
+														ctor: '::',
+														_0: A2(
+															_user$project$Main_ops['=>'],
+															'top',
+															_user$project$Main$px(y)),
+														_1: {
+															ctor: '::',
+															_0: A2(
+																_user$project$Main_ops['=>'],
+																'width',
+																_user$project$Main$px(model.tube.diameter)),
+															_1: {
+																ctor: '::',
+																_0: A2(
+																	_user$project$Main_ops['=>'],
+																	'height',
+																	_user$project$Main$px(model.tube.diameter)),
+																_1: {ctor: '[]'}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$style(
+							{
+								ctor: '::',
+								_0: A2(_user$project$Main_ops['=>'], 'height', '100%'),
+								_1: {
+									ctor: '::',
+									_0: A2(_user$project$Main_ops['=>'], 'border-radius', '50%'),
+									_1: {
+										ctor: '::',
+										_0: A2(_user$project$Main_ops['=>'], 'overflow', 'hidden'),
+										_1: {ctor: '[]'}
+									}
+								}
+							}),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: _user$project$Main$tubeUser(
+							_elm_lang$core$List$head(model.users)),
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			});
+	});
+var _user$project$Main$populateTubes = function (model) {
+	return A2(
+		_elm_lang$core$List$map,
+		_user$project$Main$modelTube(model),
+		model.tubers);
+};
+var _user$project$Main$InitialWindow = function (a) {
+	return {ctor: 'InitialWindow', _0: a};
+};
+var _user$project$Main$initialWindow = A2(_elm_lang$core$Task$perform, _user$project$Main$InitialWindow, _elm_lang$window$Window$size);
+var _user$project$Main$init = {ctor: '_Tuple2', _0: _user$project$Main$initialModel, _1: _user$project$Main$initialWindow};
+var _user$project$Main$ResizePool = function (a) {
+	return {ctor: 'ResizePool', _0: a};
+};
+var _user$project$Main$MoveEnd = function (a) {
+	return {ctor: 'MoveEnd', _0: a};
+};
+var _user$project$Main$MoveAt = function (a) {
+	return {ctor: 'MoveAt', _0: a};
+};
+var _user$project$Main$mouseMoveSubs = function (model) {
+	var _p19 = model.move;
+	if (_p19.ctor === 'Nothing') {
+		return _elm_lang$core$Platform_Sub$none;
+	} else {
+		return _elm_lang$core$Platform_Sub$batch(
+			{
+				ctor: '::',
+				_0: _elm_lang$mouse$Mouse$moves(_user$project$Main$MoveAt),
+				_1: {
+					ctor: '::',
+					_0: _elm_lang$mouse$Mouse$ups(_user$project$Main$MoveEnd),
+					_1: {ctor: '[]'}
+				}
+			});
+	}
+};
+var _user$project$Main$subscriptions = function (model) {
+	return _elm_lang$core$Platform_Sub$batch(
+		{
+			ctor: '::',
+			_0: _elm_lang$window$Window$resizes(_user$project$Main$ResizePool),
+			_1: {
+				ctor: '::',
+				_0: _user$project$Main$mouseMoveSubs(model),
+				_1: {ctor: '[]'}
+			}
+		});
+};
+var _user$project$Main$MoveStart = function (a) {
+	return {ctor: 'MoveStart', _0: a};
+};
+var _user$project$Main$onMouseDown = A2(
+	_elm_lang$html$Html_Events$on,
+	'mousedown',
+	A2(_elm_lang$core$Json_Decode$map, _user$project$Main$MoveStart, _elm_lang$mouse$Mouse$position));
+var _user$project$Main$view = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('overflow-hidden'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A3(
+				_elm_lang$html$Html$node,
+				'link',
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$rel('stylesheet'),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$href(_user$project$Main$tachyonsCSS),
+						_1: {ctor: '[]'}
+					}
+				},
+				{ctor: '[]'}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{
+						ctor: '::',
+						_0: _user$project$Main$onMouseDown,
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class('bg-black-90'),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$style(
+									{
+										ctor: '::',
+										_0: A2(_user$project$Main_ops['=>'], 'cursor', 'move'),
+										_1: {
+											ctor: '::',
+											_0: A2(
+												_user$project$Main_ops['=>'],
+												'height',
+												_user$project$Main$px(model.windowSize.height)),
+											_1: {
+												ctor: '::',
+												_0: A2(_user$project$Main_ops['=>'], 'overflow', 'hidden'),
+												_1: {ctor: '[]'}
+											}
+										}
+									}),
+								_1: {ctor: '[]'}
+							}
+						}
+					},
+					_user$project$Main$populateTubes(model)),
+				_1: {ctor: '[]'}
+			}
+		});
+};
+var _user$project$Main$main = _elm_lang$html$Html$program(
+	{init: _user$project$Main$init, view: _user$project$Main$view, update: _user$project$Main$update, subscriptions: _user$project$Main$subscriptions})();
