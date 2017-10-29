@@ -7,6 +7,7 @@ import Json.Decode as Decode
 import Mouse exposing (Position)
 import Window exposing (..)
 import Task exposing (..)
+import Random exposing (..)
 
 
 main =
@@ -41,7 +42,8 @@ initialModel =
     , move = Nothing
     , tube =
         initialTube
-        -- 1440 is just placeholder until the task to get the window size runs
+
+    -- 1440 is just placeholder until the task to get the window size runs
     , windowSize = Size 140 140
     , tubers = loremTubers
     , users = loremUsers
@@ -84,8 +86,8 @@ initialRing =
     }
 
 
-poolSize : Model -> Size
-poolSize model =
+poolSize : Model -> Size -> Size
+poolSize model windowSize =
     let
         spacingX =
             model.tube.spacing
@@ -94,10 +96,10 @@ poolSize model =
             ((spaceY model.tube.spacing) * 2)
 
         paddedWidth =
-            toFloat (model.windowSize.width + model.tube.diameter)
+            toFloat (windowSize.width + model.tube.diameter)
 
         paddedHeight =
-            toFloat (model.windowSize.height + model.tube.diameter)
+            toFloat (windowSize.height + model.tube.diameter)
     in
         Size
             ((ceiling (paddedWidth / (toFloat spacingX))) * spacingX)
@@ -143,14 +145,14 @@ type alias Size =
     }
 
 
-determineTubers : Model -> List Tuber
-determineTubers model =
+determineTubers : Model -> Size -> List Tuber
+determineTubers model windowSize =
     let
         poolRows =
-            List.range 0 ((.width (poolSize model)) // model.tube.spacing)
+            List.range 0 ((.width (poolSize model windowSize)) // model.tube.spacing)
 
         poolCols =
-            List.range 0 ((.height (poolSize model)) // (spaceY model.tube.spacing))
+            List.range 0 ((.height (poolSize model windowSize)) // (spaceY model.tube.spacing))
     in
         List.indexedMap Tuber (List.concatMap (\x -> List.map (\y -> (staggerTubes x y model.tube.spacing)) (List.map ((*) (spaceY model.tube.spacing)) poolCols)) (List.map ((*) model.tube.spacing) poolRows))
 
@@ -217,19 +219,19 @@ updateHelp : Msg -> Model -> Model
 updateHelp msg ({ position, move, tube, windowSize, tubers, users } as model) =
     case msg of
         MoveStart xy ->
-            Model position (Just (Move xy xy)) (tubePop tube) windowSize tubers users
+            Model position (Just (Move xy xy)) tube windowSize tubers users
 
         MoveAt xy ->
             Model position (Maybe.map (\{ start } -> Move start xy) move) tube windowSize tubers users
 
         MoveEnd _ ->
-            Model (getPosition model) Nothing (tubePop tube) windowSize tubers users
+            Model (getPosition model) Nothing tube windowSize tubers users
 
         ResizePool windowSize ->
-            Model position move tube windowSize (determineTubers model) users
+            Model position move tube windowSize (determineTubers model windowSize) users
 
         InitialWindow windowSize ->
-            Model position move tube windowSize (determineTubers model) users
+            Model position move tube windowSize (determineTubers model windowSize) users
 
 
 tubePop : Tube -> Tube
@@ -263,27 +265,31 @@ mouseMoveSubs model =
 (=>) =
     (,)
 
+
 tachyonsCSS : String
 tachyonsCSS =
-  "https://cdnjs.cloudflare.com/ajax/libs/tachyons/4.8.1/tachyons.min.css"
+    "tachyons.css"
 
 
 view : Model -> Html Msg
 view model =
-  div[class "overflow-hidden"][
-    Html.node "link" [ Html.Attributes.rel "stylesheet", Html.Attributes.href tachyonsCSS ] [],
-    div
-        [ onMouseDown
-        , class "bg-black-90"
-        , style
-            [ "cursor" => "move"
-            -- , "background-color" => "#333"
-            , "height" => px model.windowSize.height
-            , "overflow" => "hidden"
+    div [ class "overflow-hidden" ]
+        [ Html.node "link" [ Html.Attributes.rel "stylesheet", Html.Attributes.href tachyonsCSS ] []
+        , div
+            [ onPointerDown
+            , class "bg-black-90"
+            , style
+                [ "cursor" => "move"
+                , "transform" => "scale(1.05)"
+
+                -- , "background-color" => "#333"
+                , "height" => px model.windowSize.height
+                , "overflow" => "hidden"
+                ]
             ]
+            (populateTubes model)
         ]
-        (populateTubes model)
-        ]
+
 
 populateTubes : Model -> List (Html Msg)
 populateTubes model =
@@ -294,22 +300,21 @@ modelTube : Model -> Tuber -> Html Msg
 modelTube model tuber =
     let
         x =
-            ((%) (tuber.offset.x + (.x (getPosition model))) (.width (poolSize model))) - (model.tube.diameter // 2)
+            ((%) (tuber.offset.x + (.x (getPosition model))) (.width (poolSize model model.windowSize))) - (model.tube.diameter // 2)
 
         y =
-            ((%) (tuber.offset.y + (.y (getPosition model))) (.height (poolSize model))) - (model.tube.diameter // 2)
+            ((%) (tuber.offset.y + (.y (getPosition model))) (.height (poolSize model model.windowSize))) - (model.tube.diameter // 2)
     in
         div
-            [ style
+            [ class "dim"
+            , style
                 [ "padding" => "5px"
                 , "box-sizing" => "border-box"
                 , "border" => "2px solid green"
-                , "transform" => "translate(-50%, -50%)"
+                , "transform" => ("translate(calc(-50% + " ++ px x ++ "), calc(-50% + " ++ px y ++ ")")
                 , "border-radius" => "50%"
                 , "position" => "absolute"
                 , "overflow" => "hidden"
-                , "left" => px x
-                , "top" => px y
                 , "width" => px model.tube.diameter
                 , "height" => px model.tube.diameter
                 ]
@@ -327,19 +332,15 @@ modelTube model tuber =
 
 tubeUser : Maybe User -> Html Msg
 tubeUser user =
-  case user of
-    Just user ->
     div
         [ style
-            [ "background" => ("url('" ++ user.pic ++ "')")
+            [ "background" => ("url('https://randomuser.me/api/portraits/men/4.jpg')")
             , "height" => "100%"
             , "width" => "100%"
             , "background-size" => "cover"
             ]
         ]
-        [ showUserProfile user ]
-    Nothing -> div[][]
-
+        []
 
 
 px : Int -> String
@@ -359,14 +360,6 @@ getPosition model =
                 (model.position.y + current.y - start.y)
 
 
-onMouseDown : Attribute Msg
-onMouseDown =
-    on "mousedown" (Decode.map MoveStart Mouse.position)
-
-
-showUserProfile : User -> Html Msg
-showUserProfile user =
-  on "doubleClick"
-  div
-    [class "vh-100 w-100 flex items-center justify-center"] 
-    [text user.name]
+onPointerDown : Attribute Msg
+onPointerDown =
+    on "pointerdown" (Decode.map MoveStart Mouse.position)

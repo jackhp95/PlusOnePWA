@@ -1,0 +1,1182 @@
+/*
+#############
+30% INTENSITY
+#############
+*/
+
+.bg-magenta-30,
+.hover-bg-magenta-30:hover {
+  background-color: #FFADEE !important;
+}
+
+.bg-purple-30,
+.hover-bg-purple-30:hover {
+  background-color: #DBBCFF !important;
+}
+
+.bg-blue-30,
+.hover-bg-blue-30:hover {
+  background-color: #B9CBFF !important;
+}
+
+.bg-teal-30,
+.hover-bg-teal-30:hover {
+  background-color: #55FFFF !important;
+}
+
+.bg-mint-30,
+.hover-bg-mint-30:hover {
+  background-color: #79FF9A !important;
+}
+
+.bg-green-30,
+.hover-bg-green-30:hover {
+  background-color: #9DFF3B !important;
+}
+
+.bg-yellow-30,
+.hover-bg-yellow-30:hover {
+  background-color: #FFCE38 !important;
+}
+
+.bg-red-30,
+.hover-bg-red-30:hover {
+  background-color: #FFB5B5 !important;
+}
+
+.bg-tone-30,
+.hover-bg-tone-30:hover {
+  background-color: #cccccc !important;
+}
+
+.magenta-30 {
+  color: #FFADEE !important;
+}
+
+.purple-30 {
+  color: #DBBCFF !important;
+}
+
+.blue-30 {
+  color: #B9CBFF !important;
+}
+
+.teal-30 {
+  color: #55FFFF !important;
+}
+
+.mint-30 {
+  color: #79FF9A !important;
+}
+
+.green-30 {
+  color: #9DFF3B !important;
+}
+
+.yellow-30 {
+  color: #FFCE38 !important;
+}
+
+.red-30 {
+  color: #FFB5B5 !important;
+}
+
+.tone-30 {
+  color: #cccccc !important;
+}
+
+
+/*
+#############
+50% INTENSITY
+#############
+*/
+
+.bg-magenta-50,
+.hover-bg-magenta-50:hover {
+  background-color: #FF30CB !important;
+}
+
+.bg-purple-50,
+.hover-bg-purple-50:hover {
+  background-color: #A952FF !important;
+}
+
+.bg-blue-50,
+.hover-bg-blue-50:hover {
+  background-color: #547FFF !important;
+}
+
+.bg-teal-50,
+.hover-bg-teal-50:hover {
+  background-color: #00B5B5 !important;
+}
+
+.bg-mint-50,
+.hover-bg-mint-50:hover {
+  background-color: #00CC33 !important;
+}
+
+.bg-green-50,
+.hover-bg-green-50:hover {
+  background-color: #57AD00 !important;
+}
+
+.bg-yellow-50,
+.hover-bg-yellow-50:hover {
+  background-color: #AB8000 !important;
+}
+
+.bg-red-50,
+.hover-bg-red-50:hover {
+  background-color: #FF4747 !important;
+}
+
+.bg-tone-50,
+.hover-bg-tone-50:hover {
+  background-color: #808080 !important;
+}
+
+.magenta-50 {
+  color: #FF30CB !important;
+}
+
+.purple-50 {
+  color: #A952FF !important;
+}
+
+.blue-50 {
+  color: #547FFF !important;
+}
+
+.teal-50 {
+  color: #00B5B5 !important;
+}
+
+.mint-50 {
+  color: #00CC33 !important;
+}
+
+.green-50 {
+  color: #57AD00 !important;
+}
+
+.yellow-50 {
+  color: #AB8000 !important;
+}
+
+.red-50 {
+  color: #FF4747 !important;
+}
+
+.tone-50 {
+  color: #808080 !important;
+}
+
+
+/*
+#############
+80% INTENSITY
+#############
+*/
+
+.bg-magenta-80,
+.hover-bg-magenta-80:hover {
+  background-color: #860065 !important;
+}
+
+.bg-purple-80,
+.hover-bg-purple-80:hover {
+  background-color: #6400C6 !important;
+}
+
+.bg-blue-80,
+.hover-bg-blue-80:hover {
+  background-color: #0033C8 !important;
+}
+
+.bg-teal-80,
+.hover-bg-teal-80:hover {
+  background-color: #004A4A !important;
+}
+
+.bg-mint-80,
+.hover-bg-mint-80:hover {
+  background-color: #005415 !important;
+}
+
+.bg-green-80,
+.hover-bg-green-80:hover {
+  background-color: #234600 !important;
+}
+
+.bg-yellow-80,
+.hover-bg-yellow-80:hover {
+  background-color: #463400 !important;
+}
+
+.bg-red-80,
+.hover-bg-red-80:hover {
+  background-color: #AD0000 !important;
+}
+
+.bg-tone-80,
+.hover-bg-tone-80:hover {
+  background-color: #333333 !important;
+}
+
+.magenta-80 {
+  color: #860065 !important;
+}
+
+.purple-80 {
+  color: #6400C6 !important;
+}
+
+.blue-80 {
+  color: #0033C8 !important;
+}
+
+.teal-80 {
+  color: #004A4A !important;
+}
+
+.mint-80 {
+  color: #005415 !important;
+}
+
+.green-80 {
+  color: #234600 !important;
+}
+
+.yellow-80 {
+  color: #463400 !important;
+}
+
+.red-80 {
+  color: #AD0000 !important;
+}
+
+.tone-80 {
+  color: #333333 !important;
+}
+
+
+/*
+######################
+SOLID Linear Gradients
+######################
+*/
+
+.lg-magenta {
+  background: linear-gradient(150deg, #FFADEE, #860065) !important;
+}
+
+.lg-purple {
+  background: linear-gradient(150deg, #DBBCFF, #6400C6) !important;
+}
+
+.lg-blue {
+  background: linear-gradient(150deg, #B9CBFF, #0033C8) !important;
+}
+
+.lg-teal {
+  background: linear-gradient(150deg, #55FFFF, #004A4A) !important;
+}
+
+.lg-mint {
+  background: linear-gradient(150deg, #79FF9A, #005415) !important;
+}
+
+.lg-green {
+  background: linear-gradient(150deg, #9DFF3B, #234600) !important;
+}
+
+.lg-yellow {
+  background: linear-gradient(150deg, #FFCE38, #463400) !important;
+}
+
+.lg-red {
+  background: linear-gradient(150deg, #FFB5B5, #AD0000) !important;
+}
+
+.lg-tone {
+  background: linear-gradient(150deg, #cccccc, #333333) !important;
+}
+
+
+/*
+######################
++1 Linear Gradients
+######################
+*/
+
+.lg-magenta-red {
+  background: linear-gradient(150deg, #FFADEE, #AD0000) !important;
+}
+
+.lg-purple-magenta {
+  background: linear-gradient(150deg, #DBBCFF, #860065) !important;
+}
+
+.lg-blue-purple {
+  background: linear-gradient(150deg, #B9CBFF, #6400C6) !important;
+}
+
+.lg-teal-blue {
+  background: linear-gradient(150deg, #55FFFF, #0033C8) !important;
+}
+
+.lg-mint-teal {
+  background: linear-gradient(150deg, #79FF9A, #004A4A) !important;
+}
+
+.lg-green-mint {
+  background: linear-gradient(150deg, #9DFF3B, #005415) !important;
+}
+
+.lg-yellow-green {
+  background: linear-gradient(150deg, #FFCE38, #234600) !important;
+}
+
+.lg-red-yellow {
+  background: linear-gradient(150deg, #FFB5B5, #463400) !important;
+}
+
+
+/*
+######################
++2 Linear Gradients
+######################
+*/
+
+.lg-magenta-yellow {
+  background: linear-gradient(150deg, #FFADEE, #463400) !important;
+}
+
+.lg-purple-red {
+  background: linear-gradient(150deg, #DBBCFF, #AD0000) !important;
+}
+
+.lg-blue-magenta {
+  background: linear-gradient(150deg, #B9CBFF, #860065) !important;
+}
+
+.lg-teal-purple {
+  background: linear-gradient(150deg, #55FFFF, #6400C6) !important;
+}
+
+.lg-mint-blue {
+  background: linear-gradient(150deg, #79FF9A, #0033C8) !important;
+}
+
+.lg-green-teal {
+  background: linear-gradient(150deg, #9DFF3B, #004A4A) !important;
+}
+
+.lg-yellow-mint {
+  background: linear-gradient(150deg, #FFCE38, #005415) !important;
+}
+
+.lg-red-green {
+  background: linear-gradient(150deg, #FFB5B5, #234600) !important;
+}
+
+
+/*
+######################
++3 Linear Gradients
+######################
+*/
+
+.lg-magenta-green {
+  background: linear-gradient(150deg, #FFADEE, #234600) !important;
+}
+
+.lg-purple-yellow {
+  background: linear-gradient(150deg, #DBBCFF, #463400) !important;
+}
+
+.lg-blue-red {
+  background: linear-gradient(150deg, #B9CBFF, #AD0000) !important;
+}
+
+.lg-teal-magenta {
+  background: linear-gradient(150deg, #55FFFF, #860065) !important;
+}
+
+.lg-mint-purple {
+  background: linear-gradient(150deg, #79FF9A, #6400C6) !important;
+}
+
+.lg-green-blue {
+  background: linear-gradient(150deg, #9DFF3B, #0033C8) !important;
+}
+
+.lg-yellow-teal {
+  background: linear-gradient(150deg, #FFCE38, #004A4A) !important;
+}
+
+.lg-red-mint {
+  background: linear-gradient(150deg, #FFB5B5, #005415) !important;
+}
+
+
+/*
+######################
++4 Linear Gradients
+######################
+*/
+
+.lg-magenta-mint {
+  background: linear-gradient(150deg, #FFADEE, #005415) !important;
+}
+
+.lg-purple-green {
+  background: linear-gradient(150deg, #DBBCFF, #234600) !important;
+}
+
+.lg-blue-yellow {
+  background: linear-gradient(150deg, #B9CBFF, #463400) !important;
+}
+
+.lg-teal-red {
+  background: linear-gradient(150deg, #55FFFF, #AD0000) !important;
+}
+
+.lg-mint-magenta {
+  background: linear-gradient(150deg, #79FF9A, #860065) !important;
+}
+
+.lg-green-purple {
+  background: linear-gradient(150deg, #9DFF3B, #6400C6) !important;
+}
+
+.lg-yellow-blue {
+  background: linear-gradient(150deg, #FFCE38, #0033C8) !important;
+}
+
+.lg-red-teal {
+  background: linear-gradient(150deg, #FFB5B5, #004A4A) !important;
+}
+
+
+/*
+######################
++5 Linear Gradients
+######################
+*/
+
+.lg-magenta-teal {
+  background: linear-gradient(150deg, #FFADEE, #004A4A) !important;
+}
+
+.lg-purple-mint {
+  background: linear-gradient(150deg, #DBBCFF, #005415) !important;
+}
+
+.lg-blue-green {
+  background: linear-gradient(150deg, #B9CBFF, #234600) !important;
+}
+
+.lg-teal-yellow {
+  background: linear-gradient(150deg, #55FFFF, #463400) !important;
+}
+
+.lg-mint-red {
+  background: linear-gradient(150deg, #79FF9A, #AD0000) !important;
+}
+
+.lg-green-magenta {
+  background: linear-gradient(150deg, #9DFF3B, #860065) !important;
+}
+
+.lg-yellow-purple {
+  background: linear-gradient(150deg, #FFCE38, #6400C6) !important;
+}
+
+.lg-red-blue {
+  background: linear-gradient(150deg, #FFB5B5, #0033C8) !important;
+}
+
+
+/*
+######################
++6 Linear Gradients
+######################
+*/
+
+.lg-magenta-blue {
+  background: linear-gradient(150deg, #FFADEE, #0033C8) !important;
+}
+
+.lg-purple-teal {
+  background: linear-gradient(150deg, #DBBCFF, #004A4A) !important;
+}
+
+.lg-blue-mint {
+  background: linear-gradient(150deg, #B9CBFF, #005415) !important;
+}
+
+.lg-teal-green {
+  background: linear-gradient(150deg, #55FFFF, #234600) !important;
+}
+
+.lg-mint-yellow {
+  background: linear-gradient(150deg, #79FF9A, #463400) !important;
+}
+
+.lg-green-red {
+  background: linear-gradient(150deg, #9DFF3B, #AD0000) !important;
+}
+
+.lg-yellow-magenta {
+  background: linear-gradient(150deg, #FFCE38, #860065) !important;
+}
+
+.lg-red-purple {
+  background: linear-gradient(150deg, #FFB5B5, #6400C6) !important;
+}
+
+
+/*
+######################
++7 Linear Gradients
+######################
+*/
+
+.lg-magenta-purple {
+  background: linear-gradient(150deg, #FFADEE, #6400C6) !important;
+}
+
+.lg-purple-blue {
+  background: linear-gradient(150deg, #DBBCFF, #0033C8) !important;
+}
+
+.lg-blue-teal {
+  background: linear-gradient(150deg, #B9CBFF, #004A4A) !important;
+}
+
+.lg-teal-mint {
+  background: linear-gradient(150deg, #55FFFF, #005415) !important;
+}
+
+.lg-mint-green {
+  background: linear-gradient(150deg, #79FF9A, #234600) !important;
+}
+
+.lg-green-yellow {
+  background: linear-gradient(150deg, #9DFF3B, #463400) !important;
+}
+
+.lg-yellow-red {
+  background: linear-gradient(150deg, #FFCE38, #AD0000) !important;
+}
+
+.lg-red-magenta {
+  background: linear-gradient(150deg, #FFB5B5, #860065) !important;
+}
+
+
+/*
+######################
++1 Linear Gradients-30
+######################
+*/
+
+.lg-magenta-red-30 {
+  background: linear-gradient(150deg, #FFADEE, #FFB5B5) !important;
+}
+
+.lg-purple-magenta-30 {
+  background: linear-gradient(150deg, #DBBCFF, #FFADEE) !important;
+}
+
+.lg-blue-purple-30 {
+  background: linear-gradient(150deg, #B9CBFF, #DBBCFF) !important;
+}
+
+.lg-teal-blue-30 {
+  background: linear-gradient(150deg, #55FFFF, #B9CBFF) !important;
+}
+
+.lg-mint-teal-30 {
+  background: linear-gradient(150deg, #79FF9A, #55FFFF) !important;
+}
+
+.lg-green-mint-30 {
+  background: linear-gradient(150deg, #9DFF3B, #79FF9A) !important;
+}
+
+.lg-yellow-green-30 {
+  background: linear-gradient(150deg, #FFCE38, #9DFF3B) !important;
+}
+
+.lg-red-yellow-30 {
+  background: linear-gradient(150deg, #FFB5B5, #FFCE38) !important;
+}
+
+
+/*
+######################
++2 Linear Gradients-30
+######################
+*/
+
+.lg-magenta-yellow-30 {
+  background: linear-gradient(150deg, #FFADEE, #FFCE38) !important;
+}
+
+.lg-purple-red-30 {
+  background: linear-gradient(150deg, #DBBCFF, #FFB5B5) !important;
+}
+
+.lg-blue-magenta-30 {
+  background: linear-gradient(150deg, #B9CBFF, #FFADEE) !important;
+}
+
+.lg-teal-purple-30 {
+  background: linear-gradient(150deg, #55FFFF, #DBBCFF) !important;
+}
+
+.lg-mint-blue-30 {
+  background: linear-gradient(150deg, #79FF9A, #B9CBFF) !important;
+}
+
+.lg-green-teal-30 {
+  background: linear-gradient(150deg, #9DFF3B, #55FFFF) !important;
+}
+
+.lg-yellow-mint-30 {
+  background: linear-gradient(150deg, #FFCE38, #79FF9A) !important;
+}
+
+.lg-red-green-30 {
+  background: linear-gradient(150deg, #FFB5B5, #9DFF3B) !important;
+}
+
+
+/*
+######################
++3 Linear Gradients-30
+######################
+*/
+
+.lg-magenta-green-30 {
+  background: linear-gradient(150deg, #FFADEE, #9DFF3B) !important;
+}
+
+.lg-purple-yellow-30 {
+  background: linear-gradient(150deg, #DBBCFF, #FFCE38) !important;
+}
+
+.lg-blue-red-30 {
+  background: linear-gradient(150deg, #B9CBFF, #FFB5B5) !important;
+}
+
+.lg-teal-magenta-30 {
+  background: linear-gradient(150deg, #55FFFF, #FFADEE) !important;
+}
+
+.lg-mint-purple-30 {
+  background: linear-gradient(150deg, #79FF9A, #DBBCFF) !important;
+}
+
+.lg-green-blue-30 {
+  background: linear-gradient(150deg, #9DFF3B, #B9CBFF) !important;
+}
+
+.lg-yellow-teal-30 {
+  background: linear-gradient(150deg, #FFCE38, #55FFFF) !important;
+}
+
+.lg-red-mint-30 {
+  background: linear-gradient(150deg, #FFB5B5, #79FF9A) !important;
+}
+
+
+/*
+######################
++4 Linear Gradients-30
+######################
+*/
+
+.lg-magenta-mint-30 {
+  background: linear-gradient(150deg, #FFADEE, #79FF9A) !important;
+}
+
+.lg-purple-green-30 {
+  background: linear-gradient(150deg, #DBBCFF, #9DFF3B) !important;
+}
+
+.lg-blue-yellow-30 {
+  background: linear-gradient(150deg, #B9CBFF, #FFCE38) !important;
+}
+
+.lg-teal-red-30 {
+  background: linear-gradient(150deg, #55FFFF, #FFB5B5) !important;
+}
+
+.lg-mint-magenta-30 {
+  background: linear-gradient(150deg, #79FF9A, #FFADEE) !important;
+}
+
+.lg-green-purple-30 {
+  background: linear-gradient(150deg, #9DFF3B, #DBBCFF) !important;
+}
+
+.lg-yellow-blue-30 {
+  background: linear-gradient(150deg, #FFCE38, #B9CBFF) !important;
+}
+
+.lg-red-teal-30 {
+  background: linear-gradient(150deg, #FFB5B5, #55FFFF) !important;
+}
+
+
+/*
+######################
++5 Linear Gradients-30
+######################
+*/
+
+.lg-magenta-teal-30 {
+  background: linear-gradient(150deg, #FFADEE, #55FFFF) !important;
+}
+
+.lg-purple-mint-30 {
+  background: linear-gradient(150deg, #DBBCFF, #79FF9A) !important;
+}
+
+.lg-blue-green-30 {
+  background: linear-gradient(150deg, #B9CBFF, #9DFF3B) !important;
+}
+
+.lg-teal-yellow-30 {
+  background: linear-gradient(150deg, #55FFFF, #FFCE38) !important;
+}
+
+.lg-mint-red-30 {
+  background: linear-gradient(150deg, #79FF9A, #FFB5B5) !important;
+}
+
+.lg-green-magenta-30 {
+  background: linear-gradient(150deg, #9DFF3B, #FFADEE) !important;
+}
+
+.lg-yellow-purple-30 {
+  background: linear-gradient(150deg, #FFCE38, #DBBCFF) !important;
+}
+
+.lg-red-blue-30 {
+  background: linear-gradient(150deg, #FFB5B5, #B9CBFF) !important;
+}
+
+
+/*
+######################
++6 Linear Gradients-30
+######################
+*/
+
+.lg-magenta-blue-30 {
+  background: linear-gradient(150deg, #FFADEE, #B9CBFF) !important;
+}
+
+.lg-purple-teal-30 {
+  background: linear-gradient(150deg, #DBBCFF, #55FFFF) !important;
+}
+
+.lg-blue-mint-30 {
+  background: linear-gradient(150deg, #B9CBFF, #79FF9A) !important;
+}
+
+.lg-teal-green-30 {
+  background: linear-gradient(150deg, #55FFFF, #9DFF3B) !important;
+}
+
+.lg-mint-yellow-30 {
+  background: linear-gradient(150deg, #79FF9A, #FFCE38) !important;
+}
+
+.lg-green-red-30 {
+  background: linear-gradient(150deg, #9DFF3B, #FFB5B5) !important;
+}
+
+.lg-yellow-magenta-30 {
+  background: linear-gradient(150deg, #FFCE38, #FFADEE) !important;
+}
+
+.lg-red-purple-30 {
+  background: linear-gradient(150deg, #FFB5B5, #DBBCFF) !important;
+}
+
+
+/*
+######################
++7 Linear Gradients-30
+######################
+*/
+
+.lg-magenta-purple-30 {
+  background: linear-gradient(150deg, #FFADEE, #DBBCFF) !important;
+}
+
+.lg-purple-blue-30 {
+  background: linear-gradient(150deg, #DBBCFF, #B9CBFF) !important;
+}
+
+.lg-blue-teal-30 {
+  background: linear-gradient(150deg, #B9CBFF, #55FFFF) !important;
+}
+
+.lg-teal-mint-30 {
+  background: linear-gradient(150deg, #55FFFF, #79FF9A) !important;
+}
+
+.lg-mint-green-30 {
+  background: linear-gradient(150deg, #79FF9A, #9DFF3B) !important;
+}
+
+.lg-green-yellow-30 {
+  background: linear-gradient(150deg, #9DFF3B, #FFCE38) !important;
+}
+
+.lg-yellow-red-30 {
+  background: linear-gradient(150deg, #FFCE38, #FFB5B5) !important;
+}
+
+.lg-red-magenta-30 {
+  background: linear-gradient(150deg, #FFB5B5, #FFADEE) !important;
+}
+
+
+/*
+######################
++1 Linear Gradients-80
+######################
+*/
+
+.lg-magenta-red-80 {
+  background: linear-gradient(150deg, #860065, #AD0000) !important;
+}
+
+.lg-purple-magenta-80 {
+  background: linear-gradient(150deg, #6400C6, #860065) !important;
+}
+
+.lg-blue-purple-80 {
+  background: linear-gradient(150deg, #0033C8, #6400C6) !important;
+}
+
+.lg-teal-blue-80 {
+  background: linear-gradient(150deg, #004A4A, #0033C8) !important;
+}
+
+.lg-mint-teal-80 {
+  background: linear-gradient(150deg, #005415, #004A4A) !important;
+}
+
+.lg-green-mint-80 {
+  background: linear-gradient(150deg, #234600, #005415) !important;
+}
+
+.lg-yellow-green-80 {
+  background: linear-gradient(150deg, #463400, #234600) !important;
+}
+
+.lg-red-yellow-80 {
+  background: linear-gradient(150deg, #AD0000, #463400) !important;
+}
+
+
+/*
+######################
++2 Linear Gradients-80
+######################
+*/
+
+.lg-magenta-yellow-80 {
+  background: linear-gradient(150deg, #860065, #463400) !important;
+}
+
+.lg-purple-red-80 {
+  background: linear-gradient(150deg, #6400C6, #AD0000) !important;
+}
+
+.lg-blue-magenta-80 {
+  background: linear-gradient(150deg, #0033C8, #860065) !important;
+}
+
+.lg-teal-purple-80 {
+  background: linear-gradient(150deg, #004A4A, #6400C6) !important;
+}
+
+.lg-mint-blue-80 {
+  background: linear-gradient(150deg, #005415, #0033C8) !important;
+}
+
+.lg-green-teal-80 {
+  background: linear-gradient(150deg, #234600, #004A4A) !important;
+}
+
+.lg-yellow-mint-80 {
+  background: linear-gradient(150deg, #463400, #005415) !important;
+}
+
+.lg-red-green-80 {
+  background: linear-gradient(150deg, #AD0000, #234600) !important;
+}
+
+
+/*
+######################
++3 Linear Gradients-80
+######################
+*/
+
+.lg-magenta-green-80 {
+  background: linear-gradient(150deg, #860065, #234600) !important;
+}
+
+.lg-purple-yellow-80 {
+  background: linear-gradient(150deg, #6400C6, #463400) !important;
+}
+
+.lg-blue-red-80 {
+  background: linear-gradient(150deg, #0033C8, #AD0000) !important;
+}
+
+.lg-teal-magenta-80 {
+  background: linear-gradient(150deg, #004A4A, #860065) !important;
+}
+
+.lg-mint-purple-80 {
+  background: linear-gradient(150deg, #005415, #6400C6) !important;
+}
+
+.lg-green-blue-80 {
+  background: linear-gradient(150deg, #234600, #0033C8) !important;
+}
+
+.lg-yellow-teal-80 {
+  background: linear-gradient(150deg, #463400, #004A4A) !important;
+}
+
+.lg-red-mint-80 {
+  background: linear-gradient(150deg, #AD0000, #005415) !important;
+}
+
+
+/*
+######################
++4 Linear Gradients-80
+######################
+*/
+
+.lg-magenta-mint-80 {
+  background: linear-gradient(150deg, #860065, #005415) !important;
+}
+
+.lg-purple-green-80 {
+  background: linear-gradient(150deg, #6400C6, #234600) !important;
+}
+
+.lg-blue-yellow-80 {
+  background: linear-gradient(150deg, #0033C8, #463400) !important;
+}
+
+.lg-teal-red-80 {
+  background: linear-gradient(150deg, #004A4A, #AD0000) !important;
+}
+
+.lg-mint-magenta-80 {
+  background: linear-gradient(150deg, #005415, #860065) !important;
+}
+
+.lg-green-purple-80 {
+  background: linear-gradient(150deg, #234600, #6400C6) !important;
+}
+
+.lg-yellow-blue-80 {
+  background: linear-gradient(150deg, #463400, #0033C8) !important;
+}
+
+.lg-red-teal-80 {
+  background: linear-gradient(150deg, #AD0000, #004A4A) !important;
+}
+
+
+/*
+######################
++5 Linear Gradients-80
+######################
+*/
+
+.lg-magenta-teal-80 {
+  background: linear-gradient(150deg, #860065, #004A4A) !important;
+}
+
+.lg-purple-mint-80 {
+  background: linear-gradient(150deg, #6400C6, #005415) !important;
+}
+
+.lg-blue-green-80 {
+  background: linear-gradient(150deg, #0033C8, #234600) !important;
+}
+
+.lg-teal-yellow-80 {
+  background: linear-gradient(150deg, #004A4A, #463400) !important;
+}
+
+.lg-mint-red-80 {
+  background: linear-gradient(150deg, #005415, #AD0000) !important;
+}
+
+.lg-green-magenta-80 {
+  background: linear-gradient(150deg, #234600, #860065) !important;
+}
+
+.lg-yellow-purple-80 {
+  background: linear-gradient(150deg, #463400, #6400C6) !important;
+}
+
+.lg-red-blue-80 {
+  background: linear-gradient(150deg, #AD0000, #0033C8) !important;
+}
+
+
+/*
+######################
++6 Linear Gradients-80
+######################
+*/
+
+.lg-magenta-blue-80 {
+  background: linear-gradient(150deg, #860065, #0033C8) !important;
+}
+
+.lg-purple-teal-80 {
+  background: linear-gradient(150deg, #6400C6, #004A4A) !important;
+}
+
+.lg-blue-mint-80 {
+  background: linear-gradient(150deg, #0033C8, #005415) !important;
+}
+
+.lg-teal-green-80 {
+  background: linear-gradient(150deg, #004A4A, #234600) !important;
+}
+
+.lg-mint-yellow-80 {
+  background: linear-gradient(150deg, #005415, #463400) !important;
+}
+
+.lg-green-red-80 {
+  background: linear-gradient(150deg, #234600, #AD0000) !important;
+}
+
+.lg-yellow-magenta-80 {
+  background: linear-gradient(150deg, #463400, #860065) !important;
+}
+
+.lg-red-purple-80 {
+  background: linear-gradient(150deg, #AD0000, #6400C6) !important;
+}
+
+
+/*
+######################
++7 Linear Gradients-80
+######################
+*/
+
+.lg-magenta-purple-80 {
+  background: linear-gradient(150deg, #860065, #6400C6) !important;
+}
+
+.lg-purple-blue-80 {
+  background: linear-gradient(150deg, #6400C6, #0033C8) !important;
+}
+
+.lg-blue-teal-80 {
+  background: linear-gradient(150deg, #0033C8, #004A4A) !important;
+}
+
+.lg-teal-mint-80 {
+  background: linear-gradient(150deg, #004A4A, #005415) !important;
+}
+
+.lg-mint-green-80 {
+  background: linear-gradient(150deg, #005415, #234600) !important;
+}
+
+.lg-green-yellow-80 {
+  background: linear-gradient(150deg, #234600, #463400) !important;
+}
+
+.lg-yellow-red-80 {
+  background: linear-gradient(150deg, #463400, #AD0000) !important;
+}
+
+.lg-red-magenta-80 {
+  background: linear-gradient(150deg, #AD0000, #860065) !important;
+}
+
+
+/*
+#####################
+Blending Mode Classes
+#####################
+*/
+
+.bg-normal {
+  background-blend-mode: normal !important;
+}
+
+.bg-multiply {
+  background-blend-mode: multiply !important;
+}
+
+.bg-screen {
+  background-blend-mode: screen !important;
+}
+
+.bg-overlay {
+  background-blend-mode: overlay !important;
+}
+
+.bg-darken {
+  background-blend-mode: darken !important;
+}
+
+.bg-lighten {
+  background-blend-mode: lighten !important;
+}
+
+.bg-color-dodge {
+  background-blend-mode: color-dodge !important;
+}
+
+.bg-saturation {
+  background-blend-mode: saturation !important;
+}
+
+.bg-color {
+  background-blend-mode: color !important;
+}
+
+.bg-luminosity {
+  background-blend-mode: luminosity !important;
+}
+
+
+/*
+#####################
+Parallax
+#####################
+*/
+
+.parallax {
+  background-attachment: fixed !important;
+}
