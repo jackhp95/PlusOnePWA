@@ -38,14 +38,17 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.4/worker-lua.js"></script>
 
 <!-- Put the name of your app here (my sources place in `src` forder) -->
-<script type="text/javascript" src="/_compile/Pool.elm"></script>
+<!-- <script type="text/javascript" src="/_compile/Pool.elm"></script> -->
+<script type="text/javascript" src="Pool.js"></script>
 
 <!-- Removes splash and starts elm app. -->
 <script type="text/javascript">
   while (document.body.firstChild) {
     document.body.removeChild(document.body.firstChild);
   }
-  runElmProgram();
+  // runElmProgram();
+  // var node = document.getElementById('main');
+  var app = Elm.Main.fullscreen();
 </script>
 
 </html>
