@@ -1,387 +1,24 @@
-var _user$project$Main$getPosition = function (model) {
-	var _p0 = model.move;
-	if (_p0.ctor === 'Nothing') {
-		return model.position;
-	} else {
-		var _p2 = _p0._0.start;
-		var _p1 = _p0._0.current;
-		return A2(_elm_lang$mouse$Mouse$Position, (model.position.x + _p1.x) - _p2.x, (model.position.y + _p1.y) - _p2.y);
-	}
+var _user$project$Main$subscriptions = function (model) {
+	return _elm_lang$core$Platform_Sub$none;
 };
-var _user$project$Main$px = function (number) {
-	return A2(
-		_elm_lang$core$Basics_ops['++'],
-		_elm_lang$core$Basics$toString(number),
-		'px');
-};
-var _user$project$Main$tachyonsCSS = 'tachyons.css';
-var _user$project$Main_ops = _user$project$Main_ops || {};
-_user$project$Main_ops['=>'] = F2(
-	function (v0, v1) {
-		return {ctor: '_Tuple2', _0: v0, _1: v1};
-	});
-var _user$project$Main$tubeUser = function (user) {
-	return A2(
-		_elm_lang$html$Html$div,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$style(
-				{
-					ctor: '::',
-					_0: A2(_user$project$Main_ops['=>'], 'background', 'url(\'https://randomuser.me/api/portraits/men/4.jpg\')'),
-					_1: {
-						ctor: '::',
-						_0: A2(_user$project$Main_ops['=>'], 'height', '100%'),
-						_1: {
-							ctor: '::',
-							_0: A2(_user$project$Main_ops['=>'], 'width', '100%'),
-							_1: {
-								ctor: '::',
-								_0: A2(_user$project$Main_ops['=>'], 'background-size', 'cover'),
-								_1: {ctor: '[]'}
-							}
-						}
-					}
-				}),
-			_1: {ctor: '[]'}
-		},
-		{ctor: '[]'});
-};
-var _user$project$Main$initialPosition = {x: 0, y: 0};
-var _user$project$Main$spaceY = function (spacing) {
-	return _elm_lang$core$Basics$round(
-		A2(
-			F2(
-				function (x, y) {
-					return x * y;
-				}),
-			_elm_lang$core$Basics$sin(
-				_elm_lang$core$Basics$degrees(30)),
-			_elm_lang$core$Basics$toFloat(spacing)) / 2);
-};
-var _user$project$Main$staggerTubes = F3(
-	function (x, y, spacing) {
-		var otherRow = A2(
-			_elm_lang$core$Basics_ops['%'],
-			(y / _user$project$Main$spaceY(spacing)) | 0,
-			2);
-		var _p3 = otherRow;
-		if (_p3 === 1) {
-			return A2(_elm_lang$mouse$Mouse$Position, x + ((spacing / 2) | 0), y);
+var _user$project$Main$maybeImage = function (performers) {
+	var performer = _elm_lang$core$List$head(performers);
+	var image = function () {
+		var _p0 = performer;
+		if (_p0.ctor === 'Just') {
+			return _p0._0.image;
 		} else {
-			return A2(_elm_lang$mouse$Mouse$Position, x, y);
+			return _elm_lang$core$Maybe$Nothing;
 		}
-	});
-var _user$project$Main$initialRing = {width: 2, padding: 3};
-var _user$project$Main$initialTube = {diameter: 100, ring: _user$project$Main$initialRing, spacing: 300, pop: 110};
-var _user$project$Main$Model = F6(
-	function (a, b, c, d, e, f) {
-		return {position: a, move: b, tube: c, windowSize: d, tubers: e, users: f};
-	});
-var _user$project$Main$Move = F2(
-	function (a, b) {
-		return {start: a, current: b};
-	});
-var _user$project$Main$Tube = F4(
-	function (a, b, c, d) {
-		return {diameter: a, ring: b, spacing: c, pop: d};
-	});
-var _user$project$Main$tubePop = function (tube) {
-	return A4(_user$project$Main$Tube, tube.pop, tube.ring, tube.spacing, tube.diameter);
-};
-var _user$project$Main$Ring = F2(
-	function (a, b) {
-		return {width: a, padding: b};
-	});
-var _user$project$Main$Tuber = F2(
-	function (a, b) {
-		return {uniqueID: a, offset: b};
-	});
-var _user$project$Main$loremTubers = {
-	ctor: '::',
-	_0: A2(
-		_user$project$Main$Tuber,
-		1,
-		A2(_elm_lang$mouse$Mouse$Position, 0, 0)),
-	_1: {
-		ctor: '::',
-		_0: A2(
-			_user$project$Main$Tuber,
-			2,
-			A2(_elm_lang$mouse$Mouse$Position, 300, 300)),
-		_1: {
-			ctor: '::',
-			_0: A2(
-				_user$project$Main$Tuber,
-				3,
-				A2(_elm_lang$mouse$Mouse$Position, 600, 600)),
-			_1: {ctor: '[]'}
-		}
-	}
-};
-var _user$project$Main$User = F6(
-	function (a, b, c, d, e, f) {
-		return {uniqueID: a, name: b, pic: c, online: d, chattor: e, chattee: f};
-	});
-var _user$project$Main$loremUsers = {
-	ctor: '::',
-	_0: A6(_user$project$Main$User, 1, 'doug', 'https://randomuser.me/api/portraits/men/1.jpg', true, true, true),
-	_1: {
-		ctor: '::',
-		_0: A6(_user$project$Main$User, 2, 'lillith', 'https://randomuser.me/api/portraits/men/2.jpg', true, true, true),
-		_1: {
-			ctor: '::',
-			_0: A6(_user$project$Main$User, 3, 'kyle', 'https://randomuser.me/api/portraits/men/3.jpg', true, true, true),
-			_1: {
-				ctor: '::',
-				_0: A6(_user$project$Main$User, 4, 'borf', 'https://randomuser.me/api/portraits/men/4.jpg', true, true, true),
-				_1: {ctor: '[]'}
-			}
-		}
-	}
-};
-var _user$project$Main$Size = F2(
-	function (a, b) {
-		return {width: a, height: b};
-	});
-var _user$project$Main$initialModel = {
-	position: _user$project$Main$initialPosition,
-	move: _elm_lang$core$Maybe$Nothing,
-	tube: _user$project$Main$initialTube,
-	windowSize: A2(_user$project$Main$Size, 140, 140),
-	tubers: _user$project$Main$loremTubers,
-	users: _user$project$Main$loremUsers
-};
-var _user$project$Main$poolSize = F2(
-	function (model, windowSize) {
-		var paddedHeight = _elm_lang$core$Basics$toFloat(windowSize.height + model.tube.diameter);
-		var paddedWidth = _elm_lang$core$Basics$toFloat(windowSize.width + model.tube.diameter);
-		var spacingY = _user$project$Main$spaceY(model.tube.spacing) * 2;
-		var spacingX = model.tube.spacing;
-		return A2(
-			_user$project$Main$Size,
-			_elm_lang$core$Basics$ceiling(
-				paddedWidth / _elm_lang$core$Basics$toFloat(spacingX)) * spacingX,
-			_elm_lang$core$Basics$ceiling(
-				paddedHeight / _elm_lang$core$Basics$toFloat(spacingY)) * spacingY);
-	});
-var _user$project$Main$determineTubers = F2(
-	function (model, windowSize) {
-		var poolCols = A2(
-			_elm_lang$core$List$range,
-			0,
-			(function (_) {
-				return _.height;
-			}(
-				A2(_user$project$Main$poolSize, model, windowSize)) / _user$project$Main$spaceY(model.tube.spacing)) | 0);
-		var poolRows = A2(
-			_elm_lang$core$List$range,
-			0,
-			(function (_) {
-				return _.width;
-			}(
-				A2(_user$project$Main$poolSize, model, windowSize)) / model.tube.spacing) | 0);
-		return A2(
-			_elm_lang$core$List$indexedMap,
-			_user$project$Main$Tuber,
-			A2(
-				_elm_lang$core$List$concatMap,
-				function (x) {
-					return A2(
-						_elm_lang$core$List$map,
-						function (y) {
-							return A3(_user$project$Main$staggerTubes, x, y, model.tube.spacing);
-						},
-						A2(
-							_elm_lang$core$List$map,
-							F2(
-								function (x, y) {
-									return x * y;
-								})(
-								_user$project$Main$spaceY(model.tube.spacing)),
-							poolCols));
-				},
-				A2(
-					_elm_lang$core$List$map,
-					F2(
-						function (x, y) {
-							return x * y;
-						})(model.tube.spacing),
-					poolRows)));
-	});
-var _user$project$Main$updateHelp = F2(
-	function (msg, _p4) {
-		var _p5 = _p4;
-		var _p18 = _p5.windowSize;
-		var _p17 = _p5.users;
-		var _p16 = _p5.tubers;
-		var _p15 = _p5.tube;
-		var _p14 = _p5.position;
-		var _p13 = _p5.move;
-		var _p12 = _p5;
-		var _p6 = msg;
-		switch (_p6.ctor) {
-			case 'MoveStart':
-				var _p7 = _p6._0;
-				return A6(
-					_user$project$Main$Model,
-					_p14,
-					_elm_lang$core$Maybe$Just(
-						A2(_user$project$Main$Move, _p7, _p7)),
-					_p15,
-					_p18,
-					_p16,
-					_p17);
-			case 'MoveAt':
-				return A6(
-					_user$project$Main$Model,
-					_p14,
-					A2(
-						_elm_lang$core$Maybe$map,
-						function (_p8) {
-							var _p9 = _p8;
-							return A2(_user$project$Main$Move, _p9.start, _p6._0);
-						},
-						_p13),
-					_p15,
-					_p18,
-					_p16,
-					_p17);
-			case 'MoveEnd':
-				return A6(
-					_user$project$Main$Model,
-					_user$project$Main$getPosition(_p12),
-					_elm_lang$core$Maybe$Nothing,
-					_p15,
-					_p18,
-					_p16,
-					_p17);
-			case 'ResizePool':
-				var _p10 = _p6._0;
-				return A6(
-					_user$project$Main$Model,
-					_p14,
-					_p13,
-					_p15,
-					_p10,
-					A2(_user$project$Main$determineTubers, _p12, _p10),
-					_p17);
-			default:
-				var _p11 = _p6._0;
-				return A6(
-					_user$project$Main$Model,
-					_p14,
-					_p13,
-					_p15,
-					_p11,
-					A2(_user$project$Main$determineTubers, _p12, _p11),
-					_p17);
-		}
-	});
-var _user$project$Main$update = F2(
-	function (msg, model) {
-		return {
-			ctor: '_Tuple2',
-			_0: A2(_user$project$Main$updateHelp, msg, model),
-			_1: _elm_lang$core$Platform_Cmd$none
-		};
-	});
-var _user$project$Main$modelTube = F2(
-	function (model, tuber) {
-		var y = A2(
-			F2(
-				function (x, y) {
-					return A2(_elm_lang$core$Basics_ops['%'], x, y);
-				}),
-			tuber.offset.y + function (_) {
-				return _.y;
-			}(
-				_user$project$Main$getPosition(model)),
-			function (_) {
-				return _.height;
-			}(
-				A2(_user$project$Main$poolSize, model, model.windowSize))) - ((model.tube.diameter / 2) | 0);
-		var x = A2(
-			F2(
-				function (x, y) {
-					return A2(_elm_lang$core$Basics_ops['%'], x, y);
-				}),
-			tuber.offset.x + function (_) {
-				return _.x;
-			}(
-				_user$project$Main$getPosition(model)),
-			function (_) {
-				return _.width;
-			}(
-				A2(_user$project$Main$poolSize, model, model.windowSize))) - ((model.tube.diameter / 2) | 0);
+	}();
+	var _p1 = image;
+	if (_p1.ctor === 'Just') {
 		return A2(
 			_elm_lang$html$Html$div,
 			{
 				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class('dim'),
-				_1: {
-					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$style(
-						{
-							ctor: '::',
-							_0: A2(_user$project$Main_ops['=>'], 'padding', '5px'),
-							_1: {
-								ctor: '::',
-								_0: A2(_user$project$Main_ops['=>'], 'box-sizing', 'border-box'),
-								_1: {
-									ctor: '::',
-									_0: A2(_user$project$Main_ops['=>'], 'border', '2px solid green'),
-									_1: {
-										ctor: '::',
-										_0: A2(
-											_user$project$Main_ops['=>'],
-											'transform',
-											A2(
-												_elm_lang$core$Basics_ops['++'],
-												'translate(calc(-50% + ',
-												A2(
-													_elm_lang$core$Basics_ops['++'],
-													_user$project$Main$px(x),
-													A2(
-														_elm_lang$core$Basics_ops['++'],
-														'), calc(-50% + ',
-														A2(
-															_elm_lang$core$Basics_ops['++'],
-															_user$project$Main$px(y),
-															')'))))),
-										_1: {
-											ctor: '::',
-											_0: A2(_user$project$Main_ops['=>'], 'border-radius', '50%'),
-											_1: {
-												ctor: '::',
-												_0: A2(_user$project$Main_ops['=>'], 'position', 'absolute'),
-												_1: {
-													ctor: '::',
-													_0: A2(_user$project$Main_ops['=>'], 'overflow', 'hidden'),
-													_1: {
-														ctor: '::',
-														_0: A2(
-															_user$project$Main_ops['=>'],
-															'width',
-															_user$project$Main$px(model.tube.diameter)),
-														_1: {
-															ctor: '::',
-															_0: A2(
-																_user$project$Main_ops['=>'],
-																'height',
-																_user$project$Main$px(model.tube.diameter)),
-															_1: {ctor: '[]'}
-														}
-													}
-												}
-											}
-										}
-									}
-								}
-							}
-						}),
-					_1: {ctor: '[]'}
-				}
+				_0: _elm_lang$html$Html_Attributes$class('w-100 mb2 mt1'),
+				_1: {ctor: '[]'}
 			},
 			{
 				ctor: '::',
@@ -392,90 +29,545 @@ var _user$project$Main$modelTube = F2(
 						_0: _elm_lang$html$Html_Attributes$style(
 							{
 								ctor: '::',
-								_0: A2(_user$project$Main_ops['=>'], 'height', '100%'),
-								_1: {
-									ctor: '::',
-									_0: A2(_user$project$Main_ops['=>'], 'border-radius', '50%'),
-									_1: {
-										ctor: '::',
-										_0: A2(_user$project$Main_ops['=>'], 'overflow', 'hidden'),
-										_1: {ctor: '[]'}
-									}
-								}
+								_0: {
+									ctor: '_Tuple2',
+									_0: 'background-image',
+									_1: A2(
+										_elm_lang$core$Basics_ops['++'],
+										'url(',
+										A2(_elm_lang$core$Basics_ops['++'], _p1._0, ')'))
+								},
+								_1: {ctor: '[]'}
 							}),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class('aspect-ratio--8x5 cover'),
+							_1: {ctor: '[]'}
+						}
+					},
+					{ctor: '[]'}),
+				_1: {ctor: '[]'}
+			});
+	} else {
+		return _elm_lang$html$Html$text('');
+	}
+};
+var _user$project$Main$eventListView = function (event) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('ph3 pt3 hover-bg-black-30'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _user$project$Main$maybeImage(event.performers),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('pb3 bb b--white-20'),
 						_1: {ctor: '[]'}
 					},
 					{
 						ctor: '::',
-						_0: _user$project$Main$tubeUser(
-							_elm_lang$core$List$head(model.users)),
-						_1: {ctor: '[]'}
+						_0: A2(
+							_elm_lang$html$Html$div,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$class('pb1 f4 fw6 pv2'),
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text(event.title),
+								_1: {
+									ctor: '::',
+									_0: A2(
+										_elm_lang$html$Html$span,
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html_Attributes$class('fw5 white-70'),
+											_1: {ctor: '[]'}
+										},
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html$text(
+												A2(_elm_lang$core$Basics_ops['++'], ' @ ', event.venue.name)),
+											_1: {ctor: '[]'}
+										}),
+									_1: {ctor: '[]'}
+								}
+							}),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$div,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$class('pb2'),
+									_1: {ctor: '[]'}
+								},
+								{
+									ctor: '::',
+									_0: A2(
+										_elm_lang$html$Html$div,
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html_Attributes$class('fw2 white-50 ma0'),
+											_1: {ctor: '[]'}
+										},
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html$text(event.datetime_local),
+											_1: {ctor: '[]'}
+										}),
+									_1: {ctor: '[]'}
+								}),
+							_1: {ctor: '[]'}
+						}
 					}),
-				_1: {ctor: '[]'}
-			});
-	});
-var _user$project$Main$populateTubes = function (model) {
-	return A2(
-		_elm_lang$core$List$map,
-		_user$project$Main$modelTube(model),
-		model.tubers);
-};
-var _user$project$Main$InitialWindow = function (a) {
-	return {ctor: 'InitialWindow', _0: a};
-};
-var _user$project$Main$initialWindow = A2(_elm_lang$core$Task$perform, _user$project$Main$InitialWindow, _elm_lang$window$Window$size);
-var _user$project$Main$init = {ctor: '_Tuple2', _0: _user$project$Main$initialModel, _1: _user$project$Main$initialWindow};
-var _user$project$Main$ResizePool = function (a) {
-	return {ctor: 'ResizePool', _0: a};
-};
-var _user$project$Main$MoveEnd = function (a) {
-	return {ctor: 'MoveEnd', _0: a};
-};
-var _user$project$Main$MoveAt = function (a) {
-	return {ctor: 'MoveAt', _0: a};
-};
-var _user$project$Main$mouseMoveSubs = function (model) {
-	var _p19 = model.move;
-	if (_p19.ctor === 'Nothing') {
-		return _elm_lang$core$Platform_Sub$none;
-	} else {
-		return _elm_lang$core$Platform_Sub$batch(
-			{
-				ctor: '::',
-				_0: _elm_lang$mouse$Mouse$moves(_user$project$Main$MoveAt),
-				_1: {
-					ctor: '::',
-					_0: _elm_lang$mouse$Mouse$ups(_user$project$Main$MoveEnd),
-					_1: {ctor: '[]'}
-				}
-			});
-	}
-};
-var _user$project$Main$subscriptions = function (model) {
-	return _elm_lang$core$Platform_Sub$batch(
-		{
-			ctor: '::',
-			_0: _elm_lang$window$Window$resizes(_user$project$Main$ResizePool),
-			_1: {
-				ctor: '::',
-				_0: _user$project$Main$mouseMoveSubs(model),
 				_1: {ctor: '[]'}
 			}
 		});
 };
-var _user$project$Main$MoveStart = function (a) {
-	return {ctor: 'MoveStart', _0: a};
+var _user$project$Main$eventIcon = function (tuple) {
+	var data = _elm_lang$core$Tuple$second(tuple);
+	var desc = _elm_lang$core$Tuple$first(tuple);
+	var _p2 = data;
+	switch (_p2) {
+		case '0.0':
+			return _elm_lang$html$Html$text('');
+		case '0':
+			return _elm_lang$html$Html$text('');
+		case '':
+			return _elm_lang$html$Html$text('');
+		default:
+			return A2(
+				_elm_lang$html$Html$li,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text(
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							desc,
+							A2(_elm_lang$core$Basics_ops['++'], ' is ', _p2))),
+					_1: {ctor: '[]'}
+				});
+	}
 };
-var _user$project$Main$onPointerDown = A2(
-	_elm_lang$html$Html_Events$on,
-	'pointerdown',
-	A2(_elm_lang$core$Json_Decode$map, _user$project$Main$MoveStart, _elm_lang$mouse$Mouse$position));
+var _user$project$Main$eventIcons = function (event) {
+	var icons = {
+		ctor: '::',
+		_0: {ctor: '_Tuple2', _0: 'Category', _1: event.category},
+		_1: {
+			ctor: '::',
+			_0: {
+				ctor: '_Tuple2',
+				_0: 'Score',
+				_1: _elm_lang$core$Basics$toString(event.score)
+			},
+			_1: {
+				ctor: '::',
+				_0: {
+					ctor: '_Tuple2',
+					_0: 'Popularity',
+					_1: _elm_lang$core$Basics$toString(event.popularity)
+				},
+				_1: {ctor: '[]'}
+			}
+		}
+	};
+	return A2(
+		_elm_lang$html$Html$ul,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('w-100 h4 list ma0 pa0 flex white-50 justify-around items-center'),
+			_1: {ctor: '[]'}
+		},
+		A2(_elm_lang$core$List$map, _user$project$Main$eventIcon, icons));
+};
+var _user$project$Main$eventBanner = function (event) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('lg-mint-red-30 h5 flex flex-column justify-between pa4'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$ul,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('list white ma0 pa0 flex justify-end w-100 f7 pv2'),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$li,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class('grow-large dn dib-l pv1 ph3 ml3 ba b--white-50 br-pill hover-bg-teal-50'),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text('share'),
+							_1: {ctor: '[]'}
+						}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$li,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$class('grow-large dn dib-l pv1 ph3 ml3 ba b--white-50 br-pill hover-bg-red-50'),
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text('like'),
+								_1: {ctor: '[]'}
+							}),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$li,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$class('grow-large pv1 ph3 ml3 ba b--white-50 br-pill hover-bg-mint-50'),
+									_1: {ctor: '[]'}
+								},
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html$text('more'),
+									_1: {ctor: '[]'}
+								}),
+							_1: {ctor: '[]'}
+						}
+					}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('tr f1 f2-m white lh-solid fw9 ma0 pa0'),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text(event.title),
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			}
+		});
+};
+var _user$project$Main$eventView = function (event) {
+	var _p3 = event;
+	if (_p3.ctor === 'Nothing') {
+		return _elm_lang$html$Html$text('');
+	} else {
+		var _p4 = _p3._0;
+		return A2(
+			_elm_lang$html$Html$section,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('flex-auto dn db-ns vh-100'),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('lg-mint-red-30 h5 flex flex-column justify-between pa4'),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$ul,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$class('list white ma0 pa0 flex justify-end w-100 f7 pv2'),
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$li,
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$class('grow-large dn dib-l pv1 ph3 ml3 ba b--white-50 br-pill hover-bg-teal-50'),
+										_1: {ctor: '[]'}
+									},
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html$text('share'),
+										_1: {ctor: '[]'}
+									}),
+								_1: {
+									ctor: '::',
+									_0: A2(
+										_elm_lang$html$Html$li,
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html_Attributes$class('grow-large dn dib-l pv1 ph3 ml3 ba b--white-50 br-pill hover-bg-red-50'),
+											_1: {ctor: '[]'}
+										},
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html$text('like'),
+											_1: {ctor: '[]'}
+										}),
+									_1: {
+										ctor: '::',
+										_0: A2(
+											_elm_lang$html$Html$li,
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html_Attributes$class('grow-large pv1 ph3 ml3 ba b--white-50 br-pill hover-bg-mint-50'),
+												_1: {ctor: '[]'}
+											},
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html$text('more'),
+												_1: {ctor: '[]'}
+											}),
+										_1: {ctor: '[]'}
+									}
+								}
+							}),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$div,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$class('tr f1 f2-m white lh-solid fw9 ma0 pa0'),
+									_1: {ctor: '[]'}
+								},
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html$text(_p4.title),
+									_1: {ctor: '[]'}
+								}),
+							_1: {ctor: '[]'}
+						}
+					}),
+				_1: {
+					ctor: '::',
+					_0: _user$project$Main$eventIcons(_p4),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$div,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$class('flex fixed flex-auto self-end'),
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$h3,
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$class('pa3 flex-auto tc f3 bg-blue-50 fw9'),
+										_1: {ctor: '[]'}
+									},
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html$text('buy tickets'),
+										_1: {ctor: '[]'}
+									}),
+								_1: {
+									ctor: '::',
+									_0: A2(
+										_elm_lang$html$Html$h3,
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html_Attributes$class('pa3 flex-auto tc f3 bg-magenta-50 fw9'),
+											_1: {ctor: '[]'}
+										},
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html$text('view pool'),
+											_1: {ctor: '[]'}
+										}),
+									_1: {ctor: '[]'}
+								}
+							}),
+						_1: {ctor: '[]'}
+					}
+				}
+			});
+	}
+};
+var _user$project$Main$feedView = function (model) {
+	return A2(
+		_elm_lang$html$Html$section,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('measure bg-black-20 overflow-auto z-999 shadow-2 pb5'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$div,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('lg-magenta-purple-80 h5 flex flex-column justify-between pa4'),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$input,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class('fw2 pa2 bg-transparent b--none outline-0 white focus-underline f4 f5-m self-stretch placeholder-white-50'),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$placeholder('search'),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$type_('search'),
+									_1: {ctor: '[]'}
+								}
+							}
+						},
+						{ctor: '[]'}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$div,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$class('tr f1 f2-m white lh-solid fw9 ma0 pa0'),
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text('discover events'),
+								_1: {ctor: '[]'}
+							}),
+						_1: {ctor: '[]'}
+					}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{ctor: '[]'},
+					A2(_elm_lang$core$List$map, _user$project$Main$eventListView, model.seatgeek.events)),
+				_1: {ctor: '[]'}
+			}
+		});
+};
+var _user$project$Main$navTab = function (page) {
+	return A2(
+		_elm_lang$html$Html$li,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('w4-l pv3-l hover-bg-black-50 z-999'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text(page),
+			_1: {ctor: '[]'}
+		});
+};
+var _user$project$Main$navHome = A2(
+	_elm_lang$html$Html$div,
+	{
+		ctor: '::',
+		_0: _elm_lang$html$Html_Attributes$class('fw7 w4-l pv4 pa3-m dn dib-ns f4'),
+		_1: {ctor: '[]'}
+	},
+	{
+		ctor: '::',
+		_0: _elm_lang$html$Html$text('PlusOne'),
+		_1: {ctor: '[]'}
+	});
+var _user$project$Main$navBar = A2(
+	_elm_lang$html$Html$nav,
+	{
+		ctor: '::',
+		_0: _elm_lang$html$Html_Attributes$class('bg-black-40 bg-black-90 z-9999 w-100 w4-l h3 vh-100-l tc-l fixed flex-m flex-row-m items-center-m self-start-m absolute bottom-0 shadow-2'),
+		_1: {ctor: '[]'}
+	},
+	{
+		ctor: '::',
+		_0: _user$project$Main$navHome,
+		_1: {
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$ul,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('list ma0 pa0 flex flex-column-l justify-around flex-auto items-center h3 h-auto-l f6 white-90'),
+					_1: {ctor: '[]'}
+				},
+				A2(
+					_elm_lang$core$List$map,
+					_user$project$Main$navTab,
+					{
+						ctor: '::',
+						_0: 'discover',
+						_1: {
+							ctor: '::',
+							_0: 'add',
+							_1: {
+								ctor: '::',
+								_0: 'stats',
+								_1: {
+									ctor: '::',
+									_0: 'chats',
+									_1: {
+										ctor: '::',
+										_0: 'profile',
+										_1: {ctor: '[]'}
+									}
+								}
+							}
+						}
+					})),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('dn-ns absolute bottom-0 h3 z-0 w-100 bg-black-90'),
+						_1: {ctor: '[]'}
+					},
+					{ctor: '[]'}),
+				_1: {ctor: '[]'}
+			}
+		}
+	});
+var _user$project$Main$plusOneCSS = 'Admin/plusOne.css';
+var _user$project$Main$tachyonsCSS = 'Admin/tachyons.css';
 var _user$project$Main$view = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
 		{
 			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('overflow-hidden'),
+			_0: _elm_lang$html$Html_Attributes$class('overflow-hidden lg-purple-magenta-80'),
 			_1: {ctor: '[]'}
 		},
 		{
@@ -495,45 +587,92 @@ var _user$project$Main$view = function (model) {
 				{ctor: '[]'}),
 			_1: {
 				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$div,
+				_0: A3(
+					_elm_lang$html$Html$node,
+					'link',
 					{
 						ctor: '::',
-						_0: _user$project$Main$onPointerDown,
+						_0: _elm_lang$html$Html_Attributes$rel('stylesheet'),
 						_1: {
 							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('bg-black-90'),
+							_0: _elm_lang$html$Html_Attributes$href(_user$project$Main$plusOneCSS),
+							_1: {ctor: '[]'}
+						}
+					},
+					{ctor: '[]'}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$div,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class('white sans-serif flex fw1 vh-100'),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: _user$project$Main$navBar,
 							_1: {
 								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$style(
+								_0: A2(
+									_elm_lang$html$Html$main_,
 									{
 										ctor: '::',
-										_0: A2(_user$project$Main_ops['=>'], 'cursor', 'move'),
+										_0: _elm_lang$html$Html_Attributes$class('vh-100 w-100 bg-black-50 pl6-l pt5-m flex'),
+										_1: {ctor: '[]'}
+									},
+									{
+										ctor: '::',
+										_0: _user$project$Main$feedView(model),
 										_1: {
 											ctor: '::',
-											_0: A2(_user$project$Main_ops['=>'], 'transform', 'scale(1.05)'),
-											_1: {
-												ctor: '::',
-												_0: A2(
-													_user$project$Main_ops['=>'],
-													'height',
-													_user$project$Main$px(model.windowSize.height)),
-												_1: {
-													ctor: '::',
-													_0: A2(_user$project$Main_ops['=>'], 'overflow', 'hidden'),
-													_1: {ctor: '[]'}
-												}
-											}
+											_0: _user$project$Main$eventView(
+												_elm_lang$core$List$head(model.seatgeek.events)),
+											_1: {ctor: '[]'}
 										}
 									}),
 								_1: {ctor: '[]'}
 							}
-						}
-					},
-					_user$project$Main$populateTubes(model)),
-				_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				}
 			}
 		});
+};
+var _user$project$Main$Model = function (a) {
+	return {seatgeek: a};
+};
+var _user$project$Main$update = F2(
+	function (msg, model) {
+		var _p5 = msg;
+		if (_p5._0.ctor === 'Ok') {
+			var _p6 = _p5._0._0;
+			return {
+				ctor: '_Tuple2',
+				_0: _user$project$Main$Model(
+					A2(
+						_user$project$SeatGeek$Reply,
+						_p6.meta,
+						A2(_elm_lang$core$Basics_ops['++'], model.seatgeek.events, _p6.events))),
+				_1: _elm_lang$core$Platform_Cmd$none
+			};
+		} else {
+			var _p7 = A2(_elm_lang$core$Debug$log, 'err', _p5._0._0);
+			return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+		}
+	});
+var _user$project$Main$GetReply = function (a) {
+	return {ctor: 'GetReply', _0: a};
+};
+var _user$project$Main$askQuery = function (query) {
+	var url = _user$project$SeatGeek$composeRequest(query);
+	var request = A2(_elm_lang$http$Http$get, url, _user$project$SeatGeek$decodeReply);
+	return A2(_elm_lang$http$Http$send, _user$project$Main$GetReply, request);
+};
+var _user$project$Main$init = {
+	ctor: '_Tuple2',
+	_0: {seatgeek: _user$project$SeatGeek$emptyReply},
+	_1: _user$project$Main$askQuery(_user$project$SeatGeek$initQuery)
 };
 var _user$project$Main$main = _elm_lang$html$Html$program(
 	{init: _user$project$Main$init, view: _user$project$Main$view, update: _user$project$Main$update, subscriptions: _user$project$Main$subscriptions})();

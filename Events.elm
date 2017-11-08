@@ -1,19 +1,23 @@
 -- Read more about this program in the official Elm guide:
 -- https://guide.elm-lang.org/architecture/effects/http.html
 
+
+module Main exposing (..)
+
+import SeatGeek exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
-
+import Http exposing (..)
 
 
 main =
-  Html.program
-    { init = init
-    , view = view
-    , update = update
-    , subscriptions = subscriptions
-    }
+    Html.program
+        { init = init
+        , view = view
+        , update = update
+        , subscriptions = subscriptions
+        }
 
 
 
@@ -21,16 +25,28 @@ main =
 
 
 type alias Model =
-  { hello : String
-  , world : String
-  }
+    { seatgeek : SeatGeek.Reply
+    }
 
 
-init : ( Model, Cmd msg )
-init = (
-  { hello ="hello" 
-  , world = "world"
-  }, Cmd.none)
+askQuery : Query -> Cmd Msg
+askQuery query =
+    let
+        url =
+            composeRequest query
+
+        request =
+            Http.get url decodeReply
+    in
+        Http.send GetReply request
+
+
+init : ( Model, Cmd Msg )
+init =
+    ( { seatgeek = SeatGeek.emptyReply
+      }
+    , askQuery initQuery
+    )
 
 
 
@@ -38,308 +54,218 @@ init = (
 
 
 type Msg
-  = Howdy
-  | Pardner
+    = GetReply (Result Http.Error Reply)
 
 
 update : Msg -> Model -> ( Model, Cmd msg )
 update msg model =
-  case msg of
-    Howdy -> 
-        ( { model | hello = "howdy" } , Cmd.none )
-    
-    Pardner -> 
-        ( { model | world = "pardner" } , Cmd.none )
+    case msg of
+        GetReply (Ok recieved) ->
+            ( Model (SeatGeek.Reply recieved.meta (model.seatgeek.events ++ recieved.events)), Cmd.none )
+
+        GetReply (Err e) ->
+            let
+                _ =
+                    Debug.log "err" e
+            in
+                ( model, Cmd.none )
+
 
 
 -- VIEW
+
+
 tachyonsCSS : String
 tachyonsCSS =
-  "Admin/tachyons.css"
+    "Admin/tachyons.css"
+
 
 plusOneCSS : String
 plusOneCSS =
-  "Admin/plusOne.css"
+    "Admin/plusOne.css"
+
 
 view : Model -> Html Msg
 view model =
-    div [ class "overflow-hidden bg-black"][
-        Html.node "link" [ Html.Attributes.rel "stylesheet", Html.Attributes.href tachyonsCSS ][],
-        Html.node "link" [ Html.Attributes.rel "stylesheet", Html.Attributes.href plusOneCSS ][],
-        div [ class "white sans-serif flex fw1 vh-100" ]
-    [ navBar
-    , main_ [ class "vh-100 w-100 bg-tone-80 pl4-l ml6-l mt5-m pt3-m flex" ]
-        [ section [ class "bg-black-10 flex-auto overflow-auto z-999 shadow-2" ]
-            [ div [ class "lg-magenta-purple-80 h5 flex flex-column justify-between pa4" ]
-                [ input [ class "fw2 pa2 bg-transparent b--none outline-0 white focus-underline f4 f5-m self-stretch placeholder-white-50", placeholder "search", type_ "search" ]
-                    []
-                , h1 [ class "tr f1 f2-m white lh-solid fw9 ma0 pa0" ]
-                    [ text "discover events" ]
-                ]
-            , div [ class "flex flex-column flex-row-l items-center-l justify-start pa3 bb-l b--white-05" ]
-                [ div [ class "w-100 w-auto-l pa4-l br-pill-l lg-purple-red-80" ]
-                    [ div [ class "aspect-ratio--8x5 dn-l" ]
-                        []
-                    ]
-                , div [ class "flex-l flex-column-l ph3-l" ]
-                    [ h3 [ class "dib mw6-l light-silver mt3 mb2 ma0-l pv2-l f3" ]
-                        [ text "chance the rapper "
-                        , span [ class "fw5 silver" ]
-                            [ text "@ the blue note" ]
-                        ]
-                    , div [ class "dib-l ma0-l mb2 pb1-l pb4 bb bn-l b--white-20" ]
-                        [ h4 [ class "dib fw2 silver ma0" ]
-                            [ text "tomorrow night" ]
-                        ]
-                    ]
-                ]
-            , div [ class "flex flex-column flex-row-l items-center-l justify-start pa3 bb-l b--white-05" ]
-                [ div [ class "w-100 w-auto-l pa4-l br-pill-l lg-blue-teal-80" ]
-                    [ div [ class "aspect-ratio--8x5 dn-l" ]
-                        []
-                    ]
-                , div [ class "flex-l flex-column-l ph3-l" ]
-                    [ h3 [ class "dib mw6-l light-silver mt3 mb2 ma0-l pv2-l f3" ]
-                        [ text "chance the rapper "
-                        , span [ class "fw5 silver" ]
-                            [ text "@ the blue note" ]
-                        ]
-                    , div [ class "dib-l ma0-l mb2 pb1-l pb4 bb bn-l b--white-20" ]
-                        [ h4 [ class "dib fw2 silver ma0" ]
-                            [ text "tomorrow night" ]
-                        ]
-                    ]
-                ]
-            , div [ class "flex flex-column flex-row-l items-center-l justify-start pa3 bb-l b--white-05" ]
-                [ div [ class "w-100 w-auto-l pa4-l br-pill-l lg-purple-teal-80" ]
-                    [ div [ class "aspect-ratio--8x5 dn-l" ]
-                        []
-                    ]
-                , div [ class "flex-l flex-column-l ph3-l" ]
-                    [ h3 [ class "dib mw6-l light-silver mt3 mb2 ma0-l pv2-l f3" ]
-                        [ text "chance the rapper "
-                        , span [ class "fw5 silver" ]
-                            [ text "@ the blue note" ]
-                        ]
-                    , div [ class "dib-l ma0-l mb2 pb1-l pb4 bb bn-l b--white-20" ]
-                        [ h4 [ class "dib fw2 silver ma0" ]
-                            [ text "tomorrow night" ]
-                        ]
-                    ]
-                ]
-            , div [ class "flex flex-column flex-row-l items-center-l justify-start pa3 bb-l b--white-05" ]
-                [ div [ class "w-100 w-auto-l pa4-l br-pill-l lg-blue-magenta-80" ]
-                    [ div [ class "aspect-ratio--8x5 dn-l" ]
-                        []
-                    ]
-                , div [ class "flex-l flex-column-l ph3-l" ]
-                    [ h3 [ class "dib mw6-l light-silver mt3 mb2 ma0-l pv2-l f3" ]
-                        [ text "chance the rapper "
-                        , span [ class "fw5 silver" ]
-                            [ text "@ the blue note" ]
-                        ]
-                    , div [ class "dib-l ma0-l mb2 pb1-l pb4 bb bn-l b--white-20" ]
-                        [ h4 [ class "dib fw2 silver ma0" ]
-                            [ text "tomorrow night" ]
-                        ]
-                    ]
-                ]
-            , div [ class "flex flex-column flex-row-l items-center-l justify-start pa3 bb-l b--white-05" ]
-                [ div [ class "w-100 w-auto-l pa4-l br-pill-l lg-mint-teal-80" ]
-                    [ div [ class "aspect-ratio--8x5 dn-l" ]
-                        []
-                    ]
-                , div [ class "flex-l flex-column-l ph3-l" ]
-                    [ h3 [ class "dib mw6-l light-silver mt3 mb2 ma0-l pv2-l f3" ]
-                        [ text "chance the rapper "
-                        , span [ class "fw5 silver" ]
-                            [ text "@ the blue note" ]
-                        ]
-                    , div [ class "dib-l ma0-l mb2 pb1-l pb4 bb bn-l b--white-20" ]
-                        [ h4 [ class "dib fw2 silver ma0" ]
-                            [ text "tomorrow night" ]
-                        ]
-                    ]
-                ]
-            , div [ class "flex flex-column flex-row-l items-center-l justify-start pa3 bb-l b--white-05" ]
-                [ div [ class "w-100 w-auto-l pa4-l br-pill-l lg-blue-teal-80" ]
-                    [ div [ class "aspect-ratio--8x5 dn-l" ]
-                        []
-                    ]
-                , div [ class "flex-l flex-column-l ph3-l" ]
-                    [ h3 [ class "dib mw6-l light-silver mt3 mb2 ma0-l pv2-l f3" ]
-                        [ text "chance the rapper "
-                        , span [ class "fw5 silver" ]
-                            [ text "@ the blue note" ]
-                        ]
-                    , div [ class "dib-l ma0-l mb2 pb1-l pb4 bb bn-l b--white-20" ]
-                        [ h4 [ class "dib fw2 silver ma0" ]
-                            [ text "tomorrow night" ]
-                        ]
-                    ]
-                ]
-            , div [ class "flex flex-column flex-row-l items-center-l justify-start pa3 bb-l b--white-05" ]
-                [ div [ class "w-100 w-auto-l pa4-l br-pill-l lg-magenta-red-80" ]
-                    [ div [ class "aspect-ratio--8x5 dn-l" ]
-                        []
-                    ]
-                , div [ class "flex-l flex-column-l ph3-l" ]
-                    [ h3 [ class "dib mw6-l light-silver mt3 mb2 ma0-l pv2-l f3" ]
-                        [ text "chance the rapper "
-                        , span [ class "fw5 silver" ]
-                            [ text "@ the blue note" ]
-                        ]
-                    , div [ class "dib-l ma0-l mb2 pb1-l pb4 bb bn-l b--white-20" ]
-                        [ h4 [ class "dib fw2 silver ma0" ]
-                            [ text "tomorrow night" ]
-                        ]
-                    ]
-                ]
-            , div [ class "flex flex-column flex-row-l items-center-l justify-start pa3 bb-l b--white-05" ]
-                [ div [ class "w-100 w-auto-l pa4-l br-pill-l lg-blue-teal-80" ]
-                    [ div [ class "aspect-ratio--8x5 dn-l" ]
-                        []
-                    ]
-                , div [ class "flex-l flex-column-l ph3-l" ]
-                    [ h3 [ class "dib mw6-l light-silver mt3 mb2 ma0-l pv2-l f3" ]
-                        [ text "chance the rapper "
-                        , span [ class "fw5 silver" ]
-                            [ text "@ the blue note" ]
-                        ]
-                    , div [ class "dib-l ma0-l mb2 pb1-l pb4 bb bn-l b--white-20" ]
-                        [ h4 [ class "dib fw2 silver ma0" ]
-                            [ text "tomorrow night" ]
-                        ]
-                    ]
-                ]
-            , div [ class "flex flex-column flex-row-l items-center-l justify-start pa3 bb-l b--white-05" ]
-                [ div [ class "w-100 w-auto-l pa4-l br-pill-l lg-blue-green-80" ]
-                    [ div [ class "aspect-ratio--8x5 dn-l" ]
-                        []
-                    ]
-                , div [ class "flex-l flex-column-l ph3-l" ]
-                    [ h3 [ class "dib mw6-l light-silver mt3 mb2 ma0-l pv2-l f3" ]
-                        [ text "chance the rapper "
-                        , span [ class "fw5 silver" ]
-                            [ text "@ the blue note" ]
-                        ]
-                    , div [ class "dib-l ma0-l mb2 pb1-l pb4 bb bn-l b--white-20" ]
-                        [ h4 [ class "dib fw2 silver ma0" ]
-                            [ text "tomorrow night" ]
-                        ]
-                    ]
-                ]
-            , div [ class "flex flex-column flex-row-l items-center-l justify-start pa3 bb-l b--white-05" ]
-                [ div [ class "w-100 w-auto-l pa4-l br-pill-l lg-yellow-teal-80" ]
-                    [ div [ class "aspect-ratio--8x5 dn-l" ]
-                        []
-                    ]
-                , div [ class "flex-l flex-column-l ph3-l" ]
-                    [ h3 [ class "dib mw6-l light-silver mt3 mb2 ma0-l pv2-l f3" ]
-                        [ text "chance the rapper "
-                        , span [ class "fw5 silver" ]
-                            [ text "@ the blue note" ]
-                        ]
-                    , div [ class "dib-l ma0-l mb2 pb1-l pb4 bb bn-l b--white-20" ]
-                        [ h4 [ class "dib fw2 silver ma0" ]
-                            [ text "tomorrow night" ]
-                        ]
-                    ]
-                ]
-            , div [ class "flex flex-column flex-row-l items-center-l justify-start pa3 bb-l b--white-05" ]
-                [ div [ class "w-100 w-auto-l pa4-l br-pill-l lg-red-blue-80" ]
-                    [ div [ class "aspect-ratio--8x5 dn-l" ]
-                        []
-                    ]
-                , div [ class "flex-l flex-column-l ph3-l" ]
-                    [ h3 [ class "dib mw6-l light-silver mt3 mb2 ma0-l pv2-l f3" ]
-                        [ text "chance the rapper "
-                        , span [ class "fw5 silver" ]
-                            [ text "@ the blue note" ]
-                        ]
-                    , div [ class "dib-l ma0-l mb2 pb1-l pb4 bb bn-l b--white-20" ]
-                        [ h4 [ class "dib fw2 silver ma0" ]
-                            [ text "tomorrow night" ]
-                        ]
-                    ]
-                ]
-            , div [ class "flex flex-column flex-row-l items-center-l justify-start pa3 bb-l b--white-05" ]
-                [ div [ class "w-100 w-auto-l pa4-l br-pill-l lg-yellow-magenta-80" ]
-                    [ div [ class "aspect-ratio--8x5 dn-l" ]
-                        []
-                    ]
-                , div [ class "flex-l flex-column-l ph3-l" ]
-                    [ h3 [ class "dib mw6-l light-silver mt3 mb2 ma0-l pv2-l f3" ]
-                        [ text "chance the rapper "
-                        , span [ class "fw5 silver" ]
-                            [ text "@ the blue note" ]
-                        ]
-                    , div [ class "dib-l ma0-l mb2 pb1-l pb4 bb bn-l b--white-20" ]
-                        [ h4 [ class "dib fw2 silver ma0" ]
-                            [ text "tomorrow night" ]
-                        ]
-                    ]
-                ]
-            ]
-        , section [ class "bg-black-20 flex-auto dn db-ns vh-100" ]
-            [ div [ class "lg-mint-red-30 h5 flex flex-column justify-between pa4" ]
-                [ ul [ class "list white ma0 pa0 flex justify-end w-100 f7 pv2" ]
-                    [ li [ class "grow-large dn dib-l pv1 ph3 ml3 ba b--white-50 br-pill hover-bg-teal-50" ]
-                        [ text "share" ]
-                    , li [ class "grow-large dn dib-l pv1 ph3 ml3 ba b--white-50 br-pill hover-bg-red-50" ]
-                        [ text "like" ]
-                    , li [ class "grow-large pv1 ph3 ml3 ba b--white-50 br-pill hover-bg-mint-50" ]
-                        [ text "more" ]
-                    ]
-                , h1 [ class "tr f1 f2-m white lh-solid fw9 ma0 pa0" ]
-                    [ text "chance the rapper" ]
-                ]
-            , ul [ class "w-100 h4 list ma0 pa0 flex gray justify-around items-center" ]
-                [ li []
-                    [ text "popularity" ]
-                , li []
-                    [ text "distance" ]
-                , li []
-                    [ text "type" ]
-                , li []
-                    [ text "food" ]
-                ]
-            , div [ class "flex fixed flex-auto self-end" ]
-                [ h3 [ class "pa3 flex-auto tc f3 bg-blue-50 fw9" ]
-                    [ text "buy tickets" ]
-                , h3 [ class "pa3 flex-auto tc f3 bg-magenta-50 fw9" ]
-                    [ text "view pool" ]
+    div [ class "overflow-hidden lg-purple-magenta-80" ]
+        [ Html.node "link" [ Html.Attributes.rel "stylesheet", Html.Attributes.href tachyonsCSS ] []
+        , Html.node "link" [ Html.Attributes.rel "stylesheet", Html.Attributes.href plusOneCSS ] []
+        , div [ class "white sans-serif flex fw1 vh-100" ]
+            [ navBar
+            , main_ [ class "vh-100 w-100 bg-black-50 pl6-l pt5-m flex" ]
+                [ feedView model
+                , eventView (List.head model.seatgeek.events)
                 ]
             ]
         ]
-    ]
-    
-    ]
+
 
 navBar : Html Msg
 navBar =
-    nav [ class "bg-near-black z-9999 w-100 w4-l pt2-l pr4-l vh-100-l flex justify-between justify-start-l fixed self-start-ns flex-column-l self-end shadow-2" ]
+    nav [ class "bg-black-40 bg-black-90 z-9999 w-100 w4-l h3 vh-100-l tc-l fixed flex-m flex-row-m items-center-m self-start-m absolute bottom-0 shadow-2" ]
         [ navHome
-        , ul [ class "list ma0 pa0 flex justify-around items-center-m w-100 w-auto-l flex-column-l f6 f5-ns light-silver" ]
-        ( List.map navTab ["discover", "add", "stats", "chats", "profile"] )
+        , ul [ class "list ma0 pa0 flex flex-column-l justify-around flex-auto items-center h3 h-auto-l f6 white-90" ]
+            (List.map navTab [ "discover", "add", "stats", "chats", "profile" ])
+        , div [ class "dn-ns absolute bottom-0 h3 z-0 w-100 bg-black-90" ] []
         ]
+
 
 navHome : Html Msg
 navHome =
-    span [ class "fw7 pa4 mh2-m dn dib-ns f3-l f4-m" ][ text "PlusOne" ]
+    div [ class "fw7 w4-l pv4 pa3-m dn dib-ns f4" ] [ text "PlusOne" ]
+
 
 navTab : String -> Html Msg
 navTab page =
-    li [ class "flex-auto tc pv4 pv3-l pl4-l pr6-l ph2 hover-bg-teal-50" ][ text page ]
+    li [ class "w4-l pv3-l hover-bg-black-50 z-999" ] [ text page ]
+
+
+feedView : Model -> Html Msg
+feedView model =
+    section [ class "measure bg-black-20 overflow-auto z-999 shadow-2 pb5" ]
+        [ div [ class "lg-magenta-purple-80 h5 flex flex-column justify-between pa4" ]
+            [ input [ class "fw2 pa2 bg-transparent b--none outline-0 white focus-underline f4 f5-m self-stretch placeholder-white-50", placeholder "search", type_ "search" ]
+                []
+            , div [ class "tr f1 f2-m white lh-solid fw9 ma0 pa0" ]
+                [ text "discover events" ]
+            ]
+        , div [] (List.map eventListView model.seatgeek.events)
+        ]
+
+
+eventView : Maybe Event -> Html msg
+eventView event =
+    case event of
+        Nothing ->
+            text ""
+
+        Just event ->
+            section [ class "flex-auto dn db-ns vh-100" ]
+                [ div [ class "lg-mint-red-30 h5 flex flex-column justify-between pa4" ]
+                    [ ul [ class "list white ma0 pa0 flex justify-end w-100 f7 pv2" ]
+                        [ li [ class "grow-large dn dib-l pv1 ph3 ml3 ba b--white-50 br-pill hover-bg-teal-50" ]
+                            [ text "share" ]
+                        , li [ class "grow-large dn dib-l pv1 ph3 ml3 ba b--white-50 br-pill hover-bg-red-50" ]
+                            [ text "like" ]
+                        , li [ class "grow-large pv1 ph3 ml3 ba b--white-50 br-pill hover-bg-mint-50" ]
+                            [ text "more" ]
+                        ]
+                    , div [ class "tr f1 f2-m white lh-solid fw9 ma0 pa0" ]
+                        [ text event.title ]
+                    ]
+                , eventIcons event
+                , div [ class "flex fixed flex-auto self-end" ]
+                    [ h3 [ class "pa3 flex-auto tc f3 bg-blue-50 fw9" ]
+                        [ text "buy tickets" ]
+                    , h3 [ class "pa3 flex-auto tc f3 bg-magenta-50 fw9" ]
+                        [ text "view pool" ]
+                    ]
+                ]
+
+
+eventBanner : Event -> Html msg
+eventBanner event =
+    div [ class "lg-mint-red-30 h5 flex flex-column justify-between pa4" ]
+        [ ul [ class "list white ma0 pa0 flex justify-end w-100 f7 pv2" ]
+            [ li [ class "grow-large dn dib-l pv1 ph3 ml3 ba b--white-50 br-pill hover-bg-teal-50" ]
+                [ text "share" ]
+            , li [ class "grow-large dn dib-l pv1 ph3 ml3 ba b--white-50 br-pill hover-bg-red-50" ]
+                [ text "like" ]
+            , li [ class "grow-large pv1 ph3 ml3 ba b--white-50 br-pill hover-bg-mint-50" ]
+                [ text "more" ]
+            ]
+        , div [ class "tr f1 f2-m white lh-solid fw9 ma0 pa0" ]
+            [ text event.title ]
+        ]
+
+
+eventIcons : Event -> Html msg
+eventIcons event =
+    let
+        icons =
+            [ ( "Category", event.category )
+            , ( "Score", (toString event.score) )
+            , ( "Popularity", (toString event.popularity) )
+            ]
+    in
+        ul [ class "w-100 h4 list ma0 pa0 flex white-50 justify-around items-center" ]
+            (List.map eventIcon icons)
+
+
+eventIcon : ( String, String ) -> Html msg
+eventIcon tuple =
+    let
+        desc =
+            Tuple.first tuple
+
+        data =
+            Tuple.second tuple
+    in
+        case data of
+            "0.0" ->
+                text ""
+
+            "0" ->
+                text ""
+
+            "" ->
+                text ""
+
+            data ->
+                li [] [ text (desc ++ " is " ++ data) ]
+
+
+eventListView : Event -> Html msg
+eventListView event =
+    div [ class "ph3 pt3 hover-bg-black-30" ]
+        [ maybeImage event.performers
+        , div [ class "pb3 bb b--white-20" ]
+            [ div [ class "pb1 f4 fw6 pv2" ]
+                [ text event.title
+                , span [ class "fw5 white-70" ]
+                    [ text (" @ " ++ event.venue.name) ]
+                ]
+            , div [ class "pb2" ]
+                [ div [ class "fw2 white-50 ma0" ]
+                    [ text event.datetime_local ]
+                ]
+            ]
+        ]
+
+
+maybeImage : List Performer -> Html msg
+maybeImage performers =
+    let
+        performer =
+            List.head performers
+
+        image =
+            case performer of
+                Just performer ->
+                    performer.image
+
+                Nothing ->
+                    Nothing
+    in
+        case image of
+            Just image ->
+                div [ class "w-100 mb2 mt1" ]
+                    [ div [ style [ ( "background-image", "url(" ++ image ++ ")" ) ], class "aspect-ratio--8x5 cover" ]
+                        []
+                    ]
+
+            Nothing ->
+                text ""
+
+
 
 -- SUBSCRIPTIONS
 
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-  Sub.none
+    Sub.none
 
 
 
 -- HTTP
-
