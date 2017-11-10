@@ -1,5 +1,69 @@
 /*
 #############
+Breathe BG/LG
+#############
+*/
+
+.lg-breathe-50 {
+  background: linear-gradient(45deg, #547FFF, #00B5B5, #00CC33, #57AD00, #AB8000, #FF4747, #FF30CB, #A952FF);
+  background-size: 1600% 1600%;
+  -webkit-animation: Breathe 500s ease infinite;
+  -moz-animation: Breathe 500s ease infinite;
+  -o-animation: Breathe 500s ease infinite;
+  animation: Breathe 500s ease infinite;
+}
+
+@-webkit-keyframes Breathe {
+  0% {
+    background-position: 100% 0%
+  }
+  50% {
+    background-position: 0% 100%
+  }
+  100% {
+    background-position: 100% 0%
+  }
+}
+
+@-moz-keyframes Breathe {
+  0% {
+    background-position: 100% 0%
+  }
+  50% {
+    background-position: 0% 100%
+  }
+  100% {
+    background-position: 100% 0%
+  }
+}
+
+@-o-keyframes Breathe {
+  0% {
+    background-position: 100% 0%
+  }
+  50% {
+    background-position: 0% 100%
+  }
+  100% {
+    background-position: 100% 0%
+  }
+}
+
+@keyframes Breathe {
+  0% {
+    background-position: 100% 0%
+  }
+  50% {
+    background-position: 0% 100%
+  }
+  100% {
+    background-position: 100% 0%
+  }
+}
+
+
+/*
+#############
 30% INTENSITY
 #############
 */
@@ -1179,4 +1243,43 @@ Parallax
 
 .parallax {
   background-attachment: fixed !important;
+}
+
+
+/*
+#####################
+Blur
+#####################
+*/
+
+.blur0 {
+  filter: blur(0);
+}
+
+.blur1 {
+  filter: blur(.25rem);
+}
+
+.blur2 {
+  filter: blur(.5rem);
+}
+
+.blur3 {
+  filter: blur(1rem);
+}
+
+.blur4 {
+  filter: blur(2rem);
+}
+
+.blur5 {
+  filter: blur(4rem);
+}
+
+.blur6 {
+  filter: blur(8rem);
+}
+
+.blur7 {
+  filter: blur(16rem);
 }

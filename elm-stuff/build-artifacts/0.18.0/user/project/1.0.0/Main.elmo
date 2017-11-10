@@ -1,23 +1,295 @@
 var _user$project$Main$subscriptions = function (model) {
 	return _elm_lang$core$Platform_Sub$none;
 };
+var _user$project$Main$bgImg = function (imgPath) {
+	return _elm_lang$html$Html_Attributes$style(
+		{
+			ctor: '::',
+			_0: {
+				ctor: '_Tuple2',
+				_0: 'background-image',
+				_1: A2(
+					_elm_lang$core$Basics_ops['++'],
+					'url(\'',
+					A2(_elm_lang$core$Basics_ops['++'], imgPath, '\')'))
+			},
+			_1: {ctor: '[]'}
+		});
+};
+var _user$project$Main$featherIcon = function (icon) {
+	return _elm_lang$html$Html_Attributes$style(
+		{
+			ctor: '::',
+			_0: {
+				ctor: '_Tuple2',
+				_0: 'background-image',
+				_1: A2(
+					_elm_lang$core$Basics_ops['++'],
+					'url(\'https://icongr.am/feather/',
+					A2(_elm_lang$core$Basics_ops['++'], icon, '.svg?size=20&color=ffffff\')'))
+			},
+			_1: {ctor: '[]'}
+		});
+};
 var _user$project$Main$maybeImage = function (performers) {
-	var performer = _elm_lang$core$List$head(performers);
-	var image = function () {
-		var _p0 = performer;
-		if (_p0.ctor === 'Just') {
-			return _p0._0.image;
-		} else {
-			return _elm_lang$core$Maybe$Nothing;
-		}
-	}();
-	var _p1 = image;
-	if (_p1.ctor === 'Just') {
+	var _p0 = _elm_lang$core$List$head(performers);
+	if (_p0.ctor === 'Just') {
+		return _p0._0.image;
+	} else {
+		return _elm_lang$core$Maybe$Nothing;
+	}
+};
+var _user$project$Main$eventListIcon = function (taxonomy) {
+	var iconClasses = _elm_lang$html$Html_Attributes$class('contain h1 w1 ml2 dib');
+	var _p1 = taxonomy.name;
+	switch (_p1) {
+		case 'concert':
+			return A2(
+				_elm_lang$html$Html$li,
+				{
+					ctor: '::',
+					_0: iconClasses,
+					_1: {
+						ctor: '::',
+						_0: _user$project$Main$featherIcon('music'),
+						_1: {ctor: '[]'}
+					}
+				},
+				{ctor: '[]'});
+		case 'sports':
+			return A2(
+				_elm_lang$html$Html$li,
+				{
+					ctor: '::',
+					_0: iconClasses,
+					_1: {
+						ctor: '::',
+						_0: _user$project$Main$featherIcon('activity'),
+						_1: {ctor: '[]'}
+					}
+				},
+				{ctor: '[]'});
+		case '':
+			return A2(
+				_elm_lang$html$Html$li,
+				{
+					ctor: '::',
+					_0: iconClasses,
+					_1: {
+						ctor: '::',
+						_0: _user$project$Main$featherIcon('alert-circle'),
+						_1: {ctor: '[]'}
+					}
+				},
+				{ctor: '[]'});
+		default:
+			return A2(
+				_elm_lang$html$Html$li,
+				{
+					ctor: '::',
+					_0: iconClasses,
+					_1: {
+						ctor: '::',
+						_0: _user$project$Main$featherIcon('alert-circle'),
+						_1: {ctor: '[]'}
+					}
+				},
+				{ctor: '[]'});
+	}
+};
+var _user$project$Main$eventIcon = function (taxonomy) {
+	var badgeClasses = _elm_lang$html$Html_Attributes$class('flex flex-column items-center');
+	var captionClasses = _elm_lang$html$Html_Attributes$class('ph2');
+	var iconClasses = _elm_lang$html$Html_Attributes$class('h3 w3 contain');
+	var _p2 = taxonomy.name;
+	switch (_p2) {
+		case 'concert':
+			return A2(
+				_elm_lang$html$Html$li,
+				{
+					ctor: '::',
+					_0: badgeClasses,
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$div,
+						{
+							ctor: '::',
+							_0: iconClasses,
+							_1: {
+								ctor: '::',
+								_0: _user$project$Main$featherIcon('music'),
+								_1: {ctor: '[]'}
+							}
+						},
+						{ctor: '[]'}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$div,
+							{
+								ctor: '::',
+								_0: captionClasses,
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text(taxonomy.name),
+								_1: {ctor: '[]'}
+							}),
+						_1: {ctor: '[]'}
+					}
+				});
+		case 'sports':
+			return A2(
+				_elm_lang$html$Html$li,
+				{
+					ctor: '::',
+					_0: badgeClasses,
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$div,
+						{
+							ctor: '::',
+							_0: iconClasses,
+							_1: {
+								ctor: '::',
+								_0: _user$project$Main$featherIcon('activity'),
+								_1: {ctor: '[]'}
+							}
+						},
+						{ctor: '[]'}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$div,
+							{
+								ctor: '::',
+								_0: captionClasses,
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text(taxonomy.name),
+								_1: {ctor: '[]'}
+							}),
+						_1: {ctor: '[]'}
+					}
+				});
+		case '':
+			return A2(
+				_elm_lang$html$Html$li,
+				{
+					ctor: '::',
+					_0: badgeClasses,
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$div,
+						{
+							ctor: '::',
+							_0: iconClasses,
+							_1: {
+								ctor: '::',
+								_0: _user$project$Main$featherIcon('alert-circle'),
+								_1: {ctor: '[]'}
+							}
+						},
+						{ctor: '[]'}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$div,
+							{
+								ctor: '::',
+								_0: captionClasses,
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text(taxonomy.name),
+								_1: {ctor: '[]'}
+							}),
+						_1: {ctor: '[]'}
+					}
+				});
+		default:
+			return A2(
+				_elm_lang$html$Html$li,
+				{
+					ctor: '::',
+					_0: badgeClasses,
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$div,
+						{
+							ctor: '::',
+							_0: iconClasses,
+							_1: {
+								ctor: '::',
+								_0: _user$project$Main$featherIcon('alert-octagon'),
+								_1: {ctor: '[]'}
+							}
+						},
+						{ctor: '[]'}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$div,
+							{
+								ctor: '::',
+								_0: captionClasses,
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text(taxonomy.name),
+								_1: {ctor: '[]'}
+							}),
+						_1: {ctor: '[]'}
+					}
+				});
+	}
+};
+var _user$project$Main$eventIcons = function (event) {
+	var toIcon = A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('contain h2 w2 h1-m w1-m dib'),
+			_1: {ctor: '[]'}
+		},
+		{ctor: '[]'});
+	return A2(
+		_elm_lang$html$Html$ul,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('w-auto h4 list ma0 pa0 flex white-50 justify-around items-center'),
+			_1: {ctor: '[]'}
+		},
+		A2(_elm_lang$core$List$map, _user$project$Main$eventIcon, event.taxonomies));
+};
+var _user$project$Main$progressBar = function (num) {
+	var percent = num * 100;
+	var _p3 = percent;
+	if (_p3 === 0.0) {
+		return _elm_lang$html$Html$text('');
+	} else {
 		return A2(
 			_elm_lang$html$Html$div,
 			{
 				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class('w-100 mb2 mt1'),
+				_0: _elm_lang$html$Html_Attributes$class('w-100 bg-black-20 overflow-hidden'),
 				_1: {ctor: '[]'}
 			},
 			{
@@ -31,38 +303,647 @@ var _user$project$Main$maybeImage = function (performers) {
 								ctor: '::',
 								_0: {
 									ctor: '_Tuple2',
-									_0: 'background-image',
+									_0: 'width',
 									_1: A2(
 										_elm_lang$core$Basics_ops['++'],
-										'url(',
-										A2(_elm_lang$core$Basics_ops['++'], _p1._0, ')'))
+										_elm_lang$core$Basics$toString(_p3),
+										'%')
 								},
 								_1: {ctor: '[]'}
 							}),
 						_1: {
 							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('aspect-ratio--8x5 cover'),
+							_0: _elm_lang$html$Html_Attributes$class('animate bounceInLeft pt2 lg-breathe-50'),
 							_1: {ctor: '[]'}
 						}
 					},
 					{ctor: '[]'}),
 				_1: {ctor: '[]'}
 			});
-	} else {
-		return _elm_lang$html$Html$text('');
 	}
 };
+var _user$project$Main$selectedEvent = function (model) {
+	return _elm_lang$core$List$head(
+		A2(
+			_elm_lang$core$List$filter,
+			function (x) {
+				return _elm_lang$core$Native_Utils.eq(
+					model.selectedEvent,
+					_elm_lang$core$Maybe$Just(x.id));
+			},
+			model.seatgeek.events));
+};
+var _user$project$Main$navTab = function (tuple) {
+	var captionClasses = _elm_lang$html$Html_Attributes$class('pa3 pa2-m dn dib-ns');
+	var iconClasses = _elm_lang$html$Html_Attributes$class('w2 h2 w1-m h1-m contain');
+	var page = _elm_lang$core$Tuple$first(tuple);
+	var icon = _elm_lang$core$Tuple$second(tuple);
+	return A2(
+		_elm_lang$html$Html$li,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('grow ph4-l pv2-l mv2-l ph2 hover-bg-black-50 z-999 flex items-center br--right-l br-pill-l'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$div,
+				{
+					ctor: '::',
+					_0: iconClasses,
+					_1: {
+						ctor: '::',
+						_0: _user$project$Main$featherIcon(icon),
+						_1: {ctor: '[]'}
+					}
+				},
+				{ctor: '[]'}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{
+						ctor: '::',
+						_0: captionClasses,
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text(page),
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			}
+		});
+};
+var _user$project$Main$navHome = A2(
+	_elm_lang$html$Html$div,
+	{
+		ctor: '::',
+		_0: _elm_lang$html$Html_Attributes$class('pa4-l ph3 grow hover-bg-black-50 flex-ns flex-column-l items-center dn'),
+		_1: {ctor: '[]'}
+	},
+	{
+		ctor: '::',
+		_0: A2(
+			_elm_lang$html$Html$div,
+			{
+				ctor: '::',
+				_0: _user$project$Main$bgImg('Assets/WhitePlusOneLogo.svg'),
+				_1: {
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('contain bg-center ma2-l h3-l w3-l h2 w2'),
+					_1: {ctor: '[]'}
+				}
+			},
+			{ctor: '[]'}),
+		_1: {
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$div,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('fw7 pa3-m f4 pa2-l dib-l dn'),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text('PlusOne'),
+					_1: {ctor: '[]'}
+				}),
+			_1: {ctor: '[]'}
+		}
+	});
+var _user$project$Main$plusOneCSS = 'Admin/plusOne.css';
+var _user$project$Main$tachyonsCSS = 'Admin/tachyons.css';
+var _user$project$Main$gradients = {
+	ctor: '::',
+	_0: 'lg-magenta-red',
+	_1: {
+		ctor: '::',
+		_0: 'lg-purple-magenta',
+		_1: {
+			ctor: '::',
+			_0: 'lg-blue-purple',
+			_1: {
+				ctor: '::',
+				_0: 'lg-teal-blue',
+				_1: {
+					ctor: '::',
+					_0: 'lg-mint-teal',
+					_1: {
+						ctor: '::',
+						_0: 'lg-green-mint',
+						_1: {
+							ctor: '::',
+							_0: 'lg-yellow-green',
+							_1: {
+								ctor: '::',
+								_0: 'lg-red-yellow',
+								_1: {
+									ctor: '::',
+									_0: 'lg-magenta-yellow',
+									_1: {
+										ctor: '::',
+										_0: 'lg-purple-red',
+										_1: {
+											ctor: '::',
+											_0: 'lg-blue-magenta',
+											_1: {
+												ctor: '::',
+												_0: 'lg-teal-purple',
+												_1: {
+													ctor: '::',
+													_0: 'lg-mint-blue',
+													_1: {
+														ctor: '::',
+														_0: 'lg-green-teal',
+														_1: {
+															ctor: '::',
+															_0: 'lg-yellow-mint',
+															_1: {
+																ctor: '::',
+																_0: 'lg-red-green',
+																_1: {
+																	ctor: '::',
+																	_0: 'lg-yellow-purple',
+																	_1: {
+																		ctor: '::',
+																		_0: 'lg-red-blue',
+																		_1: {
+																			ctor: '::',
+																			_0: 'lg-magenta-blue',
+																			_1: {
+																				ctor: '::',
+																				_0: 'lg-purple-teal',
+																				_1: {
+																					ctor: '::',
+																					_0: 'lg-blue-mint',
+																					_1: {
+																						ctor: '::',
+																						_0: 'lg-teal-green',
+																						_1: {
+																							ctor: '::',
+																							_0: 'lg-mint-yellow',
+																							_1: {
+																								ctor: '::',
+																								_0: 'lg-green-red',
+																								_1: {
+																									ctor: '::',
+																									_0: 'lg-yellow-magenta',
+																									_1: {
+																										ctor: '::',
+																										_0: 'lg-red-purple',
+																										_1: {
+																											ctor: '::',
+																											_0: 'lg-magenta-purple',
+																											_1: {
+																												ctor: '::',
+																												_0: 'lg-purple-blue',
+																												_1: {
+																													ctor: '::',
+																													_0: 'lg-blue-teal',
+																													_1: {
+																														ctor: '::',
+																														_0: 'lg-teal-mint',
+																														_1: {
+																															ctor: '::',
+																															_0: 'lg-mint-green',
+																															_1: {
+																																ctor: '::',
+																																_0: 'lg-green-yellow',
+																																_1: {
+																																	ctor: '::',
+																																	_0: 'lg-yellow-red',
+																																	_1: {
+																																		ctor: '::',
+																																		_0: 'lg-red-magenta',
+																																		_1: {ctor: '[]'}
+																																	}
+																																}
+																															}
+																														}
+																													}
+																												}
+																											}
+																										}
+																									}
+																								}
+																							}
+																						}
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+};
+var _user$project$Main$randomGradient = function (event) {
+	var randomSeed = _elm_lang$core$String$length(event.title) * _elm_lang$core$String$length(event.url);
+	var randomIndex = A2(
+		_elm_lang$core$Basics_ops['%'],
+		randomSeed,
+		_elm_lang$core$List$length(_user$project$Main$gradients));
+	var selectedGradient = _elm_lang$core$List$head(
+		A2(_elm_lang$core$List$drop, randomIndex, _user$project$Main$gradients));
+	var _p4 = selectedGradient;
+	if (_p4.ctor === 'Nothing') {
+		return 'white';
+	} else {
+		return A2(_elm_lang$core$Basics_ops['++'], _p4._0, '');
+	}
+};
+var _user$project$Main$eventBanner = function (event) {
+	var titleSize = function () {
+		var _p5 = (_elm_lang$core$String$length(event.title) / 25) | 0;
+		switch (_p5) {
+			case 0:
+				return ' f1 f2-m';
+			case 1:
+				return ' f2 f3-m';
+			case 2:
+				return ' f3 f4-m';
+			case 3:
+				return ' f4 f5-m';
+			default:
+				return ' f5 f6-m';
+		}
+	}();
+	var heroImg = function () {
+		var _p6 = _user$project$Main$maybeImage(event.performers);
+		if (_p6.ctor === 'Nothing') {
+			return _elm_lang$html$Html_Attributes$style(
+				{ctor: '[]'});
+		} else {
+			return _elm_lang$html$Html_Attributes$style(
+				{
+					ctor: '::',
+					_0: {
+						ctor: '_Tuple2',
+						_0: 'background-image',
+						_1: A2(
+							_elm_lang$core$Basics_ops['++'],
+							'url(',
+							A2(_elm_lang$core$Basics_ops['++'], _p6._0, ')'))
+					},
+					_1: {ctor: '[]'}
+				});
+		}
+	}();
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class(
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					'bg-darken ',
+					_user$project$Main$randomGradient(event))),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$div,
+				{
+					ctor: '::',
+					_0: heroImg,
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('bg-darken bg-center h5 flex flex-column justify-between pa4 cover'),
+						_1: {ctor: '[]'}
+					}
+				},
+				{
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$ul,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class('list white ma0 pa0 flex justify-end w-100 f7 pv2'),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$li,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$class('grow dn dib-l pv1 ph3 ml3 ba b--white-50 br-pill hover-bg-teal-50'),
+									_1: {ctor: '[]'}
+								},
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html$text('share'),
+									_1: {ctor: '[]'}
+								}),
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$li,
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$class('grow dn dib-l pv1 ph3 ml3 ba b--white-50 br-pill hover-bg-red-50'),
+										_1: {ctor: '[]'}
+									},
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html$text('like'),
+										_1: {ctor: '[]'}
+									}),
+								_1: {
+									ctor: '::',
+									_0: A2(
+										_elm_lang$html$Html$li,
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html_Attributes$class('grow pv1 ph3 ml3 ba b--white-50 br-pill hover-bg-mint-50'),
+											_1: {ctor: '[]'}
+										},
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html$text('more'),
+											_1: {ctor: '[]'}
+										}),
+									_1: {ctor: '[]'}
+								}
+							}
+						}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$div,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$class(
+									A2(_elm_lang$core$Basics_ops['++'], 'tr f1 f2-m white lh-solid fw9 ma0 pa0', titleSize)),
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text(event.title),
+								_1: {ctor: '[]'}
+							}),
+						_1: {ctor: '[]'}
+					}
+				}),
+			_1: {ctor: '[]'}
+		});
+};
+var _user$project$Main$eventView = function (model) {
+	var event = _user$project$Main$selectedEvent(model);
+	var _p7 = event;
+	if (_p7.ctor === 'Nothing') {
+		return _elm_lang$html$Html$text('');
+	} else {
+		var _p8 = _p7._0;
+		return A2(
+			_elm_lang$html$Html$section,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class(' w-50-ns dn db-ns vh-100'),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$article,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('animated fadeInLeft mw6-l bg-black-20'),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: _user$project$Main$eventBanner(_p8),
+						_1: {
+							ctor: '::',
+							_0: _user$project$Main$progressBar(_p8.popularity),
+							_1: {
+								ctor: '::',
+								_0: _user$project$Main$progressBar(_p8.score),
+								_1: {
+									ctor: '::',
+									_0: _user$project$Main$eventIcons(_p8),
+									_1: {ctor: '[]'}
+								}
+							}
+						}
+					}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$nav,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class('animated fadeInUp flex justify-between w-50 fixed bottom-0 mw6-l pa2 f3'),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$div,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$class('pa3 tc bg-blue-50 fw9'),
+									_1: {ctor: '[]'}
+								},
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html$text('buy tickets'),
+									_1: {ctor: '[]'}
+								}),
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$div,
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$class('pa3 tc bg-magenta-50 fw9'),
+										_1: {ctor: '[]'}
+									},
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html$text('view pool'),
+										_1: {ctor: '[]'}
+									}),
+								_1: {ctor: '[]'}
+							}
+						}),
+					_1: {ctor: '[]'}
+				}
+			});
+	}
+};
+var _user$project$Main$navList = {
+	ctor: '::',
+	_0: {ctor: '_Tuple2', _0: 'discover', _1: 'eye'},
+	_1: {
+		ctor: '::',
+		_0: {ctor: '_Tuple2', _0: 'add', _1: 'plus-square'},
+		_1: {
+			ctor: '::',
+			_0: {ctor: '_Tuple2', _0: 'share', _1: 'share-2'},
+			_1: {
+				ctor: '::',
+				_0: {ctor: '_Tuple2', _0: 'chats', _1: 'message-square'},
+				_1: {
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 'profile', _1: 'user'},
+					_1: {ctor: '[]'}
+				}
+			}
+		}
+	}
+};
+var _user$project$Main$navBar = A2(
+	_elm_lang$html$Html$nav,
+	{
+		ctor: '::',
+		_0: _elm_lang$html$Html_Attributes$class('animate flipInY z-9999 w-100 w-auto-l h3 vh-100-l tc-l fixed flex-m flex-row-m items-center-m self-start-m absolute static-l top-0-m bottom-0 overflow-hidden'),
+		_1: {ctor: '[]'}
+	},
+	{
+		ctor: '::',
+		_0: _user$project$Main$navHome,
+		_1: {
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$ul,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('list ma0 pa0 flex flex-column-l items-start-l justify-around flex-auto items-center items-stretch-m h3 h-auto-l pr4-l f6 white-90'),
+					_1: {ctor: '[]'}
+				},
+				A2(_elm_lang$core$List$map, _user$project$Main$navTab, _user$project$Main$navList)),
+			_1: {ctor: '[]'}
+		}
+	});
+var _user$project$Main$Model = F2(
+	function (a, b) {
+		return {seatgeek: a, selectedEvent: b};
+	});
+var _user$project$Main$update = F2(
+	function (msg, model) {
+		var _p9 = msg;
+		if (_p9.ctor === 'GetReply') {
+			if (_p9._0.ctor === 'Ok') {
+				var _p10 = _p9._0._0;
+				return {
+					ctor: '_Tuple2',
+					_0: A2(
+						_user$project$Main$Model,
+						A2(
+							_user$project$SeatGeek$Reply,
+							_p10.meta,
+							A2(_elm_lang$core$Basics_ops['++'], model.seatgeek.events, _p10.events)),
+						model.selectedEvent),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			} else {
+				var _p11 = A2(_elm_lang$core$Debug$log, 'err', _p9._0._0);
+				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+			}
+		} else {
+			if (_p9._0.ctor === 'Just') {
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							selectedEvent: _elm_lang$core$Maybe$Just(_p9._0._0)
+						}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			} else {
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{selectedEvent: _elm_lang$core$Maybe$Nothing}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			}
+		}
+	});
+var _user$project$Main$ViewEvent = function (a) {
+	return {ctor: 'ViewEvent', _0: a};
+};
 var _user$project$Main$eventListView = function (event) {
+	var cardImage = function () {
+		var _p12 = _user$project$Main$maybeImage(event.performers);
+		if (_p12.ctor === 'Just') {
+			return A2(
+				_elm_lang$html$Html$div,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('w-100 mb2 mt1'),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$div,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$style(
+								{
+									ctor: '::',
+									_0: {
+										ctor: '_Tuple2',
+										_0: 'background-image',
+										_1: A2(
+											_elm_lang$core$Basics_ops['++'],
+											'url(',
+											A2(_elm_lang$core$Basics_ops['++'], _p12._0, ')'))
+									},
+									_1: {ctor: '[]'}
+								}),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$class('aspect-ratio--8x5 cover'),
+								_1: {ctor: '[]'}
+							}
+						},
+						{ctor: '[]'}),
+					_1: {ctor: '[]'}
+				});
+		} else {
+			return _elm_lang$html$Html$text('');
+		}
+	}();
 	return A2(
 		_elm_lang$html$Html$div,
 		{
 			ctor: '::',
 			_0: _elm_lang$html$Html_Attributes$class('ph3 pt3 hover-bg-black-30'),
-			_1: {ctor: '[]'}
+			_1: {
+				ctor: '::',
+				_0: _elm_lang$html$Html_Events$onClick(
+					_user$project$Main$ViewEvent(
+						_elm_lang$core$Maybe$Just(event.id))),
+				_1: {ctor: '[]'}
+			}
 		},
 		{
 			ctor: '::',
-			_0: _user$project$Main$maybeImage(event.performers),
+			_0: cardImage,
 			_1: {
 				ctor: '::',
 				_0: A2(
@@ -108,13 +989,13 @@ var _user$project$Main$eventListView = function (event) {
 								_elm_lang$html$Html$div,
 								{
 									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$class('pb2'),
+									_0: _elm_lang$html$Html_Attributes$class('pb2 flex justify-between items-center'),
 									_1: {ctor: '[]'}
 								},
 								{
 									ctor: '::',
 									_0: A2(
-										_elm_lang$html$Html$div,
+										_elm_lang$html$Html$span,
 										{
 											ctor: '::',
 											_0: _elm_lang$html$Html_Attributes$class('fw2 white-50 ma0'),
@@ -125,302 +1006,32 @@ var _user$project$Main$eventListView = function (event) {
 											_0: _elm_lang$html$Html$text(event.datetime_local),
 											_1: {ctor: '[]'}
 										}),
-									_1: {ctor: '[]'}
-								}),
-							_1: {ctor: '[]'}
-						}
-					}),
-				_1: {ctor: '[]'}
-			}
-		});
-};
-var _user$project$Main$eventIcon = function (tuple) {
-	var data = _elm_lang$core$Tuple$second(tuple);
-	var desc = _elm_lang$core$Tuple$first(tuple);
-	var _p2 = data;
-	switch (_p2) {
-		case '0.0':
-			return _elm_lang$html$Html$text('');
-		case '0':
-			return _elm_lang$html$Html$text('');
-		case '':
-			return _elm_lang$html$Html$text('');
-		default:
-			return A2(
-				_elm_lang$html$Html$li,
-				{ctor: '[]'},
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html$text(
-						A2(
-							_elm_lang$core$Basics_ops['++'],
-							desc,
-							A2(_elm_lang$core$Basics_ops['++'], ' is ', _p2))),
-					_1: {ctor: '[]'}
-				});
-	}
-};
-var _user$project$Main$eventIcons = function (event) {
-	var icons = {
-		ctor: '::',
-		_0: {ctor: '_Tuple2', _0: 'Category', _1: event.category},
-		_1: {
-			ctor: '::',
-			_0: {
-				ctor: '_Tuple2',
-				_0: 'Score',
-				_1: _elm_lang$core$Basics$toString(event.score)
-			},
-			_1: {
-				ctor: '::',
-				_0: {
-					ctor: '_Tuple2',
-					_0: 'Popularity',
-					_1: _elm_lang$core$Basics$toString(event.popularity)
-				},
-				_1: {ctor: '[]'}
-			}
-		}
-	};
-	return A2(
-		_elm_lang$html$Html$ul,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('w-100 h4 list ma0 pa0 flex white-50 justify-around items-center'),
-			_1: {ctor: '[]'}
-		},
-		A2(_elm_lang$core$List$map, _user$project$Main$eventIcon, icons));
-};
-var _user$project$Main$eventBanner = function (event) {
-	return A2(
-		_elm_lang$html$Html$div,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('lg-mint-red-30 h5 flex flex-column justify-between pa4'),
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$ul,
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class('list white ma0 pa0 flex justify-end w-100 f7 pv2'),
-					_1: {ctor: '[]'}
-				},
-				{
-					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html$li,
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('grow-large dn dib-l pv1 ph3 ml3 ba b--white-50 br-pill hover-bg-teal-50'),
-							_1: {ctor: '[]'}
-						},
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html$text('share'),
-							_1: {ctor: '[]'}
-						}),
-					_1: {
-						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$li,
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$class('grow-large dn dib-l pv1 ph3 ml3 ba b--white-50 br-pill hover-bg-red-50'),
-								_1: {ctor: '[]'}
-							},
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html$text('like'),
-								_1: {ctor: '[]'}
-							}),
-						_1: {
-							ctor: '::',
-							_0: A2(
-								_elm_lang$html$Html$li,
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$class('grow-large pv1 ph3 ml3 ba b--white-50 br-pill hover-bg-mint-50'),
-									_1: {ctor: '[]'}
-								},
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html$text('more'),
-									_1: {ctor: '[]'}
-								}),
-							_1: {ctor: '[]'}
-						}
-					}
-				}),
-			_1: {
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$div,
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class('tr f1 f2-m white lh-solid fw9 ma0 pa0'),
-						_1: {ctor: '[]'}
-					},
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html$text(event.title),
-						_1: {ctor: '[]'}
-					}),
-				_1: {ctor: '[]'}
-			}
-		});
-};
-var _user$project$Main$eventView = function (event) {
-	var _p3 = event;
-	if (_p3.ctor === 'Nothing') {
-		return _elm_lang$html$Html$text('');
-	} else {
-		var _p4 = _p3._0;
-		return A2(
-			_elm_lang$html$Html$section,
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class('flex-auto dn db-ns vh-100'),
-				_1: {ctor: '[]'}
-			},
-			{
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$div,
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class('lg-mint-red-30 h5 flex flex-column justify-between pa4'),
-						_1: {ctor: '[]'}
-					},
-					{
-						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$ul,
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$class('list white ma0 pa0 flex justify-end w-100 f7 pv2'),
-								_1: {ctor: '[]'}
-							},
-							{
-								ctor: '::',
-								_0: A2(
-									_elm_lang$html$Html$li,
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$class('grow-large dn dib-l pv1 ph3 ml3 ba b--white-50 br-pill hover-bg-teal-50'),
-										_1: {ctor: '[]'}
-									},
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html$text('share'),
-										_1: {ctor: '[]'}
-									}),
-								_1: {
-									ctor: '::',
-									_0: A2(
-										_elm_lang$html$Html$li,
-										{
-											ctor: '::',
-											_0: _elm_lang$html$Html_Attributes$class('grow-large dn dib-l pv1 ph3 ml3 ba b--white-50 br-pill hover-bg-red-50'),
-											_1: {ctor: '[]'}
-										},
-										{
-											ctor: '::',
-											_0: _elm_lang$html$Html$text('like'),
-											_1: {ctor: '[]'}
-										}),
 									_1: {
 										ctor: '::',
 										_0: A2(
-											_elm_lang$html$Html$li,
+											_elm_lang$html$Html$ul,
 											{
 												ctor: '::',
-												_0: _elm_lang$html$Html_Attributes$class('grow-large pv1 ph3 ml3 ba b--white-50 br-pill hover-bg-mint-50'),
+												_0: _elm_lang$html$Html_Attributes$class('pa0 ma0 list dib'),
 												_1: {ctor: '[]'}
 											},
-											{
-												ctor: '::',
-												_0: _elm_lang$html$Html$text('more'),
-												_1: {ctor: '[]'}
-											}),
+											A2(_elm_lang$core$List$map, _user$project$Main$eventListIcon, event.taxonomies)),
 										_1: {ctor: '[]'}
 									}
-								}
-							}),
-						_1: {
-							ctor: '::',
-							_0: A2(
-								_elm_lang$html$Html$div,
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$class('tr f1 f2-m white lh-solid fw9 ma0 pa0'),
-									_1: {ctor: '[]'}
-								},
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html$text(_p4.title),
-									_1: {ctor: '[]'}
 								}),
 							_1: {ctor: '[]'}
 						}
 					}),
-				_1: {
-					ctor: '::',
-					_0: _user$project$Main$eventIcons(_p4),
-					_1: {
-						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$div,
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$class('flex fixed flex-auto self-end'),
-								_1: {ctor: '[]'}
-							},
-							{
-								ctor: '::',
-								_0: A2(
-									_elm_lang$html$Html$h3,
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$class('pa3 flex-auto tc f3 bg-blue-50 fw9'),
-										_1: {ctor: '[]'}
-									},
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html$text('buy tickets'),
-										_1: {ctor: '[]'}
-									}),
-								_1: {
-									ctor: '::',
-									_0: A2(
-										_elm_lang$html$Html$h3,
-										{
-											ctor: '::',
-											_0: _elm_lang$html$Html_Attributes$class('pa3 flex-auto tc f3 bg-magenta-50 fw9'),
-											_1: {ctor: '[]'}
-										},
-										{
-											ctor: '::',
-											_0: _elm_lang$html$Html$text('view pool'),
-											_1: {ctor: '[]'}
-										}),
-									_1: {ctor: '[]'}
-								}
-							}),
-						_1: {ctor: '[]'}
-					}
-				}
-			});
-	}
+				_1: {ctor: '[]'}
+			}
+		});
 };
-var _user$project$Main$feedView = function (model) {
+var _user$project$Main$eventsView = function (model) {
 	return A2(
 		_elm_lang$html$Html$section,
 		{
 			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('measure bg-black-20 overflow-auto z-999 shadow-2 pb5'),
+			_0: _elm_lang$html$Html_Attributes$class('animated fadeInUp mw6-l w-50-ns w-100 bg-black-40 overflow-auto z-999 shadow-2 mr4-l mr2-l'),
 			_1: {ctor: '[]'}
 		},
 		{
@@ -477,97 +1088,12 @@ var _user$project$Main$feedView = function (model) {
 			}
 		});
 };
-var _user$project$Main$navTab = function (page) {
-	return A2(
-		_elm_lang$html$Html$li,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('w4-l pv3-l hover-bg-black-50 z-999'),
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html$text(page),
-			_1: {ctor: '[]'}
-		});
-};
-var _user$project$Main$navHome = A2(
-	_elm_lang$html$Html$div,
-	{
-		ctor: '::',
-		_0: _elm_lang$html$Html_Attributes$class('fw7 w4-l pv4 pa3-m dn dib-ns f4'),
-		_1: {ctor: '[]'}
-	},
-	{
-		ctor: '::',
-		_0: _elm_lang$html$Html$text('PlusOne'),
-		_1: {ctor: '[]'}
-	});
-var _user$project$Main$navBar = A2(
-	_elm_lang$html$Html$nav,
-	{
-		ctor: '::',
-		_0: _elm_lang$html$Html_Attributes$class('bg-black-40 bg-black-90 z-9999 w-100 w4-l h3 vh-100-l tc-l fixed flex-m flex-row-m items-center-m self-start-m absolute bottom-0 shadow-2'),
-		_1: {ctor: '[]'}
-	},
-	{
-		ctor: '::',
-		_0: _user$project$Main$navHome,
-		_1: {
-			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$ul,
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class('list ma0 pa0 flex flex-column-l justify-around flex-auto items-center h3 h-auto-l f6 white-90'),
-					_1: {ctor: '[]'}
-				},
-				A2(
-					_elm_lang$core$List$map,
-					_user$project$Main$navTab,
-					{
-						ctor: '::',
-						_0: 'discover',
-						_1: {
-							ctor: '::',
-							_0: 'add',
-							_1: {
-								ctor: '::',
-								_0: 'stats',
-								_1: {
-									ctor: '::',
-									_0: 'chats',
-									_1: {
-										ctor: '::',
-										_0: 'profile',
-										_1: {ctor: '[]'}
-									}
-								}
-							}
-						}
-					})),
-			_1: {
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$div,
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class('dn-ns absolute bottom-0 h3 z-0 w-100 bg-black-90'),
-						_1: {ctor: '[]'}
-					},
-					{ctor: '[]'}),
-				_1: {ctor: '[]'}
-			}
-		}
-	});
-var _user$project$Main$plusOneCSS = 'Admin/plusOne.css';
-var _user$project$Main$tachyonsCSS = 'Admin/tachyons.css';
 var _user$project$Main$view = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
 		{
 			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('overflow-hidden lg-purple-magenta-80'),
+			_0: _elm_lang$html$Html_Attributes$class('overflow-hidden lg-breathe-50'),
 			_1: {ctor: '[]'}
 		},
 		{
@@ -606,7 +1132,7 @@ var _user$project$Main$view = function (model) {
 						_elm_lang$html$Html$div,
 						{
 							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('white sans-serif flex fw1 vh-100'),
+							_0: _elm_lang$html$Html_Attributes$class('white sans-serif flex fw1 vh-100 bg-black-80'),
 							_1: {ctor: '[]'}
 						},
 						{
@@ -618,16 +1144,15 @@ var _user$project$Main$view = function (model) {
 									_elm_lang$html$Html$main_,
 									{
 										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$class('vh-100 w-100 bg-black-50 pl6-l pt5-m flex'),
+										_0: _elm_lang$html$Html_Attributes$class('vh-100 w-100 pt5-m pb5 pb0-ns flex'),
 										_1: {ctor: '[]'}
 									},
 									{
 										ctor: '::',
-										_0: _user$project$Main$feedView(model),
+										_0: _user$project$Main$eventsView(model),
 										_1: {
 											ctor: '::',
-											_0: _user$project$Main$eventView(
-												_elm_lang$core$List$head(model.seatgeek.events)),
+											_0: _user$project$Main$eventView(model),
 											_1: {ctor: '[]'}
 										}
 									}),
@@ -639,28 +1164,6 @@ var _user$project$Main$view = function (model) {
 			}
 		});
 };
-var _user$project$Main$Model = function (a) {
-	return {seatgeek: a};
-};
-var _user$project$Main$update = F2(
-	function (msg, model) {
-		var _p5 = msg;
-		if (_p5._0.ctor === 'Ok') {
-			var _p6 = _p5._0._0;
-			return {
-				ctor: '_Tuple2',
-				_0: _user$project$Main$Model(
-					A2(
-						_user$project$SeatGeek$Reply,
-						_p6.meta,
-						A2(_elm_lang$core$Basics_ops['++'], model.seatgeek.events, _p6.events))),
-				_1: _elm_lang$core$Platform_Cmd$none
-			};
-		} else {
-			var _p7 = A2(_elm_lang$core$Debug$log, 'err', _p5._0._0);
-			return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
-		}
-	});
 var _user$project$Main$GetReply = function (a) {
 	return {ctor: 'GetReply', _0: a};
 };
@@ -671,7 +1174,7 @@ var _user$project$Main$askQuery = function (query) {
 };
 var _user$project$Main$init = {
 	ctor: '_Tuple2',
-	_0: {seatgeek: _user$project$SeatGeek$emptyReply},
+	_0: {seatgeek: _user$project$SeatGeek$emptyReply, selectedEvent: _elm_lang$core$Maybe$Nothing},
 	_1: _user$project$Main$askQuery(_user$project$SeatGeek$initQuery)
 };
 var _user$project$Main$main = _elm_lang$html$Html$program(
