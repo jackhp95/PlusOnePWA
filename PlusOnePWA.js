@@ -11467,7 +11467,7 @@ var _user$project$Main$navTab = function (tuple) {
 		_elm_lang$html$Html$li,
 		{
 			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('animated zoomInLeft grow pr3-l pl4-l pv2-l mv2-l ph2 pointer hover-bg-black-50 z-999 flex items-center br--right-l br-pill-l'),
+			_0: _elm_lang$html$Html_Attributes$class('animated zoomInLeft grow pr3-l pl4-l pv2-l mv2-l ph2 pointer hover-bg-black-50 z-999 flex flex-auto justify-center items-center br--right-l br-pill-l'),
 			_1: {ctor: '[]'}
 		},
 		{
@@ -11831,7 +11831,7 @@ var _user$project$Main$navBar = A2(
 				_elm_lang$html$Html$ul,
 				{
 					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class('list ma0 pa0 flex flex-column-l items-start-l justify-around flex-auto items-center items-stretch-m h3 h-auto-l pr3-l f6 o-90'),
+					_0: _elm_lang$html$Html_Attributes$class('list ma0 pa0 flex flex-column-l items-start-l justify-around flex-auto items-start-l items-stretch h3 h-auto-l pr3-l f6 o-90-ns bg-0-ns lg-breathe-50'),
 					_1: {ctor: '[]'}
 				},
 				A2(_elm_lang$core$List$map, _user$project$Main$navTab, _user$project$Main$navList)),
@@ -11990,7 +11990,7 @@ var _user$project$Main$eventListView = function (event) {
 							_elm_lang$html$Html$div,
 							{
 								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$class('pb1 f4 fw6 pv2'),
+								_0: _elm_lang$html$Html_Attributes$class('pb1 f4 pv2'),
 								_1: {ctor: '[]'}
 							},
 							{
@@ -12013,7 +12013,7 @@ var _user$project$Main$eventListView = function (event) {
 										_elm_lang$html$Html$div,
 										{
 											ctor: '::',
-											_0: _elm_lang$html$Html_Attributes$class('fw5 o-70 dib'),
+											_0: _elm_lang$html$Html_Attributes$class('fw4 o-70 dib'),
 											_1: {ctor: '[]'}
 										},
 										{
