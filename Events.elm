@@ -164,24 +164,24 @@ update msg model =
 
 
 -- VIEW
-
-
-tachyonsCSS : String
-tachyonsCSS =
-    "Admin/tachyons.css"
-
-
-plusOneCSS : String
-plusOneCSS =
-    "Admin/plusOne.css"
+-- tachyonsCSS : String
+-- tachyonsCSS =
+--     "https://unpkg.com/tachyons@4.8.0/css/tachyons.min.css"
+-- plusOneCSS : String
+-- plusOneCSS =
+--     "Admin/plusOne.css"
+-- animateCSS : String
+-- animateCSS =
+--     "https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css"
 
 
 view : Model -> Html Msg
 view model =
-    div [ class "overflow-hidden lg-breathe-50" ]
-        [ Html.node "link" [ Html.Attributes.rel "stylesheet", Html.Attributes.href tachyonsCSS ] []
-        , Html.node "link" [ Html.Attributes.rel "stylesheet", Html.Attributes.href plusOneCSS ] []
-        , div [ class "white sans-serif flex fw1 vh-100 bg-black-80" ]
+    div [ class "overflow-hidden animated fadeIn" ]
+        [ --Html.node "link" [ Html.Attributes.rel "stylesheet", Html.Attributes.href tachyonsCSS ] []
+          --, Html.node "link" [ Html.Attributes.rel "stylesheet", Html.Attributes.href plusOneCSS ] []
+          --, Html.node "link" [ Html.Attributes.rel "stylesheet", Html.Attributes.href animateCSS ] [],
+          div [ class "white sans-serif flex fw1 vh-100 bg-black-60" ]
             [ navBar
             , main_ [ class "flex-auto pt5-m pb5 pb0-ns flex justify-stretch" ]
                 [ eventsView model
@@ -225,7 +225,7 @@ navTab tuple =
         captionClasses =
             (class "pa3 pa2-m dn dib-ns")
     in
-        li [ class "animated zoomInLeft grow pr3-l pl4-l pv2-l mv2-l ph2 pointer hover-bg-black-50 z-999 flex flex-auto justify-center items-center br--right-l br-pill-l" ]
+        li [ class "animated zoomInLeft grow pr3-l pl4-l pv2-l mv2-l ph2 pointer hover-bg-black-50 z-999 flex flex-auto justify-center items-center br--right-l br-pill-l " ]
             [ div [ iconClasses, (featherIcon icon) ] []
             , div [ captionClasses ] [ text page ]
             ]
@@ -465,7 +465,7 @@ eventListView event =
         cardImage =
             case (maybeImage event.performers) of
                 Just image ->
-                    div [ class "w-100 mb2 mt1" ]
+                    div [ class ("w-100 mb2 mt1 " ++ (randomGradient event)) ]
                         [ div [ style [ ( "background-image", "url(" ++ image ++ ")" ) ], class "aspect-ratio--8x5 cover" ]
                             []
                         ]

@@ -11467,7 +11467,7 @@ var _user$project$Main$navTab = function (tuple) {
 		_elm_lang$html$Html$li,
 		{
 			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('animated zoomInLeft grow pr3-l pl4-l pv2-l mv2-l ph2 pointer hover-bg-black-50 z-999 flex flex-auto justify-center items-center br--right-l br-pill-l'),
+			_0: _elm_lang$html$Html_Attributes$class('animated zoomInLeft grow pr3-l pl4-l pv2-l mv2-l ph2 pointer hover-bg-black-50 z-999 flex flex-auto justify-center items-center br--right-l br-pill-l '),
 			_1: {ctor: '[]'}
 		},
 		{
@@ -11540,8 +11540,6 @@ var _user$project$Main$navHome = A2(
 			_1: {ctor: '[]'}
 		}
 	});
-var _user$project$Main$plusOneCSS = 'Admin/plusOne.css';
-var _user$project$Main$tachyonsCSS = 'Admin/tachyons.css';
 var _user$project$Main$gradients = {
 	ctor: '::',
 	_0: 'lg-magenta-red',
@@ -11912,7 +11910,11 @@ var _user$project$Main$eventListView = function (event) {
 				_elm_lang$html$Html$div,
 				{
 					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class('w-100 mb2 mt1'),
+					_0: _elm_lang$html$Html_Attributes$class(
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							'w-100 mb2 mt1 ',
+							_user$project$Main$randomGradient(event))),
 					_1: {ctor: '[]'}
 				},
 				{
@@ -12140,75 +12142,43 @@ var _user$project$Main$view = function (model) {
 		_elm_lang$html$Html$div,
 		{
 			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('overflow-hidden lg-breathe-50'),
+			_0: _elm_lang$html$Html_Attributes$class('overflow-hidden animated fadeIn'),
 			_1: {ctor: '[]'}
 		},
 		{
 			ctor: '::',
-			_0: A3(
-				_elm_lang$html$Html$node,
-				'link',
+			_0: A2(
+				_elm_lang$html$Html$div,
 				{
 					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$rel('stylesheet'),
+					_0: _elm_lang$html$Html_Attributes$class('white sans-serif flex fw1 vh-100 bg-black-60'),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: _user$project$Main$navBar,
 					_1: {
 						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$href(_user$project$Main$tachyonsCSS),
+						_0: A2(
+							_elm_lang$html$Html$main_,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$class('flex-auto pt5-m pb5 pb0-ns flex justify-stretch'),
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: _user$project$Main$eventsView(model),
+								_1: {
+									ctor: '::',
+									_0: _user$project$Main$eventView(model),
+									_1: {ctor: '[]'}
+								}
+							}),
 						_1: {ctor: '[]'}
 					}
-				},
-				{ctor: '[]'}),
-			_1: {
-				ctor: '::',
-				_0: A3(
-					_elm_lang$html$Html$node,
-					'link',
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$rel('stylesheet'),
-						_1: {
-							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$href(_user$project$Main$plusOneCSS),
-							_1: {ctor: '[]'}
-						}
-					},
-					{ctor: '[]'}),
-				_1: {
-					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html$div,
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('white sans-serif flex fw1 vh-100 bg-black-80'),
-							_1: {ctor: '[]'}
-						},
-						{
-							ctor: '::',
-							_0: _user$project$Main$navBar,
-							_1: {
-								ctor: '::',
-								_0: A2(
-									_elm_lang$html$Html$main_,
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$class('flex-auto pt5-m pb5 pb0-ns flex justify-stretch'),
-										_1: {ctor: '[]'}
-									},
-									{
-										ctor: '::',
-										_0: _user$project$Main$eventsView(model),
-										_1: {
-											ctor: '::',
-											_0: _user$project$Main$eventView(model),
-											_1: {ctor: '[]'}
-										}
-									}),
-								_1: {ctor: '[]'}
-							}
-						}),
-					_1: {ctor: '[]'}
-				}
-			}
+				}),
+			_1: {ctor: '[]'}
 		});
 };
 var _user$project$Main$GetReply = function (a) {
