@@ -195,7 +195,7 @@ navBar : Html Msg
 navBar =
     nav [ class "z-9999 w-100 w-auto-l h3 vh-100-l tc-l fixed flex-m flex-row-m items-center-m self-start-m absolute static-l top-0-m bottom-0" ]
         [ navHome
-        , ul [ class "list ma0 pa0 flex flex-column-l items-start-l justify-around flex-auto items-center items-stretch-m h3 h-auto-l pr3-l f6 o-90" ]
+        , ul [ class "list ma0 pa0 flex flex-column-l items-start-l justify-around flex-auto items-start-l items-stretch h3 h-auto-l pr3-l f6 o-90-ns bg-0-ns lg-breathe-50" ]
             (List.map navTab navList)
         ]
 
@@ -225,7 +225,7 @@ navTab tuple =
         captionClasses =
             (class "pa3 pa2-m dn dib-ns")
     in
-        li [ class "animated zoomInLeft grow pr3-l pl4-l pv2-l mv2-l ph2 pointer hover-bg-black-50 z-999 flex items-center br--right-l br-pill-l" ]
+        li [ class "animated zoomInLeft grow pr3-l pl4-l pv2-l mv2-l ph2 pointer hover-bg-black-50 z-999 flex flex-auto justify-center items-center br--right-l br-pill-l" ]
             [ div [ iconClasses, (featherIcon icon) ] []
             , div [ captionClasses ] [ text page ]
             ]
@@ -476,9 +476,9 @@ eventListView event =
         div [ class "animated fadeInUp ph3 pt3 hover-bg-black-30", onClick (ViewEvent (Just event.id)) ]
             [ cardImage
             , div [ class "pb3 bb b--white-20" ]
-                [ div [ class "pb1 f4 fw6 pv2" ]
-                    [ span [class "mr2"] [ text event.title]
-                    , div [ class "fw5 o-70 dib" ]
+                [ div [ class "pb1 f4 pv2" ]
+                    [ span [ class "mr2" ] [ text event.title ]
+                    , div [ class "fw4 o-70 dib" ]
                         [ atIcon, text event.venue.name ]
                     ]
                 , div [ class "pb2 flex justify-between items-center" ]

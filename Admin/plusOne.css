@@ -1283,3 +1283,16 @@ Blur
 .blur7 {
   filter: blur(16rem);
 }
+
+
+/*
+#############
+-ns CUSTOM
+#############
+*/
+
+@media screen and (min-width:30em) {
+  .bg-0-ns {
+    background: transparent;
+  }
+}
