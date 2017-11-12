@@ -227,7 +227,7 @@ type alias Venue =
     , num_upcoming_events : Int
     , id : Int
     , slug : String
-    , timezone : String
+    , timezone : Maybe String
     , url : String
     , postal_code : String
     , city : String
@@ -352,7 +352,7 @@ composeRequest query =
 
         start =
             ("?" ++ "client_id=" ++ query.client_id)
-                ++ "&postal_code=65203"
+                ++ "&postal_code=65203&per_page=30"
                 ++ (composeArgument "aid" query.aid)
                 ++ (composeArgument "rid" query.rid)
 
@@ -529,7 +529,7 @@ decodeVenue =
         |: ("num_upcoming_events" := Json.Decode.int)
         |: ("id" := Json.Decode.int)
         |: ("slug" := Json.Decode.string)
-        |: ("timezone" := Json.Decode.string)
+        |: Json.Decode.maybe ("timezone" := Json.Decode.string)
         |: ("url" := Json.Decode.string)
         |: ("postal_code" := Json.Decode.string)
         |: ("city" := Json.Decode.string)

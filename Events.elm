@@ -9,6 +9,9 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Http exposing (..)
+import Date exposing (..)
+import Task exposing (..)
+import Date.Extra.Duration exposing (..)
 
 
 main =
@@ -27,12 +30,13 @@ main =
 type alias Model =
     { seatgeek : SeatGeek.Reply
     , selectedEvent : Maybe Int
+    , currentDatetime : Maybe Date
     }
 
 
 navList : List ( String, String )
 navList =
-    [ ( "discover", "eye" ), ( "add", "plus-square" ), ( "share", "share-2" ), ( "chats", "message-square" ), ( "profile", "user" ) ]
+    [ ( "discover", "compass" ), ( "add", "plus-square" ), ( "share", "share-2" ), ( "chats", "message-square" ), ( "profile", "user" ) ]
 
 
 gradients : List String
@@ -113,9 +117,16 @@ init : ( Model, Cmd Msg )
 init =
     ( { seatgeek = SeatGeek.emptyReply
       , selectedEvent = Nothing
+      , currentDatetime = Nothing
       }
-    , askQuery initQuery
+    , Cmd.batch [ askQuery initQuery, getDatetime ]
     )
+
+
+getDatetime : Cmd Msg
+getDatetime =
+    Date.now
+        |> Task.perform OnDatetime
 
 
 
@@ -125,13 +136,14 @@ init =
 type Msg
     = GetReply (Result Http.Error Reply)
     | ViewEvent (Maybe Int)
+    | OnDatetime Date
 
 
 update : Msg -> Model -> ( Model, Cmd msg )
 update msg model =
     case msg of
         GetReply (Ok recieved) ->
-            ( Model (SeatGeek.Reply recieved.meta (model.seatgeek.events ++ recieved.events)) model.selectedEvent, Cmd.none )
+            ( Model (SeatGeek.Reply recieved.meta (model.seatgeek.events ++ recieved.events)) model.selectedEvent model.currentDatetime, Cmd.none )
 
         GetReply (Err e) ->
             let
@@ -145,6 +157,9 @@ update msg model =
 
         ViewEvent Nothing ->
             ( { model | selectedEvent = Nothing }, Cmd.none )
+
+        OnDatetime now ->
+            ( { model | currentDatetime = Just now }, Cmd.none )
 
 
 
@@ -168,7 +183,7 @@ view model =
         , Html.node "link" [ Html.Attributes.rel "stylesheet", Html.Attributes.href plusOneCSS ] []
         , div [ class "white sans-serif flex fw1 vh-100 bg-black-80" ]
             [ navBar
-            , main_ [ class "vh-100 w-100 pt5-m pb5 pb0-ns flex" ]
+            , main_ [ class "flex-auto pt5-m pb5 pb0-ns flex justify-stretch" ]
                 [ eventsView model
                 , eventView model
                 ]
@@ -178,19 +193,19 @@ view model =
 
 navBar : Html Msg
 navBar =
-    nav [ class "animate flipInY z-9999 w-100 w-auto-l h3 vh-100-l tc-l fixed flex-m flex-row-m items-center-m self-start-m absolute static-l top-0-m bottom-0 overflow-hidden" ]
+    nav [ class "z-9999 w-100 w-auto-l h3 vh-100-l tc-l fixed flex-m flex-row-m items-center-m self-start-m absolute static-l top-0-m bottom-0" ]
         [ navHome
-        , ul [ class "list ma0 pa0 flex flex-column-l items-start-l justify-around flex-auto items-center items-stretch-m h3 h-auto-l pr4-l f6 white-90" ]
+        , ul [ class "list ma0 pa0 flex flex-column-l items-start-l justify-around flex-auto items-center items-stretch-m h3 h-auto-l pr3-l f6 o-90" ]
             (List.map navTab navList)
         ]
 
 
 navHome : Html Msg
 navHome =
-    div [ class "pa4-l ph3 grow hover-bg-black-50 flex-ns flex-column-l items-center dn" ]
-        [ div [ bgImg "Assets/WhitePlusOneLogo.svg", class "contain bg-center ma2-l h3-l w3-l h2 w2" ] []
+    div [ class "grow-large ph4-l pv4-l ph3 flex-ns flex-column-l items-center dn" ]
+        [ div [ bgImg "Assets/WhitePlusOneLogo.svg", class "animated bounceIn contain bg-center h3-l w3-l h2 w2" ] []
         , div
-            [ class "fw7 pa3-m f4 pa2-l dib-l dn" ]
+            [ class "animated bounceInLeft fw7 pa3-m f4 dib-l dn" ]
             [ text "PlusOne" ]
         ]
 
@@ -210,7 +225,7 @@ navTab tuple =
         captionClasses =
             (class "pa3 pa2-m dn dib-ns")
     in
-        li [ class "grow ph4-l pv2-l mv2-l ph2 hover-bg-black-50 z-999 flex items-center br--right-l br-pill-l" ]
+        li [ class "animated zoomInLeft grow pr3-l pl4-l pv2-l mv2-l ph2 pointer hover-bg-black-50 z-999 flex items-center br--right-l br-pill-l" ]
             [ div [ iconClasses, (featherIcon icon) ] []
             , div [ captionClasses ] [ text page ]
             ]
@@ -218,15 +233,31 @@ navTab tuple =
 
 eventsView : Model -> Html Msg
 eventsView model =
-    section [ class "animated fadeInUp mw6-l w-50-ns w-100 bg-black-40 overflow-auto z-999 shadow-2 mr4-l mr2-l" ]
-        [ div [ class "lg-magenta-purple-80 h5 flex flex-column justify-between pa4" ]
-            [ input [ class "fw2 pa2 bg-transparent b--none outline-0 white focus-underline f4 f5-m self-stretch placeholder-white-50", placeholder "search", type_ "search" ]
-                []
-            , div [ class "tr f1 f2-m white lh-solid fw9 ma0 pa0" ]
+    section [ class "animated fadeInUp mw6-ns bg-black-40 overflow-auto z-999 shadow-2 mr3-l mr2-m flex-grow-1" ]
+        [ div [ class "lg-magenta-purple-80 h5 flex flex-column justify-between pa4 pa3-m" ]
+            [ discoverToolsView
+            , div [ class "tr f1 f2-m lh-solid fw8 ma0 pa0" ]
                 [ text "discover events" ]
             ]
         , div [] (List.map eventListView model.seatgeek.events)
         ]
+
+
+discoverToolsView : Html msg
+discoverToolsView =
+    let
+        icon x =
+            div [ class "animated bounceIn pointer hover-bg-black-20 br-pill pa2" ]
+                [ div [ featherIcon x, class "contain bg-center grow pt3 pb2 pl3 pr2" ] []
+                ]
+    in
+        div [ class "flex justify-end" ]
+            [ icon "search"
+            , icon "map-pin"
+            , icon "thumbs-up"
+            , icon "tag"
+            , icon "at-sign"
+            ]
 
 
 selectedEvent : Model -> Maybe Event
@@ -239,26 +270,121 @@ eventView model =
     let
         event =
             selectedEvent model
+
+        now =
+            model.currentDatetime
     in
         case event of
             Nothing ->
                 text ""
 
             Just event ->
-                section [ class " w-50-ns dn db-ns vh-100" ]
-                    [ article [ class "animated fadeInLeft mw6-l bg-black-20" ]
-                        [ eventBanner event
-                        , progressBar event.popularity
-                        , progressBar event.score
-                        , eventIcons event
-                        ]
-                    , nav [ class "animated fadeInUp flex justify-between w-50 fixed bottom-0 mw6-l pa2 f3" ]
-                        [ div [ class "pa3 tc bg-blue-50 fw9" ]
-                            [ text "buy tickets" ]
-                        , div [ class "pa3 tc bg-magenta-50 fw9" ]
-                            [ text "view pool" ]
-                        ]
+                section [ class "dn db-ns vh-100 animated overflow-auto fadeInLeft mw7-ns flex-grow-1" ]
+                    [ eventBanner event
+                    , eventTitle event
+                    , eventPopularity event
+                    , eventIcons event
+                    , eventTickets event
+                    , eventTime event now
+                    , div [] [ text (toString event) ]
                     ]
+
+
+eventTitle : Event -> Html msg
+eventTitle event =
+    let
+        icon x =
+            div [ featherIcon x, class "contain dib bg-center grow mr2 mt1 pt1 pb3 pl1 pr3" ] []
+
+        textSize x y =
+            case ((String.length x) // y) of
+                0 ->
+                    " f1 f2-m"
+
+                1 ->
+                    " f2 f3-m"
+
+                2 ->
+                    " f3 f4-m"
+
+                3 ->
+                    " f4 f5-m"
+
+                _ ->
+                    " f5 f6-m"
+    in
+        div [ class "bg-black-20 pa4" ]
+            [ div [ class ("fw7" ++ textSize event.title 30) ]
+                [ text event.title
+                ]
+            , div [ class "fw5 mv3 f3 flex items-start" ]
+                [ icon "at-sign", text event.venue.name ]
+            ]
+
+
+eventTime : Event -> Maybe Date -> Html msg
+eventTime event now =
+    let
+        eventDate =
+            Result.toMaybe (Date.fromString event.datetime_local)
+
+        invalidDates =
+            List.any (\x -> x == Nothing)
+                [ eventDate
+                , now
+                ]
+
+        deltaRecord =
+            case invalidDates of
+                True ->
+                    "Golly, it looks like there is a bee in our proverbial bonnet."
+
+                False ->
+                    toString (Maybe.map2 Date.Extra.Duration.diffDays eventDate now)
+    in
+        div [ class "bg-black-20 pa3" ]
+            [ div [] [ text (toString event.datetime_local) ]
+            , div [] [ text (toString eventDate) ]
+            , div [] [ text (toString now) ]
+            , div [] [ text (toString deltaRecord) ]
+            ]
+
+
+eventTickets : Event -> Html msg
+eventTickets event =
+    let
+        emptyTickets =
+            List.all (\x -> x == Nothing)
+                [ event.stats.highest_price
+                , event.stats.average_price
+                , event.stats.lowest_price
+                , event.stats.lowest_price_good_deals
+                ]
+    in
+        case emptyTickets of
+            False ->
+                div [ class "flex items-center pa4 bg-black-20" ]
+                    [ text (toString event.stats)
+                    ]
+
+            True ->
+                text ""
+
+
+eventPopularity : Event -> Html msg
+eventPopularity event =
+    case event.popularity of
+        0.0 ->
+            text ""
+
+        _ ->
+            div [ class "flex items-center ph4 pv4 bg-black-20" ]
+                [ div [ class "mr3 f2" ] [ text "🔥" ]
+                , div [ class "flex flex-column flex-auto h2 justify-around" ]
+                    [ progressBar event.popularity
+                    , progressBar event.score
+                    ]
+                ]
 
 
 progressBar : Float -> Html msg
@@ -272,59 +398,22 @@ progressBar num =
                 text ""
 
             percent ->
-                div [ class "w-100 bg-black-20 overflow-hidden" ]
-                    [ div [ style [ ( "width", ((toString percent) ++ "%") ) ], class "animate bounceInLeft pt2 lg-breathe-50" ] []
+                div [ class "w-100 bg-white-10 overflow-hidden br-pill" ]
+                    [ div [ style [ ( "width", ((toString percent) ++ "%") ) ], class "animated slideInleft pt2 bg-red-50" ] []
                     ]
 
 
 eventIcons : Event -> Html msg
 eventIcons event =
     let
-        toIcon =
-            div
-                [ class "contain h2 w2 h1-m w1-m dib" ]
-                []
+        toIcon x =
+            li [ class "flex w4 mb2 flex-column items-center overflow-hidden" ]
+                [ div [ class "f-subheadline f1-m" ] [ text (stringToEmoji (x.name)) ]
+                , div [ class "pv2 o-70" ] [ text (x.name) ]
+                ]
     in
-        ul [ class "w-auto h4 list ma0 pa0 flex white-50 justify-around items-center" ]
-            (List.map eventIcon event.taxonomies)
-
-
-eventIcon : Taxonomy -> Html msg
-eventIcon taxonomy =
-    let
-        iconClasses =
-            class "h3 w3 contain"
-
-        captionClasses =
-            class "ph2"
-
-        badgeClasses =
-            class "flex flex-column items-center"
-    in
-        case taxonomy.name of
-            "concert" ->
-                li [ badgeClasses ]
-                    [ div [ iconClasses, (featherIcon "music") ] []
-                    , div [ captionClasses ] [ text taxonomy.name ]
-                    ]
-
-            "sports" ->
-                li [ badgeClasses ]
-                    [ div [ iconClasses, (featherIcon "activity") ] []
-                    , div [ captionClasses ] [ text taxonomy.name ]
-                    ]
-
-            "" ->
-                li [ badgeClasses ]
-                    [ div [ iconClasses, (featherIcon "alert-circle") ] []
-                    , div [ captionClasses ] [ text taxonomy.name ]
-                    ]
-
-            _ ->
-                li [ badgeClasses ]
-                    [ div [ iconClasses, (featherIcon "alert-octagon") ] []
-                    , div [ captionClasses ] [ text taxonomy.name ]
-                    ]
+        ul [ class "list ma0 pa4 pb3 flex justify-around items-center bg-black-40" ]
+            (List.map toIcon event.taxonomies)
 
 
 randomGradient : Event -> String
@@ -341,7 +430,7 @@ randomGradient event =
     in
         case selectedGradient of
             Nothing ->
-                "white"
+                ""
 
             Just result ->
                 result ++ ""
@@ -353,50 +442,26 @@ eventBanner event =
         heroImg =
             case maybeImage event.performers of
                 Nothing ->
-                    style []
+                    class (randomGradient event)
 
                 Just image ->
                     style [ ( "background-image", "url(" ++ image ++ ")" ) ]
-
-        titleSize =
-            case ((String.length event.title) // 25) of
-                0 ->
-                    " f1 f2-m"
-
-                1 ->
-                    " f2 f3-m"
-
-                2 ->
-                    " f3 f4-m"
-
-                3 ->
-                    " f4 f5-m"
-
-                _ ->
-                    " f5 f6-m"
     in
-        div [ class ("bg-darken " ++ (randomGradient event)) ]
-            [ div
-                [ heroImg
-                , class ("bg-darken bg-center h5 flex flex-column justify-between pa4 cover")
-                ]
-                [ ul [ class "list white ma0 pa0 flex justify-end w-100 f7 pv2" ]
-                    [ li [ class "grow dn dib-l pv1 ph3 ml3 ba b--white-50 br-pill hover-bg-teal-50" ]
-                        [ text "share" ]
-                    , li [ class "grow dn dib-l pv1 ph3 ml3 ba b--white-50 br-pill hover-bg-red-50" ]
-                        [ text "like" ]
-                    , li [ class "grow pv1 ph3 ml3 ba b--white-50 br-pill hover-bg-mint-50" ]
-                        [ text "more" ]
-                    ]
-                , div [ class ("tr f1 f2-m white lh-solid fw9 ma0 pa0" ++ titleSize) ]
-                    [ text event.title ]
-                ]
-            ]
+        div
+            [ heroImg, class ("bg-center cover aspect-ratio aspect-ratio--16x9-l aspect-ratio--1x1-m ") ]
+            [ div [ class "aspect-ratio--object cover" ] [] ]
 
 
 eventListView : Event -> Html Msg
 eventListView event =
     let
+        atIcon =
+            div
+                [ featherIcon "at-sign"
+                , class "contain dib bg-center mr1 pb3 pr3"
+                ]
+                []
+
         cardImage =
             case (maybeImage event.performers) of
                 Just image ->
@@ -408,41 +473,22 @@ eventListView event =
                 Nothing ->
                     text ""
     in
-        div [ class "ph3 pt3 hover-bg-black-30", onClick (ViewEvent (Just event.id)) ]
+        div [ class "animated fadeInUp ph3 pt3 hover-bg-black-30", onClick (ViewEvent (Just event.id)) ]
             [ cardImage
             , div [ class "pb3 bb b--white-20" ]
                 [ div [ class "pb1 f4 fw6 pv2" ]
-                    [ text event.title
-                    , span [ class "fw5 white-70" ]
-                        [ text (" @ " ++ event.venue.name) ]
+                    [ span [class "mr2"] [ text event.title]
+                    , div [ class "fw5 o-70 dib" ]
+                        [ atIcon, text event.venue.name ]
                     ]
                 , div [ class "pb2 flex justify-between items-center" ]
-                    [ span [ class "fw2 white-50 ma0" ]
+                    [ span [ class "fw2 o-50 ma0" ]
                         [ text event.datetime_local ]
-                    , ul [ class "pa0 ma0 list dib" ] (List.map eventListIcon event.taxonomies)
+                    , ul [ class "pa0 ma0 list dib" ]
+                        (List.map (\x -> li [ class "ml2 dib" ] [ text (stringToEmoji x.name) ]) event.taxonomies)
                     ]
                 ]
             ]
-
-
-eventListIcon : Taxonomy -> Html msg
-eventListIcon taxonomy =
-    let
-        iconClasses =
-            (class "contain h1 w1 ml2 dib")
-    in
-        case taxonomy.name of
-            "concert" ->
-                li [ iconClasses, featherIcon "music" ] []
-
-            "sports" ->
-                li [ iconClasses, featherIcon "activity" ] []
-
-            "" ->
-                li [ iconClasses, featherIcon "alert-circle" ] []
-
-            _ ->
-                li [ iconClasses, featherIcon "alert-circle" ] []
 
 
 maybeImage : List Performer -> Maybe String
@@ -463,6 +509,97 @@ featherIcon icon =
 bgImg : String -> Attribute msg
 bgImg imgPath =
     (style [ ( "background-image", ("url('" ++ imgPath ++ "')") ) ])
+
+
+stringToEmoji : String -> String
+stringToEmoji string =
+    case string of
+        "concert" ->
+            "🎵"
+
+        "music_festival" ->
+            "🎶"
+
+        "sports" ->
+            "🏆"
+
+        "theater" ->
+            "🎭"
+
+        "basketball" ->
+            "🏀"
+
+        "nba" ->
+            "⛹"
+
+        "ncaa_football" ->
+            "👨\x1F3FB\x200D🎓"
+
+        "ncaa_basketball" ->
+            "👨\x1F3FB\x200D🎓"
+
+        "ncaa_womens_basketball" ->
+            "👩\x200D🎓"
+
+        "wnba" ->
+            "⛹️\x200D♀️"
+
+        "family" ->
+            "🚸"
+
+        "broadway_tickets_national" ->
+            "🎟"
+
+        "dance_performance_tour" ->
+            "💃"
+
+        "classical" ->
+            "🎼"
+
+        "classical_orchestral_instrumental" ->
+            "🎻"
+
+        "comedy" ->
+            "\x1F923"
+
+        "hockey" ->
+            "\x1F3D2"
+
+        "fighting" ->
+            "\x1F93C\x200D♂️"
+
+        "soccer" ->
+            "⚽"
+
+        "wrestling" ->
+            "\x1F93C"
+
+        "football" ->
+            "🏈"
+
+        "auto_racing" ->
+            "🏎️"
+
+        "animal_sports" ->
+            "🐾"
+
+        "horse_racing" ->
+            "🏇"
+
+        "rodeo" ->
+            "\x1F920"
+
+        "nfl" ->
+            "🏟️"
+
+        "cirque_du_soleil" ->
+            "\x1F938"
+
+        "classical_opera" ->
+            "🎤"
+
+        _ ->
+            "\x1F937"
 
 
 
