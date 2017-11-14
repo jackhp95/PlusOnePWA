@@ -11173,7 +11173,7 @@ var _user$project$SeatGeek$composeRequest = function (query) {
 			A2(_elm_lang$core$Basics_ops['++'], 'client_id=', query.client_id)),
 		A2(
 			_elm_lang$core$Basics_ops['++'],
-			'&postal_code=10001&per_page=300',
+			'&postal_code=65203&per_page=30',
 			A2(
 				_elm_lang$core$Basics_ops['++'],
 				A2(_user$project$SeatGeek$composeArgument, 'aid', query.aid),
@@ -12934,7 +12934,7 @@ var _user$project$Main$eventBanner = function (event) {
 							_elm_lang$html$Html$div,
 							{
 								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$class('pa3 bg-purple-80 br-pill relative top-2 right-2 shadow-2 flex grow justify-center items-center'),
+								_0: _elm_lang$html$Html_Attributes$class('pa3 lg-breathe-50 br-pill relative top-2 right-2 shadow-2 flex grow justify-center items-center'),
 								_1: {ctor: '[]'}
 							},
 							{

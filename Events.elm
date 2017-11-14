@@ -567,7 +567,7 @@ eventBanner event =
             [ heroImg, class ("bg-center cover aspect-ratio aspect-ratio--16x9 bb b--white-20") ]
             [ div [ style [ ( "background-image", "linear-gradient( rgba(0,0,0,0.3), transparent)" ) ], class "aspect-ratio--object cover bg-center flex flex-column items-end justify-between pa4 pb0" ]
                 [ discoverToolsView
-                , div [ class "pa3 bg-purple-80 br-pill relative top-2 right-2 shadow-2 flex grow justify-center items-center" ]
+                , div [ class "pa3 lg-breathe-50 br-pill relative top-2 right-2 shadow-2 flex grow justify-center items-center" ]
                     [ div [ featherIcon "life-buoy", class "h3 w3 contain" ] []
                     ]
                 ]

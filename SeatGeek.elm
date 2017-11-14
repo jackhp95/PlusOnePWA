@@ -352,7 +352,7 @@ composeRequest query =
 
         start =
             ("?" ++ "client_id=" ++ query.client_id)
-                ++ "&postal_code=10001&per_page=300"
+                ++ "&postal_code=65203&per_page=30"
                 ++ (composeArgument "aid" query.aid)
                 ++ (composeArgument "rid" query.rid)
 
