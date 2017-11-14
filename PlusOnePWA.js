@@ -12023,7 +12023,7 @@ var _user$project$Main$eventIcons = function (event) {
 			_elm_lang$html$Html$li,
 			{
 				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class('flex w4 flex-column items-center overflow-hidden'),
+				_0: _elm_lang$html$Html_Attributes$class('flex w4 flex-column items-center overflow-hidden pointer animated zoomIn'),
 				_1: {ctor: '[]'}
 			},
 			{
@@ -12032,7 +12032,7 @@ var _user$project$Main$eventIcons = function (event) {
 					_elm_lang$html$Html$div,
 					{
 						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class('f-subheadline f1-m'),
+						_0: _elm_lang$html$Html_Attributes$class('f-subheadline f1-m grow'),
 						_1: {ctor: '[]'}
 					},
 					{
@@ -12934,7 +12934,7 @@ var _user$project$Main$eventBanner = function (event) {
 							_elm_lang$html$Html$div,
 							{
 								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$class('pa3 lg-breathe-50 br-pill relative top-2 right-2 shadow-2 flex grow justify-center items-center'),
+								_0: _elm_lang$html$Html_Attributes$class('pa3 lg-breathe-50 br-pill relative top-2 right-1 shadow-2 flex grow justify-center items-center'),
 								_1: {ctor: '[]'}
 							},
 							{
