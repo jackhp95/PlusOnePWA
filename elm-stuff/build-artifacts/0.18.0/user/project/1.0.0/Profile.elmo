@@ -1,0 +1,391 @@
+var _user$project$Profile$animateCSS = 'https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css';
+var _user$project$Profile$plusOneCSS = 'Admin/plusOne.css';
+var _user$project$Profile$tachyonsCSS = 'Admin/tachyons.css';
+var _user$project$Profile$stringToEmoji = function (string) {
+	var _p0 = string;
+	switch (_p0) {
+		case 'night owl':
+			return '🦉';
+		case 'talkative':
+			return '🗣️';
+		case 'flirtatious':
+			return '😏';
+		case 'funny':
+			return '🤣';
+		default:
+			return '🤷';
+	}
+};
+var _user$project$Profile$traitsIcons = function (traits) {
+	var toIcon = function (x) {
+		return A2(
+			_elm_lang$html$Html$li,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('flex w4 flex-column items-center overflow-hidden pointer animated zoomIn'),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('f-subheadline-l f1 grow'),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text(
+							_user$project$Profile$stringToEmoji(x.name)),
+						_1: {ctor: '[]'}
+					}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$div,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class('pv2 o-70'),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text(
+								A2(
+									_elm_lang$core$Maybe$withDefault,
+									x.name,
+									_elm_lang$core$List$head(
+										A2(_elm_lang$core$String$split, '_', x.name)))),
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				}
+			});
+	};
+	return A2(
+		_elm_lang$html$Html$ul,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('list mv0 mh4 ph0 pt4 pb3 flex justify-around items-center bb b--white-20'),
+			_1: {ctor: '[]'}
+		},
+		A2(_elm_lang$core$List$map, toIcon, traits));
+};
+var _user$project$Profile$profileToolsView = function () {
+	var icon = function (x) {
+		return A2(
+			_elm_lang$html$Html$div,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('animated bounceIn pointer hover-bg-black-50 br-pill pa2'),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{
+						ctor: '::',
+						_0: _user$project$Icon$feather(x),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class('contain bg-center grow pt3 pb2 pl3 pr2'),
+							_1: {ctor: '[]'}
+						}
+					},
+					{ctor: '[]'}),
+				_1: {ctor: '[]'}
+			});
+	};
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('flex justify-end'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: icon('search'),
+			_1: {
+				ctor: '::',
+				_0: icon('map-pin'),
+				_1: {
+					ctor: '::',
+					_0: icon('thumbs-up'),
+					_1: {
+						ctor: '::',
+						_0: icon('tag'),
+						_1: {
+							ctor: '::',
+							_0: icon('at-sign'),
+							_1: {ctor: '[]'}
+						}
+					}
+				}
+			}
+		});
+}();
+var _user$project$Profile$profileAvi = function (avis) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('w5'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$div,
+				{
+					ctor: '::',
+					_0: _user$project$Icon$bgImg(
+						A2(
+							_elm_lang$core$Maybe$withDefault,
+							'',
+							_elm_lang$core$List$head(avis))),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('aspect-ratio--1x1 lg-breathe-50 br-pill shadow-2 ba bw1 cover bg-center br-pill'),
+						_1: {ctor: '[]'}
+					}
+				},
+				{ctor: '[]'}),
+			_1: {ctor: '[]'}
+		});
+};
+var _user$project$Profile$profileView = function (model) {
+	return A2(
+		_elm_lang$html$Html$section,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('w-100 bg-black-20 mw7-l'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$div,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('lg-breathe-50 flex h5 ph3 ph4-m ph5-l pt6 items-center'),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: _user$project$Profile$profileAvi(model.avi),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$div,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$class('f2 fw8 ml3'),
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text(model.name),
+								_1: {ctor: '[]'}
+							}),
+						_1: {ctor: '[]'}
+					}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('ph4 pv3 bg-black-20 w-100'),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: _user$project$Profile$profileToolsView,
+						_1: {ctor: '[]'}
+					}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$div,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class('mv0 mh4 ph0 pt4 pb3 bb b--white-20'),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$div,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$class('fw8 pv2'),
+									_1: {ctor: '[]'}
+								},
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html$text('bio'),
+									_1: {ctor: '[]'}
+								}),
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$div,
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$class('pv2 lh-copy measure'),
+										_1: {ctor: '[]'}
+									},
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html$text('\n                Look, life is bad. everyone\'s sad. we\'re all gonna die. But I already bought this inflatable bouncy castle, so are you gonna take your shoes off or what?\n                '),
+										_1: {ctor: '[]'}
+									}),
+								_1: {ctor: '[]'}
+							}
+						}),
+					_1: {
+						ctor: '::',
+						_0: _user$project$Profile$traitsIcons(model.traits),
+						_1: {ctor: '[]'}
+					}
+				}
+			}
+		});
+};
+var _user$project$Profile$view = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('lg-breathe-50 overflow-hidden'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A3(
+				_elm_lang$html$Html$node,
+				'link',
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$rel('stylesheet'),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$href(_user$project$Profile$tachyonsCSS),
+						_1: {ctor: '[]'}
+					}
+				},
+				{ctor: '[]'}),
+			_1: {
+				ctor: '::',
+				_0: A3(
+					_elm_lang$html$Html$node,
+					'link',
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$rel('stylesheet'),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$href(_user$project$Profile$plusOneCSS),
+							_1: {ctor: '[]'}
+						}
+					},
+					{ctor: '[]'}),
+				_1: {
+					ctor: '::',
+					_0: A3(
+						_elm_lang$html$Html$node,
+						'link',
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$rel('stylesheet'),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$href(_user$project$Profile$animateCSS),
+								_1: {ctor: '[]'}
+							}
+						},
+						{ctor: '[]'}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$div,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$class('white sans-serif flex fw1 vh-100 bg-black-60'),
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: _user$project$Nav$bar,
+								_1: {
+									ctor: '::',
+									_0: A2(
+										_elm_lang$html$Html$main_,
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html_Attributes$class('flex-auto pt5-m mb5 mb0-ns flex justify-stretch'),
+											_1: {ctor: '[]'}
+										},
+										{
+											ctor: '::',
+											_0: _user$project$Profile$profileView(model),
+											_1: {ctor: '[]'}
+										}),
+									_1: {ctor: '[]'}
+								}
+							}),
+						_1: {ctor: '[]'}
+					}
+				}
+			}
+		});
+};
+var _user$project$Profile$update = F2(
+	function (msg, model) {
+		var _p1 = msg;
+		return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+	});
+var _user$project$Profile$subscriptions = function (_p2) {
+	return _elm_lang$core$Platform_Sub$none;
+};
+var _user$project$Profile$initModel = {
+	name: 'Hannah Hazeldine',
+	avi: {
+		ctor: '::',
+		_0: 'https://images.unsplash.com/photo-1496361001419-80f0d1be777a?dpr=1&auto=format&fit=crop&w=1000&q=80&cs=tinysrgb&ixid=dW5zcGxhc2guY29tOzs7Ozs%3D',
+		_1: {ctor: '[]'}
+	},
+	traits: {
+		ctor: '::',
+		_0: {name: 'night owl', from: 'tommy', datetime: ''},
+		_1: {
+			ctor: '::',
+			_0: {name: 'flirtatious', from: 'tommy', datetime: ''},
+			_1: {
+				ctor: '::',
+				_0: {name: 'talkative', from: 'tommy', datetime: ''},
+				_1: {
+					ctor: '::',
+					_0: {name: 'funny', from: 'tommy', datetime: ''},
+					_1: {ctor: '[]'}
+				}
+			}
+		}
+	}
+};
+var _user$project$Profile$init = {ctor: '_Tuple2', _0: _user$project$Profile$initModel, _1: _elm_lang$core$Platform_Cmd$none};
+var _user$project$Profile$main = _elm_lang$html$Html$program(
+	{init: _user$project$Profile$init, subscriptions: _user$project$Profile$subscriptions, update: _user$project$Profile$update, view: _user$project$Profile$view})();
+var _user$project$Profile$Model = F3(
+	function (a, b, c) {
+		return {name: a, avi: b, traits: c};
+	});
+var _user$project$Profile$Trait = F3(
+	function (a, b, c) {
+		return {name: a, from: b, datetime: c};
+	});
+var _user$project$Profile$Test = {ctor: 'Test'};

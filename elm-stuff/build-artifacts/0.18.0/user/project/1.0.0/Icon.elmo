@@ -1,0 +1,22 @@
+var _user$project$Icon$bgImg = function (imgPath) {
+	return _elm_lang$html$Html_Attributes$style(
+		{
+			ctor: '::',
+			_0: {
+				ctor: '_Tuple2',
+				_0: 'background-image',
+				_1: A2(
+					_elm_lang$core$Basics_ops['++'],
+					'url(\'',
+					A2(_elm_lang$core$Basics_ops['++'], imgPath, '\')'))
+			},
+			_1: {ctor: '[]'}
+		});
+};
+var _user$project$Icon$feather = function (icon) {
+	return _user$project$Icon$bgImg(
+		A2(
+			_elm_lang$core$Basics_ops['++'],
+			'https://icongr.am/feather/',
+			A2(_elm_lang$core$Basics_ops['++'], icon, '.svg?size=20&color=ffffff')));
+};

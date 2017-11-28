@@ -2,17 +2,19 @@
 -- https://guide.elm-lang.org/architecture/effects/http.html
 
 
-module Main exposing (..)
+module Events exposing (..)
 
 import SeatGeek exposing (..)
+import Nav exposing (bar)
+import Icon exposing (feather)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Http exposing (..)
 import Date exposing (..)
 import Task exposing (..)
-import Date.Extra.Duration exposing (..)
 import Date.Extra.Format exposing (..)
+import Date.Extra.Duration exposing (..)
 import Date.Extra.Config.Config_en_us exposing (..)
 import Date.Extra.I18n.I_en_us exposing (..)
 
@@ -35,11 +37,6 @@ type alias Model =
     , selectedEvent : Maybe Int
     , currentDatetime : Maybe Date
     }
-
-
-navList : List ( String, String )
-navList =
-    [ ( "discover", "compass" ), ( "add", "plus-square" ), ( "share", "share-2" ), ( "chats", "message-square" ), ( "profile", "user" ) ]
 
 
 gradients : List String
@@ -167,15 +164,6 @@ update msg model =
 
 
 -- VIEW
--- tachyonsCSS : String
--- tachyonsCSS =
---     "https://unpkg.com/tachyons@4.8.0/css/tachyons.min.css"
--- plusOneCSS : String
--- plusOneCSS =
---     "Admin/plusOne.css"
--- animateCSS : String
--- animateCSS =
---     "https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css"
 
 
 view : Model -> Html Msg
@@ -185,53 +173,13 @@ view model =
           --, Html.node "link" [ Html.Attributes.rel "stylesheet", Html.Attributes.href plusOneCSS ] []
           --, Html.node "link" [ Html.Attributes.rel "stylesheet", Html.Attributes.href animateCSS ] [],
           div [ class "white sans-serif flex fw1 vh-100 bg-black-60" ]
-            [ navBar
+            [ Nav.bar
             , main_ [ class "flex-auto pt5-m pb5 pb0-ns flex justify-stretch" ]
                 [ eventsView model
                 , eventView model
                 ]
             ]
         ]
-
-
-navBar : Html Msg
-navBar =
-    nav [ class "z-9999 w-100 w-auto-l h3 vh-100-l tc-l fixed flex-m flex-row-m items-center-m self-start-m absolute static-l top-0-m bottom-0" ]
-        [ navHome
-        , ul [ class "list ma0 pa0 flex flex-column-l items-start-l justify-around flex-auto items-start-l items-stretch h3 h-auto-l pr3-l f6 o-90-ns bg-0-ns lg-breathe-50" ]
-            (List.map navTab navList)
-        ]
-
-
-navHome : Html Msg
-navHome =
-    div [ class "grow-large ph4-l pv4-l ph3 flex-ns flex-column-l items-center dn" ]
-        [ div [ bgImg "Assets/WhitePlusOneLogo.svg", class "animated bounceIn contain bg-center h3-l w3-l h2 w2" ] []
-        , div
-            [ class "animated bounceInLeft fw7 pa3-m f4 dib-l dn ttn" ]
-            [ text "PlusOne" ]
-        ]
-
-
-navTab : ( String, String ) -> Html Msg
-navTab tuple =
-    let
-        icon =
-            Tuple.second tuple
-
-        page =
-            Tuple.first tuple
-
-        iconClasses =
-            (class "w2 h2 w1-m h1-m contain")
-
-        captionClasses =
-            (class "pa3 pa2-m dn dib-ns")
-    in
-        li [ class "animated zoomInLeft grow pr3-l pl4-l pv2-l mv2-l ph2 pointer hover-bg-black-50 z-999 flex flex-auto justify-center items-center br--right-l br-pill-l " ]
-            [ div [ iconClasses, (featherIcon icon) ] []
-            , div [ captionClasses ] [ text page ]
-            ]
 
 
 eventsView : Model -> Html Msg
@@ -251,7 +199,7 @@ discoverToolsView =
     let
         icon x =
             div [ class "animated bounceIn pointer hover-bg-black-50 br-pill pa2" ]
-                [ div [ featherIcon x, class "contain bg-center grow pt3 pb2 pl3 pr2" ] []
+                [ div [ Icon.feather x, class "contain bg-center grow pt3 pb2 pl3 pr2" ] []
                 ]
     in
         div [ class "flex justify-end" ]
@@ -297,7 +245,7 @@ eventTitle : Event -> Html msg
 eventTitle event =
     let
         icon x =
-            div [ featherIcon x, class "contain dib bg-center grow ml1 mr2 pt1 pb3 pl1 pr3" ] []
+            div [ Icon.feather x, class "contain dib bg-center grow ml1 mr2 pt1 pb3 pl1 pr3" ] []
 
         textSize x y =
             case ((String.length x) // y) of
@@ -471,19 +419,19 @@ yetToBeAdded =
                 other events at the venue, other venues the artist will be at,
                 spotify, Last.fm, and google maps integration. I also need to make
                 events that do not have defined times do not display a time.
-                
-                Sed ut perspiciatis, unde omnis iste natus error sit voluptatem 
-                accusantium doloremque laudantium, totam rem aperiam eaque ipsa, 
-                quae ab illo inventore veritatis et quasi architecto beatae vitae 
-                dicta sunt, explicabo. Nemo enim ipsam voluptatem, quia voluptas sit, 
-                aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos, 
+
+                Sed ut perspiciatis, unde omnis iste natus error sit voluptatem
+                accusantium doloremque laudantium, totam rem aperiam eaque ipsa,
+                quae ab illo inventore veritatis et quasi architecto beatae vitae
+                dicta sunt, explicabo. Nemo enim ipsam voluptatem, quia voluptas sit,
+                aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos,
                 qui ratione voluptatem sequi nesciunt, neque porro quisquam est.
-                qui dolorem ipsum, quia dolor sit amet consectetur adipisci. 
-                velit, sed quia non numquam [do] eius modi tempora inci[di]dunt, 
-                ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima 
-                veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, 
-                nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure 
-                reprehenderit, qui in ea voluptate velit esse, quam nihil molestiae 
+                qui dolorem ipsum, quia dolor sit amet consectetur adipisci.
+                velit, sed quia non numquam [do] eius modi tempora inci[di]dunt,
+                ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima
+                veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam,
+                nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure
+                reprehenderit, qui in ea voluptate velit esse, quam nihil molestiae
                 consequatur, vel illum, qui dolorem eum fugiat, quo voluptas nulla pariatur?
                 """
         ]
@@ -493,10 +441,10 @@ eventPool : Html msg
 eventPool =
     div [ class "flex items-center justify-around mh4 pv4 bb b--white-20" ]
         [ a [ class "br-pill pa2 mh1 flex items-center mh1 grow" ]
-            [ div [ featherIcon "info", class "h2 w2 contain bg-center" ] []
+            [ div [ Icon.feather "info", class "h2 w2 contain bg-center" ] []
             ]
         , a [ class "lg-breathe-50 br1 pa2 mh1 flex items-center mh1 grow" ]
-            [ div [ featherIcon "life-buoy", class "h2 w2 mh1 contain bg-center" ] []
+            [ div [ Icon.feather "life-buoy", class "h2 w2 mh1 contain bg-center" ] []
             , div [ class "mh2 f4 fw3 ttn" ] [ text ("join pool") ]
             ]
         , div [ class "mr3 f2" ] [ text "🏊" ]
@@ -634,11 +582,6 @@ maybeImage performers =
 featherIcon : String -> Attribute msg
 featherIcon icon =
     (style [ ( "background-image", ("url('https://icongr.am/feather/" ++ icon ++ ".svg?size=20&color=ffffff')") ) ])
-
-
-bgImg : String -> Attribute msg
-bgImg imgPath =
-    (style [ ( "background-image", ("url('" ++ imgPath ++ "')") ) ])
 
 
 stringToEmoji : String -> String

@@ -1,0 +1,126 @@
+var _user$project$Nav$tab = function (tuple) {
+	var captionClasses = _elm_lang$html$Html_Attributes$class('pa3 pa2-m dn dib-ns');
+	var iconClasses = _elm_lang$html$Html_Attributes$class('w2 h2 w1-m h1-m contain');
+	var page = _elm_lang$core$Tuple$first(tuple);
+	var icon = _elm_lang$core$Tuple$second(tuple);
+	return A2(
+		_elm_lang$html$Html$li,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('animated zoomInLeft grow pr3-l pl4-l pv2-l mv2-l ph2 pointer hover-bg-black-50 z-999 flex flex-auto justify-center items-center br--right-l br-pill-l '),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$div,
+				{
+					ctor: '::',
+					_0: iconClasses,
+					_1: {
+						ctor: '::',
+						_0: _user$project$Icon$feather(icon),
+						_1: {ctor: '[]'}
+					}
+				},
+				{ctor: '[]'}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{
+						ctor: '::',
+						_0: captionClasses,
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text(page),
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			}
+		});
+};
+var _user$project$Nav$home = A2(
+	_elm_lang$html$Html$div,
+	{
+		ctor: '::',
+		_0: _elm_lang$html$Html_Attributes$class('grow-large ph4-l pv4-l ph3 flex-ns flex-column-l items-center dn'),
+		_1: {ctor: '[]'}
+	},
+	{
+		ctor: '::',
+		_0: A2(
+			_elm_lang$html$Html$div,
+			{
+				ctor: '::',
+				_0: _user$project$Icon$bgImg('Assets/WhitePlusOneLogo.svg'),
+				_1: {
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('animated bounceIn contain bg-center h3-l w3-l h2 w2'),
+					_1: {ctor: '[]'}
+				}
+			},
+			{ctor: '[]'}),
+		_1: {
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$div,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('animated bounceInLeft fw7 pa3-m f4 dib-l dn ttn'),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text('PlusOne'),
+					_1: {ctor: '[]'}
+				}),
+			_1: {ctor: '[]'}
+		}
+	});
+var _user$project$Nav$selections = {
+	ctor: '::',
+	_0: {ctor: '_Tuple2', _0: 'discover', _1: 'compass'},
+	_1: {
+		ctor: '::',
+		_0: {ctor: '_Tuple2', _0: 'add', _1: 'plus-square'},
+		_1: {
+			ctor: '::',
+			_0: {ctor: '_Tuple2', _0: 'share', _1: 'share-2'},
+			_1: {
+				ctor: '::',
+				_0: {ctor: '_Tuple2', _0: 'chats', _1: 'message-square'},
+				_1: {
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 'profile', _1: 'user'},
+					_1: {ctor: '[]'}
+				}
+			}
+		}
+	}
+};
+var _user$project$Nav$bar = A2(
+	_elm_lang$html$Html$nav,
+	{
+		ctor: '::',
+		_0: _elm_lang$html$Html_Attributes$class('z-9999 w-100 w-auto-l h3 vh-100-l tc-l fixed flex-m flex-row-m items-center-m self-start-m absolute static-l top-0-m bottom-0'),
+		_1: {ctor: '[]'}
+	},
+	{
+		ctor: '::',
+		_0: _user$project$Nav$home,
+		_1: {
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$ul,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('list ma0 pa0 flex flex-column-l items-start-l justify-around flex-auto items-start-l items-stretch h3 h-auto-l pr3-l f6 o-90-ns bg-0-ns lg-breathe-50'),
+					_1: {ctor: '[]'}
+				},
+				A2(_elm_lang$core$List$map, _user$project$Nav$tab, _user$project$Nav$selections)),
+			_1: {ctor: '[]'}
+		}
+	});

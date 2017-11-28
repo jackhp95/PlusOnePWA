@@ -579,247 +579,244 @@ decodeReplyMeta =
 
 
 
-   -- VIEW
+-- VIEW
 
 
 view : Model -> Html Msg
 view model =
-    div [][]
-    
-{--
+    div []
         [ div [] (metaView model.reply)
         , div [] (List.map eventView model.reply.events)
         , div [] [ button [ Html.Events.onClick Discover ] [ text "discover" ] ]
         ]
 
-   metaView : Reply -> List (Html.Html msg)
-   metaView model =
-       [ span [] [ text (" per page : " ++ toString model.meta.per_page) ]
-       , span [] [ text (" decoded : " ++ toString (List.length model.events)) ]
-       ]
+
+metaView : Reply -> List (Html.Html msg)
+metaView model =
+    [ span [] [ text (" per page : " ++ toString model.meta.per_page) ]
+    , span [] [ text (" decoded : " ++ toString (List.length model.events)) ]
+    ]
 
 
-   eventView : Event -> Html msg
-   eventView event =
-       dl [ class "ba pa3 ma2" ]
-           [ dt [] [ text "Title" ]
-           , dd [] [ text event.title ]
-           , dt [] [ text "Short Title" ]
-           , dd [] [ text event.short_title ]
-           , div [] (List.map eventPerformerView event.performers)
-           , dt [] [ text "ID" ]
-           , dd [] [ text (toString event.id) ]
-           , dt [] [ text "Score" ]
-           , dd [] [ text (toString event.score) ]
-           , dt [] [ text "Type of event" ]
-           , dd [] [ text event.category ]
-           , eventVenueView event.venue
-           , dt [] [ text "Datetime Local" ]
-           , dd [] [ text event.datetime_local ]
-           , dt [] [ text "UTC Start" ]
-           , dd [] [ text event.datetime_utc ]
-           , dt [] [ text "UTC End" ]
-           , dd [] [ text event.visible_until_utc ]
-           , dt [] [ text "Creation Time" ]
-           , dd [] [ text event.created_at ]
-           , dt [] [ text "Announce Date" ]
-           , dd [] [ text event.announce_date ]
-           , dt [] [ text "Estimated Time" ]
-           , dd [] [ text (toString event.time_tbd) ]
-           , dt [] [ text "Estimated Date" ]
-           , dd [] [ text (toString event.date_tbd) ]
-           , dl [ class "ba pa3 ma2" ] (eventStatsView event.stats)
-           , dt [] [ text "Popularity" ]
-           , dd [] [ text (toString event.popularity) ]
-           , dt [] [ text "URL" ]
-           , dd [] [ text event.url ]
-           , div [] (List.map taxonomyView event.taxonomies)
-           ]
+eventView : Event -> Html msg
+eventView event =
+    dl [ class "ba pa3 ma2" ]
+        [ dt [] [ text "Title" ]
+        , dd [] [ text event.title ]
+        , dt [] [ text "Short Title" ]
+        , dd [] [ text event.short_title ]
+        , div [] (List.map eventPerformerView event.performers)
+        , dt [] [ text "ID" ]
+        , dd [] [ text (toString event.id) ]
+        , dt [] [ text "Score" ]
+        , dd [] [ text (toString event.score) ]
+        , dt [] [ text "Type of event" ]
+        , dd [] [ text event.category ]
+        , eventVenueView event.venue
+        , dt [] [ text "Datetime Local" ]
+        , dd [] [ text event.datetime_local ]
+        , dt [] [ text "UTC Start" ]
+        , dd [] [ text event.datetime_utc ]
+        , dt [] [ text "UTC End" ]
+        , dd [] [ text event.visible_until_utc ]
+        , dt [] [ text "Creation Time" ]
+        , dd [] [ text event.created_at ]
+        , dt [] [ text "Announce Date" ]
+        , dd [] [ text event.announce_date ]
+        , dt [] [ text "Estimated Time" ]
+        , dd [] [ text (toString event.time_tbd) ]
+        , dt [] [ text "Estimated Date" ]
+        , dd [] [ text (toString event.date_tbd) ]
+        , dl [ class "ba pa3 ma2" ] (eventStatsView event.stats)
+        , dt [] [ text "Popularity" ]
+        , dd [] [ text (toString event.popularity) ]
+        , dt [] [ text "URL" ]
+        , dd [] [ text event.url ]
+        , div [] (List.map taxonomyView event.taxonomies)
+        ]
 
 
-   eventStatsView : Tickets -> List (Html msg)
-   eventStatsView stats =
-       (eventStatsIntView stats.listing_count "Listing Count"
-           ++ eventStatsFloatView stats.highest_price "highest price"
-           ++ eventStatsFloatView stats.average_price "average price"
-           ++ eventStatsFloatView stats.lowest_price "lowest price"
-           ++ eventStatsFloatView stats.lowest_price_good_deals "lowest price good deals"
-       )
+eventStatsView : Tickets -> List (Html msg)
+eventStatsView stats =
+    (eventStatsIntView stats.listing_count "Listing Count"
+        ++ eventStatsFloatView stats.highest_price "highest price"
+        ++ eventStatsFloatView stats.average_price "average price"
+        ++ eventStatsFloatView stats.lowest_price "lowest price"
+        ++ eventStatsFloatView stats.lowest_price_good_deals "lowest price good deals"
+    )
 
 
-   eventStatsIntView : Maybe Int -> String -> List (Html msg)
-   eventStatsIntView number string =
-       case number of
-           Nothing ->
-               []
+eventStatsIntView : Maybe Int -> String -> List (Html msg)
+eventStatsIntView number string =
+    case number of
+        Nothing ->
+            []
 
-           Just 0 ->
-               []
+        Just 0 ->
+            []
 
-           Just number ->
-               [ dt [] [ text string ]
-               , dd [] [ text (toString number) ]
-               ]
-
-
-   eventStatsFloatView : Maybe Float -> String -> List (Html msg)
-   eventStatsFloatView number string =
-       case number of
-           Nothing ->
-               []
-
-           Just number ->
-               [ dt [] [ text string ]
-               , dd [] [ text ("$" ++ (toString number)) ]
-               ]
+        Just number ->
+            [ dt [] [ text string ]
+            , dd [] [ text (toString number) ]
+            ]
 
 
-   colorBackgroundView : Maybe PerformerColor -> Attribute msg
-   colorBackgroundView colors =
-       case colors of
-           Nothing ->
-               style []
+eventStatsFloatView : Maybe Float -> String -> List (Html msg)
+eventStatsFloatView number string =
+    case number of
+        Nothing ->
+            []
 
-           Just colors ->
-               style [ ( "backgroundColor", colors.iconic ) ]
-
-
-   eventPerformerView : Performer -> Html msg
-   eventPerformerView performer =
-       dl [ class "ba pa3 ma2", colorBackgroundView performer.colors ]
-           [ dt [] [ text "Performer Image" ]
-           , performer.image |> Maybe.map (\url -> img [ src url ] []) |> Maybe.withDefault (text "no image homie")
-           , dt [] [ text "name" ]
-           , dd [] [ text performer.name ]
-           , dt [] [ text "short name" ]
-           , dd [] [ text performer.short_name ]
-           , dt [] [ text "image attribution" ]
-           , dd [] [ text (Maybe.withDefault "IDK, There ain't no image attribution tho" performer.image_attribution) ]
-           , performerDivisionsView performer.divisions
-           , dt [] [ text "url" ]
-           , dd [] [ text performer.url ]
-           , dt [] [ text "category" ]
-           , dd [] [ text performer.category ]
-           , dt [] [ text "slug" ]
-           , dd [] [ text performer.slug ]
-           , dt [] [ text "image license" ]
-           , dd [] [ text (Maybe.withDefault "IDK, There ain't no image license tho" performer.image_license) ]
-           , dt [] [ text "num_upcoming_events" ]
-           , dd [] [ text (toString performer.num_upcoming_events) ]
-           , dt [] [ text "Primary" ]
-           , dd [] [ text (toString (Maybe.withDefault False performer.primary)) ]
-           , dt [] [ text "popularity" ]
-           , dd [] [ text (toString performer.popularity) ]
-           , dt [] [ text "ID" ]
-           , dd [] [ text (toString performer.id) ]
-           , dt [] [ text "Home Venue ID" ]
-           , dd [] [ text (toString performer.home_venue_id) ]
-           , div [] (List.map taxonomyView performer.taxonomies)
-           , performerStatsView performer.stats
-           , imagesView performer.images
-           ]
+        Just number ->
+            [ dt [] [ text string ]
+            , dd [] [ text ("$" ++ (toString number)) ]
+            ]
 
 
-   imagesView : List String -> Html msg
-   imagesView images =
-       div [ class "ba pa3 ma2 b--red" ] (List.map (\url -> img [ src url ] []) images)
+colorBackgroundView : Maybe PerformerColor -> Attribute msg
+colorBackgroundView colors =
+    case colors of
+        Nothing ->
+            style []
+
+        Just colors ->
+            style [ ( "backgroundColor", colors.iconic ) ]
 
 
-   performerDivisionsView : Maybe (List Division) -> Html msg
-   performerDivisionsView divisions =
-       case divisions of
-           Nothing ->
-               div [] []
-
-           Just divisions ->
-               div [] (List.map performerDivisionView divisions)
-
-
-   performerDivisionView : Division -> Html msg
-   performerDivisionView division =
-       div [ class "ba pa3 ma2 b--red" ]
-           [ div [] [ text ("display_type: " ++ (toString division.display_type)) ]
-           , div [] [ text ("short_name: " ++ (toString division.short_name)) ]
-           , div [] [ text ("display_name: " ++ (toString division.display_name)) ]
-           , div [] [ text ("division_level: " ++ (toString division.division_level)) ]
-           , div [] [ text ("slug: " ++ (toString division.slug)) ]
-           , div [] [ text ("taxonomy_id: " ++ (toString division.taxonomy_id)) ]
-           ]
-
-
-   eventVenueLocationView : GCS -> Html msg
-   eventVenueLocationView location =
-       dl [ class "ba pa3 ma2" ]
-           [ dt [] [ text "Latitude" ]
-           , dd [] [ text (toString location.lat) ]
-           , dt [] [ text "Longitude" ]
-           , dd [] [ text (toString location.lon) ]
-           ]
-
-
-   eventVenueView : Venue -> Html msg
-   eventVenueView venue =
-       dl [ class "ba pa3 ma2" ]
-           [ dt [] [ text "Venue Name" ]
-           , dd [] [ text venue.name ]
-           , dt [] [ text "Display Location" ]
-           , dd [] [ text venue.display_location ]
-           , dt [] [ text "Extended Address" ]
-           , dd [] [ text venue.extended_address ]
-           , dt [] [ text "Name V2" ]
-           , dd [] [ text venue.name_v2 ]
-           , dt [] [ text "State" ]
-           , dd [] [ text (Maybe.withDefault "no state provided" venue.state) ]
-           , dt [] [ text "Slug" ]
-           , dd [] [ text venue.slug ]
-           , dt [] [ text "Timezone" ]
-           , dd [] [ text venue.timezone ]
-           , dt [] [ text "Site" ]
-           , dd [] [ text venue.url ]
-           , dt [] [ text "Postal Code" ]
-           , dd [] [ text venue.postal_code ]
-           , dt [] [ text "City" ]
-           , dd [] [ text venue.city ]
-           , dt [] [ text "Country" ]
-           , dd [] [ text venue.country ]
-           , dt [] [ text "Address" ]
-           , dd [] [ text venue.address ]
-           , eventVenueLocationView venue.location
-           , dt [] [ text "Popularity" ]
-           , dd [] [ text (toString venue.popularity) ]
-           , dt [] [ text "Score" ]
-           , dd [] [ text (toString venue.score) ]
-           , dt [] [ text "ID" ]
-           , dd [] [ text (toString venue.id) ]
-           , dt [] [ text "num upcoming events" ]
-           , dd [] [ text (toString venue.num_upcoming_events) ]
-           ]
+eventPerformerView : Performer -> Html msg
+eventPerformerView performer =
+    dl [ class "ba pa3 ma2", colorBackgroundView performer.colors ]
+        [ dt [] [ text "Performer Image" ]
+        , performer.image |> Maybe.map (\url -> img [ src url ] []) |> Maybe.withDefault (text "no image homie")
+        , dt [] [ text "name" ]
+        , dd [] [ text performer.name ]
+        , dt [] [ text "short name" ]
+        , dd [] [ text performer.short_name ]
+        , dt [] [ text "image attribution" ]
+        , dd [] [ text (Maybe.withDefault "IDK, There ain't no image attribution tho" performer.image_attribution) ]
+        , performerDivisionsView performer.divisions
+        , dt [] [ text "url" ]
+        , dd [] [ text performer.url ]
+        , dt [] [ text "category" ]
+        , dd [] [ text performer.category ]
+        , dt [] [ text "slug" ]
+        , dd [] [ text performer.slug ]
+        , dt [] [ text "image license" ]
+        , dd [] [ text (Maybe.withDefault "IDK, There ain't no image license tho" performer.image_license) ]
+        , dt [] [ text "num_upcoming_events" ]
+        , dd [] [ text (toString performer.num_upcoming_events) ]
+        , dt [] [ text "Primary" ]
+        , dd [] [ text (toString (Maybe.withDefault False performer.primary)) ]
+        , dt [] [ text "popularity" ]
+        , dd [] [ text (toString performer.popularity) ]
+        , dt [] [ text "ID" ]
+        , dd [] [ text (toString performer.id) ]
+        , dt [] [ text "Home Venue ID" ]
+        , dd [] [ text (toString performer.home_venue_id) ]
+        , div [] (List.map taxonomyView performer.taxonomies)
+        , performerStatsView performer.stats
+        , imagesView performer.images
+        ]
 
 
-   taxonomyView : Taxonomy -> Html msg
-   taxonomyView taxonomy =
-       dl [ class "ba pa3 ma2" ]
-           [ dt [] [ text "ID" ]
-           , dd [] [ text (toString taxonomy.id) ]
-           , dt [] [ text "Parent ID" ]
-           , dd [] [ text (toString taxonomy.parent_id) ]
-           , dt [] [ text "Name" ]
-           , dd [] [ text taxonomy.name ]
-           ]
+imagesView : List String -> Html msg
+imagesView images =
+    div [ class "ba pa3 ma2 b--red" ] (List.map (\url -> img [ src url ] []) images)
 
 
-   performerStatsView : PerformerStats -> Html msg
-   performerStatsView stats =
-       dl [ class "ba pa3 ma2" ]
-           [ dt [] [ text "Performer Event Count Stats" ]
-           , dd [] [ text (toString stats.event_count) ]
-           ]
+performerDivisionsView : Maybe (List Division) -> Html msg
+performerDivisionsView divisions =
+    case divisions of
+        Nothing ->
+            div [] []
+
+        Just divisions ->
+            div [] (List.map performerDivisionView divisions)
+
+
+performerDivisionView : Division -> Html msg
+performerDivisionView division =
+    div [ class "ba pa3 ma2 b--red" ]
+        [ div [] [ text ("display_type: " ++ (toString division.display_type)) ]
+        , div [] [ text ("short_name: " ++ (toString division.short_name)) ]
+        , div [] [ text ("display_name: " ++ (toString division.display_name)) ]
+        , div [] [ text ("division_level: " ++ (toString division.division_level)) ]
+        , div [] [ text ("slug: " ++ (toString division.slug)) ]
+        , div [] [ text ("taxonomy_id: " ++ (toString division.taxonomy_id)) ]
+        ]
+
+
+eventVenueLocationView : GCS -> Html msg
+eventVenueLocationView location =
+    dl [ class "ba pa3 ma2" ]
+        [ dt [] [ text "Latitude" ]
+        , dd [] [ text (toString location.lat) ]
+        , dt [] [ text "Longitude" ]
+        , dd [] [ text (toString location.lon) ]
+        ]
+
+
+eventVenueView : Venue -> Html msg
+eventVenueView venue =
+    dl [ class "ba pa3 ma2" ]
+        [ dt [] [ text "Venue Name" ]
+        , dd [] [ text venue.name ]
+        , dt [] [ text "Display Location" ]
+        , dd [] [ text venue.display_location ]
+        , dt [] [ text "Extended Address" ]
+        , dd [] [ text venue.extended_address ]
+        , dt [] [ text "Name V2" ]
+        , dd [] [ text venue.name_v2 ]
+        , dt [] [ text "State" ]
+        , dd [] [ text (Maybe.withDefault "no state provided" venue.state) ]
+        , dt [] [ text "Slug" ]
+        , dd [] [ text venue.slug ]
+        , dt [] [ text "Timezone" ]
+        , dd [] [ text (toString venue.timezone) ]
+        , dt [] [ text "Site" ]
+        , dd [] [ text venue.url ]
+        , dt [] [ text "Postal Code" ]
+        , dd [] [ text venue.postal_code ]
+        , dt [] [ text "City" ]
+        , dd [] [ text venue.city ]
+        , dt [] [ text "Country" ]
+        , dd [] [ text venue.country ]
+        , dt [] [ text "Address" ]
+        , dd [] [ text venue.address ]
+        , eventVenueLocationView venue.location
+        , dt [] [ text "Popularity" ]
+        , dd [] [ text (toString venue.popularity) ]
+        , dt [] [ text "Score" ]
+        , dd [] [ text (toString venue.score) ]
+        , dt [] [ text "ID" ]
+        , dd [] [ text (toString venue.id) ]
+        , dt [] [ text "num upcoming events" ]
+        , dd [] [ text (toString venue.num_upcoming_events) ]
+        ]
+
+
+taxonomyView : Taxonomy -> Html msg
+taxonomyView taxonomy =
+    dl [ class "ba pa3 ma2" ]
+        [ dt [] [ text "ID" ]
+        , dd [] [ text (toString taxonomy.id) ]
+        , dt [] [ text "Parent ID" ]
+        , dd [] [ text (toString taxonomy.parent_id) ]
+        , dt [] [ text "Name" ]
+        , dd [] [ text taxonomy.name ]
+        ]
+
+
+performerStatsView : PerformerStats -> Html msg
+performerStatsView stats =
+    dl [ class "ba pa3 ma2" ]
+        [ dt [] [ text "Performer Event Count Stats" ]
+        , dd [] [ text (toString stats.event_count) ]
+        ]
 
 
 
-   -- UPDATE
-
---}
+-- UPDATE
 
 
 type Msg
@@ -830,12 +827,6 @@ type Msg
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        _ ->
-            ( model, Cmd.none )
-
-
-
-{--
         Discover ->
             ( model, askQuery model.query )
 
@@ -850,16 +841,13 @@ update msg model =
                 ( model, Cmd.none )
 
 
-   askQuery : Query -> Cmd Msg
-   askQuery query =
-       let
-           url =
-               composeRequest query
+askQuery : Query -> Cmd Msg
+askQuery query =
+    let
+        url =
+            composeRequest query
 
-           request =
-               Http.get url decodeReply
-       in
-           Http.send GetReply request
-
-
---}
+        request =
+            Http.get url decodeReply
+    in
+        Http.send GetReply request
