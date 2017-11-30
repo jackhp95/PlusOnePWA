@@ -9,9 +9,9 @@
     var start = Date.now();
   </script>
 
-  <link defer rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css" />
-  <link defer rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tachyons/4.9.0/tachyons.min.css" />
-  <link defer rel="stylesheet" href="Admin/plusOne.css" />
+  <link async rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css" />
+  <link async rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tachyons/4.9.0/tachyons.min.css" />
+  <link async rel="stylesheet" href="Admin/plusOne.css" />
 
   <style>
     /*
@@ -199,13 +199,13 @@ Breathe BG/LG
   var sw = new Worker('sw.js');
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js')
-      .then(function (reg) {
+      .then(function (sw) {
 
-        if (reg.installing) {
+        if (sw.installing) {
           console.log('Service worker installing');
-        } else if (reg.waiting) {
+        } else if (sw.waiting) {
           console.log('Service worker installed');
-        } else if (reg.active) {
+        } else if (sw.active) {
           console.log('Service worker active');
         }
 
