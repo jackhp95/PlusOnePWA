@@ -1,17 +1,16 @@
-<html>
+<html lang="en" class="lg-breathe-50">
 
 <head>
   <meta charset="UTF-8">
   <title>PlusOne</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script>
-    var start = new Date().getTime();
-    var ss = 0
+    var start = Date.now();
   </script>
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css" onload="ss++;" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tachyons/4.9.0/tachyons.min.css" onload="ss++;" />
-  <link rel="stylesheet" href="Admin/plusOne.css" onload="ss++;" />
+  <link async rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css" />
+  <link async rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tachyons/4.9.0/tachyons.min.css" />
+  <link async rel="stylesheet" href="Admin/plusOne.css" />
 
   <style>
     /*
@@ -119,19 +118,19 @@ Breathe BG/LG
 
 
   <!-- Favicon starts -->
-  <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="194x194" href="favicon/favicon-194x194.png">
-  <link rel="icon" type="image/png" sizes="192x192" href="favicon/android-chrome-192x192.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
+  <link async rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png">
+  <link async rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
+  <link async rel="icon" type="image/png" sizes="194x194" href="favicon/favicon-194x194.png">
+  <link async rel="icon" type="image/png" sizes="192x192" href="favicon/android-chrome-192x192.png">
+  <link async rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
   <link rel="manifest" href="favicon/manifest.json">
-  <link rel="mask-icon" href="favicon/safari-pinned-tab.svg" color="#330064">
+  <link async rel="mask-icon" href="favicon/safari-pinned-tab.svg" color="#330064">
   <meta name="theme-color" content="#330064">
   <!-- Favicon ends -->
 
 </head>
 
-<body class="lg-breathe-50">
+<body>
   <div style="width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center;">
     <div class="pulse animated infinite" style="width:6em;">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 269.8 207.8">
@@ -166,28 +165,40 @@ Breathe BG/LG
       </svg>
     </div>
   </div>
-
+  <noscript style="width:50ch; padding: 4em;">
+    Hey bud, Why are you not using JavaScript? We kinda depend on JavaScript to like do much of anything on this site. But look,
+    If you tweet @dateplusone we'll start building non JS options of our site. Cool beans?
+  </noscript>
 </body>
 
-<!-- <script type="text/javascript" src="/_compile/Events.elm"></script> -->
-<script type="text/javascript" src="PlusOnePWA.js">
-</script>
+<script async type="text/javascript" src="sw.js"></script>
 
-
-<script type="text/javascript">
+<!-- <script async type="text/javascript" src="/_compile/Events.elm"></script> -->
+<script type="text/javascript" src="PlusOnePWA.js"></script>
+<script type="text/javascript" defer>
   //Removes splash and starts elm app.
-  var elapsed = new Date().getTime() - start;
+  var elapsed = Date.now() - start;
 
   while (document.body.firstChild) {
-    elapsed = new Date().getTime() - start;
+    elapsed = Date.now() - start;
 
-    if ((elapsed > 1500) && (ss >= 3)) {
+    if (elapsed > 1500) {
       document.body.removeChild(document.body.firstChild);
     }
   }
   // runElmProgram();
   // var node = document.getElementById('main');
   var app = Elm.Main.fullscreen();
+</script>
+
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker
+      .register('sw.js')
+      .then(function () {
+        console.log("Service Worker Registered");
+      });
+  }
 </script>
 
 </html>

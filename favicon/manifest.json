@@ -1,5 +1,6 @@
 {
-    "name": "PlusOne",
+    "name": "PlusOne Dating",
+    "short_name": "PlusOne",
     "icons": [
         {
             "src": "/android-chrome-192x192.png",
