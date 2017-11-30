@@ -179,7 +179,7 @@ Breathe BG/LG
 
 <!-- <script defer type="text/javascript" src="/_compile/Events.elm"></script> -->
 <script type="text/javascript" src="PlusOnePWA.js"></script>
-<script type="text/javascript" defer>
+<script type="text/javascript">
   //Removes splash and starts elm app.
   var elapsed = Date.now() - start;
 
@@ -195,7 +195,7 @@ Breathe BG/LG
   var app = Elm.Main.fullscreen();
 </script>
 
-<script>
+<!-- <script type="text/javascript">
   var sw = new Worker('sw.js');
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker
@@ -204,6 +204,6 @@ Breathe BG/LG
         console.log("Service Worker Registered");
       });
   }
-</script>
+</script> -->
 
 </html>
