@@ -2,10 +2,11 @@ this.addEventListener('install', function (event) {
     event.waitUntil(
         caches.open('v1').then(function (cache) {
             return cache.addAll([
-                '/serviceworkerdemo/',
-                '/serviceworkerdemo/index.html',
-                '/serviceworkerdemo/style.css',
-                '/serviceworkerdemo/app.js',
+                'Admin/PlusOne.css',
+                'Assets/ColorLogo.png',
+                'Assets/PlusOneLogo.svg',
+                'Assets/SeatGeekLogo.svg',
+                'Assets/WhitePlusOneLogo.svg'            
             ]);
         })
     );
