@@ -12,6 +12,8 @@ import Mouse exposing (Position)
 import Window exposing (..)
 import Task exposing (..)
 import Random exposing (..)
+import Touch
+import SingleTouch
 
 
 main =
@@ -207,11 +209,15 @@ init =
 
 
 type Msg
-    = MoveStart Position
-    | MoveAt Position
-    | MoveEnd Position
+    = MouseStart Position
+    | MouseMove Position
+    | MouseEnd Position
     | ResizePool Size
     | InitialWindow Size
+    | TouchStart Touch.Coordinates
+    | TouchMove Touch.Coordinates
+    | TouchEnd Touch.Coordinates
+    | TouchCancel Touch.Coordinates
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -222,13 +228,56 @@ update msg model =
 updateHelp : Msg -> Model -> Model
 updateHelp msg ({ position, move, tube, windowSize, tubers, users } as model) =
     case msg of
-        MoveStart xy ->
-            Model position (Just (Move xy xy)) tube windowSize tubers users
+        TouchStart coordinates ->
+            -- Model (Start <|
+            { model
+                | move =
+                    (Just
+                        (Move
+                            (Position
+                                (round (Tuple.first (Touch.clientPos coordinates)))
+                                (round (Tuple.second (Touch.clientPos coordinates)))
+                            )
+                            (Position
+                                (round (Tuple.first (Touch.clientPos coordinates)))
+                                (round (Tuple.second (Touch.clientPos coordinates)))
+                            )
+                        )
+                    )
+            }
 
-        MoveAt xy ->
-            Model position (Maybe.map (\{ start } -> Move start xy) move) tube windowSize tubers users
+        TouchMove coordinates ->
+            -- Model (Move <| Touch.clientPos coordinates)
+            { model
+                | move =
+                    Maybe.map
+                        (\{ start } ->
+                            (Move
+                                start
+                                (Position
+                                    (round (Tuple.first (Touch.clientPos coordinates)))
+                                    (round (Tuple.second (Touch.clientPos coordinates)))
+                                )
+                            )
+                        )
+                        move
+            }
 
-        MoveEnd _ ->
+        TouchEnd coordinates ->
+            -- Model (End <| Touch.clientPos coordinates)
+            Model (getPosition model) Nothing tube windowSize tubers users
+
+        TouchCancel coordinates ->
+            -- Model (Cancel <| Touch.clientPos coordinates)
+            Model (getPosition model) Nothing tube windowSize tubers users
+
+        MouseStart xy ->
+            { model | move = (Just (Move xy xy)) }
+
+        MouseMove xy ->
+            { model | move = (Maybe.map (\{ start } -> Move start xy) move) }
+
+        MouseEnd _ ->
             Model (getPosition model) Nothing tube windowSize tubers users
 
         ResizePool windowSize ->
@@ -259,7 +308,7 @@ mouseMoveSubs model =
             Sub.none
 
         Just _ ->
-            Sub.batch [ Mouse.moves MoveAt, Mouse.ups MoveEnd ]
+            Sub.batch [ Mouse.moves MouseMove, Mouse.ups MouseEnd ]
 
 
 
@@ -280,7 +329,7 @@ view model =
     div [ class "overflow-hidden" ]
         [ Html.node "link" [ Html.Attributes.rel "stylesheet", Html.Attributes.href tachyonsCSS ] []
         , div
-            [ onPointerDown
+            [ onMouseDown
             , class "bg-black-90"
             , style
                 [ "cursor" => "move"
@@ -364,6 +413,15 @@ getPosition model =
                 (model.position.y + current.y - start.y)
 
 
-onPointerDown : Attribute Msg
-onPointerDown =
-    on "pointerdown" (Decode.map MoveStart Mouse.position)
+onMouseDown : Attribute Msg
+onMouseDown =
+    on "mousedown" (Decode.map MouseStart Mouse.position)
+
+
+touchEvents : List (Html.Attribute Msg)
+touchEvents =
+    [ SingleTouch.onStart TouchStart
+    , SingleTouch.onMove TouchMove
+    , SingleTouch.onEnd TouchEnd
+    , SingleTouch.onCancel TouchCancel
+    ]

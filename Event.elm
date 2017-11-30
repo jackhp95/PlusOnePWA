@@ -172,7 +172,7 @@ view model =
         [ --Html.node "link" [ Html.Attributes.rel "stylesheet", Html.Attributes.href tachyonsCSS ] []
           --, Html.node "link" [ Html.Attributes.rel "stylesheet", Html.Attributes.href plusOneCSS ] []
           --, Html.node "link" [ Html.Attributes.rel "stylesheet", Html.Attributes.href animateCSS ] [],
-          div [ class "white flex fw4 vh-100 bg-black-60" ]
+          div [ class "white flex fw1 vh-100 bg-black-60" ]
             [ Nav.bar
             , main_ [ class "flex-auto pt5-m pb5 pb0-ns flex justify-stretch" ]
                 [ eventsView model
@@ -187,7 +187,7 @@ eventsView model =
     section [ class "animated fadeInUp mw6-ns bg-black-40 overflow-auto z-999 shadow-2 mr3-l mr2-m flex-grow-1" ]
         [ div [ class "lg-breathe-50 h5 flex flex-column justify-between pa3" ]
             [ discoverToolsView
-            , div [ class "f1 f2-m lh-solid fw7 ma0 pa0" ]
+            , div [ class "f1 f2-m lh-solid fw8 ma0 pa0" ]
                 [ text "discover events" ]
             ]
         , div [] (List.map (eventListView model.currentDatetime) model.seatgeek.events)
@@ -261,10 +261,10 @@ eventTitle event =
                     " f2"
     in
         div [ class "pt4 pb3 mh4 bb b--white-20" ]
-            [ div [ class ("fw6 pv1 lh-solid ttn" ++ textSize event.title 30) ]
+            [ div [ class ("fw7 pv1 lh-solid ttn" ++ textSize event.title 30) ]
                 [ text event.title
                 ]
-            , div [ class "fw5 pv1 f4 flex items-center o-80 ttn" ]
+            , div [ class "fw5 pv1 f4 flex items-start o-70 ttn" ]
                 [ icon "at-sign", text event.venue.name ]
             ]
 
@@ -295,7 +295,7 @@ eventTime event maybeNow =
 
                 Just x ->
                     [ div [ class "fw7 f3 lh-solid pb2" ] [ text (clockTime x) ]
-                    , div [ class "fw4 f5 lh-solid" ] [ text (fullDate x) ]
+                    , div [ class "fw3 f5 lh-solid" ] [ text (fullDate x) ]
                     ]
     in
         div [ class "pv4 mh4 bb b--white-20 flex justify-between" ]
@@ -390,7 +390,7 @@ eventTickets event =
                         , class "h2 w2 mh1 contain bg-center"
                         ]
                         []
-                    , div [ class "blue-80 mh2 f4 fw4 ttn" ] [ text ("$" ++ (toString x) ++ " tickets") ]
+                    , div [ class "blue-80 mh2 f4 fw3 ttn" ] [ text ("$" ++ (toString x) ++ " tickets") ]
                     ]
 
             Nothing ->
@@ -447,7 +447,7 @@ eventPool =
             ]
         , a [ class "lg-breathe-50 br1 pa2 mh1 flex items-center mh1 grow" ]
             [ div [ Icon.feather "life-buoy", class "h2 w2 mh1 contain bg-center" ] []
-            , div [ class "mh2 f4 fw4 ttn" ] [ text ("join pool") ]
+            , div [ class "mh2 f4 fw3 ttn" ] [ text ("join pool") ]
             ]
         , div [ class "mr3 f2" ] [ text "🏊" ]
         ]
@@ -475,7 +475,7 @@ eventIcons event =
         toIcon x =
             li [ class "flex w4 flex-column items-center overflow-hidden pointer animated zoomIn" ]
                 [ div [ class "f-subheadline f1-m grow" ] [ text (stringToEmoji (x.name)) ]
-                , div [ class "pv2 o-80" ] [ text (Maybe.withDefault x.name (List.head (String.split "_" x.name))) ]
+                , div [ class "pv2 o-70" ] [ text (Maybe.withDefault x.name (List.head (String.split "_" x.name))) ]
                 ]
     in
         ul [ class "list mv0 mh4 ph0 pt4 pb3 flex justify-around items-center bb b--white-20" ]
@@ -557,12 +557,12 @@ eventListView maybeNow event =
             [ cardImage
             , div [ class "pb3 bb b--white-20" ]
                 [ div [ class "pb1 f4 pv2" ]
-                    [ span [ class "mr2 fw5" ] [ text event.title ]
-                    , div [ class "fw5 o-80 dib" ]
+                    [ span [ class "mr2 fw6" ] [ text event.title ]
+                    , div [ class "fw4 o-70 dib" ]
                         [ atIcon, text event.venue.name ]
                     ]
                 , div [ class "pb2 flex justify-between items-center" ]
-                    [ span [ class "fw4 o-60 ma0" ]
+                    [ span [ class "fw2 o-50 ma0" ]
                         [ text viewTime ]
                     , ul [ class "pa0 ma0 list dib" ]
                         (List.map (\x -> li [ class "ml2 dib" ] [ text (stringToEmoji x.name) ]) event.taxonomies)

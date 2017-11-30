@@ -117,7 +117,7 @@ var _user$project$Events$eventIcons = function (event) {
 						_elm_lang$html$Html$div,
 						{
 							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('pv2 o-70'),
+							_0: _elm_lang$html$Html_Attributes$class('pv2 o-80'),
 							_1: {ctor: '[]'}
 						},
 						{
@@ -247,7 +247,7 @@ var _user$project$Events$eventPool = A2(
 							_elm_lang$html$Html$div,
 							{
 								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$class('mh2 f4 fw3 ttn'),
+								_0: _elm_lang$html$Html_Attributes$class('mh2 f4 fw4 ttn'),
 								_1: {ctor: '[]'}
 							},
 							{
@@ -402,7 +402,7 @@ var _user$project$Events$eventTickets = function (event) {
 						_elm_lang$html$Html$div,
 						{
 							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('blue-80 mh2 f4 fw3 ttn'),
+							_0: _elm_lang$html$Html_Attributes$class('blue-80 mh2 f4 fw4 ttn'),
 							_1: {ctor: '[]'}
 						},
 						{
@@ -528,7 +528,7 @@ var _user$project$Events$eventTime = F2(
 							_elm_lang$html$Html$div,
 							{
 								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$class('fw3 f5 lh-solid'),
+								_0: _elm_lang$html$Html_Attributes$class('fw4 f5 lh-solid'),
 								_1: {ctor: '[]'}
 							},
 							{
@@ -613,7 +613,7 @@ var _user$project$Events$eventTitle = function (event) {
 					_0: _elm_lang$html$Html_Attributes$class(
 						A2(
 							_elm_lang$core$Basics_ops['++'],
-							'fw7 pv1 lh-solid ttn',
+							'fw6 pv1 lh-solid ttn',
 							A2(textSize, event.title, 30))),
 					_1: {ctor: '[]'}
 				},
@@ -628,7 +628,7 @@ var _user$project$Events$eventTitle = function (event) {
 					_elm_lang$html$Html$div,
 					{
 						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class('fw5 pv1 f4 flex items-start o-70 ttn'),
+						_0: _elm_lang$html$Html_Attributes$class('fw5 pv1 f4 flex items-center o-80 ttn'),
 						_1: {ctor: '[]'}
 					},
 					{
@@ -688,27 +688,30 @@ var _user$project$Events$discoverToolsView = function () {
 			_0: _elm_lang$html$Html_Attributes$class('flex justify-end'),
 			_1: {ctor: '[]'}
 		},
-		{
-			ctor: '::',
-			_0: icon('search'),
-			_1: {
+		A2(
+			_elm_lang$core$List$map,
+			icon,
+			{
 				ctor: '::',
-				_0: icon('map-pin'),
+				_0: 'search',
 				_1: {
 					ctor: '::',
-					_0: icon('thumbs-up'),
+					_0: 'map-pin',
 					_1: {
 						ctor: '::',
-						_0: icon('tag'),
+						_0: 'thumbs-up',
 						_1: {
 							ctor: '::',
-							_0: icon('at-sign'),
-							_1: {ctor: '[]'}
+							_0: 'tag',
+							_1: {
+								ctor: '::',
+								_0: 'at-sign',
+								_1: {ctor: '[]'}
+							}
 						}
 					}
 				}
-			}
-		});
+			}));
 }();
 var _user$project$Events$gradients = {
 	ctor: '::',
@@ -1173,7 +1176,7 @@ var _user$project$Events$eventListView = F2(
 										_elm_lang$html$Html$span,
 										{
 											ctor: '::',
-											_0: _elm_lang$html$Html_Attributes$class('mr2 fw6'),
+											_0: _elm_lang$html$Html_Attributes$class('mr2 fw5'),
 											_1: {ctor: '[]'}
 										},
 										{
@@ -1187,7 +1190,7 @@ var _user$project$Events$eventListView = F2(
 											_elm_lang$html$Html$div,
 											{
 												ctor: '::',
-												_0: _elm_lang$html$Html_Attributes$class('fw4 o-70 dib'),
+												_0: _elm_lang$html$Html_Attributes$class('fw5 o-80 dib'),
 												_1: {ctor: '[]'}
 											},
 											{
@@ -1217,7 +1220,7 @@ var _user$project$Events$eventListView = F2(
 											_elm_lang$html$Html$span,
 											{
 												ctor: '::',
-												_0: _elm_lang$html$Html_Attributes$class('fw2 o-50 ma0'),
+												_0: _elm_lang$html$Html_Attributes$class('fw4 o-60 ma0'),
 												_1: {ctor: '[]'}
 											},
 											{
@@ -1288,7 +1291,7 @@ var _user$project$Events$eventsView = function (model) {
 							_elm_lang$html$Html$div,
 							{
 								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$class('f1 f2-m lh-solid fw8 ma0 pa0'),
+								_0: _elm_lang$html$Html_Attributes$class('f1 f2-m lh-solid fw7 ma0 pa0'),
 								_1: {ctor: '[]'}
 							},
 							{
@@ -1326,7 +1329,7 @@ var _user$project$Events$view = function (model) {
 				_elm_lang$html$Html$div,
 				{
 					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class('white sans-serif flex fw1 vh-100 bg-black-60'),
+					_0: _elm_lang$html$Html_Attributes$class('white flex fw4 vh-100 bg-black-60'),
 					_1: {ctor: '[]'}
 				},
 				{

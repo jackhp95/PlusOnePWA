@@ -212,70 +212,130 @@ var _user$project$Main$determineTubers = F2(
 var _user$project$Main$updateHelp = F2(
 	function (msg, _p4) {
 		var _p5 = _p4;
-		var _p18 = _p5.windowSize;
-		var _p17 = _p5.users;
-		var _p16 = _p5.tubers;
-		var _p15 = _p5.tube;
-		var _p14 = _p5.position;
-		var _p13 = _p5.move;
-		var _p12 = _p5;
+		var _p22 = _p5.windowSize;
+		var _p21 = _p5.users;
+		var _p20 = _p5.tubers;
+		var _p19 = _p5.tube;
+		var _p18 = _p5.position;
+		var _p17 = _p5.move;
+		var _p16 = _p5;
 		var _p6 = msg;
 		switch (_p6.ctor) {
-			case 'MoveStart':
+			case 'TouchStart':
 				var _p7 = _p6._0;
-				return A6(
-					_user$project$Main$Model,
-					_p14,
-					_elm_lang$core$Maybe$Just(
-						A2(_user$project$Main$Move, _p7, _p7)),
-					_p15,
-					_p18,
+				return _elm_lang$core$Native_Utils.update(
 					_p16,
-					_p17);
-			case 'MoveAt':
-				return A6(
-					_user$project$Main$Model,
-					_p14,
-					A2(
-						_elm_lang$core$Maybe$map,
-						function (_p8) {
-							var _p9 = _p8;
-							return A2(_user$project$Main$Move, _p9.start, _p6._0);
-						},
-						_p13),
-					_p15,
-					_p18,
-					_p16,
-					_p17);
-			case 'MoveEnd':
-				return A6(
-					_user$project$Main$Model,
-					_user$project$Main$getPosition(_p12),
-					_elm_lang$core$Maybe$Nothing,
-					_p15,
-					_p18,
-					_p16,
-					_p17);
-			case 'ResizePool':
+					{
+						move: _elm_lang$core$Maybe$Just(
+							A2(
+								_user$project$Main$Move,
+								A2(
+									_elm_lang$mouse$Mouse$Position,
+									_elm_lang$core$Basics$round(
+										_elm_lang$core$Tuple$first(
+											_mpizenberg$elm_touch_events$Touch$clientPos(_p7))),
+									_elm_lang$core$Basics$round(
+										_elm_lang$core$Tuple$second(
+											_mpizenberg$elm_touch_events$Touch$clientPos(_p7)))),
+								A2(
+									_elm_lang$mouse$Mouse$Position,
+									_elm_lang$core$Basics$round(
+										_elm_lang$core$Tuple$first(
+											_mpizenberg$elm_touch_events$Touch$clientPos(_p7))),
+									_elm_lang$core$Basics$round(
+										_elm_lang$core$Tuple$second(
+											_mpizenberg$elm_touch_events$Touch$clientPos(_p7))))))
+					});
+			case 'TouchMove':
 				var _p10 = _p6._0;
+				return _elm_lang$core$Native_Utils.update(
+					_p16,
+					{
+						move: A2(
+							_elm_lang$core$Maybe$map,
+							function (_p8) {
+								var _p9 = _p8;
+								return A2(
+									_user$project$Main$Move,
+									_p9.start,
+									A2(
+										_elm_lang$mouse$Mouse$Position,
+										_elm_lang$core$Basics$round(
+											_elm_lang$core$Tuple$first(
+												_mpizenberg$elm_touch_events$Touch$clientPos(_p10))),
+										_elm_lang$core$Basics$round(
+											_elm_lang$core$Tuple$second(
+												_mpizenberg$elm_touch_events$Touch$clientPos(_p10)))));
+							},
+							_p17)
+					});
+			case 'TouchEnd':
 				return A6(
 					_user$project$Main$Model,
-					_p14,
-					_p13,
-					_p15,
-					_p10,
-					A2(_user$project$Main$determineTubers, _p12, _p10),
-					_p17);
-			default:
+					_user$project$Main$getPosition(_p16),
+					_elm_lang$core$Maybe$Nothing,
+					_p19,
+					_p22,
+					_p20,
+					_p21);
+			case 'TouchCancel':
+				return A6(
+					_user$project$Main$Model,
+					_user$project$Main$getPosition(_p16),
+					_elm_lang$core$Maybe$Nothing,
+					_p19,
+					_p22,
+					_p20,
+					_p21);
+			case 'MouseStart':
 				var _p11 = _p6._0;
+				return _elm_lang$core$Native_Utils.update(
+					_p16,
+					{
+						move: _elm_lang$core$Maybe$Just(
+							A2(_user$project$Main$Move, _p11, _p11))
+					});
+			case 'MouseMove':
+				return _elm_lang$core$Native_Utils.update(
+					_p16,
+					{
+						move: A2(
+							_elm_lang$core$Maybe$map,
+							function (_p12) {
+								var _p13 = _p12;
+								return A2(_user$project$Main$Move, _p13.start, _p6._0);
+							},
+							_p17)
+					});
+			case 'MouseEnd':
 				return A6(
 					_user$project$Main$Model,
+					_user$project$Main$getPosition(_p16),
+					_elm_lang$core$Maybe$Nothing,
+					_p19,
+					_p22,
+					_p20,
+					_p21);
+			case 'ResizePool':
+				var _p14 = _p6._0;
+				return A6(
+					_user$project$Main$Model,
+					_p18,
+					_p17,
+					_p19,
 					_p14,
-					_p13,
+					A2(_user$project$Main$determineTubers, _p16, _p14),
+					_p21);
+			default:
+				var _p15 = _p6._0;
+				return A6(
+					_user$project$Main$Model,
+					_p18,
+					_p17,
+					_p19,
 					_p15,
-					_p11,
-					A2(_user$project$Main$determineTubers, _p12, _p11),
-					_p17);
+					A2(_user$project$Main$determineTubers, _p16, _p15),
+					_p21);
 		}
 	});
 var _user$project$Main$update = F2(
@@ -420,6 +480,35 @@ var _user$project$Main$populateTubes = function (model) {
 		_user$project$Main$modelTube(model),
 		model.tubers);
 };
+var _user$project$Main$TouchCancel = function (a) {
+	return {ctor: 'TouchCancel', _0: a};
+};
+var _user$project$Main$TouchEnd = function (a) {
+	return {ctor: 'TouchEnd', _0: a};
+};
+var _user$project$Main$TouchMove = function (a) {
+	return {ctor: 'TouchMove', _0: a};
+};
+var _user$project$Main$TouchStart = function (a) {
+	return {ctor: 'TouchStart', _0: a};
+};
+var _user$project$Main$touchEvents = {
+	ctor: '::',
+	_0: _mpizenberg$elm_touch_events$SingleTouch$onStart(_user$project$Main$TouchStart),
+	_1: {
+		ctor: '::',
+		_0: _mpizenberg$elm_touch_events$SingleTouch$onMove(_user$project$Main$TouchMove),
+		_1: {
+			ctor: '::',
+			_0: _mpizenberg$elm_touch_events$SingleTouch$onEnd(_user$project$Main$TouchEnd),
+			_1: {
+				ctor: '::',
+				_0: _mpizenberg$elm_touch_events$SingleTouch$onCancel(_user$project$Main$TouchCancel),
+				_1: {ctor: '[]'}
+			}
+		}
+	}
+};
 var _user$project$Main$InitialWindow = function (a) {
 	return {ctor: 'InitialWindow', _0: a};
 };
@@ -428,24 +517,24 @@ var _user$project$Main$init = {ctor: '_Tuple2', _0: _user$project$Main$initialMo
 var _user$project$Main$ResizePool = function (a) {
 	return {ctor: 'ResizePool', _0: a};
 };
-var _user$project$Main$MoveEnd = function (a) {
-	return {ctor: 'MoveEnd', _0: a};
+var _user$project$Main$MouseEnd = function (a) {
+	return {ctor: 'MouseEnd', _0: a};
 };
-var _user$project$Main$MoveAt = function (a) {
-	return {ctor: 'MoveAt', _0: a};
+var _user$project$Main$MouseMove = function (a) {
+	return {ctor: 'MouseMove', _0: a};
 };
 var _user$project$Main$mouseMoveSubs = function (model) {
-	var _p19 = model.move;
-	if (_p19.ctor === 'Nothing') {
+	var _p23 = model.move;
+	if (_p23.ctor === 'Nothing') {
 		return _elm_lang$core$Platform_Sub$none;
 	} else {
 		return _elm_lang$core$Platform_Sub$batch(
 			{
 				ctor: '::',
-				_0: _elm_lang$mouse$Mouse$moves(_user$project$Main$MoveAt),
+				_0: _elm_lang$mouse$Mouse$moves(_user$project$Main$MouseMove),
 				_1: {
 					ctor: '::',
-					_0: _elm_lang$mouse$Mouse$ups(_user$project$Main$MoveEnd),
+					_0: _elm_lang$mouse$Mouse$ups(_user$project$Main$MouseEnd),
 					_1: {ctor: '[]'}
 				}
 			});
@@ -463,13 +552,13 @@ var _user$project$Main$subscriptions = function (model) {
 			}
 		});
 };
-var _user$project$Main$MoveStart = function (a) {
-	return {ctor: 'MoveStart', _0: a};
+var _user$project$Main$MouseStart = function (a) {
+	return {ctor: 'MouseStart', _0: a};
 };
-var _user$project$Main$onPointerDown = A2(
+var _user$project$Main$onMouseDown = A2(
 	_elm_lang$html$Html_Events$on,
-	'pointerdown',
-	A2(_elm_lang$core$Json_Decode$map, _user$project$Main$MoveStart, _elm_lang$mouse$Mouse$position));
+	'mousedown',
+	A2(_elm_lang$core$Json_Decode$map, _user$project$Main$MouseStart, _elm_lang$mouse$Mouse$position));
 var _user$project$Main$view = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
@@ -499,7 +588,7 @@ var _user$project$Main$view = function (model) {
 					_elm_lang$html$Html$div,
 					{
 						ctor: '::',
-						_0: _user$project$Main$onPointerDown,
+						_0: _user$project$Main$onMouseDown,
 						_1: {
 							ctor: '::',
 							_0: _elm_lang$html$Html_Attributes$class('bg-black-90'),
