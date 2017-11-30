@@ -117,9 +117,9 @@ Breathe BG/LG
     }
   </style>
 
-  <meta async name="apple-mobile-web-app-title" content="PlusOne">
-  <meta async name="apple-mobile-web-app-capable" content="yes">
-  <meta async name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="PlusOne">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
 
   <!-- Favicon starts -->
   <link async rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png">
@@ -198,22 +198,12 @@ Breathe BG/LG
 <script>
   var sw = new Worker('sw.js');
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js')
-      .then(function (sw) {
-
-        if (sw.installing) {
-          console.log('Service worker installing');
-        } else if (sw.waiting) {
-          console.log('Service worker installed');
-        } else if (sw.active) {
-          console.log('Service worker active');
-        }
-
-      }).catch(function (error) {
-        // registration failed
-        console.log('Registration failed with ' + error);
+    navigator.serviceWorker
+      .register('sw.js')
+      .then(function () {
+        console.log("Service Worker Registered");
       });
-  };
+  }
 </script>
 
 </html>
