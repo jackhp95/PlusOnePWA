@@ -193,7 +193,6 @@ Breathe BG/LG
 
 <script>
   var sw = new Worker('sw.js');
-  sw.postMessage();
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker
       .register('sw.js')
