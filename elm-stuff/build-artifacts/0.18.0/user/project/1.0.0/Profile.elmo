@@ -1,4 +1,4 @@
-var _user$project$Main$stringToEmoji = function (string) {
+var _user$project$Profile$stringToEmoji = function (string) {
 	var _p0 = string;
 	switch (_p0) {
 		case 'night owl':
@@ -13,7 +13,7 @@ var _user$project$Main$stringToEmoji = function (string) {
 			return '🤷';
 	}
 };
-var _user$project$Main$traitsIcons = function (traits) {
+var _user$project$Profile$traitsIcons = function (traits) {
 	var toIcon = function (x) {
 		return A2(
 			_elm_lang$html$Html$li,
@@ -34,7 +34,7 @@ var _user$project$Main$traitsIcons = function (traits) {
 					{
 						ctor: '::',
 						_0: _elm_lang$html$Html$text(
-							_user$project$Main$stringToEmoji(x.name)),
+							_user$project$Profile$stringToEmoji(x.name)),
 						_1: {ctor: '[]'}
 					}),
 				_1: {
@@ -69,7 +69,7 @@ var _user$project$Main$traitsIcons = function (traits) {
 		},
 		A2(_elm_lang$core$List$map, toIcon, traits));
 };
-var _user$project$Main$profileToolsView = function () {
+var _user$project$Profile$profileToolsView = function () {
 	var icon = function (x) {
 		return A2(
 			_elm_lang$html$Html$div,
@@ -130,7 +130,7 @@ var _user$project$Main$profileToolsView = function () {
 				}
 			}));
 }();
-var _user$project$Main$pastEvents = function (model) {
+var _user$project$Profile$pastEvents = function (model) {
 	var eventCard = function (_p1) {
 		var _p2 = _p1;
 		return A2(
@@ -240,7 +240,7 @@ var _user$project$Main$pastEvents = function (model) {
 							_elm_lang$html$Html$table,
 							{
 								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$class('ph4 white'),
+								_0: _elm_lang$html$Html_Attributes$class('ph4'),
 								_1: {ctor: '[]'}
 							},
 							{
@@ -257,7 +257,7 @@ var _user$project$Main$pastEvents = function (model) {
 			}
 		});
 };
-var _user$project$Main$profileBio = function (model) {
+var _user$project$Profile$profileBio = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
 		{
@@ -297,7 +297,7 @@ var _user$project$Main$profileBio = function (model) {
 			}
 		});
 };
-var _user$project$Main$profileAvi = function (avis) {
+var _user$project$Profile$profileAvi = function (avis) {
 	return A2(
 		_elm_lang$html$Html$div,
 		{
@@ -326,7 +326,7 @@ var _user$project$Main$profileAvi = function (avis) {
 			_1: {ctor: '[]'}
 		});
 };
-var _user$project$Main$profileView = function (model) {
+var _user$project$Profile$profileView = function (model) {
 	return A2(
 		_elm_lang$html$Html$section,
 		{
@@ -345,7 +345,7 @@ var _user$project$Main$profileView = function (model) {
 				},
 				{
 					ctor: '::',
-					_0: _user$project$Main$profileAvi(model.avi),
+					_0: _user$project$Profile$profileAvi(model.avi),
 					_1: {
 						ctor: '::',
 						_0: A2(
@@ -374,21 +374,21 @@ var _user$project$Main$profileView = function (model) {
 					},
 					{
 						ctor: '::',
-						_0: _user$project$Main$profileToolsView,
+						_0: _user$project$Profile$profileToolsView,
 						_1: {ctor: '[]'}
 					}),
 				_1: {
 					ctor: '::',
-					_0: _user$project$Main$profileBio(model),
+					_0: _user$project$Profile$profileBio(model),
 					_1: {
 						ctor: '::',
-						_0: _user$project$Main$traitsIcons(model.traits),
+						_0: _user$project$Profile$traitsIcons(model.traits),
 						_1: {
 							ctor: '::',
-							_0: _user$project$Main$pastEvents(model),
+							_0: _user$project$Profile$pastEvents(model),
 							_1: {
 								ctor: '::',
-								_0: _user$project$Main$traitsIcons(model.traits),
+								_0: _user$project$Profile$traitsIcons(model.traits),
 								_1: {ctor: '[]'}
 							}
 						}
@@ -397,7 +397,7 @@ var _user$project$Main$profileView = function (model) {
 			}
 		});
 };
-var _user$project$Main$view = function (model) {
+var _user$project$Profile$view = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
 		{
@@ -428,7 +428,7 @@ var _user$project$Main$view = function (model) {
 							},
 							{
 								ctor: '::',
-								_0: _user$project$Main$profileView(model),
+								_0: _user$project$Profile$profileView(model),
 								_1: {ctor: '[]'}
 							}),
 						_1: {ctor: '[]'}
@@ -437,15 +437,15 @@ var _user$project$Main$view = function (model) {
 			_1: {ctor: '[]'}
 		});
 };
-var _user$project$Main$update = F2(
+var _user$project$Profile$update = F2(
 	function (msg, model) {
 		var _p3 = msg;
 		return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 	});
-var _user$project$Main$subscriptions = function (_p4) {
+var _user$project$Profile$subscriptions = function (_p4) {
 	return _elm_lang$core$Platform_Sub$none;
 };
-var _user$project$Main$initModel = {
+var _user$project$Profile$initModel = {
 	name: 'Hannah Hazeldine',
 	avi: {
 		ctor: '::',
@@ -470,15 +470,15 @@ var _user$project$Main$initModel = {
 		}
 	}
 };
-var _user$project$Main$init = {ctor: '_Tuple2', _0: _user$project$Main$initModel, _1: _elm_lang$core$Platform_Cmd$none};
-var _user$project$Main$main = _elm_lang$html$Html$program(
-	{init: _user$project$Main$init, subscriptions: _user$project$Main$subscriptions, update: _user$project$Main$update, view: _user$project$Main$view})();
-var _user$project$Main$Model = F3(
+var _user$project$Profile$init = {ctor: '_Tuple2', _0: _user$project$Profile$initModel, _1: _elm_lang$core$Platform_Cmd$none};
+var _user$project$Profile$main = _elm_lang$html$Html$program(
+	{init: _user$project$Profile$init, subscriptions: _user$project$Profile$subscriptions, update: _user$project$Profile$update, view: _user$project$Profile$view})();
+var _user$project$Profile$Model = F3(
 	function (a, b, c) {
 		return {name: a, avi: b, traits: c};
 	});
-var _user$project$Main$Trait = F3(
+var _user$project$Profile$Trait = F3(
 	function (a, b, c) {
 		return {name: a, from: b, datetime: c};
 	});
-var _user$project$Main$Test = {ctor: 'Test'};
+var _user$project$Profile$Test = {ctor: 'Test'};

@@ -5,7 +5,7 @@
 module Nav exposing (bar)
 
 import Html exposing (..)
-import Html.Attributes exposing (style, class)
+import Html.Attributes exposing (style, class, href)
 import Icon exposing (..)
 import List exposing (map)
 
@@ -26,11 +26,13 @@ bar =
 
 home : Html msg
 home =
-    div [ class "grow-large ph4-l pv4-l ph3 flex-ns flex-column-l items-center dn" ]
-        [ div [ bgImg "Assets/WhitePlusOneLogo.svg", class "animated bounceIn contain bg-center h3-l w3-l h2 w2" ] []
-        , div
-            [ class "animated bounceInLeft fw7 pa3-m f4 dib-l dn ttn" ]
-            [ text "PlusOne" ]
+    a [ href "index.html", class "white link" ]
+        [ div [ class "grow-large ph4-l pv4-l ph3 flex-ns flex-column-l items-center dn" ]
+            [ div [ bgImg "Assets/WhitePlusOneLogo.svg", class "animated bounceIn contain bg-center h3-l w3-l h2 w2" ] []
+            , div
+                [ class "animated bounceInLeft fw7 pa3-m f4 dib-l dn ttn" ]
+                [ text "PlusOne" ]
+            ]
         ]
 
 
@@ -49,7 +51,9 @@ tab tuple =
         captionClasses =
             (class "pa3 pa2-m dn dib-ns")
     in
-        li [ class "animated zoomInLeft grow pr3-l pl4-l pv2-l mv2-l ph2 pointer hover-bg-black-50 z-999 flex flex-auto justify-center items-center br--right-l br-pill-l " ]
-            [ div [ iconClasses, (Icon.feather icon) ] []
-            , div [ captionClasses ] [ text page ]
+        a [ href "Profile.html", class "white link flex flex-auto" ]
+            [ li [ class "animated zoomInLeft grow pr3-l pl4-l pv2-l mv2-l ph2 pointer hover-bg-black-50 z-999 flex flex-auto justify-center items-center br--right-l br-pill-l " ]
+                [ div [ iconClasses, (Icon.feather icon) ] []
+                , div [ captionClasses ] [ text page ]
+                ]
             ]

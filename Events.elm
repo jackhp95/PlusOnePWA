@@ -437,10 +437,10 @@ yetToBeAdded =
 eventPool : Html msg
 eventPool =
     div [ class "flex items-center justify-around mh4 pv4 bb b--white-20" ]
-        [ a [ class "br-pill pa2 mh1 flex items-center mh1 grow" ]
+        [ a [ href "Pool.html", class "white link br-pill pa2 mh1 flex items-center mh1 grow" ]
             [ div [ Icon.feather "info", class "h2 w2 contain bg-center" ] []
             ]
-        , a [ class "lg-breathe-50 br1 pa2 mh1 flex items-center mh1 grow" ]
+        , a [ href "Pool.html", class "white link lg-breathe-50 br1 pa2 mh1 flex items-center mh1 grow" ]
             [ div [ Icon.feather "life-buoy", class "h2 w2 mh1 contain bg-center" ] []
             , div [ class "mh2 f4 fw4 ttn" ] [ text ("join pool") ]
             ]

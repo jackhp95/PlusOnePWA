@@ -4,50 +4,69 @@ var _user$project$Nav$tab = function (tuple) {
 	var page = _elm_lang$core$Tuple$first(tuple);
 	var icon = _elm_lang$core$Tuple$second(tuple);
 	return A2(
-		_elm_lang$html$Html$li,
+		_elm_lang$html$Html$a,
 		{
 			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('animated zoomInLeft grow pr3-l pl4-l pv2-l mv2-l ph2 pointer hover-bg-black-50 z-999 flex flex-auto justify-center items-center br--right-l br-pill-l '),
-			_1: {ctor: '[]'}
+			_0: _elm_lang$html$Html_Attributes$href('Profile.html'),
+			_1: {
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('white link flex flex-auto'),
+				_1: {ctor: '[]'}
+			}
 		},
 		{
 			ctor: '::',
 			_0: A2(
-				_elm_lang$html$Html$div,
+				_elm_lang$html$Html$li,
 				{
 					ctor: '::',
-					_0: iconClasses,
+					_0: _elm_lang$html$Html_Attributes$class('animated zoomInLeft grow pr3-l pl4-l pv2-l mv2-l ph2 pointer hover-bg-black-50 z-999 flex flex-auto justify-center items-center br--right-l br-pill-l '),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$div,
+						{
+							ctor: '::',
+							_0: iconClasses,
+							_1: {
+								ctor: '::',
+								_0: _user$project$Icon$feather(icon),
+								_1: {ctor: '[]'}
+							}
+						},
+						{ctor: '[]'}),
 					_1: {
 						ctor: '::',
-						_0: _user$project$Icon$feather(icon),
+						_0: A2(
+							_elm_lang$html$Html$div,
+							{
+								ctor: '::',
+								_0: captionClasses,
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text(page),
+								_1: {ctor: '[]'}
+							}),
 						_1: {ctor: '[]'}
 					}
-				},
-				{ctor: '[]'}),
-			_1: {
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$div,
-					{
-						ctor: '::',
-						_0: captionClasses,
-						_1: {ctor: '[]'}
-					},
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html$text(page),
-						_1: {ctor: '[]'}
-					}),
-				_1: {ctor: '[]'}
-			}
+				}),
+			_1: {ctor: '[]'}
 		});
 };
 var _user$project$Nav$home = A2(
-	_elm_lang$html$Html$div,
+	_elm_lang$html$Html$a,
 	{
 		ctor: '::',
-		_0: _elm_lang$html$Html_Attributes$class('grow-large ph4-l pv4-l ph3 flex-ns flex-column-l items-center dn'),
-		_1: {ctor: '[]'}
+		_0: _elm_lang$html$Html_Attributes$href('index.html'),
+		_1: {
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('white link'),
+			_1: {ctor: '[]'}
+		}
 	},
 	{
 		ctor: '::',
@@ -55,30 +74,41 @@ var _user$project$Nav$home = A2(
 			_elm_lang$html$Html$div,
 			{
 				ctor: '::',
-				_0: _user$project$Icon$bgImg('Assets/WhitePlusOneLogo.svg'),
+				_0: _elm_lang$html$Html_Attributes$class('grow-large ph4-l pv4-l ph3 flex-ns flex-column-l items-center dn'),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{
+						ctor: '::',
+						_0: _user$project$Icon$bgImg('Assets/WhitePlusOneLogo.svg'),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class('animated bounceIn contain bg-center h3-l w3-l h2 w2'),
+							_1: {ctor: '[]'}
+						}
+					},
+					{ctor: '[]'}),
 				_1: {
 					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class('animated bounceIn contain bg-center h3-l w3-l h2 w2'),
+					_0: A2(
+						_elm_lang$html$Html$div,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class('animated bounceInLeft fw7 pa3-m f4 dib-l dn ttn'),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text('PlusOne'),
+							_1: {ctor: '[]'}
+						}),
 					_1: {ctor: '[]'}
 				}
-			},
-			{ctor: '[]'}),
-		_1: {
-			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$div,
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class('animated bounceInLeft fw7 pa3-m f4 dib-l dn ttn'),
-					_1: {ctor: '[]'}
-				},
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html$text('PlusOne'),
-					_1: {ctor: '[]'}
-				}),
-			_1: {ctor: '[]'}
-		}
+			}),
+		_1: {ctor: '[]'}
 	});
 var _user$project$Nav$selections = {
 	ctor: '::',

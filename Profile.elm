@@ -1,4 +1,4 @@
-module Profile exposing (..)
+module Main exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -139,7 +139,7 @@ pastEvents model =
         div [ class "ma0 pv4 bb b--white-20" ]
             [ div [ class "fw7 pv2 mh4 f4" ] [ text "previous events" ]
             , div [ class "mv2 overflow-auto" ]
-                [ table [ class "ph4" ]
+                [ table [ class "ph4 white" ]
                     [ tr []
                         (List.map eventCard prevEvents)
                     ]
