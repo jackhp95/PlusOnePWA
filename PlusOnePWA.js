@@ -11138,6 +11138,29 @@ var _rluiten$elm_date_extra$Date_Extra_Format$utcIsoString = function (date) {
 };
 var _rluiten$elm_date_extra$Date_Extra_Format$isoFormat = '%Y-%m-%dT%H:%M:%S';
 
+var _user$project$Icon$bgImg = function (imgPath) {
+	return _elm_lang$html$Html_Attributes$style(
+		{
+			ctor: '::',
+			_0: {
+				ctor: '_Tuple2',
+				_0: 'background-image',
+				_1: A2(
+					_elm_lang$core$Basics_ops['++'],
+					'url(\'',
+					A2(_elm_lang$core$Basics_ops['++'], imgPath, '\')'))
+			},
+			_1: {ctor: '[]'}
+		});
+};
+var _user$project$Icon$feather = function (icon) {
+	return _user$project$Icon$bgImg(
+		A2(
+			_elm_lang$core$Basics_ops['++'],
+			'https://icongr.am/feather/',
+			A2(_elm_lang$core$Basics_ops['++'], icon, '.svg?size=20&color=ffffff')));
+};
+
 var _user$project$SeatGeek$performerStatsView = function (stats) {
 	return A2(
 		_elm_lang$html$Html$dl,
@@ -13474,29 +13497,6 @@ var _user$project$SeatGeek$view = function (model) {
 var _user$project$SeatGeek$main = _elm_lang$html$Html$program(
 	{init: _user$project$SeatGeek$init, view: _user$project$SeatGeek$view, update: _user$project$SeatGeek$update, subscriptions: _user$project$SeatGeek$subscriptions})();
 
-var _user$project$Icon$bgImg = function (imgPath) {
-	return _elm_lang$html$Html_Attributes$style(
-		{
-			ctor: '::',
-			_0: {
-				ctor: '_Tuple2',
-				_0: 'background-image',
-				_1: A2(
-					_elm_lang$core$Basics_ops['++'],
-					'url(\'',
-					A2(_elm_lang$core$Basics_ops['++'], imgPath, '\')'))
-			},
-			_1: {ctor: '[]'}
-		});
-};
-var _user$project$Icon$feather = function (icon) {
-	return _user$project$Icon$bgImg(
-		A2(
-			_elm_lang$core$Basics_ops['++'],
-			'https://icongr.am/feather/',
-			A2(_elm_lang$core$Basics_ops['++'], icon, '.svg?size=20&color=ffffff')));
-};
-
 var _user$project$Nav$tab = function (tuple) {
 	var captionClasses = _elm_lang$html$Html_Attributes$class('pa3 pa2-m dn dib-ns');
 	var iconClasses = _elm_lang$html$Html_Attributes$class('w2 h2 w1-m h1-m contain');
@@ -13624,10 +13624,10 @@ var _user$project$Nav$bar = A2(
 		}
 	});
 
-var _user$project$Events$subscriptions = function (model) {
+var _user$project$Main$subscriptions = function (model) {
 	return _elm_lang$core$Platform_Sub$none;
 };
-var _user$project$Events$stringToEmoji = function (string) {
+var _user$project$Main$stringToEmoji = function (string) {
 	var _p0 = string;
 	switch (_p0) {
 		case 'concert':
@@ -13690,7 +13690,7 @@ var _user$project$Events$stringToEmoji = function (string) {
 			return '🤷';
 	}
 };
-var _user$project$Events$featherIcon = function (icon) {
+var _user$project$Main$featherIcon = function (icon) {
 	return _elm_lang$html$Html_Attributes$style(
 		{
 			ctor: '::',
@@ -13705,7 +13705,7 @@ var _user$project$Events$featherIcon = function (icon) {
 			_1: {ctor: '[]'}
 		});
 };
-var _user$project$Events$maybeImage = function (performers) {
+var _user$project$Main$maybeImage = function (performers) {
 	var _p1 = _elm_lang$core$List$head(performers);
 	if (_p1.ctor === 'Just') {
 		return _p1._0.image;
@@ -13713,7 +13713,7 @@ var _user$project$Events$maybeImage = function (performers) {
 		return _elm_lang$core$Maybe$Nothing;
 	}
 };
-var _user$project$Events$eventIcons = function (event) {
+var _user$project$Main$eventIcons = function (event) {
 	var toIcon = function (x) {
 		return A2(
 			_elm_lang$html$Html$li,
@@ -13734,7 +13734,7 @@ var _user$project$Events$eventIcons = function (event) {
 					{
 						ctor: '::',
 						_0: _elm_lang$html$Html$text(
-							_user$project$Events$stringToEmoji(x.name)),
+							_user$project$Main$stringToEmoji(x.name)),
 						_1: {ctor: '[]'}
 					}),
 				_1: {
@@ -13769,7 +13769,7 @@ var _user$project$Events$eventIcons = function (event) {
 		},
 		A2(_elm_lang$core$List$map, toIcon, event.taxonomies));
 };
-var _user$project$Events$progressBar = function (num) {
+var _user$project$Main$progressBar = function (num) {
 	var percent = num * 100;
 	var _p2 = percent;
 	if (_p2 === 0.0) {
@@ -13812,7 +13812,7 @@ var _user$project$Events$progressBar = function (num) {
 			});
 	}
 };
-var _user$project$Events$eventPool = A2(
+var _user$project$Main$eventPool = A2(
 	_elm_lang$html$Html$div,
 	{
 		ctor: '::',
@@ -13902,7 +13902,7 @@ var _user$project$Events$eventPool = A2(
 			}
 		}
 	});
-var _user$project$Events$yetToBeAdded = A2(
+var _user$project$Main$yetToBeAdded = A2(
 	_elm_lang$html$Html$div,
 	{
 		ctor: '::',
@@ -13914,7 +13914,7 @@ var _user$project$Events$yetToBeAdded = A2(
 		_0: _elm_lang$html$Html$text('I still need to add genres in the emojis.\n                I need to have photo galleries for extra photos,\n                other events at the venue, other venues the artist will be at,\n                spotify, Last.fm, and google maps integration. I also need to make\n                events that do not have defined times do not display a time.\n\n                Sed ut perspiciatis, unde omnis iste natus error sit voluptatem\n                accusantium doloremque laudantium, totam rem aperiam eaque ipsa,\n                quae ab illo inventore veritatis et quasi architecto beatae vitae\n                dicta sunt, explicabo. Nemo enim ipsam voluptatem, quia voluptas sit,\n                aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos,\n                qui ratione voluptatem sequi nesciunt, neque porro quisquam est.\n                qui dolorem ipsum, quia dolor sit amet consectetur adipisci.\n                velit, sed quia non numquam [do] eius modi tempora inci[di]dunt,\n                ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima\n                veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam,\n                nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure\n                reprehenderit, qui in ea voluptate velit esse, quam nihil molestiae\n                consequatur, vel illum, qui dolorem eum fugiat, quo voluptas nulla pariatur?\n                '),
 		_1: {ctor: '[]'}
 	});
-var _user$project$Events$eventPopularity = function (event) {
+var _user$project$Main$eventPopularity = function (event) {
 	var _p3 = event.popularity;
 	if (_p3 === 0.0) {
 		return _elm_lang$html$Html$text('');
@@ -13951,10 +13951,10 @@ var _user$project$Events$eventPopularity = function (event) {
 						},
 						{
 							ctor: '::',
-							_0: _user$project$Events$progressBar(event.popularity),
+							_0: _user$project$Main$progressBar(event.popularity),
 							_1: {
 								ctor: '::',
-								_0: _user$project$Events$progressBar(event.score),
+								_0: _user$project$Main$progressBar(event.score),
 								_1: {ctor: '[]'}
 							}
 						}),
@@ -13963,7 +13963,7 @@ var _user$project$Events$eventPopularity = function (event) {
 			});
 	}
 };
-var _user$project$Events$eventTickets = function (event) {
+var _user$project$Main$eventTickets = function (event) {
 	var emptyTickets = A2(
 		_elm_lang$core$List$all,
 		function (x) {
@@ -14050,7 +14050,7 @@ var _user$project$Events$eventTickets = function (event) {
 		return _elm_lang$html$Html$text('');
 	}
 };
-var _user$project$Events$thisPartOfDay = function (hour) {
+var _user$project$Main$thisPartOfDay = function (hour) {
 	return _elm_lang$core$Native_Utils.eq(hour, 1) ? 'in an hour' : A2(
 		_elm_lang$core$Basics_ops['++'],
 		'in ',
@@ -14059,7 +14059,7 @@ var _user$project$Events$thisPartOfDay = function (hour) {
 			_elm_lang$core$Basics$toString(hour),
 			' hours'));
 };
-var _user$project$Events$somePartOfDay = F2(
+var _user$project$Main$somePartOfDay = F2(
 	function (hour, day) {
 		return _elm_lang$core$Native_Utils.eq(hour, 0) ? A2(_elm_lang$core$Basics_ops['++'], day, ' at midnight') : ((_elm_lang$core$Native_Utils.cmp(hour, 3) < 0) ? A2(_elm_lang$core$Basics_ops['++'], day, ' after midnight') : ((_elm_lang$core$Native_Utils.cmp(hour, 5) < 0) ? A2(_elm_lang$core$Basics_ops['++'], day, ' at dawn') : ((_elm_lang$core$Native_Utils.cmp(hour, 8) < 0) ? A2(
 			_elm_lang$core$Basics_ops['++'],
@@ -14075,7 +14075,7 @@ var _user$project$Events$somePartOfDay = F2(
 			'late ',
 			A2(_elm_lang$core$Basics_ops['++'], day, ' night')) : 'For some reason, I think there are more than 24 hours in a day.')))))))))));
 	});
-var _user$project$Events$simpleTime = F2(
+var _user$project$Main$simpleTime = F2(
 	function (delta, maybeEventDate) {
 		var _p5 = maybeEventDate;
 		if (_p5.ctor === 'Nothing') {
@@ -14100,22 +14100,22 @@ var _user$project$Events$simpleTime = F2(
 				'next ',
 				_rluiten$elm_date_extra$Date_Extra_I18n_I_en_us$dayName(
 					_elm_lang$core$Date$dayOfWeek(_p6))) : ((_elm_lang$core$Native_Utils.cmp(delta.day, 1) > 0) ? A2(
-				_user$project$Events$somePartOfDay,
+				_user$project$Main$somePartOfDay,
 				_elm_lang$core$Date$hour(_p6),
 				_rluiten$elm_date_extra$Date_Extra_I18n_I_en_us$dayName(
 					_elm_lang$core$Date$dayOfWeek(_p6))) : (_elm_lang$core$Native_Utils.eq(delta.day, 1) ? A2(
-				_user$project$Events$somePartOfDay,
+				_user$project$Main$somePartOfDay,
 				_elm_lang$core$Date$hour(_p6),
 				_rluiten$elm_date_extra$Date_Extra_I18n_I_en_us$dayName(
-					_elm_lang$core$Date$dayOfWeek(_p6))) : _user$project$Events$thisPartOfDay(
+					_elm_lang$core$Date$dayOfWeek(_p6))) : _user$project$Main$thisPartOfDay(
 				_elm_lang$core$Date$hour(_p6))))))))));
 		}
 	});
-var _user$project$Events$maybeEventDate = function (date) {
+var _user$project$Main$maybeEventDate = function (date) {
 	return _elm_lang$core$Result$toMaybe(
 		_elm_lang$core$Date$fromString(date));
 };
-var _user$project$Events$eventTime = F2(
+var _user$project$Main$eventTime = F2(
 	function (event, maybeNow) {
 		var clockTime = function (x) {
 			return A3(_rluiten$elm_date_extra$Date_Extra_Format$format, _rluiten$elm_date_extra$Date_Extra_Config_Config_en_us$config, '%-I:%M %P', x);
@@ -14124,7 +14124,7 @@ var _user$project$Events$eventTime = F2(
 			return A3(_rluiten$elm_date_extra$Date_Extra_Format$format, _rluiten$elm_date_extra$Date_Extra_Config_Config_en_us$config, '%A, %B %@e, %Y', x);
 		};
 		var eventDateView = function () {
-			var _p7 = _user$project$Events$maybeEventDate(event.datetime_local);
+			var _p7 = _user$project$Main$maybeEventDate(event.datetime_local);
 			if (_p7.ctor === 'Nothing') {
 				return {
 					ctor: '::',
@@ -14187,16 +14187,16 @@ var _user$project$Events$eventTime = F2(
 					eventDateView),
 				_1: {
 					ctor: '::',
-					_0: _user$project$Events$eventTickets(event),
+					_0: _user$project$Main$eventTickets(event),
 					_1: {ctor: '[]'}
 				}
 			});
 	});
-var _user$project$Events$deltaTime = F2(
+var _user$project$Main$deltaTime = F2(
 	function (now, upcoming) {
 		return A3(_elm_lang$core$Maybe$map2, _rluiten$elm_date_extra$Date_Extra_Duration$diff, upcoming, now);
 	});
-var _user$project$Events$eventTitle = function (event) {
+var _user$project$Main$eventTitle = function (event) {
 	var textSize = F2(
 		function (x, y) {
 			var _p9 = (_elm_lang$core$String$length(x) / y) | 0;
@@ -14270,7 +14270,7 @@ var _user$project$Events$eventTitle = function (event) {
 			}
 		});
 };
-var _user$project$Events$selectedEvent = function (model) {
+var _user$project$Main$selectedEvent = function (model) {
 	return _elm_lang$core$List$head(
 		A2(
 			_elm_lang$core$List$filter,
@@ -14281,7 +14281,7 @@ var _user$project$Events$selectedEvent = function (model) {
 			},
 			model.seatgeek.events));
 };
-var _user$project$Events$discoverToolsView = function () {
+var _user$project$Main$discoverToolsView = function () {
 	var icon = function (x) {
 		return A2(
 			_elm_lang$html$Html$div,
@@ -14339,7 +14339,7 @@ var _user$project$Events$discoverToolsView = function () {
 				}
 			}));
 }();
-var _user$project$Events$gradients = {
+var _user$project$Main$gradients = {
 	ctor: '::',
 	_0: 'lg-magenta-red',
 	_1: {
@@ -14476,14 +14476,14 @@ var _user$project$Events$gradients = {
 		}
 	}
 };
-var _user$project$Events$randomGradient = function (event) {
+var _user$project$Main$randomGradient = function (event) {
 	var randomSeed = _elm_lang$core$String$length(event.title) * _elm_lang$core$String$length(event.url);
 	var randomIndex = A2(
 		_elm_lang$core$Basics_ops['%'],
 		randomSeed,
-		_elm_lang$core$List$length(_user$project$Events$gradients));
+		_elm_lang$core$List$length(_user$project$Main$gradients));
 	var selectedGradient = _elm_lang$core$List$head(
-		A2(_elm_lang$core$List$drop, randomIndex, _user$project$Events$gradients));
+		A2(_elm_lang$core$List$drop, randomIndex, _user$project$Main$gradients));
 	var _p10 = selectedGradient;
 	if (_p10.ctor === 'Nothing') {
 		return '';
@@ -14491,12 +14491,12 @@ var _user$project$Events$randomGradient = function (event) {
 		return A2(_elm_lang$core$Basics_ops['++'], _p10._0, '');
 	}
 };
-var _user$project$Events$eventBanner = function (event) {
+var _user$project$Main$eventBanner = function (event) {
 	var heroImg = function () {
-		var _p11 = _user$project$Events$maybeImage(event.performers);
+		var _p11 = _user$project$Main$maybeImage(event.performers);
 		if (_p11.ctor === 'Nothing') {
 			return _elm_lang$html$Html_Attributes$class(
-				_user$project$Events$randomGradient(event));
+				_user$project$Main$randomGradient(event));
 		} else {
 			return _elm_lang$html$Html_Attributes$style(
 				{
@@ -14544,7 +14544,7 @@ var _user$project$Events$eventBanner = function (event) {
 				},
 				{
 					ctor: '::',
-					_0: _user$project$Events$discoverToolsView,
+					_0: _user$project$Main$discoverToolsView,
 					_1: {
 						ctor: '::',
 						_0: A2(
@@ -14560,7 +14560,7 @@ var _user$project$Events$eventBanner = function (event) {
 									_elm_lang$html$Html$div,
 									{
 										ctor: '::',
-										_0: _user$project$Events$featherIcon('life-buoy'),
+										_0: _user$project$Main$featherIcon('life-buoy'),
 										_1: {
 											ctor: '::',
 											_0: _elm_lang$html$Html_Attributes$class('h3 w3 contain'),
@@ -14576,9 +14576,9 @@ var _user$project$Events$eventBanner = function (event) {
 			_1: {ctor: '[]'}
 		});
 };
-var _user$project$Events$eventView = function (model) {
+var _user$project$Main$eventView = function (model) {
 	var now = model.currentDatetime;
-	var event = _user$project$Events$selectedEvent(model);
+	var event = _user$project$Main$selectedEvent(model);
 	var _p12 = event;
 	if (_p12.ctor === 'Nothing') {
 		return _elm_lang$html$Html$text('');
@@ -14593,25 +14593,25 @@ var _user$project$Events$eventView = function (model) {
 			},
 			{
 				ctor: '::',
-				_0: _user$project$Events$eventBanner(_p13),
+				_0: _user$project$Main$eventBanner(_p13),
 				_1: {
 					ctor: '::',
-					_0: _user$project$Events$eventTitle(_p13),
+					_0: _user$project$Main$eventTitle(_p13),
 					_1: {
 						ctor: '::',
-						_0: _user$project$Events$eventIcons(_p13),
+						_0: _user$project$Main$eventIcons(_p13),
 						_1: {
 							ctor: '::',
-							_0: A2(_user$project$Events$eventTime, _p13, now),
+							_0: A2(_user$project$Main$eventTime, _p13, now),
 							_1: {
 								ctor: '::',
-								_0: _user$project$Events$eventPool,
+								_0: _user$project$Main$eventPool,
 								_1: {
 									ctor: '::',
-									_0: _user$project$Events$eventPopularity(_p13),
+									_0: _user$project$Main$eventPopularity(_p13),
 									_1: {
 										ctor: '::',
-										_0: _user$project$Events$yetToBeAdded,
+										_0: _user$project$Main$yetToBeAdded,
 										_1: {ctor: '[]'}
 									}
 								}
@@ -14622,11 +14622,11 @@ var _user$project$Events$eventView = function (model) {
 			});
 	}
 };
-var _user$project$Events$Model = F3(
+var _user$project$Main$Model = F3(
 	function (a, b, c) {
 		return {seatgeek: a, selectedEvent: b, currentDatetime: c};
 	});
-var _user$project$Events$update = F2(
+var _user$project$Main$update = F2(
 	function (msg, model) {
 		var _p14 = msg;
 		switch (_p14.ctor) {
@@ -14636,7 +14636,7 @@ var _user$project$Events$update = F2(
 					return {
 						ctor: '_Tuple2',
 						_0: A3(
-							_user$project$Events$Model,
+							_user$project$Main$Model,
 							A2(
 								_user$project$SeatGeek$Reply,
 								_p15.meta,
@@ -14681,17 +14681,17 @@ var _user$project$Events$update = F2(
 				};
 		}
 	});
-var _user$project$Events$OnDatetime = function (a) {
+var _user$project$Main$OnDatetime = function (a) {
 	return {ctor: 'OnDatetime', _0: a};
 };
-var _user$project$Events$getDatetime = A2(_elm_lang$core$Task$perform, _user$project$Events$OnDatetime, _elm_lang$core$Date$now);
-var _user$project$Events$ViewEvent = function (a) {
+var _user$project$Main$getDatetime = A2(_elm_lang$core$Task$perform, _user$project$Main$OnDatetime, _elm_lang$core$Date$now);
+var _user$project$Main$ViewEvent = function (a) {
 	return {ctor: 'ViewEvent', _0: a};
 };
-var _user$project$Events$eventListView = F2(
+var _user$project$Main$eventListView = F2(
 	function (maybeNow, event) {
 		var cardImage = function () {
-			var _p17 = _user$project$Events$maybeImage(event.performers);
+			var _p17 = _user$project$Main$maybeImage(event.performers);
 			if (_p17.ctor === 'Just') {
 				return A2(
 					_elm_lang$html$Html$div,
@@ -14701,7 +14701,7 @@ var _user$project$Events$eventListView = F2(
 							A2(
 								_elm_lang$core$Basics_ops['++'],
 								'w-100 mb2 mt1 ',
-								_user$project$Events$randomGradient(event))),
+								_user$project$Main$randomGradient(event))),
 						_1: {ctor: '[]'}
 					},
 					{
@@ -14740,7 +14740,7 @@ var _user$project$Events$eventListView = F2(
 			_elm_lang$html$Html$div,
 			{
 				ctor: '::',
-				_0: _user$project$Events$featherIcon('at-sign'),
+				_0: _user$project$Main$featherIcon('at-sign'),
 				_1: {
 					ctor: '::',
 					_0: _elm_lang$html$Html_Attributes$class('contain dib bg-center mr1 mt1 pb3 pr3'),
@@ -14750,16 +14750,16 @@ var _user$project$Events$eventListView = F2(
 			{ctor: '[]'});
 		var viewTime = function () {
 			var _p18 = A2(
-				_user$project$Events$deltaTime,
+				_user$project$Main$deltaTime,
 				maybeNow,
-				_user$project$Events$maybeEventDate(event.datetime_local));
+				_user$project$Main$maybeEventDate(event.datetime_local));
 			if (_p18.ctor === 'Nothing') {
 				return 'whoopsie, viewTime messed up';
 			} else {
 				return A2(
-					_user$project$Events$simpleTime,
+					_user$project$Main$simpleTime,
 					_p18._0,
-					_user$project$Events$maybeEventDate(event.datetime_local));
+					_user$project$Main$maybeEventDate(event.datetime_local));
 			}
 		}();
 		return A2(
@@ -14770,7 +14770,7 @@ var _user$project$Events$eventListView = F2(
 				_1: {
 					ctor: '::',
 					_0: _elm_lang$html$Html_Events$onClick(
-						_user$project$Events$ViewEvent(
+						_user$project$Main$ViewEvent(
 							_elm_lang$core$Maybe$Just(event.id))),
 					_1: {ctor: '[]'}
 				}
@@ -14876,7 +14876,7 @@ var _user$project$Events$eventListView = F2(
 															{
 																ctor: '::',
 																_0: _elm_lang$html$Html$text(
-																	_user$project$Events$stringToEmoji(x.name)),
+																	_user$project$Main$stringToEmoji(x.name)),
 																_1: {ctor: '[]'}
 															});
 													},
@@ -14891,12 +14891,12 @@ var _user$project$Events$eventListView = F2(
 				}
 			});
 	});
-var _user$project$Events$eventsView = function (model) {
+var _user$project$Main$eventsView = function (model) {
 	return A2(
 		_elm_lang$html$Html$section,
 		{
 			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('animated fadeInUp mw6-ns bg-black-40 overflow-auto z-999 shadow-2 mr3-l mr2-m flex-grow-1'),
+			_0: _elm_lang$html$Html_Attributes$class('animated fadeInUp mw6-ns bg-black-40 overflow-auto z-999 shadow-2-l mr3-l mr2-m flex-grow-1'),
 			_1: {ctor: '[]'}
 		},
 		{
@@ -14910,7 +14910,7 @@ var _user$project$Events$eventsView = function (model) {
 				},
 				{
 					ctor: '::',
-					_0: _user$project$Events$discoverToolsView,
+					_0: _user$project$Main$discoverToolsView,
 					_1: {
 						ctor: '::',
 						_0: A2(
@@ -14935,85 +14935,74 @@ var _user$project$Events$eventsView = function (model) {
 					{ctor: '[]'},
 					A2(
 						_elm_lang$core$List$map,
-						_user$project$Events$eventListView(model.currentDatetime),
+						_user$project$Main$eventListView(model.currentDatetime),
 						model.seatgeek.events)),
 				_1: {ctor: '[]'}
 			}
 		});
 };
-var _user$project$Events$view = function (model) {
+var _user$project$Main$view = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
 		{
 			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('overflow-hidden animated fadeIn ttl'),
+			_0: _elm_lang$html$Html_Attributes$class('overflow-hidden animated fadeIn ttl white flex fw4 vh-100 bg-black-60'),
 			_1: {ctor: '[]'}
 		},
 		{
 			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$div,
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class('white flex fw4 vh-100 bg-black-60'),
-					_1: {ctor: '[]'}
-				},
-				{
-					ctor: '::',
-					_0: _user$project$Nav$bar,
-					_1: {
+			_0: _user$project$Nav$bar,
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$main_,
+					{
 						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$main_,
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$class('flex-auto pt5-m pb5 pb0-ns flex justify-stretch'),
-								_1: {ctor: '[]'}
-							},
-							{
-								ctor: '::',
-								_0: _user$project$Events$eventsView(model),
-								_1: {
-									ctor: '::',
-									_0: _user$project$Events$eventView(model),
-									_1: {ctor: '[]'}
-								}
-							}),
+						_0: _elm_lang$html$Html_Attributes$class('flex-auto pt5-m pb5 pb0-ns flex justify-stretch'),
 						_1: {ctor: '[]'}
-					}
-				}),
-			_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: _user$project$Main$eventsView(model),
+						_1: {
+							ctor: '::',
+							_0: _user$project$Main$eventView(model),
+							_1: {ctor: '[]'}
+						}
+					}),
+				_1: {ctor: '[]'}
+			}
 		});
 };
-var _user$project$Events$GetReply = function (a) {
+var _user$project$Main$GetReply = function (a) {
 	return {ctor: 'GetReply', _0: a};
 };
-var _user$project$Events$askQuery = function (query) {
+var _user$project$Main$askQuery = function (query) {
 	var url = _user$project$SeatGeek$composeRequest(query);
 	var request = A2(_elm_lang$http$Http$get, url, _user$project$SeatGeek$decodeReply);
-	return A2(_elm_lang$http$Http$send, _user$project$Events$GetReply, request);
+	return A2(_elm_lang$http$Http$send, _user$project$Main$GetReply, request);
 };
-var _user$project$Events$init = {
+var _user$project$Main$init = {
 	ctor: '_Tuple2',
 	_0: {seatgeek: _user$project$SeatGeek$emptyReply, selectedEvent: _elm_lang$core$Maybe$Nothing, currentDatetime: _elm_lang$core$Maybe$Nothing},
 	_1: _elm_lang$core$Platform_Cmd$batch(
 		{
 			ctor: '::',
-			_0: _user$project$Events$askQuery(_user$project$SeatGeek$initQuery),
+			_0: _user$project$Main$askQuery(_user$project$SeatGeek$initQuery),
 			_1: {
 				ctor: '::',
-				_0: _user$project$Events$getDatetime,
+				_0: _user$project$Main$getDatetime,
 				_1: {ctor: '[]'}
 			}
 		})
 };
-var _user$project$Events$main = _elm_lang$html$Html$program(
-	{init: _user$project$Events$init, view: _user$project$Events$view, update: _user$project$Events$update, subscriptions: _user$project$Events$subscriptions})();
+var _user$project$Main$main = _elm_lang$html$Html$program(
+	{init: _user$project$Main$init, view: _user$project$Main$view, update: _user$project$Main$update, subscriptions: _user$project$Main$subscriptions})();
 
 var Elm = {};
-Elm['Events'] = Elm['Events'] || {};
-if (typeof _user$project$Events$main !== 'undefined') {
-    _user$project$Events$main(Elm['Events'], 'Events', undefined);
+Elm['Main'] = Elm['Main'] || {};
+if (typeof _user$project$Main$main !== 'undefined') {
+    _user$project$Main$main(Elm['Main'], 'Main', undefined);
 }
 
 if (typeof define === "function" && define['amd'])

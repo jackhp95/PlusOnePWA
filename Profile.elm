@@ -69,10 +69,11 @@ update msg model =
 view : Model -> Html Msg
 view model =
     div [ class "lg-breathe-50 overflow-hidden" ]
-        [ Html.node "link" [ Html.Attributes.rel "stylesheet", Html.Attributes.href tachyonsCSS ] []
-        , Html.node "link" [ Html.Attributes.rel "stylesheet", Html.Attributes.href plusOneCSS ] []
-        , Html.node "link" [ Html.Attributes.rel "stylesheet", Html.Attributes.href animateCSS ] []
-        , div [ class "white flex fw1 vh-100 bg-black-60" ]
+        [ -- Html.node "link" [ Html.Attributes.rel "stylesheet", Html.Attributes.href tachyonsCSS ] []
+          -- , Html.node "link" [ Html.Attributes.rel "stylesheet", Html.Attributes.href plusOneCSS ] []
+          -- , Html.node "link" [ Html.Attributes.rel "stylesheet", Html.Attributes.href animateCSS ] []
+          -- ,
+          div [ class "white flex fw1 vh-100 bg-black-60" ]
             [ Nav.bar
             , main_ [ class "flex-auto pt5-m mb5 mb0-ns flex justify-stretch" ]
                 [ profileView model
@@ -191,16 +192,13 @@ stringToEmoji string =
             "\x1F937"
 
 
-tachyonsCSS : String
-tachyonsCSS =
-    "Admin/tachyons.css"
 
-
-plusOneCSS : String
-plusOneCSS =
-    "Admin/plusOne.css"
-
-
-animateCSS : String
-animateCSS =
-    "https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css"
+-- tachyonsCSS : String
+-- tachyonsCSS =
+--     "Admin/tachyons.css"
+-- plusOneCSS : String
+-- plusOneCSS =
+--     "Admin/plusOne.css"
+-- animateCSS : String
+-- animateCSS =
+--     "https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css"

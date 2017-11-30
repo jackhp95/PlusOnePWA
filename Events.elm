@@ -2,7 +2,7 @@
 -- https://guide.elm-lang.org/architecture/effects/http.html
 
 
-module Events exposing (..)
+module Main exposing (..)
 
 import SeatGeek exposing (..)
 import Nav exposing (bar)
@@ -168,23 +168,18 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    div [ class "overflow-hidden animated fadeIn ttl" ]
-        [ --Html.node "link" [ Html.Attributes.rel "stylesheet", Html.Attributes.href tachyonsCSS ] []
-          --, Html.node "link" [ Html.Attributes.rel "stylesheet", Html.Attributes.href plusOneCSS ] []
-          --, Html.node "link" [ Html.Attributes.rel "stylesheet", Html.Attributes.href animateCSS ] [],
-          div [ class "white flex fw4 vh-100 bg-black-60" ]
-            [ Nav.bar
-            , main_ [ class "flex-auto pt5-m pb5 pb0-ns flex justify-stretch" ]
-                [ eventsView model
-                , eventView model
-                ]
+    div [ class "overflow-hidden animated fadeIn ttl white flex fw4 vh-100 bg-black-60" ]
+        [ Nav.bar
+        , main_ [ class "flex-auto pt5-m pb5 pb0-ns flex justify-stretch" ]
+            [ eventsView model
+            , eventView model
             ]
         ]
 
 
 eventsView : Model -> Html Msg
 eventsView model =
-    section [ class "animated fadeInUp mw6-ns bg-black-40 overflow-auto z-999 shadow-2 mr3-l mr2-m flex-grow-1" ]
+    section [ class "animated fadeInUp mw6-ns bg-black-40 overflow-auto z-999 shadow-2-l mr3-l mr2-m flex-grow-1" ]
         [ div [ class "lg-breathe-50 h5 flex flex-column justify-between pa3" ]
             [ discoverToolsView
             , div [ class "f1 f2-m lh-solid fw7 ma0 pa0" ]

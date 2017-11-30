@@ -169,12 +169,13 @@ Breathe BG/LG
 
 </body>
 
-<!-- Put the name of your app here (my sources place in `src` forder) -->
 <!-- <script type="text/javascript" src="/_compile/Events.elm"></script> -->
-<script type="text/javascript" src="PlusOnePWA.js"></script>
+<script type="text/javascript" src="PlusOnePWA.js">
+</script>
 
-<!-- Removes splash and starts elm app. -->
+
 <script type="text/javascript">
+  //Removes splash and starts elm app.
   var elapsed = new Date().getTime() - start;
 
   while (document.body.firstChild) {
@@ -184,8 +185,8 @@ Breathe BG/LG
       document.body.removeChild(document.body.firstChild);
     }
   }
-  runElmProgram();
-  var node = document.getElementById('main');
+  // runElmProgram();
+  // var node = document.getElementById('main');
   var app = Elm.Main.fullscreen();
 </script>
 
