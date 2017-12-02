@@ -12676,7 +12676,7 @@ var _user$project$Profile$view = function (x) {
 		_elm_lang$html$Html$section,
 		{
 			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('w-100 mw7-l overflow-auto'),
+			_0: _elm_lang$html$Html_Attributes$class('w-100 mw7-l overflow-auto shadow-2-l'),
 			_1: {ctor: '[]'}
 		},
 		{
@@ -13001,7 +13001,7 @@ var _user$project$Chat$view = function (x) {
 		_elm_lang$html$Html$div,
 		{
 			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('bg-black-70 flex flex-column flex-auto measure-wide pa0 ma0'),
+			_0: _elm_lang$html$Html_Attributes$class('bg-black-70 flex flex-column flex-auto measure-wide pa0 ma0 shadow-2-l'),
 			_1: {ctor: '[]'}
 		},
 		{
@@ -14593,7 +14593,7 @@ var _user$project$Events$eventBanner = function (event) {
 							_elm_lang$html$Html$div,
 							{
 								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$class('pa3 lg-breathe-50 br-pill relative top-2 right-1 shadow-2 flex grow justify-center items-center'),
+								_0: _elm_lang$html$Html_Attributes$class('pa3 lg-breathe-50 br-pill relative top-2 right-1 flex grow justify-center items-center'),
 								_1: {ctor: '[]'}
 							},
 							{
@@ -14630,7 +14630,7 @@ var _user$project$Events$eventView = function (model) {
 			_elm_lang$html$Html$section,
 			{
 				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class('dn db-ns vh-100 animated overflow-auto fadeInLeft mw7-ns flex-grow-1 bg-black-20'),
+				_0: _elm_lang$html$Html_Attributes$class('dn db-ns vh-100 animated overflow-auto fadeInLeft mw7-ns flex-grow-1 bg-black-80 shadow-2-l'),
 				_1: {ctor: '[]'}
 			},
 			{
@@ -14669,7 +14669,7 @@ var _user$project$Events$eventsView = function (model) {
 		_elm_lang$html$Html$section,
 		{
 			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('animated fadeInUp mw6-ns bg-black-40 overflow-auto z-999 shadow-2-l mr3-l mr2-m flex-grow-1'),
+			_0: _elm_lang$html$Html_Attributes$class('animated fadeInUp mw6-ns overflow-auto z-999 mr3-l mr2-m flex-grow-1 shadow-2-l'),
 			_1: {ctor: '[]'}
 		},
 		{
@@ -14678,7 +14678,7 @@ var _user$project$Events$eventsView = function (model) {
 				_elm_lang$html$Html$div,
 				{
 					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class('lg-breathe-50 h5 flex flex-column justify-between pa3'),
+					_0: _elm_lang$html$Html_Attributes$class('h5 flex flex-column justify-between pa3'),
 					_1: {ctor: '[]'}
 				},
 				{
@@ -14705,7 +14705,11 @@ var _user$project$Events$eventsView = function (model) {
 				ctor: '::',
 				_0: A2(
 					_elm_lang$html$Html$div,
-					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('bg-black-70'),
+						_1: {ctor: '[]'}
+					},
 					A2(
 						_elm_lang$core$List$map,
 						_user$project$Events$eventListView(model.currentDatetime),

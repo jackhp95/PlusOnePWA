@@ -34,7 +34,7 @@ view x =
         model =
             x.chat
     in
-        div [ class "bg-black-70 flex flex-column flex-auto measure-wide pa0 ma0" ]
+        div [ class "bg-black-70 flex flex-column flex-auto measure-wide pa0 ma0 shadow-2-l" ]
             [ nameBar model
             , section [ class "flex-auto lh-copy overflow-auto ph3 pt5 z-1 inner-shadow-1" ]
                 ([ toast

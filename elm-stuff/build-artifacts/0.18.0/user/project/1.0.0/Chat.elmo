@@ -245,7 +245,7 @@ var _user$project$Chat$view = function (x) {
 		_elm_lang$html$Html$div,
 		{
 			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('bg-black-70 flex flex-column flex-auto measure-wide pa0 ma0'),
+			_0: _elm_lang$html$Html_Attributes$class('bg-black-70 flex flex-column flex-auto measure-wide pa0 ma0 shadow-2-l'),
 			_1: {ctor: '[]'}
 		},
 		{

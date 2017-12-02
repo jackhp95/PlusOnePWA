@@ -346,7 +346,7 @@ var _user$project$Profile$view = function (x) {
 		_elm_lang$html$Html$section,
 		{
 			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('w-100 mw7-l overflow-auto'),
+			_0: _elm_lang$html$Html_Attributes$class('w-100 mw7-l overflow-auto shadow-2-l'),
 			_1: {ctor: '[]'}
 		},
 		{

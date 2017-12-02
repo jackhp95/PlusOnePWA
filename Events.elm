@@ -50,13 +50,13 @@ view model =
 
 eventsView : Types.Events -> Html Msg
 eventsView model =
-    section [ class "animated fadeInUp mw6-ns bg-black-40 overflow-auto z-999 shadow-2-l mr3-l mr2-m flex-grow-1" ]
-        [ div [ class "lg-breathe-50 h5 flex flex-column justify-between pa3" ]
+    section [ class "animated fadeInUp mw6-ns overflow-auto z-999 mr3-l mr2-m flex-grow-1 shadow-2-l" ]
+        [ div [ class "h5 flex flex-column justify-between pa3" ]
             [ discoverToolsView
             , div [ class "f1 f2-m lh-solid fw7 ma0 pa0" ]
                 [ text "discover events" ]
             ]
-        , div [] (List.map (eventListView model.currentDatetime) model.seatgeek.events)
+        , div [ class "bg-black-70" ] (List.map (eventListView model.currentDatetime) model.seatgeek.events)
         ]
 
 
@@ -98,7 +98,7 @@ eventView model =
                 text ""
 
             Just event ->
-                section [ class "dn db-ns vh-100 animated overflow-auto fadeInLeft mw7-ns flex-grow-1 bg-black-20" ]
+                section [ class "dn db-ns vh-100 animated overflow-auto fadeInLeft mw7-ns flex-grow-1 bg-black-80 shadow-2-l" ]
                     [ eventBanner event
                     , eventTitle event
                     , eventIcons event
@@ -383,7 +383,7 @@ eventBanner event =
             [ heroImg, class ("bg-center cover aspect-ratio aspect-ratio--16x9 bb b--white-20") ]
             [ div [ style [ ( "background-image", "linear-gradient( rgba(0,0,0,0.3), transparent)" ) ], class "aspect-ratio--object cover bg-center flex flex-column items-end justify-between pa4 pb0" ]
                 [ discoverToolsView
-                , div [ class "pa3 lg-breathe-50 br-pill relative top-2 right-1 shadow-2 flex grow justify-center items-center" ]
+                , div [ class "pa3 lg-breathe-50 br-pill relative top-2 right-1 flex grow justify-center items-center" ]
                     [ div [ Assets.feather "life-buoy", class "h3 w3 contain" ] []
                     ]
                 ]
