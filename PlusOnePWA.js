@@ -6666,6 +6666,10 @@ return {
 
 }();
 
+var _elm_lang$core$Process$kill = _elm_lang$core$Native_Scheduler.kill;
+var _elm_lang$core$Process$sleep = _elm_lang$core$Native_Scheduler.sleep;
+var _elm_lang$core$Process$spawn = _elm_lang$core$Native_Scheduler.spawn;
+
 var _elm_lang$core$Regex$split = _elm_lang$core$Native_Regex.split;
 var _elm_lang$core$Regex$replace = _elm_lang$core$Native_Regex.replace;
 var _elm_lang$core$Regex$find = _elm_lang$core$Native_Regex.find;
@@ -9547,6 +9551,541 @@ var _elm_lang$http$Http$StringPart = F2(
 	});
 var _elm_lang$http$Http$stringPart = _elm_lang$http$Http$StringPart;
 
+var _elm_lang$websocket$Native_WebSocket = function() {
+
+function open(url, settings)
+{
+	return _elm_lang$core$Native_Scheduler.nativeBinding(function(callback)
+	{
+		try
+		{
+			var socket = new WebSocket(url);
+			socket.elm_web_socket = true;
+		}
+		catch(err)
+		{
+			return callback(_elm_lang$core$Native_Scheduler.fail({
+				ctor: err.name === 'SecurityError' ? 'BadSecurity' : 'BadArgs',
+				_0: err.message
+			}));
+		}
+
+		socket.addEventListener("open", function(event) {
+			callback(_elm_lang$core$Native_Scheduler.succeed(socket));
+		});
+
+		socket.addEventListener("message", function(event) {
+			_elm_lang$core$Native_Scheduler.rawSpawn(A2(settings.onMessage, socket, event.data));
+		});
+
+		socket.addEventListener("close", function(event) {
+			_elm_lang$core$Native_Scheduler.rawSpawn(settings.onClose({
+				code: event.code,
+				reason: event.reason,
+				wasClean: event.wasClean
+			}));
+		});
+
+		return function()
+		{
+			if (socket && socket.close)
+			{
+				socket.close();
+			}
+		};
+	});
+}
+
+function send(socket, string)
+{
+	return _elm_lang$core$Native_Scheduler.nativeBinding(function(callback)
+	{
+		var result =
+			socket.readyState === WebSocket.OPEN
+				? _elm_lang$core$Maybe$Nothing
+				: _elm_lang$core$Maybe$Just({ ctor: 'NotOpen' });
+
+		try
+		{
+			socket.send(string);
+		}
+		catch(err)
+		{
+			result = _elm_lang$core$Maybe$Just({ ctor: 'BadString' });
+		}
+
+		callback(_elm_lang$core$Native_Scheduler.succeed(result));
+	});
+}
+
+function close(code, reason, socket)
+{
+	return _elm_lang$core$Native_Scheduler.nativeBinding(function(callback) {
+		try
+		{
+			socket.close(code, reason);
+		}
+		catch(err)
+		{
+			return callback(_elm_lang$core$Native_Scheduler.fail(_elm_lang$core$Maybe$Just({
+				ctor: err.name === 'SyntaxError' ? 'BadReason' : 'BadCode'
+			})));
+		}
+		callback(_elm_lang$core$Native_Scheduler.succeed(_elm_lang$core$Maybe$Nothing));
+	});
+}
+
+function bytesQueued(socket)
+{
+	return _elm_lang$core$Native_Scheduler.nativeBinding(function(callback) {
+		callback(_elm_lang$core$Native_Scheduler.succeed(socket.bufferedAmount));
+	});
+}
+
+return {
+	open: F2(open),
+	send: F2(send),
+	close: F3(close),
+	bytesQueued: bytesQueued
+};
+
+}();
+
+var _elm_lang$websocket$WebSocket_LowLevel$bytesQueued = _elm_lang$websocket$Native_WebSocket.bytesQueued;
+var _elm_lang$websocket$WebSocket_LowLevel$send = _elm_lang$websocket$Native_WebSocket.send;
+var _elm_lang$websocket$WebSocket_LowLevel$closeWith = _elm_lang$websocket$Native_WebSocket.close;
+var _elm_lang$websocket$WebSocket_LowLevel$close = function (socket) {
+	return A2(
+		_elm_lang$core$Task$map,
+		_elm_lang$core$Basics$always(
+			{ctor: '_Tuple0'}),
+		A3(_elm_lang$websocket$WebSocket_LowLevel$closeWith, 1000, '', socket));
+};
+var _elm_lang$websocket$WebSocket_LowLevel$open = _elm_lang$websocket$Native_WebSocket.open;
+var _elm_lang$websocket$WebSocket_LowLevel$Settings = F2(
+	function (a, b) {
+		return {onMessage: a, onClose: b};
+	});
+var _elm_lang$websocket$WebSocket_LowLevel$WebSocket = {ctor: 'WebSocket'};
+var _elm_lang$websocket$WebSocket_LowLevel$BadArgs = {ctor: 'BadArgs'};
+var _elm_lang$websocket$WebSocket_LowLevel$BadSecurity = {ctor: 'BadSecurity'};
+var _elm_lang$websocket$WebSocket_LowLevel$BadReason = {ctor: 'BadReason'};
+var _elm_lang$websocket$WebSocket_LowLevel$BadCode = {ctor: 'BadCode'};
+var _elm_lang$websocket$WebSocket_LowLevel$BadString = {ctor: 'BadString'};
+var _elm_lang$websocket$WebSocket_LowLevel$NotOpen = {ctor: 'NotOpen'};
+
+var _elm_lang$websocket$WebSocket$closeConnection = function (connection) {
+	var _p0 = connection;
+	if (_p0.ctor === 'Opening') {
+		return _elm_lang$core$Process$kill(_p0._1);
+	} else {
+		return _elm_lang$websocket$WebSocket_LowLevel$close(_p0._0);
+	}
+};
+var _elm_lang$websocket$WebSocket$after = function (backoff) {
+	return (_elm_lang$core$Native_Utils.cmp(backoff, 1) < 0) ? _elm_lang$core$Task$succeed(
+		{ctor: '_Tuple0'}) : _elm_lang$core$Process$sleep(
+		_elm_lang$core$Basics$toFloat(
+			10 * Math.pow(2, backoff)));
+};
+var _elm_lang$websocket$WebSocket$removeQueue = F2(
+	function (name, state) {
+		return _elm_lang$core$Native_Utils.update(
+			state,
+			{
+				queues: A2(_elm_lang$core$Dict$remove, name, state.queues)
+			});
+	});
+var _elm_lang$websocket$WebSocket$updateSocket = F3(
+	function (name, connection, state) {
+		return _elm_lang$core$Native_Utils.update(
+			state,
+			{
+				sockets: A3(_elm_lang$core$Dict$insert, name, connection, state.sockets)
+			});
+	});
+var _elm_lang$websocket$WebSocket$add = F2(
+	function (value, maybeList) {
+		var _p1 = maybeList;
+		if (_p1.ctor === 'Nothing') {
+			return _elm_lang$core$Maybe$Just(
+				{
+					ctor: '::',
+					_0: value,
+					_1: {ctor: '[]'}
+				});
+		} else {
+			return _elm_lang$core$Maybe$Just(
+				{ctor: '::', _0: value, _1: _p1._0});
+		}
+	});
+var _elm_lang$websocket$WebSocket$buildSubDict = F2(
+	function (subs, dict) {
+		buildSubDict:
+		while (true) {
+			var _p2 = subs;
+			if (_p2.ctor === '[]') {
+				return dict;
+			} else {
+				if (_p2._0.ctor === 'Listen') {
+					var _v3 = _p2._1,
+						_v4 = A3(
+						_elm_lang$core$Dict$update,
+						_p2._0._0,
+						_elm_lang$websocket$WebSocket$add(_p2._0._1),
+						dict);
+					subs = _v3;
+					dict = _v4;
+					continue buildSubDict;
+				} else {
+					var _v5 = _p2._1,
+						_v6 = A3(
+						_elm_lang$core$Dict$update,
+						_p2._0._0,
+						function (_p3) {
+							return _elm_lang$core$Maybe$Just(
+								A2(
+									_elm_lang$core$Maybe$withDefault,
+									{ctor: '[]'},
+									_p3));
+						},
+						dict);
+					subs = _v5;
+					dict = _v6;
+					continue buildSubDict;
+				}
+			}
+		}
+	});
+var _elm_lang$websocket$WebSocket_ops = _elm_lang$websocket$WebSocket_ops || {};
+_elm_lang$websocket$WebSocket_ops['&>'] = F2(
+	function (t1, t2) {
+		return A2(
+			_elm_lang$core$Task$andThen,
+			function (_p4) {
+				return t2;
+			},
+			t1);
+	});
+var _elm_lang$websocket$WebSocket$sendMessagesHelp = F3(
+	function (cmds, socketsDict, queuesDict) {
+		sendMessagesHelp:
+		while (true) {
+			var _p5 = cmds;
+			if (_p5.ctor === '[]') {
+				return _elm_lang$core$Task$succeed(queuesDict);
+			} else {
+				var _p9 = _p5._1;
+				var _p8 = _p5._0._0;
+				var _p7 = _p5._0._1;
+				var _p6 = A2(_elm_lang$core$Dict$get, _p8, socketsDict);
+				if ((_p6.ctor === 'Just') && (_p6._0.ctor === 'Connected')) {
+					return A2(
+						_elm_lang$websocket$WebSocket_ops['&>'],
+						A2(_elm_lang$websocket$WebSocket_LowLevel$send, _p6._0._0, _p7),
+						A3(_elm_lang$websocket$WebSocket$sendMessagesHelp, _p9, socketsDict, queuesDict));
+				} else {
+					var _v9 = _p9,
+						_v10 = socketsDict,
+						_v11 = A3(
+						_elm_lang$core$Dict$update,
+						_p8,
+						_elm_lang$websocket$WebSocket$add(_p7),
+						queuesDict);
+					cmds = _v9;
+					socketsDict = _v10;
+					queuesDict = _v11;
+					continue sendMessagesHelp;
+				}
+			}
+		}
+	});
+var _elm_lang$websocket$WebSocket$subscription = _elm_lang$core$Native_Platform.leaf('WebSocket');
+var _elm_lang$websocket$WebSocket$command = _elm_lang$core$Native_Platform.leaf('WebSocket');
+var _elm_lang$websocket$WebSocket$State = F3(
+	function (a, b, c) {
+		return {sockets: a, queues: b, subs: c};
+	});
+var _elm_lang$websocket$WebSocket$init = _elm_lang$core$Task$succeed(
+	A3(_elm_lang$websocket$WebSocket$State, _elm_lang$core$Dict$empty, _elm_lang$core$Dict$empty, _elm_lang$core$Dict$empty));
+var _elm_lang$websocket$WebSocket$Send = F2(
+	function (a, b) {
+		return {ctor: 'Send', _0: a, _1: b};
+	});
+var _elm_lang$websocket$WebSocket$send = F2(
+	function (url, message) {
+		return _elm_lang$websocket$WebSocket$command(
+			A2(_elm_lang$websocket$WebSocket$Send, url, message));
+	});
+var _elm_lang$websocket$WebSocket$cmdMap = F2(
+	function (_p11, _p10) {
+		var _p12 = _p10;
+		return A2(_elm_lang$websocket$WebSocket$Send, _p12._0, _p12._1);
+	});
+var _elm_lang$websocket$WebSocket$KeepAlive = function (a) {
+	return {ctor: 'KeepAlive', _0: a};
+};
+var _elm_lang$websocket$WebSocket$keepAlive = function (url) {
+	return _elm_lang$websocket$WebSocket$subscription(
+		_elm_lang$websocket$WebSocket$KeepAlive(url));
+};
+var _elm_lang$websocket$WebSocket$Listen = F2(
+	function (a, b) {
+		return {ctor: 'Listen', _0: a, _1: b};
+	});
+var _elm_lang$websocket$WebSocket$listen = F2(
+	function (url, tagger) {
+		return _elm_lang$websocket$WebSocket$subscription(
+			A2(_elm_lang$websocket$WebSocket$Listen, url, tagger));
+	});
+var _elm_lang$websocket$WebSocket$subMap = F2(
+	function (func, sub) {
+		var _p13 = sub;
+		if (_p13.ctor === 'Listen') {
+			return A2(
+				_elm_lang$websocket$WebSocket$Listen,
+				_p13._0,
+				function (_p14) {
+					return func(
+						_p13._1(_p14));
+				});
+		} else {
+			return _elm_lang$websocket$WebSocket$KeepAlive(_p13._0);
+		}
+	});
+var _elm_lang$websocket$WebSocket$Connected = function (a) {
+	return {ctor: 'Connected', _0: a};
+};
+var _elm_lang$websocket$WebSocket$Opening = F2(
+	function (a, b) {
+		return {ctor: 'Opening', _0: a, _1: b};
+	});
+var _elm_lang$websocket$WebSocket$BadOpen = function (a) {
+	return {ctor: 'BadOpen', _0: a};
+};
+var _elm_lang$websocket$WebSocket$GoodOpen = F2(
+	function (a, b) {
+		return {ctor: 'GoodOpen', _0: a, _1: b};
+	});
+var _elm_lang$websocket$WebSocket$Die = function (a) {
+	return {ctor: 'Die', _0: a};
+};
+var _elm_lang$websocket$WebSocket$Receive = F2(
+	function (a, b) {
+		return {ctor: 'Receive', _0: a, _1: b};
+	});
+var _elm_lang$websocket$WebSocket$open = F2(
+	function (name, router) {
+		return A2(
+			_elm_lang$websocket$WebSocket_LowLevel$open,
+			name,
+			{
+				onMessage: F2(
+					function (_p15, msg) {
+						return A2(
+							_elm_lang$core$Platform$sendToSelf,
+							router,
+							A2(_elm_lang$websocket$WebSocket$Receive, name, msg));
+					}),
+				onClose: function (details) {
+					return A2(
+						_elm_lang$core$Platform$sendToSelf,
+						router,
+						_elm_lang$websocket$WebSocket$Die(name));
+				}
+			});
+	});
+var _elm_lang$websocket$WebSocket$attemptOpen = F3(
+	function (router, backoff, name) {
+		var badOpen = function (_p16) {
+			return A2(
+				_elm_lang$core$Platform$sendToSelf,
+				router,
+				_elm_lang$websocket$WebSocket$BadOpen(name));
+		};
+		var goodOpen = function (ws) {
+			return A2(
+				_elm_lang$core$Platform$sendToSelf,
+				router,
+				A2(_elm_lang$websocket$WebSocket$GoodOpen, name, ws));
+		};
+		var actuallyAttemptOpen = A2(
+			_elm_lang$core$Task$onError,
+			badOpen,
+			A2(
+				_elm_lang$core$Task$andThen,
+				goodOpen,
+				A2(_elm_lang$websocket$WebSocket$open, name, router)));
+		return _elm_lang$core$Process$spawn(
+			A2(
+				_elm_lang$websocket$WebSocket_ops['&>'],
+				_elm_lang$websocket$WebSocket$after(backoff),
+				actuallyAttemptOpen));
+	});
+var _elm_lang$websocket$WebSocket$onEffects = F4(
+	function (router, cmds, subs, state) {
+		var newSubs = A2(_elm_lang$websocket$WebSocket$buildSubDict, subs, _elm_lang$core$Dict$empty);
+		var cleanup = function (newQueues) {
+			var rightStep = F3(
+				function (name, connection, getNewSockets) {
+					return A2(
+						_elm_lang$websocket$WebSocket_ops['&>'],
+						_elm_lang$websocket$WebSocket$closeConnection(connection),
+						getNewSockets);
+				});
+			var bothStep = F4(
+				function (name, _p17, connection, getNewSockets) {
+					return A2(
+						_elm_lang$core$Task$map,
+						A2(_elm_lang$core$Dict$insert, name, connection),
+						getNewSockets);
+				});
+			var leftStep = F3(
+				function (name, _p18, getNewSockets) {
+					return A2(
+						_elm_lang$core$Task$andThen,
+						function (newSockets) {
+							return A2(
+								_elm_lang$core$Task$andThen,
+								function (pid) {
+									return _elm_lang$core$Task$succeed(
+										A3(
+											_elm_lang$core$Dict$insert,
+											name,
+											A2(_elm_lang$websocket$WebSocket$Opening, 0, pid),
+											newSockets));
+								},
+								A3(_elm_lang$websocket$WebSocket$attemptOpen, router, 0, name));
+						},
+						getNewSockets);
+				});
+			var newEntries = A2(
+				_elm_lang$core$Dict$union,
+				newQueues,
+				A2(
+					_elm_lang$core$Dict$map,
+					F2(
+						function (k, v) {
+							return {ctor: '[]'};
+						}),
+					newSubs));
+			var collectNewSockets = A6(
+				_elm_lang$core$Dict$merge,
+				leftStep,
+				bothStep,
+				rightStep,
+				newEntries,
+				state.sockets,
+				_elm_lang$core$Task$succeed(_elm_lang$core$Dict$empty));
+			return A2(
+				_elm_lang$core$Task$andThen,
+				function (newSockets) {
+					return _elm_lang$core$Task$succeed(
+						A3(_elm_lang$websocket$WebSocket$State, newSockets, newQueues, newSubs));
+				},
+				collectNewSockets);
+		};
+		var sendMessagesGetNewQueues = A3(_elm_lang$websocket$WebSocket$sendMessagesHelp, cmds, state.sockets, state.queues);
+		return A2(_elm_lang$core$Task$andThen, cleanup, sendMessagesGetNewQueues);
+	});
+var _elm_lang$websocket$WebSocket$onSelfMsg = F3(
+	function (router, selfMsg, state) {
+		var _p19 = selfMsg;
+		switch (_p19.ctor) {
+			case 'Receive':
+				var sends = A2(
+					_elm_lang$core$List$map,
+					function (tagger) {
+						return A2(
+							_elm_lang$core$Platform$sendToApp,
+							router,
+							tagger(_p19._1));
+					},
+					A2(
+						_elm_lang$core$Maybe$withDefault,
+						{ctor: '[]'},
+						A2(_elm_lang$core$Dict$get, _p19._0, state.subs)));
+				return A2(
+					_elm_lang$websocket$WebSocket_ops['&>'],
+					_elm_lang$core$Task$sequence(sends),
+					_elm_lang$core$Task$succeed(state));
+			case 'Die':
+				var _p21 = _p19._0;
+				var _p20 = A2(_elm_lang$core$Dict$get, _p21, state.sockets);
+				if (_p20.ctor === 'Nothing') {
+					return _elm_lang$core$Task$succeed(state);
+				} else {
+					return A2(
+						_elm_lang$core$Task$andThen,
+						function (pid) {
+							return _elm_lang$core$Task$succeed(
+								A3(
+									_elm_lang$websocket$WebSocket$updateSocket,
+									_p21,
+									A2(_elm_lang$websocket$WebSocket$Opening, 0, pid),
+									state));
+						},
+						A3(_elm_lang$websocket$WebSocket$attemptOpen, router, 0, _p21));
+				}
+			case 'GoodOpen':
+				var _p24 = _p19._1;
+				var _p23 = _p19._0;
+				var _p22 = A2(_elm_lang$core$Dict$get, _p23, state.queues);
+				if (_p22.ctor === 'Nothing') {
+					return _elm_lang$core$Task$succeed(
+						A3(
+							_elm_lang$websocket$WebSocket$updateSocket,
+							_p23,
+							_elm_lang$websocket$WebSocket$Connected(_p24),
+							state));
+				} else {
+					return A3(
+						_elm_lang$core$List$foldl,
+						F2(
+							function (msg, task) {
+								return A2(
+									_elm_lang$websocket$WebSocket_ops['&>'],
+									A2(_elm_lang$websocket$WebSocket_LowLevel$send, _p24, msg),
+									task);
+							}),
+						_elm_lang$core$Task$succeed(
+							A2(
+								_elm_lang$websocket$WebSocket$removeQueue,
+								_p23,
+								A3(
+									_elm_lang$websocket$WebSocket$updateSocket,
+									_p23,
+									_elm_lang$websocket$WebSocket$Connected(_p24),
+									state))),
+						_p22._0);
+				}
+			default:
+				var _p27 = _p19._0;
+				var _p25 = A2(_elm_lang$core$Dict$get, _p27, state.sockets);
+				if (_p25.ctor === 'Nothing') {
+					return _elm_lang$core$Task$succeed(state);
+				} else {
+					if (_p25._0.ctor === 'Opening') {
+						var _p26 = _p25._0._0;
+						return A2(
+							_elm_lang$core$Task$andThen,
+							function (pid) {
+								return _elm_lang$core$Task$succeed(
+									A3(
+										_elm_lang$websocket$WebSocket$updateSocket,
+										_p27,
+										A2(_elm_lang$websocket$WebSocket$Opening, _p26 + 1, pid),
+										state));
+							},
+							A3(_elm_lang$websocket$WebSocket$attemptOpen, router, _p26 + 1, _p27));
+					} else {
+						return _elm_lang$core$Task$succeed(state);
+					}
+				}
+		}
+	});
+_elm_lang$core$Native_Platform.effectManagers['WebSocket'] = {pkg: 'elm-lang/websocket', init: _elm_lang$websocket$WebSocket$init, onEffects: _elm_lang$websocket$WebSocket$onEffects, onSelfMsg: _elm_lang$websocket$WebSocket$onSelfMsg, tag: 'fx', cmdMap: _elm_lang$websocket$WebSocket$cmdMap, subMap: _elm_lang$websocket$WebSocket$subMap};
+
 var _rluiten$elm_date_extra$Date_Extra_Internal2$prevMonth = function (month) {
 	var _p0 = month;
 	switch (_p0.ctor) {
@@ -11138,3246 +11677,7 @@ var _rluiten$elm_date_extra$Date_Extra_Format$utcIsoString = function (date) {
 };
 var _rluiten$elm_date_extra$Date_Extra_Format$isoFormat = '%Y-%m-%dT%H:%M:%S';
 
-var _user$project$Icon$bgImg = function (imgPath) {
-	return _elm_lang$html$Html_Attributes$style(
-		{
-			ctor: '::',
-			_0: {
-				ctor: '_Tuple2',
-				_0: 'background-image',
-				_1: A2(
-					_elm_lang$core$Basics_ops['++'],
-					'url(\'',
-					A2(_elm_lang$core$Basics_ops['++'], imgPath, '\')'))
-			},
-			_1: {ctor: '[]'}
-		});
-};
-var _user$project$Icon$feather = function (icon) {
-	return _user$project$Icon$bgImg(
-		A2(
-			_elm_lang$core$Basics_ops['++'],
-			'https://icongr.am/feather/',
-			A2(_elm_lang$core$Basics_ops['++'], icon, '.svg?size=20&color=ffffff')));
-};
-
-var _user$project$SeatGeek$performerStatsView = function (stats) {
-	return A2(
-		_elm_lang$html$Html$dl,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('ba pa3 ma2'),
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$dt,
-				{ctor: '[]'},
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html$text('Performer Event Count Stats'),
-					_1: {ctor: '[]'}
-				}),
-			_1: {
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$dd,
-					{ctor: '[]'},
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html$text(
-							_elm_lang$core$Basics$toString(stats.event_count)),
-						_1: {ctor: '[]'}
-					}),
-				_1: {ctor: '[]'}
-			}
-		});
-};
-var _user$project$SeatGeek$taxonomyView = function (taxonomy) {
-	return A2(
-		_elm_lang$html$Html$dl,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('ba pa3 ma2'),
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$dt,
-				{ctor: '[]'},
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html$text('ID'),
-					_1: {ctor: '[]'}
-				}),
-			_1: {
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$dd,
-					{ctor: '[]'},
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html$text(
-							_elm_lang$core$Basics$toString(taxonomy.id)),
-						_1: {ctor: '[]'}
-					}),
-				_1: {
-					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html$dt,
-						{ctor: '[]'},
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html$text('Parent ID'),
-							_1: {ctor: '[]'}
-						}),
-					_1: {
-						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$dd,
-							{ctor: '[]'},
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html$text(
-									_elm_lang$core$Basics$toString(taxonomy.parent_id)),
-								_1: {ctor: '[]'}
-							}),
-						_1: {
-							ctor: '::',
-							_0: A2(
-								_elm_lang$html$Html$dt,
-								{ctor: '[]'},
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html$text('Name'),
-									_1: {ctor: '[]'}
-								}),
-							_1: {
-								ctor: '::',
-								_0: A2(
-									_elm_lang$html$Html$dd,
-									{ctor: '[]'},
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html$text(taxonomy.name),
-										_1: {ctor: '[]'}
-									}),
-								_1: {ctor: '[]'}
-							}
-						}
-					}
-				}
-			}
-		});
-};
-var _user$project$SeatGeek$eventVenueLocationView = function (location) {
-	return A2(
-		_elm_lang$html$Html$dl,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('ba pa3 ma2'),
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$dt,
-				{ctor: '[]'},
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html$text('Latitude'),
-					_1: {ctor: '[]'}
-				}),
-			_1: {
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$dd,
-					{ctor: '[]'},
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html$text(
-							_elm_lang$core$Basics$toString(location.lat)),
-						_1: {ctor: '[]'}
-					}),
-				_1: {
-					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html$dt,
-						{ctor: '[]'},
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html$text('Longitude'),
-							_1: {ctor: '[]'}
-						}),
-					_1: {
-						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$dd,
-							{ctor: '[]'},
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html$text(
-									_elm_lang$core$Basics$toString(location.lon)),
-								_1: {ctor: '[]'}
-							}),
-						_1: {ctor: '[]'}
-					}
-				}
-			}
-		});
-};
-var _user$project$SeatGeek$eventVenueView = function (venue) {
-	return A2(
-		_elm_lang$html$Html$dl,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('ba pa3 ma2'),
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$dt,
-				{ctor: '[]'},
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html$text('Venue Name'),
-					_1: {ctor: '[]'}
-				}),
-			_1: {
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$dd,
-					{ctor: '[]'},
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html$text(venue.name),
-						_1: {ctor: '[]'}
-					}),
-				_1: {
-					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html$dt,
-						{ctor: '[]'},
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html$text('Display Location'),
-							_1: {ctor: '[]'}
-						}),
-					_1: {
-						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$dd,
-							{ctor: '[]'},
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html$text(venue.display_location),
-								_1: {ctor: '[]'}
-							}),
-						_1: {
-							ctor: '::',
-							_0: A2(
-								_elm_lang$html$Html$dt,
-								{ctor: '[]'},
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html$text('Extended Address'),
-									_1: {ctor: '[]'}
-								}),
-							_1: {
-								ctor: '::',
-								_0: A2(
-									_elm_lang$html$Html$dd,
-									{ctor: '[]'},
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html$text(venue.extended_address),
-										_1: {ctor: '[]'}
-									}),
-								_1: {
-									ctor: '::',
-									_0: A2(
-										_elm_lang$html$Html$dt,
-										{ctor: '[]'},
-										{
-											ctor: '::',
-											_0: _elm_lang$html$Html$text('Name V2'),
-											_1: {ctor: '[]'}
-										}),
-									_1: {
-										ctor: '::',
-										_0: A2(
-											_elm_lang$html$Html$dd,
-											{ctor: '[]'},
-											{
-												ctor: '::',
-												_0: _elm_lang$html$Html$text(venue.name_v2),
-												_1: {ctor: '[]'}
-											}),
-										_1: {
-											ctor: '::',
-											_0: A2(
-												_elm_lang$html$Html$dt,
-												{ctor: '[]'},
-												{
-													ctor: '::',
-													_0: _elm_lang$html$Html$text('State'),
-													_1: {ctor: '[]'}
-												}),
-											_1: {
-												ctor: '::',
-												_0: A2(
-													_elm_lang$html$Html$dd,
-													{ctor: '[]'},
-													{
-														ctor: '::',
-														_0: _elm_lang$html$Html$text(
-															A2(_elm_lang$core$Maybe$withDefault, 'no state provided', venue.state)),
-														_1: {ctor: '[]'}
-													}),
-												_1: {
-													ctor: '::',
-													_0: A2(
-														_elm_lang$html$Html$dt,
-														{ctor: '[]'},
-														{
-															ctor: '::',
-															_0: _elm_lang$html$Html$text('Slug'),
-															_1: {ctor: '[]'}
-														}),
-													_1: {
-														ctor: '::',
-														_0: A2(
-															_elm_lang$html$Html$dd,
-															{ctor: '[]'},
-															{
-																ctor: '::',
-																_0: _elm_lang$html$Html$text(venue.slug),
-																_1: {ctor: '[]'}
-															}),
-														_1: {
-															ctor: '::',
-															_0: A2(
-																_elm_lang$html$Html$dt,
-																{ctor: '[]'},
-																{
-																	ctor: '::',
-																	_0: _elm_lang$html$Html$text('Timezone'),
-																	_1: {ctor: '[]'}
-																}),
-															_1: {
-																ctor: '::',
-																_0: A2(
-																	_elm_lang$html$Html$dd,
-																	{ctor: '[]'},
-																	{
-																		ctor: '::',
-																		_0: _elm_lang$html$Html$text(
-																			_elm_lang$core$Basics$toString(venue.timezone)),
-																		_1: {ctor: '[]'}
-																	}),
-																_1: {
-																	ctor: '::',
-																	_0: A2(
-																		_elm_lang$html$Html$dt,
-																		{ctor: '[]'},
-																		{
-																			ctor: '::',
-																			_0: _elm_lang$html$Html$text('Site'),
-																			_1: {ctor: '[]'}
-																		}),
-																	_1: {
-																		ctor: '::',
-																		_0: A2(
-																			_elm_lang$html$Html$dd,
-																			{ctor: '[]'},
-																			{
-																				ctor: '::',
-																				_0: _elm_lang$html$Html$text(venue.url),
-																				_1: {ctor: '[]'}
-																			}),
-																		_1: {
-																			ctor: '::',
-																			_0: A2(
-																				_elm_lang$html$Html$dt,
-																				{ctor: '[]'},
-																				{
-																					ctor: '::',
-																					_0: _elm_lang$html$Html$text('Postal Code'),
-																					_1: {ctor: '[]'}
-																				}),
-																			_1: {
-																				ctor: '::',
-																				_0: A2(
-																					_elm_lang$html$Html$dd,
-																					{ctor: '[]'},
-																					{
-																						ctor: '::',
-																						_0: _elm_lang$html$Html$text(venue.postal_code),
-																						_1: {ctor: '[]'}
-																					}),
-																				_1: {
-																					ctor: '::',
-																					_0: A2(
-																						_elm_lang$html$Html$dt,
-																						{ctor: '[]'},
-																						{
-																							ctor: '::',
-																							_0: _elm_lang$html$Html$text('City'),
-																							_1: {ctor: '[]'}
-																						}),
-																					_1: {
-																						ctor: '::',
-																						_0: A2(
-																							_elm_lang$html$Html$dd,
-																							{ctor: '[]'},
-																							{
-																								ctor: '::',
-																								_0: _elm_lang$html$Html$text(venue.city),
-																								_1: {ctor: '[]'}
-																							}),
-																						_1: {
-																							ctor: '::',
-																							_0: A2(
-																								_elm_lang$html$Html$dt,
-																								{ctor: '[]'},
-																								{
-																									ctor: '::',
-																									_0: _elm_lang$html$Html$text('Country'),
-																									_1: {ctor: '[]'}
-																								}),
-																							_1: {
-																								ctor: '::',
-																								_0: A2(
-																									_elm_lang$html$Html$dd,
-																									{ctor: '[]'},
-																									{
-																										ctor: '::',
-																										_0: _elm_lang$html$Html$text(venue.country),
-																										_1: {ctor: '[]'}
-																									}),
-																								_1: {
-																									ctor: '::',
-																									_0: A2(
-																										_elm_lang$html$Html$dt,
-																										{ctor: '[]'},
-																										{
-																											ctor: '::',
-																											_0: _elm_lang$html$Html$text('Address'),
-																											_1: {ctor: '[]'}
-																										}),
-																									_1: {
-																										ctor: '::',
-																										_0: A2(
-																											_elm_lang$html$Html$dd,
-																											{ctor: '[]'},
-																											{
-																												ctor: '::',
-																												_0: _elm_lang$html$Html$text(venue.address),
-																												_1: {ctor: '[]'}
-																											}),
-																										_1: {
-																											ctor: '::',
-																											_0: _user$project$SeatGeek$eventVenueLocationView(venue.location),
-																											_1: {
-																												ctor: '::',
-																												_0: A2(
-																													_elm_lang$html$Html$dt,
-																													{ctor: '[]'},
-																													{
-																														ctor: '::',
-																														_0: _elm_lang$html$Html$text('Popularity'),
-																														_1: {ctor: '[]'}
-																													}),
-																												_1: {
-																													ctor: '::',
-																													_0: A2(
-																														_elm_lang$html$Html$dd,
-																														{ctor: '[]'},
-																														{
-																															ctor: '::',
-																															_0: _elm_lang$html$Html$text(
-																																_elm_lang$core$Basics$toString(venue.popularity)),
-																															_1: {ctor: '[]'}
-																														}),
-																													_1: {
-																														ctor: '::',
-																														_0: A2(
-																															_elm_lang$html$Html$dt,
-																															{ctor: '[]'},
-																															{
-																																ctor: '::',
-																																_0: _elm_lang$html$Html$text('Score'),
-																																_1: {ctor: '[]'}
-																															}),
-																														_1: {
-																															ctor: '::',
-																															_0: A2(
-																																_elm_lang$html$Html$dd,
-																																{ctor: '[]'},
-																																{
-																																	ctor: '::',
-																																	_0: _elm_lang$html$Html$text(
-																																		_elm_lang$core$Basics$toString(venue.score)),
-																																	_1: {ctor: '[]'}
-																																}),
-																															_1: {
-																																ctor: '::',
-																																_0: A2(
-																																	_elm_lang$html$Html$dt,
-																																	{ctor: '[]'},
-																																	{
-																																		ctor: '::',
-																																		_0: _elm_lang$html$Html$text('ID'),
-																																		_1: {ctor: '[]'}
-																																	}),
-																																_1: {
-																																	ctor: '::',
-																																	_0: A2(
-																																		_elm_lang$html$Html$dd,
-																																		{ctor: '[]'},
-																																		{
-																																			ctor: '::',
-																																			_0: _elm_lang$html$Html$text(
-																																				_elm_lang$core$Basics$toString(venue.id)),
-																																			_1: {ctor: '[]'}
-																																		}),
-																																	_1: {
-																																		ctor: '::',
-																																		_0: A2(
-																																			_elm_lang$html$Html$dt,
-																																			{ctor: '[]'},
-																																			{
-																																				ctor: '::',
-																																				_0: _elm_lang$html$Html$text('num upcoming events'),
-																																				_1: {ctor: '[]'}
-																																			}),
-																																		_1: {
-																																			ctor: '::',
-																																			_0: A2(
-																																				_elm_lang$html$Html$dd,
-																																				{ctor: '[]'},
-																																				{
-																																					ctor: '::',
-																																					_0: _elm_lang$html$Html$text(
-																																						_elm_lang$core$Basics$toString(venue.num_upcoming_events)),
-																																					_1: {ctor: '[]'}
-																																				}),
-																																			_1: {ctor: '[]'}
-																																		}
-																																	}
-																																}
-																															}
-																														}
-																													}
-																												}
-																											}
-																										}
-																									}
-																								}
-																							}
-																						}
-																					}
-																				}
-																			}
-																		}
-																	}
-																}
-															}
-														}
-													}
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		});
-};
-var _user$project$SeatGeek$performerDivisionView = function (division) {
-	return A2(
-		_elm_lang$html$Html$div,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('ba pa3 ma2 b--red'),
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$div,
-				{ctor: '[]'},
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html$text(
-						A2(
-							_elm_lang$core$Basics_ops['++'],
-							'display_type: ',
-							_elm_lang$core$Basics$toString(division.display_type))),
-					_1: {ctor: '[]'}
-				}),
-			_1: {
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$div,
-					{ctor: '[]'},
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html$text(
-							A2(
-								_elm_lang$core$Basics_ops['++'],
-								'short_name: ',
-								_elm_lang$core$Basics$toString(division.short_name))),
-						_1: {ctor: '[]'}
-					}),
-				_1: {
-					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html$div,
-						{ctor: '[]'},
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html$text(
-								A2(
-									_elm_lang$core$Basics_ops['++'],
-									'display_name: ',
-									_elm_lang$core$Basics$toString(division.display_name))),
-							_1: {ctor: '[]'}
-						}),
-					_1: {
-						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$div,
-							{ctor: '[]'},
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html$text(
-									A2(
-										_elm_lang$core$Basics_ops['++'],
-										'division_level: ',
-										_elm_lang$core$Basics$toString(division.division_level))),
-								_1: {ctor: '[]'}
-							}),
-						_1: {
-							ctor: '::',
-							_0: A2(
-								_elm_lang$html$Html$div,
-								{ctor: '[]'},
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html$text(
-										A2(
-											_elm_lang$core$Basics_ops['++'],
-											'slug: ',
-											_elm_lang$core$Basics$toString(division.slug))),
-									_1: {ctor: '[]'}
-								}),
-							_1: {
-								ctor: '::',
-								_0: A2(
-									_elm_lang$html$Html$div,
-									{ctor: '[]'},
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html$text(
-											A2(
-												_elm_lang$core$Basics_ops['++'],
-												'taxonomy_id: ',
-												_elm_lang$core$Basics$toString(division.taxonomy_id))),
-										_1: {ctor: '[]'}
-									}),
-								_1: {ctor: '[]'}
-							}
-						}
-					}
-				}
-			}
-		});
-};
-var _user$project$SeatGeek$performerDivisionsView = function (divisions) {
-	var _p0 = divisions;
-	if (_p0.ctor === 'Nothing') {
-		return A2(
-			_elm_lang$html$Html$div,
-			{ctor: '[]'},
-			{ctor: '[]'});
-	} else {
-		return A2(
-			_elm_lang$html$Html$div,
-			{ctor: '[]'},
-			A2(_elm_lang$core$List$map, _user$project$SeatGeek$performerDivisionView, _p0._0));
-	}
-};
-var _user$project$SeatGeek$imagesView = function (images) {
-	return A2(
-		_elm_lang$html$Html$div,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('ba pa3 ma2 b--red'),
-			_1: {ctor: '[]'}
-		},
-		A2(
-			_elm_lang$core$List$map,
-			function (url) {
-				return A2(
-					_elm_lang$html$Html$img,
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$src(url),
-						_1: {ctor: '[]'}
-					},
-					{ctor: '[]'});
-			},
-			images));
-};
-var _user$project$SeatGeek$colorBackgroundView = function (colors) {
-	var _p1 = colors;
-	if (_p1.ctor === 'Nothing') {
-		return _elm_lang$html$Html_Attributes$style(
-			{ctor: '[]'});
-	} else {
-		return _elm_lang$html$Html_Attributes$style(
-			{
-				ctor: '::',
-				_0: {ctor: '_Tuple2', _0: 'backgroundColor', _1: _p1._0.iconic},
-				_1: {ctor: '[]'}
-			});
-	}
-};
-var _user$project$SeatGeek$eventPerformerView = function (performer) {
-	return A2(
-		_elm_lang$html$Html$dl,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('ba pa3 ma2'),
-			_1: {
-				ctor: '::',
-				_0: _user$project$SeatGeek$colorBackgroundView(performer.colors),
-				_1: {ctor: '[]'}
-			}
-		},
-		{
-			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$dt,
-				{ctor: '[]'},
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html$text('Performer Image'),
-					_1: {ctor: '[]'}
-				}),
-			_1: {
-				ctor: '::',
-				_0: A2(
-					_elm_lang$core$Maybe$withDefault,
-					_elm_lang$html$Html$text('no image homie'),
-					A2(
-						_elm_lang$core$Maybe$map,
-						function (url) {
-							return A2(
-								_elm_lang$html$Html$img,
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$src(url),
-									_1: {ctor: '[]'}
-								},
-								{ctor: '[]'});
-						},
-						performer.image)),
-				_1: {
-					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html$dt,
-						{ctor: '[]'},
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html$text('name'),
-							_1: {ctor: '[]'}
-						}),
-					_1: {
-						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$dd,
-							{ctor: '[]'},
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html$text(performer.name),
-								_1: {ctor: '[]'}
-							}),
-						_1: {
-							ctor: '::',
-							_0: A2(
-								_elm_lang$html$Html$dt,
-								{ctor: '[]'},
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html$text('short name'),
-									_1: {ctor: '[]'}
-								}),
-							_1: {
-								ctor: '::',
-								_0: A2(
-									_elm_lang$html$Html$dd,
-									{ctor: '[]'},
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html$text(performer.short_name),
-										_1: {ctor: '[]'}
-									}),
-								_1: {
-									ctor: '::',
-									_0: A2(
-										_elm_lang$html$Html$dt,
-										{ctor: '[]'},
-										{
-											ctor: '::',
-											_0: _elm_lang$html$Html$text('image attribution'),
-											_1: {ctor: '[]'}
-										}),
-									_1: {
-										ctor: '::',
-										_0: A2(
-											_elm_lang$html$Html$dd,
-											{ctor: '[]'},
-											{
-												ctor: '::',
-												_0: _elm_lang$html$Html$text(
-													A2(_elm_lang$core$Maybe$withDefault, 'IDK, There ain\'t no image attribution tho', performer.image_attribution)),
-												_1: {ctor: '[]'}
-											}),
-										_1: {
-											ctor: '::',
-											_0: _user$project$SeatGeek$performerDivisionsView(performer.divisions),
-											_1: {
-												ctor: '::',
-												_0: A2(
-													_elm_lang$html$Html$dt,
-													{ctor: '[]'},
-													{
-														ctor: '::',
-														_0: _elm_lang$html$Html$text('url'),
-														_1: {ctor: '[]'}
-													}),
-												_1: {
-													ctor: '::',
-													_0: A2(
-														_elm_lang$html$Html$dd,
-														{ctor: '[]'},
-														{
-															ctor: '::',
-															_0: _elm_lang$html$Html$text(performer.url),
-															_1: {ctor: '[]'}
-														}),
-													_1: {
-														ctor: '::',
-														_0: A2(
-															_elm_lang$html$Html$dt,
-															{ctor: '[]'},
-															{
-																ctor: '::',
-																_0: _elm_lang$html$Html$text('category'),
-																_1: {ctor: '[]'}
-															}),
-														_1: {
-															ctor: '::',
-															_0: A2(
-																_elm_lang$html$Html$dd,
-																{ctor: '[]'},
-																{
-																	ctor: '::',
-																	_0: _elm_lang$html$Html$text(performer.category),
-																	_1: {ctor: '[]'}
-																}),
-															_1: {
-																ctor: '::',
-																_0: A2(
-																	_elm_lang$html$Html$dt,
-																	{ctor: '[]'},
-																	{
-																		ctor: '::',
-																		_0: _elm_lang$html$Html$text('slug'),
-																		_1: {ctor: '[]'}
-																	}),
-																_1: {
-																	ctor: '::',
-																	_0: A2(
-																		_elm_lang$html$Html$dd,
-																		{ctor: '[]'},
-																		{
-																			ctor: '::',
-																			_0: _elm_lang$html$Html$text(performer.slug),
-																			_1: {ctor: '[]'}
-																		}),
-																	_1: {
-																		ctor: '::',
-																		_0: A2(
-																			_elm_lang$html$Html$dt,
-																			{ctor: '[]'},
-																			{
-																				ctor: '::',
-																				_0: _elm_lang$html$Html$text('image license'),
-																				_1: {ctor: '[]'}
-																			}),
-																		_1: {
-																			ctor: '::',
-																			_0: A2(
-																				_elm_lang$html$Html$dd,
-																				{ctor: '[]'},
-																				{
-																					ctor: '::',
-																					_0: _elm_lang$html$Html$text(
-																						A2(_elm_lang$core$Maybe$withDefault, 'IDK, There ain\'t no image license tho', performer.image_license)),
-																					_1: {ctor: '[]'}
-																				}),
-																			_1: {
-																				ctor: '::',
-																				_0: A2(
-																					_elm_lang$html$Html$dt,
-																					{ctor: '[]'},
-																					{
-																						ctor: '::',
-																						_0: _elm_lang$html$Html$text('num_upcoming_events'),
-																						_1: {ctor: '[]'}
-																					}),
-																				_1: {
-																					ctor: '::',
-																					_0: A2(
-																						_elm_lang$html$Html$dd,
-																						{ctor: '[]'},
-																						{
-																							ctor: '::',
-																							_0: _elm_lang$html$Html$text(
-																								_elm_lang$core$Basics$toString(performer.num_upcoming_events)),
-																							_1: {ctor: '[]'}
-																						}),
-																					_1: {
-																						ctor: '::',
-																						_0: A2(
-																							_elm_lang$html$Html$dt,
-																							{ctor: '[]'},
-																							{
-																								ctor: '::',
-																								_0: _elm_lang$html$Html$text('Primary'),
-																								_1: {ctor: '[]'}
-																							}),
-																						_1: {
-																							ctor: '::',
-																							_0: A2(
-																								_elm_lang$html$Html$dd,
-																								{ctor: '[]'},
-																								{
-																									ctor: '::',
-																									_0: _elm_lang$html$Html$text(
-																										_elm_lang$core$Basics$toString(
-																											A2(_elm_lang$core$Maybe$withDefault, false, performer.primary))),
-																									_1: {ctor: '[]'}
-																								}),
-																							_1: {
-																								ctor: '::',
-																								_0: A2(
-																									_elm_lang$html$Html$dt,
-																									{ctor: '[]'},
-																									{
-																										ctor: '::',
-																										_0: _elm_lang$html$Html$text('popularity'),
-																										_1: {ctor: '[]'}
-																									}),
-																								_1: {
-																									ctor: '::',
-																									_0: A2(
-																										_elm_lang$html$Html$dd,
-																										{ctor: '[]'},
-																										{
-																											ctor: '::',
-																											_0: _elm_lang$html$Html$text(
-																												_elm_lang$core$Basics$toString(performer.popularity)),
-																											_1: {ctor: '[]'}
-																										}),
-																									_1: {
-																										ctor: '::',
-																										_0: A2(
-																											_elm_lang$html$Html$dt,
-																											{ctor: '[]'},
-																											{
-																												ctor: '::',
-																												_0: _elm_lang$html$Html$text('ID'),
-																												_1: {ctor: '[]'}
-																											}),
-																										_1: {
-																											ctor: '::',
-																											_0: A2(
-																												_elm_lang$html$Html$dd,
-																												{ctor: '[]'},
-																												{
-																													ctor: '::',
-																													_0: _elm_lang$html$Html$text(
-																														_elm_lang$core$Basics$toString(performer.id)),
-																													_1: {ctor: '[]'}
-																												}),
-																											_1: {
-																												ctor: '::',
-																												_0: A2(
-																													_elm_lang$html$Html$dt,
-																													{ctor: '[]'},
-																													{
-																														ctor: '::',
-																														_0: _elm_lang$html$Html$text('Home Venue ID'),
-																														_1: {ctor: '[]'}
-																													}),
-																												_1: {
-																													ctor: '::',
-																													_0: A2(
-																														_elm_lang$html$Html$dd,
-																														{ctor: '[]'},
-																														{
-																															ctor: '::',
-																															_0: _elm_lang$html$Html$text(
-																																_elm_lang$core$Basics$toString(performer.home_venue_id)),
-																															_1: {ctor: '[]'}
-																														}),
-																													_1: {
-																														ctor: '::',
-																														_0: A2(
-																															_elm_lang$html$Html$div,
-																															{ctor: '[]'},
-																															A2(_elm_lang$core$List$map, _user$project$SeatGeek$taxonomyView, performer.taxonomies)),
-																														_1: {
-																															ctor: '::',
-																															_0: _user$project$SeatGeek$performerStatsView(performer.stats),
-																															_1: {
-																																ctor: '::',
-																																_0: _user$project$SeatGeek$imagesView(performer.images),
-																																_1: {ctor: '[]'}
-																															}
-																														}
-																													}
-																												}
-																											}
-																										}
-																									}
-																								}
-																							}
-																						}
-																					}
-																				}
-																			}
-																		}
-																	}
-																}
-															}
-														}
-													}
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		});
-};
-var _user$project$SeatGeek$eventStatsFloatView = F2(
-	function (number, string) {
-		var _p2 = number;
-		if (_p2.ctor === 'Nothing') {
-			return {ctor: '[]'};
-		} else {
-			return {
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$dt,
-					{ctor: '[]'},
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html$text(string),
-						_1: {ctor: '[]'}
-					}),
-				_1: {
-					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html$dd,
-						{ctor: '[]'},
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html$text(
-								A2(
-									_elm_lang$core$Basics_ops['++'],
-									'$',
-									_elm_lang$core$Basics$toString(_p2._0))),
-							_1: {ctor: '[]'}
-						}),
-					_1: {ctor: '[]'}
-				}
-			};
-		}
-	});
-var _user$project$SeatGeek$eventStatsIntView = F2(
-	function (number, string) {
-		var _p3 = number;
-		if (_p3.ctor === 'Nothing') {
-			return {ctor: '[]'};
-		} else {
-			if (_p3._0 === 0) {
-				return {ctor: '[]'};
-			} else {
-				return {
-					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html$dt,
-						{ctor: '[]'},
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html$text(string),
-							_1: {ctor: '[]'}
-						}),
-					_1: {
-						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$dd,
-							{ctor: '[]'},
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html$text(
-									_elm_lang$core$Basics$toString(_p3._0)),
-								_1: {ctor: '[]'}
-							}),
-						_1: {ctor: '[]'}
-					}
-				};
-			}
-		}
-	});
-var _user$project$SeatGeek$eventStatsView = function (stats) {
-	return A2(
-		_elm_lang$core$Basics_ops['++'],
-		A2(_user$project$SeatGeek$eventStatsIntView, stats.listing_count, 'Listing Count'),
-		A2(
-			_elm_lang$core$Basics_ops['++'],
-			A2(_user$project$SeatGeek$eventStatsFloatView, stats.highest_price, 'highest price'),
-			A2(
-				_elm_lang$core$Basics_ops['++'],
-				A2(_user$project$SeatGeek$eventStatsFloatView, stats.average_price, 'average price'),
-				A2(
-					_elm_lang$core$Basics_ops['++'],
-					A2(_user$project$SeatGeek$eventStatsFloatView, stats.lowest_price, 'lowest price'),
-					A2(_user$project$SeatGeek$eventStatsFloatView, stats.lowest_price_good_deals, 'lowest price good deals')))));
-};
-var _user$project$SeatGeek$eventView = function (event) {
-	return A2(
-		_elm_lang$html$Html$dl,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('ba pa3 ma2'),
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$dt,
-				{ctor: '[]'},
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html$text('Title'),
-					_1: {ctor: '[]'}
-				}),
-			_1: {
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$dd,
-					{ctor: '[]'},
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html$text(event.title),
-						_1: {ctor: '[]'}
-					}),
-				_1: {
-					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html$dt,
-						{ctor: '[]'},
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html$text('Short Title'),
-							_1: {ctor: '[]'}
-						}),
-					_1: {
-						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$dd,
-							{ctor: '[]'},
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html$text(event.short_title),
-								_1: {ctor: '[]'}
-							}),
-						_1: {
-							ctor: '::',
-							_0: A2(
-								_elm_lang$html$Html$div,
-								{ctor: '[]'},
-								A2(_elm_lang$core$List$map, _user$project$SeatGeek$eventPerformerView, event.performers)),
-							_1: {
-								ctor: '::',
-								_0: A2(
-									_elm_lang$html$Html$dt,
-									{ctor: '[]'},
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html$text('ID'),
-										_1: {ctor: '[]'}
-									}),
-								_1: {
-									ctor: '::',
-									_0: A2(
-										_elm_lang$html$Html$dd,
-										{ctor: '[]'},
-										{
-											ctor: '::',
-											_0: _elm_lang$html$Html$text(
-												_elm_lang$core$Basics$toString(event.id)),
-											_1: {ctor: '[]'}
-										}),
-									_1: {
-										ctor: '::',
-										_0: A2(
-											_elm_lang$html$Html$dt,
-											{ctor: '[]'},
-											{
-												ctor: '::',
-												_0: _elm_lang$html$Html$text('Score'),
-												_1: {ctor: '[]'}
-											}),
-										_1: {
-											ctor: '::',
-											_0: A2(
-												_elm_lang$html$Html$dd,
-												{ctor: '[]'},
-												{
-													ctor: '::',
-													_0: _elm_lang$html$Html$text(
-														_elm_lang$core$Basics$toString(event.score)),
-													_1: {ctor: '[]'}
-												}),
-											_1: {
-												ctor: '::',
-												_0: A2(
-													_elm_lang$html$Html$dt,
-													{ctor: '[]'},
-													{
-														ctor: '::',
-														_0: _elm_lang$html$Html$text('Type of event'),
-														_1: {ctor: '[]'}
-													}),
-												_1: {
-													ctor: '::',
-													_0: A2(
-														_elm_lang$html$Html$dd,
-														{ctor: '[]'},
-														{
-															ctor: '::',
-															_0: _elm_lang$html$Html$text(event.category),
-															_1: {ctor: '[]'}
-														}),
-													_1: {
-														ctor: '::',
-														_0: _user$project$SeatGeek$eventVenueView(event.venue),
-														_1: {
-															ctor: '::',
-															_0: A2(
-																_elm_lang$html$Html$dt,
-																{ctor: '[]'},
-																{
-																	ctor: '::',
-																	_0: _elm_lang$html$Html$text('Datetime Local'),
-																	_1: {ctor: '[]'}
-																}),
-															_1: {
-																ctor: '::',
-																_0: A2(
-																	_elm_lang$html$Html$dd,
-																	{ctor: '[]'},
-																	{
-																		ctor: '::',
-																		_0: _elm_lang$html$Html$text(event.datetime_local),
-																		_1: {ctor: '[]'}
-																	}),
-																_1: {
-																	ctor: '::',
-																	_0: A2(
-																		_elm_lang$html$Html$dt,
-																		{ctor: '[]'},
-																		{
-																			ctor: '::',
-																			_0: _elm_lang$html$Html$text('UTC Start'),
-																			_1: {ctor: '[]'}
-																		}),
-																	_1: {
-																		ctor: '::',
-																		_0: A2(
-																			_elm_lang$html$Html$dd,
-																			{ctor: '[]'},
-																			{
-																				ctor: '::',
-																				_0: _elm_lang$html$Html$text(event.datetime_utc),
-																				_1: {ctor: '[]'}
-																			}),
-																		_1: {
-																			ctor: '::',
-																			_0: A2(
-																				_elm_lang$html$Html$dt,
-																				{ctor: '[]'},
-																				{
-																					ctor: '::',
-																					_0: _elm_lang$html$Html$text('UTC End'),
-																					_1: {ctor: '[]'}
-																				}),
-																			_1: {
-																				ctor: '::',
-																				_0: A2(
-																					_elm_lang$html$Html$dd,
-																					{ctor: '[]'},
-																					{
-																						ctor: '::',
-																						_0: _elm_lang$html$Html$text(event.visible_until_utc),
-																						_1: {ctor: '[]'}
-																					}),
-																				_1: {
-																					ctor: '::',
-																					_0: A2(
-																						_elm_lang$html$Html$dt,
-																						{ctor: '[]'},
-																						{
-																							ctor: '::',
-																							_0: _elm_lang$html$Html$text('Creation Time'),
-																							_1: {ctor: '[]'}
-																						}),
-																					_1: {
-																						ctor: '::',
-																						_0: A2(
-																							_elm_lang$html$Html$dd,
-																							{ctor: '[]'},
-																							{
-																								ctor: '::',
-																								_0: _elm_lang$html$Html$text(event.created_at),
-																								_1: {ctor: '[]'}
-																							}),
-																						_1: {
-																							ctor: '::',
-																							_0: A2(
-																								_elm_lang$html$Html$dt,
-																								{ctor: '[]'},
-																								{
-																									ctor: '::',
-																									_0: _elm_lang$html$Html$text('Announce Date'),
-																									_1: {ctor: '[]'}
-																								}),
-																							_1: {
-																								ctor: '::',
-																								_0: A2(
-																									_elm_lang$html$Html$dd,
-																									{ctor: '[]'},
-																									{
-																										ctor: '::',
-																										_0: _elm_lang$html$Html$text(event.announce_date),
-																										_1: {ctor: '[]'}
-																									}),
-																								_1: {
-																									ctor: '::',
-																									_0: A2(
-																										_elm_lang$html$Html$dt,
-																										{ctor: '[]'},
-																										{
-																											ctor: '::',
-																											_0: _elm_lang$html$Html$text('Estimated Time'),
-																											_1: {ctor: '[]'}
-																										}),
-																									_1: {
-																										ctor: '::',
-																										_0: A2(
-																											_elm_lang$html$Html$dd,
-																											{ctor: '[]'},
-																											{
-																												ctor: '::',
-																												_0: _elm_lang$html$Html$text(
-																													_elm_lang$core$Basics$toString(event.time_tbd)),
-																												_1: {ctor: '[]'}
-																											}),
-																										_1: {
-																											ctor: '::',
-																											_0: A2(
-																												_elm_lang$html$Html$dt,
-																												{ctor: '[]'},
-																												{
-																													ctor: '::',
-																													_0: _elm_lang$html$Html$text('Estimated Date'),
-																													_1: {ctor: '[]'}
-																												}),
-																											_1: {
-																												ctor: '::',
-																												_0: A2(
-																													_elm_lang$html$Html$dd,
-																													{ctor: '[]'},
-																													{
-																														ctor: '::',
-																														_0: _elm_lang$html$Html$text(
-																															_elm_lang$core$Basics$toString(event.date_tbd)),
-																														_1: {ctor: '[]'}
-																													}),
-																												_1: {
-																													ctor: '::',
-																													_0: A2(
-																														_elm_lang$html$Html$dl,
-																														{
-																															ctor: '::',
-																															_0: _elm_lang$html$Html_Attributes$class('ba pa3 ma2'),
-																															_1: {ctor: '[]'}
-																														},
-																														_user$project$SeatGeek$eventStatsView(event.stats)),
-																													_1: {
-																														ctor: '::',
-																														_0: A2(
-																															_elm_lang$html$Html$dt,
-																															{ctor: '[]'},
-																															{
-																																ctor: '::',
-																																_0: _elm_lang$html$Html$text('Popularity'),
-																																_1: {ctor: '[]'}
-																															}),
-																														_1: {
-																															ctor: '::',
-																															_0: A2(
-																																_elm_lang$html$Html$dd,
-																																{ctor: '[]'},
-																																{
-																																	ctor: '::',
-																																	_0: _elm_lang$html$Html$text(
-																																		_elm_lang$core$Basics$toString(event.popularity)),
-																																	_1: {ctor: '[]'}
-																																}),
-																															_1: {
-																																ctor: '::',
-																																_0: A2(
-																																	_elm_lang$html$Html$dt,
-																																	{ctor: '[]'},
-																																	{
-																																		ctor: '::',
-																																		_0: _elm_lang$html$Html$text('URL'),
-																																		_1: {ctor: '[]'}
-																																	}),
-																																_1: {
-																																	ctor: '::',
-																																	_0: A2(
-																																		_elm_lang$html$Html$dd,
-																																		{ctor: '[]'},
-																																		{
-																																			ctor: '::',
-																																			_0: _elm_lang$html$Html$text(event.url),
-																																			_1: {ctor: '[]'}
-																																		}),
-																																	_1: {
-																																		ctor: '::',
-																																		_0: A2(
-																																			_elm_lang$html$Html$div,
-																																			{ctor: '[]'},
-																																			A2(_elm_lang$core$List$map, _user$project$SeatGeek$taxonomyView, event.taxonomies)),
-																																		_1: {ctor: '[]'}
-																																	}
-																																}
-																															}
-																														}
-																													}
-																												}
-																											}
-																										}
-																									}
-																								}
-																							}
-																						}
-																					}
-																				}
-																			}
-																		}
-																	}
-																}
-															}
-														}
-													}
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		});
-};
-var _user$project$SeatGeek$metaView = function (model) {
-	return {
-		ctor: '::',
-		_0: A2(
-			_elm_lang$html$Html$span,
-			{ctor: '[]'},
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html$text(
-					A2(
-						_elm_lang$core$Basics_ops['++'],
-						' per page : ',
-						_elm_lang$core$Basics$toString(model.meta.per_page))),
-				_1: {ctor: '[]'}
-			}),
-		_1: {
-			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$span,
-				{ctor: '[]'},
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html$text(
-						A2(
-							_elm_lang$core$Basics_ops['++'],
-							' decoded : ',
-							_elm_lang$core$Basics$toString(
-								_elm_lang$core$List$length(model.events)))),
-					_1: {ctor: '[]'}
-				}),
-			_1: {ctor: '[]'}
-		}
-	};
-};
-var _user$project$SeatGeek$composeArgument = F2(
-	function (name, value) {
-		var _p4 = value;
-		if (_p4 === '') {
-			return '';
-		} else {
-			return A2(
-				_elm_lang$core$Basics_ops['++'],
-				'&',
-				A2(
-					_elm_lang$core$Basics_ops['++'],
-					name,
-					A2(_elm_lang$core$Basics_ops['++'], '=', value)));
-		}
-	});
-var _user$project$SeatGeek$composeRequest = function (query) {
-	var start = A2(
-		_elm_lang$core$Basics_ops['++'],
-		A2(
-			_elm_lang$core$Basics_ops['++'],
-			'?',
-			A2(_elm_lang$core$Basics_ops['++'], 'client_id=', query.client_id)),
-		A2(
-			_elm_lang$core$Basics_ops['++'],
-			'&postal_code=65203&per_page=30',
-			A2(
-				_elm_lang$core$Basics_ops['++'],
-				A2(_user$project$SeatGeek$composeArgument, 'aid', query.aid),
-				A2(_user$project$SeatGeek$composeArgument, 'rid', query.rid))));
-	var url = 'https://api.seatgeek.com/2/';
-	var _p5 = query.endpoint;
-	switch (_p5.ctor) {
-		case 'Events':
-			if (_p5._0.ctor === 'Nothing') {
-				return A2(
-					_elm_lang$core$Basics_ops['++'],
-					url,
-					A2(_elm_lang$core$Basics_ops['++'], 'events', start));
-			} else {
-				return A2(
-					_elm_lang$core$Basics_ops['++'],
-					url,
-					A2(
-						_elm_lang$core$Basics_ops['++'],
-						'events/',
-						A2(_elm_lang$core$Basics_ops['++'], _p5._0._0, start)));
-			}
-		case 'Performers':
-			if (_p5._0.ctor === 'Nothing') {
-				return A2(
-					_elm_lang$core$Basics_ops['++'],
-					url,
-					A2(_elm_lang$core$Basics_ops['++'], 'performers', start));
-			} else {
-				return A2(
-					_elm_lang$core$Basics_ops['++'],
-					url,
-					A2(
-						_elm_lang$core$Basics_ops['++'],
-						'performers/',
-						A2(_elm_lang$core$Basics_ops['++'], _p5._0._0, start)));
-			}
-		case 'Venues':
-			if (_p5._0.ctor === 'Nothing') {
-				return A2(
-					_elm_lang$core$Basics_ops['++'],
-					url,
-					A2(_elm_lang$core$Basics_ops['++'], 'venues', start));
-			} else {
-				return A2(
-					_elm_lang$core$Basics_ops['++'],
-					url,
-					A2(
-						_elm_lang$core$Basics_ops['++'],
-						'venues/',
-						A2(_elm_lang$core$Basics_ops['++'], _p5._0._0, start)));
-			}
-		case 'Recommendations':
-			return A2(
-				_elm_lang$core$Basics_ops['++'],
-				url,
-				A2(_elm_lang$core$Basics_ops['++'], 'recommendations', start));
-		case 'Taxonomies':
-			return A2(
-				_elm_lang$core$Basics_ops['++'],
-				url,
-				A2(_elm_lang$core$Basics_ops['++'], 'taxonomies', start));
-		default:
-			return A2(
-				_elm_lang$core$Basics_ops['++'],
-				url,
-				A2(_elm_lang$core$Basics_ops['++'], 'genres', start));
-	}
-};
-var _user$project$SeatGeek$subscriptions = function (model) {
-	return _elm_lang$core$Platform_Sub$none;
-};
-var _user$project$SeatGeek$initArguments = {performers: '', venues: '', datetime: '', query: '', id: '', taxonomies: '', slug: '', genres: '', city: '', state: '', country: '', postal_code: ''};
-var _user$project$SeatGeek$emptyReply = {
-	meta: {
-		per_page: 0,
-		took: 0,
-		geolocation: {state: '', postal_code: '', lat: 0.0, range: '', display_name: '', city: '', country: '', lon: 0.0},
-		total: 0,
-		page: 0
-	},
-	events: {ctor: '[]'}
-};
-var _user$project$SeatGeek_ops = _user$project$SeatGeek_ops || {};
-_user$project$SeatGeek_ops['?'] = _elm_lang$core$Maybe$withDefault;
-var _user$project$SeatGeek_ops = _user$project$SeatGeek_ops || {};
-_user$project$SeatGeek_ops[':='] = _elm_lang$core$Json_Decode$field;
-var _user$project$SeatGeek$Model = F2(
-	function (a, b) {
-		return {reply: a, query: b};
-	});
-var _user$project$SeatGeek$Reply = F2(
-	function (a, b) {
-		return {meta: a, events: b};
-	});
-var _user$project$SeatGeek$Query = function (a) {
-	return function (b) {
-		return function (c) {
-			return function (d) {
-				return function (e) {
-					return function (f) {
-						return function (g) {
-							return function (h) {
-								return function (i) {
-									return function (j) {
-										return function (k) {
-											return function (l) {
-												return {endpoint: a, $arguments: b, geoip: c, lat: d, lon: e, range: f, per_page: g, page: h, sort: i, aid: j, rid: k, client_id: l};
-											};
-										};
-									};
-								};
-							};
-						};
-					};
-				};
-			};
-		};
-	};
-};
-var _user$project$SeatGeek$Arguments = function (a) {
-	return function (b) {
-		return function (c) {
-			return function (d) {
-				return function (e) {
-					return function (f) {
-						return function (g) {
-							return function (h) {
-								return function (i) {
-									return function (j) {
-										return function (k) {
-											return function (l) {
-												return {performers: a, venues: b, datetime: c, query: d, id: e, taxonomies: f, slug: g, genres: h, city: i, state: j, country: k, postal_code: l};
-											};
-										};
-									};
-								};
-							};
-						};
-					};
-				};
-			};
-		};
-	};
-};
-var _user$project$SeatGeek$SortArguments = F2(
-	function (a, b) {
-		return {field: a, direction: b};
-	});
-var _user$project$SeatGeek$MetaGeolocation = F8(
-	function (a, b, c, d, e, f, g, h) {
-		return {state: a, postal_code: b, lat: c, range: d, display_name: e, city: f, country: g, lon: h};
-	});
-var _user$project$SeatGeek$decodeMetaGeolocation = A2(
-	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-	A2(
-		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-		A2(
-			_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-			A2(
-				_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-				A2(
-					_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-					A2(
-						_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-						A2(
-							_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-							A2(
-								_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-								_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeek$MetaGeolocation),
-								A2(_user$project$SeatGeek_ops[':='], 'state', _elm_lang$core$Json_Decode$string)),
-							A2(_user$project$SeatGeek_ops[':='], 'postal_code', _elm_lang$core$Json_Decode$string)),
-						A2(_user$project$SeatGeek_ops[':='], 'lat', _elm_lang$core$Json_Decode$float)),
-					A2(_user$project$SeatGeek_ops[':='], 'range', _elm_lang$core$Json_Decode$string)),
-				A2(_user$project$SeatGeek_ops[':='], 'display_name', _elm_lang$core$Json_Decode$string)),
-			A2(_user$project$SeatGeek_ops[':='], 'city', _elm_lang$core$Json_Decode$string)),
-		A2(_user$project$SeatGeek_ops[':='], 'country', _elm_lang$core$Json_Decode$string)),
-	A2(_user$project$SeatGeek_ops[':='], 'lon', _elm_lang$core$Json_Decode$float));
-var _user$project$SeatGeek$ReplyMeta = F5(
-	function (a, b, c, d, e) {
-		return {per_page: a, took: b, geolocation: c, total: d, page: e};
-	});
-var _user$project$SeatGeek$decodeReplyMeta = A2(
-	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-	A2(
-		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-		A2(
-			_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-			A2(
-				_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-				A2(
-					_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-					_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeek$ReplyMeta),
-					A2(_user$project$SeatGeek_ops[':='], 'per_page', _elm_lang$core$Json_Decode$int)),
-				A2(_user$project$SeatGeek_ops[':='], 'took', _elm_lang$core$Json_Decode$int)),
-			A2(_user$project$SeatGeek_ops[':='], 'geolocation', _user$project$SeatGeek$decodeMetaGeolocation)),
-		A2(_user$project$SeatGeek_ops[':='], 'total', _elm_lang$core$Json_Decode$int)),
-	A2(_user$project$SeatGeek_ops[':='], 'page', _elm_lang$core$Json_Decode$int));
-var _user$project$SeatGeek$Event = function (a) {
-	return function (b) {
-		return function (c) {
-			return function (d) {
-				return function (e) {
-					return function (f) {
-						return function (g) {
-							return function (h) {
-								return function (i) {
-									return function (j) {
-										return function (k) {
-											return function (l) {
-												return function (m) {
-													return function (n) {
-														return function (o) {
-															return function (p) {
-																return function (q) {
-																	return function (r) {
-																		return {datetime_utc: a, visible_until_utc: b, datetime_local: c, time_tbd: d, taxonomies: e, category: f, created_at: g, performers: h, score: i, short_title: j, venue: k, id: l, stats: m, date_tbd: n, title: o, popularity: p, url: q, announce_date: r};
-																	};
-																};
-															};
-														};
-													};
-												};
-											};
-										};
-									};
-								};
-							};
-						};
-					};
-				};
-			};
-		};
-	};
-};
-var _user$project$SeatGeek$GCS = F2(
-	function (a, b) {
-		return {lon: a, lat: b};
-	});
-var _user$project$SeatGeek$decodeGCS = A2(
-	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-	A2(
-		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-		_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeek$GCS),
-		A2(_user$project$SeatGeek_ops[':='], 'lon', _elm_lang$core$Json_Decode$float)),
-	A2(_user$project$SeatGeek_ops[':='], 'lat', _elm_lang$core$Json_Decode$float));
-var _user$project$SeatGeek$Venue = function (a) {
-	return function (b) {
-		return function (c) {
-			return function (d) {
-				return function (e) {
-					return function (f) {
-						return function (g) {
-							return function (h) {
-								return function (i) {
-									return function (j) {
-										return function (k) {
-											return function (l) {
-												return function (m) {
-													return function (n) {
-														return function (o) {
-															return function (p) {
-																return function (q) {
-																	return {name: a, display_location: b, popularity: c, extended_address: d, location: e, name_v2: f, state: g, num_upcoming_events: h, id: i, slug: j, timezone: k, url: l, postal_code: m, city: n, country: o, score: p, address: q};
-																};
-															};
-														};
-													};
-												};
-											};
-										};
-									};
-								};
-							};
-						};
-					};
-				};
-			};
-		};
-	};
-};
-var _user$project$SeatGeek$decodeVenue = A2(
-	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-	A2(
-		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-		A2(
-			_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-			A2(
-				_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-				A2(
-					_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-					A2(
-						_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-						A2(
-							_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-							A2(
-								_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-								A2(
-									_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-									A2(
-										_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-										A2(
-											_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-											A2(
-												_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-												A2(
-													_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-													A2(
-														_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-														A2(
-															_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-															A2(
-																_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-																A2(
-																	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-																	_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeek$Venue),
-																	A2(_user$project$SeatGeek_ops[':='], 'name', _elm_lang$core$Json_Decode$string)),
-																A2(_user$project$SeatGeek_ops[':='], 'display_location', _elm_lang$core$Json_Decode$string)),
-															A2(_user$project$SeatGeek_ops[':='], 'popularity', _elm_lang$core$Json_Decode$float)),
-														A2(_user$project$SeatGeek_ops[':='], 'extended_address', _elm_lang$core$Json_Decode$string)),
-													A2(_user$project$SeatGeek_ops[':='], 'location', _user$project$SeatGeek$decodeGCS)),
-												A2(_user$project$SeatGeek_ops[':='], 'name_v2', _elm_lang$core$Json_Decode$string)),
-											_elm_lang$core$Json_Decode$maybe(
-												A2(_user$project$SeatGeek_ops[':='], 'state', _elm_lang$core$Json_Decode$string))),
-										A2(_user$project$SeatGeek_ops[':='], 'num_upcoming_events', _elm_lang$core$Json_Decode$int)),
-									A2(_user$project$SeatGeek_ops[':='], 'id', _elm_lang$core$Json_Decode$int)),
-								A2(_user$project$SeatGeek_ops[':='], 'slug', _elm_lang$core$Json_Decode$string)),
-							_elm_lang$core$Json_Decode$maybe(
-								A2(_user$project$SeatGeek_ops[':='], 'timezone', _elm_lang$core$Json_Decode$string))),
-						A2(_user$project$SeatGeek_ops[':='], 'url', _elm_lang$core$Json_Decode$string)),
-					A2(_user$project$SeatGeek_ops[':='], 'postal_code', _elm_lang$core$Json_Decode$string)),
-				A2(_user$project$SeatGeek_ops[':='], 'city', _elm_lang$core$Json_Decode$string)),
-			A2(_user$project$SeatGeek_ops[':='], 'country', _elm_lang$core$Json_Decode$string)),
-		A2(_user$project$SeatGeek_ops[':='], 'score', _elm_lang$core$Json_Decode$float)),
-	A2(_user$project$SeatGeek_ops[':='], 'address', _elm_lang$core$Json_Decode$string));
-var _user$project$SeatGeek$Tickets = F5(
-	function (a, b, c, d, e) {
-		return {listing_count: a, highest_price: b, average_price: c, lowest_price_good_deals: d, lowest_price: e};
-	});
-var _user$project$SeatGeek$decodeTickets = A2(
-	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-	A2(
-		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-		A2(
-			_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-			A2(
-				_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-				A2(
-					_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-					_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeek$Tickets),
-					_elm_lang$core$Json_Decode$maybe(
-						A2(_user$project$SeatGeek_ops[':='], 'listing_count', _elm_lang$core$Json_Decode$int))),
-				_elm_lang$core$Json_Decode$maybe(
-					A2(_user$project$SeatGeek_ops[':='], 'highest_price', _elm_lang$core$Json_Decode$float))),
-			_elm_lang$core$Json_Decode$maybe(
-				A2(_user$project$SeatGeek_ops[':='], 'average_price', _elm_lang$core$Json_Decode$float))),
-		_elm_lang$core$Json_Decode$maybe(
-			A2(_user$project$SeatGeek_ops[':='], 'lowest_price_good_deals', _elm_lang$core$Json_Decode$float))),
-	_elm_lang$core$Json_Decode$maybe(
-		A2(_user$project$SeatGeek_ops[':='], 'lowest_price', _elm_lang$core$Json_Decode$float)));
-var _user$project$SeatGeek$Performer = function (a) {
-	return function (b) {
-		return function (c) {
-			return function (d) {
-				return function (e) {
-					return function (f) {
-						return function (g) {
-							return function (h) {
-								return function (i) {
-									return function (j) {
-										return function (k) {
-											return function (l) {
-												return function (m) {
-													return function (n) {
-														return function (o) {
-															return function (p) {
-																return function (q) {
-																	return function (r) {
-																		return function (s) {
-																			return function (t) {
-																				return {image: a, images: b, image_attribution: c, num_upcoming_events: d, divisions: e, genres: f, stats: g, url: h, home_venue_id: i, category: j, score: k, slug: l, primary: m, colors: n, image_license: o, name: p, popularity: q, taxonomies: r, id: s, short_name: t};
-																			};
-																		};
-																	};
-																};
-															};
-														};
-													};
-												};
-											};
-										};
-									};
-								};
-							};
-						};
-					};
-				};
-			};
-		};
-	};
-};
-var _user$project$SeatGeek$PerformerColor = F3(
-	function (a, b, c) {
-		return {primary: a, all: b, iconic: c};
-	});
-var _user$project$SeatGeek$decodePerformerColor = A2(
-	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-	A2(
-		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-		A2(
-			_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-			_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeek$PerformerColor),
-			A2(
-				_user$project$SeatGeek_ops[':='],
-				'primary',
-				_elm_lang$core$Json_Decode$list(_elm_lang$core$Json_Decode$string))),
-		A2(
-			_user$project$SeatGeek_ops[':='],
-			'all',
-			_elm_lang$core$Json_Decode$list(_elm_lang$core$Json_Decode$string))),
-	A2(_user$project$SeatGeek_ops[':='], 'iconic', _elm_lang$core$Json_Decode$string));
-var _user$project$SeatGeek$PerformerStats = function (a) {
-	return {event_count: a};
-};
-var _user$project$SeatGeek$decodePerformerStats = A2(
-	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-	_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeek$PerformerStats),
-	A2(_user$project$SeatGeek_ops[':='], 'event_count', _elm_lang$core$Json_Decode$int));
-var _user$project$SeatGeek$TaxonomyStats = F2(
-	function (a, b) {
-		return {performer_count: a, event_count: b};
-	});
-var _user$project$SeatGeek$decodeTaxonomyStats = A2(
-	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-	A2(
-		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-		_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeek$TaxonomyStats),
-		A2(_user$project$SeatGeek_ops[':='], 'performer_count', _elm_lang$core$Json_Decode$int)),
-	A2(_user$project$SeatGeek_ops[':='], 'event_count', _elm_lang$core$Json_Decode$int));
-var _user$project$SeatGeek$Taxonomy = F9(
-	function (a, b, c, d, e, f, g, h, i) {
-		return {images: a, name: b, short_name: c, parent_id: d, stats: e, id: f, slug: g, image: h, is_visible: i};
-	});
-var _user$project$SeatGeek$decodeTaxonomy = A2(
-	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-	A2(
-		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-		A2(
-			_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-			A2(
-				_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-				A2(
-					_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-					A2(
-						_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-						A2(
-							_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-							A2(
-								_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-								A2(
-									_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-									_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeek$Taxonomy),
-									A2(
-										_elm_community$json_extra$Json_Decode_Extra$withDefault,
-										{ctor: '[]'},
-										A2(
-											_user$project$SeatGeek_ops[':='],
-											'images',
-											_elm_community$json_extra$Json_Decode_Extra$collection(_elm_lang$core$Json_Decode$string)))),
-								A2(_user$project$SeatGeek_ops[':='], 'name', _elm_lang$core$Json_Decode$string)),
-							_elm_lang$core$Json_Decode$maybe(
-								A2(_user$project$SeatGeek_ops[':='], 'short_name', _elm_lang$core$Json_Decode$string))),
-						_elm_lang$core$Json_Decode$maybe(
-							A2(_user$project$SeatGeek_ops[':='], 'parent_id', _elm_lang$core$Json_Decode$int))),
-					_elm_lang$core$Json_Decode$maybe(
-						A2(_user$project$SeatGeek_ops[':='], 'stats', _user$project$SeatGeek$decodeTaxonomyStats))),
-				A2(_user$project$SeatGeek_ops[':='], 'id', _elm_lang$core$Json_Decode$int)),
-			_elm_lang$core$Json_Decode$maybe(
-				A2(_user$project$SeatGeek_ops[':='], 'slug', _elm_lang$core$Json_Decode$string))),
-		_elm_lang$core$Json_Decode$maybe(
-			A2(_user$project$SeatGeek_ops[':='], 'image', _elm_lang$core$Json_Decode$string))),
-	_elm_lang$core$Json_Decode$maybe(
-		A2(_user$project$SeatGeek_ops[':='], 'is_visible', _elm_lang$core$Json_Decode$bool)));
-var _user$project$SeatGeek$Genre = F5(
-	function (a, b, c, d, e) {
-		return {slug: a, name: b, image: c, id: d, images: e};
-	});
-var _user$project$SeatGeek$decodeGenre = A2(
-	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-	A2(
-		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-		A2(
-			_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-			A2(
-				_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-				A2(
-					_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-					_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeek$Genre),
-					A2(_user$project$SeatGeek_ops[':='], 'slug', _elm_lang$core$Json_Decode$string)),
-				A2(_user$project$SeatGeek_ops[':='], 'name', _elm_lang$core$Json_Decode$string)),
-			_elm_lang$core$Json_Decode$maybe(
-				A2(_user$project$SeatGeek_ops[':='], 'image', _elm_lang$core$Json_Decode$string))),
-		A2(_user$project$SeatGeek_ops[':='], 'id', _elm_lang$core$Json_Decode$int)),
-	A2(
-		_elm_community$json_extra$Json_Decode_Extra$withDefault,
-		{ctor: '[]'},
-		A2(
-			_user$project$SeatGeek_ops[':='],
-			'images',
-			_elm_community$json_extra$Json_Decode_Extra$collection(_elm_lang$core$Json_Decode$string))));
-var _user$project$SeatGeek$Division = F6(
-	function (a, b, c, d, e, f) {
-		return {display_type: a, short_name: b, display_name: c, division_level: d, slug: e, taxonomy_id: f};
-	});
-var _user$project$SeatGeek$decodeDivision = A2(
-	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-	A2(
-		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-		A2(
-			_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-			A2(
-				_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-				A2(
-					_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-					A2(
-						_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-						_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeek$Division),
-						A2(_user$project$SeatGeek_ops[':='], 'display_type', _elm_lang$core$Json_Decode$string)),
-					_elm_lang$core$Json_Decode$maybe(
-						A2(_user$project$SeatGeek_ops[':='], 'short_name', _elm_lang$core$Json_Decode$string))),
-				A2(_user$project$SeatGeek_ops[':='], 'display_name', _elm_lang$core$Json_Decode$string)),
-			A2(_user$project$SeatGeek_ops[':='], 'division_level', _elm_lang$core$Json_Decode$int)),
-		_elm_lang$core$Json_Decode$maybe(
-			A2(_user$project$SeatGeek_ops[':='], 'slug', _elm_lang$core$Json_Decode$string))),
-	A2(_user$project$SeatGeek_ops[':='], 'taxonomy_id', _elm_lang$core$Json_Decode$int));
-var _user$project$SeatGeek$decodePerformer = A2(
-	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-	A2(
-		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-		A2(
-			_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-			A2(
-				_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-				A2(
-					_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-					A2(
-						_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-						A2(
-							_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-							A2(
-								_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-								A2(
-									_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-									A2(
-										_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-										A2(
-											_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-											A2(
-												_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-												A2(
-													_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-													A2(
-														_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-														A2(
-															_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-															A2(
-																_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-																A2(
-																	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-																	A2(
-																		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-																		A2(
-																			_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-																			A2(
-																				_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-																				_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeek$Performer),
-																				_elm_lang$core$Json_Decode$maybe(
-																					A2(_user$project$SeatGeek_ops[':='], 'image', _elm_lang$core$Json_Decode$string))),
-																			A2(
-																				_elm_community$json_extra$Json_Decode_Extra$withDefault,
-																				{ctor: '[]'},
-																				A2(
-																					_user$project$SeatGeek_ops[':='],
-																					'images',
-																					_elm_community$json_extra$Json_Decode_Extra$collection(_elm_lang$core$Json_Decode$string)))),
-																		_elm_lang$core$Json_Decode$maybe(
-																			A2(_user$project$SeatGeek_ops[':='], 'image_attribution', _elm_lang$core$Json_Decode$string))),
-																	A2(_user$project$SeatGeek_ops[':='], 'num_upcoming_events', _elm_lang$core$Json_Decode$int)),
-																_elm_lang$core$Json_Decode$maybe(
-																	A2(
-																		_user$project$SeatGeek_ops[':='],
-																		'divisions',
-																		_elm_lang$core$Json_Decode$list(_user$project$SeatGeek$decodeDivision)))),
-															_elm_lang$core$Json_Decode$maybe(
-																A2(
-																	_user$project$SeatGeek_ops[':='],
-																	'genres',
-																	_elm_lang$core$Json_Decode$list(_user$project$SeatGeek$decodeGenre)))),
-														A2(_user$project$SeatGeek_ops[':='], 'stats', _user$project$SeatGeek$decodePerformerStats)),
-													A2(_user$project$SeatGeek_ops[':='], 'url', _elm_lang$core$Json_Decode$string)),
-												_elm_lang$core$Json_Decode$maybe(
-													A2(_user$project$SeatGeek_ops[':='], 'home_venue_id', _elm_lang$core$Json_Decode$int))),
-											A2(_user$project$SeatGeek_ops[':='], 'type', _elm_lang$core$Json_Decode$string)),
-										A2(
-											_elm_community$json_extra$Json_Decode_Extra$withDefault,
-											0.0,
-											A2(_user$project$SeatGeek_ops[':='], 'score', _elm_lang$core$Json_Decode$float))),
-									A2(_user$project$SeatGeek_ops[':='], 'slug', _elm_lang$core$Json_Decode$string)),
-								_elm_lang$core$Json_Decode$maybe(
-									A2(_user$project$SeatGeek_ops[':='], 'primary', _elm_lang$core$Json_Decode$bool))),
-							_elm_lang$core$Json_Decode$maybe(
-								A2(_user$project$SeatGeek_ops[':='], 'colors', _user$project$SeatGeek$decodePerformerColor))),
-						_elm_lang$core$Json_Decode$maybe(
-							A2(_user$project$SeatGeek_ops[':='], 'image_license', _elm_lang$core$Json_Decode$string))),
-					A2(_user$project$SeatGeek_ops[':='], 'name', _elm_lang$core$Json_Decode$string)),
-				A2(_user$project$SeatGeek_ops[':='], 'popularity', _elm_lang$core$Json_Decode$float)),
-			A2(
-				_user$project$SeatGeek_ops[':='],
-				'taxonomies',
-				_elm_lang$core$Json_Decode$list(_user$project$SeatGeek$decodeTaxonomy))),
-		A2(_user$project$SeatGeek_ops[':='], 'id', _elm_lang$core$Json_Decode$int)),
-	A2(_user$project$SeatGeek_ops[':='], 'short_name', _elm_lang$core$Json_Decode$string));
-var _user$project$SeatGeek$decodeEvent = A2(
-	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-	A2(
-		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-		A2(
-			_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-			A2(
-				_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-				A2(
-					_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-					A2(
-						_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-						A2(
-							_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-							A2(
-								_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-								A2(
-									_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-									A2(
-										_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-										A2(
-											_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-											A2(
-												_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-												A2(
-													_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-													A2(
-														_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-														A2(
-															_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-															A2(
-																_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-																A2(
-																	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-																	A2(
-																		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-																		_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeek$Event),
-																		A2(_user$project$SeatGeek_ops[':='], 'datetime_utc', _elm_lang$core$Json_Decode$string)),
-																	A2(_user$project$SeatGeek_ops[':='], 'visible_until_utc', _elm_lang$core$Json_Decode$string)),
-																A2(_user$project$SeatGeek_ops[':='], 'datetime_local', _elm_lang$core$Json_Decode$string)),
-															A2(_user$project$SeatGeek_ops[':='], 'time_tbd', _elm_lang$core$Json_Decode$bool)),
-														A2(
-															_user$project$SeatGeek_ops[':='],
-															'taxonomies',
-															_elm_lang$core$Json_Decode$list(_user$project$SeatGeek$decodeTaxonomy))),
-													A2(_user$project$SeatGeek_ops[':='], 'type', _elm_lang$core$Json_Decode$string)),
-												A2(_user$project$SeatGeek_ops[':='], 'created_at', _elm_lang$core$Json_Decode$string)),
-											A2(
-												_user$project$SeatGeek_ops[':='],
-												'performers',
-												_elm_lang$core$Json_Decode$list(_user$project$SeatGeek$decodePerformer))),
-										A2(
-											_elm_community$json_extra$Json_Decode_Extra$withDefault,
-											0.0,
-											A2(_user$project$SeatGeek_ops[':='], 'score', _elm_lang$core$Json_Decode$float))),
-									A2(_user$project$SeatGeek_ops[':='], 'short_title', _elm_lang$core$Json_Decode$string)),
-								A2(_user$project$SeatGeek_ops[':='], 'venue', _user$project$SeatGeek$decodeVenue)),
-							A2(_user$project$SeatGeek_ops[':='], 'id', _elm_lang$core$Json_Decode$int)),
-						A2(_user$project$SeatGeek_ops[':='], 'stats', _user$project$SeatGeek$decodeTickets)),
-					A2(_user$project$SeatGeek_ops[':='], 'date_tbd', _elm_lang$core$Json_Decode$bool)),
-				A2(_user$project$SeatGeek_ops[':='], 'title', _elm_lang$core$Json_Decode$string)),
-			A2(_user$project$SeatGeek_ops[':='], 'popularity', _elm_lang$core$Json_Decode$float)),
-		A2(_user$project$SeatGeek_ops[':='], 'url', _elm_lang$core$Json_Decode$string)),
-	A2(_user$project$SeatGeek_ops[':='], 'announce_date', _elm_lang$core$Json_Decode$string));
-var _user$project$SeatGeek$decodeReply = A2(
-	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-	A2(
-		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-		_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeek$Reply),
-		A2(_user$project$SeatGeek_ops[':='], 'meta', _user$project$SeatGeek$decodeReplyMeta)),
-	A2(
-		_user$project$SeatGeek_ops[':='],
-		'events',
-		_elm_lang$core$Json_Decode$list(_user$project$SeatGeek$decodeEvent)));
-var _user$project$SeatGeek$Genres = {ctor: 'Genres'};
-var _user$project$SeatGeek$Taxonomies = {ctor: 'Taxonomies'};
-var _user$project$SeatGeek$Recommendations = {ctor: 'Recommendations'};
-var _user$project$SeatGeek$Venues = function (a) {
-	return {ctor: 'Venues', _0: a};
-};
-var _user$project$SeatGeek$Performers = function (a) {
-	return {ctor: 'Performers', _0: a};
-};
-var _user$project$SeatGeek$Events = function (a) {
-	return {ctor: 'Events', _0: a};
-};
-var _user$project$SeatGeek$Announce_date = {ctor: 'Announce_date'};
-var _user$project$SeatGeek$Datetime_utc = {ctor: 'Datetime_utc'};
-var _user$project$SeatGeek$Datetime_local = {ctor: 'Datetime_local'};
-var _user$project$SeatGeek$Desc = {ctor: 'Desc'};
-var _user$project$SeatGeek$Asc = {ctor: 'Asc'};
-var _user$project$SeatGeek$initQuery = {
-	endpoint: _user$project$SeatGeek$Events(_elm_lang$core$Maybe$Nothing),
-	$arguments: _user$project$SeatGeek$initArguments,
-	geoip: '',
-	lat: '',
-	lon: '',
-	range: '',
-	per_page: '',
-	page: '',
-	sort: {field: _user$project$SeatGeek$Datetime_utc, direction: _user$project$SeatGeek$Asc},
-	aid: '',
-	rid: '',
-	client_id: 'MzUwNDE1NnwxNDgxNjA1ODM2'
-};
-var _user$project$SeatGeek$init = {
-	ctor: '_Tuple2',
-	_0: {reply: _user$project$SeatGeek$emptyReply, query: _user$project$SeatGeek$initQuery},
-	_1: _elm_lang$core$Platform_Cmd$none
-};
-var _user$project$SeatGeek$GetReply = function (a) {
-	return {ctor: 'GetReply', _0: a};
-};
-var _user$project$SeatGeek$askQuery = function (query) {
-	var url = _user$project$SeatGeek$composeRequest(query);
-	var request = A2(_elm_lang$http$Http$get, url, _user$project$SeatGeek$decodeReply);
-	return A2(_elm_lang$http$Http$send, _user$project$SeatGeek$GetReply, request);
-};
-var _user$project$SeatGeek$update = F2(
-	function (msg, model) {
-		var _p6 = msg;
-		if (_p6.ctor === 'Discover') {
-			return {
-				ctor: '_Tuple2',
-				_0: model,
-				_1: _user$project$SeatGeek$askQuery(model.query)
-			};
-		} else {
-			if (_p6._0.ctor === 'Ok') {
-				var _p7 = _p6._0._0;
-				return {
-					ctor: '_Tuple2',
-					_0: A2(
-						_user$project$SeatGeek$Model,
-						A2(
-							_user$project$SeatGeek$Reply,
-							_p7.meta,
-							A2(_elm_lang$core$Basics_ops['++'], model.reply.events, _p7.events)),
-						model.query),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			} else {
-				var _p8 = A2(_elm_lang$core$Debug$log, 'err', _p6._0._0);
-				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
-			}
-		}
-	});
-var _user$project$SeatGeek$Discover = {ctor: 'Discover'};
-var _user$project$SeatGeek$view = function (model) {
-	return A2(
-		_elm_lang$html$Html$div,
-		{ctor: '[]'},
-		{
-			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$div,
-				{ctor: '[]'},
-				_user$project$SeatGeek$metaView(model.reply)),
-			_1: {
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$div,
-					{ctor: '[]'},
-					A2(_elm_lang$core$List$map, _user$project$SeatGeek$eventView, model.reply.events)),
-				_1: {
-					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html$div,
-						{ctor: '[]'},
-						{
-							ctor: '::',
-							_0: A2(
-								_elm_lang$html$Html$button,
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html_Events$onClick(_user$project$SeatGeek$Discover),
-									_1: {ctor: '[]'}
-								},
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html$text('discover'),
-									_1: {ctor: '[]'}
-								}),
-							_1: {ctor: '[]'}
-						}),
-					_1: {ctor: '[]'}
-				}
-			}
-		});
-};
-var _user$project$SeatGeek$main = _elm_lang$html$Html$program(
-	{init: _user$project$SeatGeek$init, view: _user$project$SeatGeek$view, update: _user$project$SeatGeek$update, subscriptions: _user$project$SeatGeek$subscriptions})();
-
-var _user$project$Nav$tab = function (tuple) {
-	var captionClasses = _elm_lang$html$Html_Attributes$class('pa3 pa2-m dn dib-ns');
-	var iconClasses = _elm_lang$html$Html_Attributes$class('w2 h2 w1-m h1-m contain');
-	var page = _elm_lang$core$Tuple$first(tuple);
-	var icon = _elm_lang$core$Tuple$second(tuple);
-	return A2(
-		_elm_lang$html$Html$a,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$href('Profile.html'),
-			_1: {
-				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class('white link flex flex-auto'),
-				_1: {ctor: '[]'}
-			}
-		},
-		{
-			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$li,
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class('animated zoomInLeft grow pr3-l pl4-l pv2-l mv2-l ph2 pointer hover-bg-black-50 z-999 flex flex-auto justify-center items-center br--right-l br-pill-l '),
-					_1: {ctor: '[]'}
-				},
-				{
-					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html$div,
-						{
-							ctor: '::',
-							_0: iconClasses,
-							_1: {
-								ctor: '::',
-								_0: _user$project$Icon$feather(icon),
-								_1: {ctor: '[]'}
-							}
-						},
-						{ctor: '[]'}),
-					_1: {
-						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$div,
-							{
-								ctor: '::',
-								_0: captionClasses,
-								_1: {ctor: '[]'}
-							},
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html$text(page),
-								_1: {ctor: '[]'}
-							}),
-						_1: {ctor: '[]'}
-					}
-				}),
-			_1: {ctor: '[]'}
-		});
-};
-var _user$project$Nav$home = A2(
-	_elm_lang$html$Html$a,
-	{
-		ctor: '::',
-		_0: _elm_lang$html$Html_Attributes$href('index.html'),
-		_1: {
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('white link'),
-			_1: {ctor: '[]'}
-		}
-	},
-	{
-		ctor: '::',
-		_0: A2(
-			_elm_lang$html$Html$div,
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class('grow-large ph4-l pv4-l ph3 flex-ns flex-column-l items-center dn'),
-				_1: {ctor: '[]'}
-			},
-			{
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$div,
-					{
-						ctor: '::',
-						_0: _user$project$Icon$bgImg('Assets/WhitePlusOneLogo.svg'),
-						_1: {
-							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('animated bounceIn contain bg-center h3-l w3-l h2 w2'),
-							_1: {ctor: '[]'}
-						}
-					},
-					{ctor: '[]'}),
-				_1: {
-					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html$div,
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('animated bounceInLeft fw7 pa3-m f4 dib-l dn ttn'),
-							_1: {ctor: '[]'}
-						},
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html$text('PlusOne'),
-							_1: {ctor: '[]'}
-						}),
-					_1: {ctor: '[]'}
-				}
-			}),
-		_1: {ctor: '[]'}
-	});
-var _user$project$Nav$selections = {
-	ctor: '::',
-	_0: {ctor: '_Tuple2', _0: 'discover', _1: 'compass'},
-	_1: {
-		ctor: '::',
-		_0: {ctor: '_Tuple2', _0: 'add', _1: 'plus-square'},
-		_1: {
-			ctor: '::',
-			_0: {ctor: '_Tuple2', _0: 'share', _1: 'share-2'},
-			_1: {
-				ctor: '::',
-				_0: {ctor: '_Tuple2', _0: 'chats', _1: 'message-square'},
-				_1: {
-					ctor: '::',
-					_0: {ctor: '_Tuple2', _0: 'profile', _1: 'user'},
-					_1: {ctor: '[]'}
-				}
-			}
-		}
-	}
-};
-var _user$project$Nav$bar = A2(
-	_elm_lang$html$Html$nav,
-	{
-		ctor: '::',
-		_0: _elm_lang$html$Html_Attributes$class('z-9999 w-100 w-auto-l h3 vh-100-l tc-l fixed flex-m flex-row-m items-center-m self-start-m absolute static-l top-0-m bottom-0'),
-		_1: {ctor: '[]'}
-	},
-	{
-		ctor: '::',
-		_0: _user$project$Nav$home,
-		_1: {
-			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$ul,
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class('list ma0 pa0 flex flex-column-l items-start-l justify-around flex-auto items-start-l items-stretch h3 h-auto-l pr3-l f6 o-90-ns bg-0-ns lg-breathe-50'),
-					_1: {ctor: '[]'}
-				},
-				A2(_elm_lang$core$List$map, _user$project$Nav$tab, _user$project$Nav$selections)),
-			_1: {ctor: '[]'}
-		}
-	});
-
-var _user$project$Main$subscriptions = function (model) {
-	return _elm_lang$core$Platform_Sub$none;
-};
-var _user$project$Main$stringToEmoji = function (string) {
-	var _p0 = string;
-	switch (_p0) {
-		case 'concert':
-			return '🎵';
-		case 'music_festival':
-			return '🎶';
-		case 'sports':
-			return '🏆';
-		case 'theater':
-			return '🎭';
-		case 'basketball':
-			return '🏀';
-		case 'nba':
-			return '⛹';
-		case 'ncaa_football':
-			return '👨🏻‍🎓';
-		case 'ncaa_basketball':
-			return '👨🏻‍🎓';
-		case 'ncaa_womens_basketball':
-			return '👩‍🎓';
-		case 'wnba':
-			return '⛹️‍♀️';
-		case 'family':
-			return '🚸';
-		case 'broadway_tickets_national':
-			return '🎟';
-		case 'dance_performance_tour':
-			return '💃';
-		case 'classical':
-			return '🎼';
-		case 'classical_orchestral_instrumental':
-			return '🎻';
-		case 'comedy':
-			return '🤣';
-		case 'hockey':
-			return '🏒';
-		case 'fighting':
-			return '🤼‍♂️';
-		case 'soccer':
-			return '⚽';
-		case 'wrestling':
-			return '🤼';
-		case 'football':
-			return '🏈';
-		case 'auto_racing':
-			return '🏎️';
-		case 'animal_sports':
-			return '🐾';
-		case 'horse_racing':
-			return '🏇';
-		case 'rodeo':
-			return '🤠';
-		case 'nfl':
-			return '🏟️';
-		case 'cirque_du_soleil':
-			return '🤸';
-		case 'classical_opera':
-			return '🎤';
-		default:
-			return '🤷';
-	}
-};
-var _user$project$Main$featherIcon = function (icon) {
-	return _elm_lang$html$Html_Attributes$style(
-		{
-			ctor: '::',
-			_0: {
-				ctor: '_Tuple2',
-				_0: 'background-image',
-				_1: A2(
-					_elm_lang$core$Basics_ops['++'],
-					'url(\'https://icongr.am/feather/',
-					A2(_elm_lang$core$Basics_ops['++'], icon, '.svg?size=20&color=ffffff\')'))
-			},
-			_1: {ctor: '[]'}
-		});
-};
-var _user$project$Main$maybeImage = function (performers) {
-	var _p1 = _elm_lang$core$List$head(performers);
-	if (_p1.ctor === 'Just') {
-		return _p1._0.image;
-	} else {
-		return _elm_lang$core$Maybe$Nothing;
-	}
-};
-var _user$project$Main$eventIcons = function (event) {
-	var toIcon = function (x) {
-		return A2(
-			_elm_lang$html$Html$li,
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class('flex w4 flex-column items-center overflow-hidden pointer animated zoomIn'),
-				_1: {ctor: '[]'}
-			},
-			{
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$div,
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class('f-subheadline f1-m grow'),
-						_1: {ctor: '[]'}
-					},
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html$text(
-							_user$project$Main$stringToEmoji(x.name)),
-						_1: {ctor: '[]'}
-					}),
-				_1: {
-					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html$div,
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('pv2 o-80'),
-							_1: {ctor: '[]'}
-						},
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html$text(
-								A2(
-									_elm_lang$core$Maybe$withDefault,
-									x.name,
-									_elm_lang$core$List$head(
-										A2(_elm_lang$core$String$split, '_', x.name)))),
-							_1: {ctor: '[]'}
-						}),
-					_1: {ctor: '[]'}
-				}
-			});
-	};
-	return A2(
-		_elm_lang$html$Html$ul,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('list mv0 mh4 ph0 pt4 pb3 flex justify-around items-center bb b--white-20'),
-			_1: {ctor: '[]'}
-		},
-		A2(_elm_lang$core$List$map, toIcon, event.taxonomies));
-};
-var _user$project$Main$progressBar = function (num) {
-	var percent = num * 100;
-	var _p2 = percent;
-	if (_p2 === 0.0) {
-		return _elm_lang$html$Html$text('');
-	} else {
-		return A2(
-			_elm_lang$html$Html$div,
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class('w-100 bg-black-20 overflow-hidden br-pill'),
-				_1: {ctor: '[]'}
-			},
-			{
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$div,
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$style(
-							{
-								ctor: '::',
-								_0: {
-									ctor: '_Tuple2',
-									_0: 'width',
-									_1: A2(
-										_elm_lang$core$Basics_ops['++'],
-										_elm_lang$core$Basics$toString(_p2),
-										'%')
-								},
-								_1: {ctor: '[]'}
-							}),
-						_1: {
-							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('animated slideInleft pt2 bg-red-50'),
-							_1: {ctor: '[]'}
-						}
-					},
-					{ctor: '[]'}),
-				_1: {ctor: '[]'}
-			});
-	}
-};
-var _user$project$Main$eventPool = A2(
-	_elm_lang$html$Html$div,
-	{
-		ctor: '::',
-		_0: _elm_lang$html$Html_Attributes$class('flex items-center justify-around mh4 pv4 bb b--white-20'),
-		_1: {ctor: '[]'}
-	},
-	{
-		ctor: '::',
-		_0: A2(
-			_elm_lang$html$Html$a,
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$href('Pool.html'),
-				_1: {
-					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class('white link br-pill pa2 mh1 flex items-center mh1 grow'),
-					_1: {ctor: '[]'}
-				}
-			},
-			{
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$div,
-					{
-						ctor: '::',
-						_0: _user$project$Icon$feather('info'),
-						_1: {
-							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('h2 w2 contain bg-center'),
-							_1: {ctor: '[]'}
-						}
-					},
-					{ctor: '[]'}),
-				_1: {ctor: '[]'}
-			}),
-		_1: {
-			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$a,
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$href('Pool.html'),
-					_1: {
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class('white link lg-breathe-50 br1 pa2 mh1 flex items-center mh1 grow'),
-						_1: {ctor: '[]'}
-					}
-				},
-				{
-					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html$div,
-						{
-							ctor: '::',
-							_0: _user$project$Icon$feather('life-buoy'),
-							_1: {
-								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$class('h2 w2 mh1 contain bg-center'),
-								_1: {ctor: '[]'}
-							}
-						},
-						{ctor: '[]'}),
-					_1: {
-						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$div,
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$class('mh2 f4 fw4 ttn'),
-								_1: {ctor: '[]'}
-							},
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html$text('join pool'),
-								_1: {ctor: '[]'}
-							}),
-						_1: {ctor: '[]'}
-					}
-				}),
-			_1: {
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$div,
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class('mr3 f2'),
-						_1: {ctor: '[]'}
-					},
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html$text('🏊'),
-						_1: {ctor: '[]'}
-					}),
-				_1: {ctor: '[]'}
-			}
-		}
-	});
-var _user$project$Main$yetToBeAdded = A2(
-	_elm_lang$html$Html$div,
-	{
-		ctor: '::',
-		_0: _elm_lang$html$Html_Attributes$class('flex items-center justify-around mh4 pv4 bb b--white-20 lh-copy'),
-		_1: {ctor: '[]'}
-	},
-	{
-		ctor: '::',
-		_0: _elm_lang$html$Html$text('I still need to add genres in the emojis.\n                I need to have photo galleries for extra photos,\n                other events at the venue, other venues the artist will be at,\n                spotify, Last.fm, and google maps integration. I also need to make\n                events that do not have defined times do not display a time.\n\n                Sed ut perspiciatis, unde omnis iste natus error sit voluptatem\n                accusantium doloremque laudantium, totam rem aperiam eaque ipsa,\n                quae ab illo inventore veritatis et quasi architecto beatae vitae\n                dicta sunt, explicabo. Nemo enim ipsam voluptatem, quia voluptas sit,\n                aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos,\n                qui ratione voluptatem sequi nesciunt, neque porro quisquam est.\n                qui dolorem ipsum, quia dolor sit amet consectetur adipisci.\n                velit, sed quia non numquam [do] eius modi tempora inci[di]dunt,\n                ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima\n                veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam,\n                nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure\n                reprehenderit, qui in ea voluptate velit esse, quam nihil molestiae\n                consequatur, vel illum, qui dolorem eum fugiat, quo voluptas nulla pariatur?\n                '),
-		_1: {ctor: '[]'}
-	});
-var _user$project$Main$eventPopularity = function (event) {
-	var _p3 = event.popularity;
-	if (_p3 === 0.0) {
-		return _elm_lang$html$Html$text('');
-	} else {
-		return A2(
-			_elm_lang$html$Html$div,
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class('flex items-center mh4 pv4 bb b--white-20'),
-				_1: {ctor: '[]'}
-			},
-			{
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$div,
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class('mr3 f2'),
-						_1: {ctor: '[]'}
-					},
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html$text('🔥'),
-						_1: {ctor: '[]'}
-					}),
-				_1: {
-					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html$div,
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('flex flex-column flex-auto h2 justify-around'),
-							_1: {ctor: '[]'}
-						},
-						{
-							ctor: '::',
-							_0: _user$project$Main$progressBar(event.popularity),
-							_1: {
-								ctor: '::',
-								_0: _user$project$Main$progressBar(event.score),
-								_1: {ctor: '[]'}
-							}
-						}),
-					_1: {ctor: '[]'}
-				}
-			});
-	}
-};
-var _user$project$Main$eventTickets = function (event) {
-	var emptyTickets = A2(
-		_elm_lang$core$List$all,
-		function (x) {
-			return _elm_lang$core$Native_Utils.eq(x, _elm_lang$core$Maybe$Nothing);
-		},
-		{
-			ctor: '::',
-			_0: event.stats.highest_price,
-			_1: {
-				ctor: '::',
-				_0: event.stats.average_price,
-				_1: {
-					ctor: '::',
-					_0: event.stats.lowest_price,
-					_1: {
-						ctor: '::',
-						_0: event.stats.lowest_price_good_deals,
-						_1: {ctor: '[]'}
-					}
-				}
-			}
-		});
-	var _p4 = event.stats.lowest_price;
-	if (_p4.ctor === 'Just') {
-		return A2(
-			_elm_lang$html$Html$a,
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$href(event.url),
-				_1: {
-					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$target('_blank'),
-					_1: {
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class('bg-white br1 pa2 mh1 flex items-center mh1 no-underline'),
-						_1: {ctor: '[]'}
-					}
-				}
-			},
-			{
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$div,
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$style(
-							{
-								ctor: '::',
-								_0: {ctor: '_Tuple2', _0: 'background-image', _1: 'url(\'Assets/SeatGeekLogo.svg\')'},
-								_1: {ctor: '[]'}
-							}),
-						_1: {
-							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('h2 w2 mh1 contain bg-center'),
-							_1: {ctor: '[]'}
-						}
-					},
-					{ctor: '[]'}),
-				_1: {
-					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html$div,
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('blue-80 mh2 f4 fw4 ttn'),
-							_1: {ctor: '[]'}
-						},
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html$text(
-								A2(
-									_elm_lang$core$Basics_ops['++'],
-									'$',
-									A2(
-										_elm_lang$core$Basics_ops['++'],
-										_elm_lang$core$Basics$toString(_p4._0),
-										' tickets'))),
-							_1: {ctor: '[]'}
-						}),
-					_1: {ctor: '[]'}
-				}
-			});
-	} else {
-		return _elm_lang$html$Html$text('');
-	}
-};
-var _user$project$Main$thisPartOfDay = function (hour) {
-	return _elm_lang$core$Native_Utils.eq(hour, 1) ? 'in an hour' : A2(
-		_elm_lang$core$Basics_ops['++'],
-		'in ',
-		A2(
-			_elm_lang$core$Basics_ops['++'],
-			_elm_lang$core$Basics$toString(hour),
-			' hours'));
-};
-var _user$project$Main$somePartOfDay = F2(
-	function (hour, day) {
-		return _elm_lang$core$Native_Utils.eq(hour, 0) ? A2(_elm_lang$core$Basics_ops['++'], day, ' at midnight') : ((_elm_lang$core$Native_Utils.cmp(hour, 3) < 0) ? A2(_elm_lang$core$Basics_ops['++'], day, ' after midnight') : ((_elm_lang$core$Native_Utils.cmp(hour, 5) < 0) ? A2(_elm_lang$core$Basics_ops['++'], day, ' at dawn') : ((_elm_lang$core$Native_Utils.cmp(hour, 8) < 0) ? A2(
-			_elm_lang$core$Basics_ops['++'],
-			'early ',
-			A2(_elm_lang$core$Basics_ops['++'], day, ' morning')) : ((_elm_lang$core$Native_Utils.cmp(hour, 10) < 0) ? A2(_elm_lang$core$Basics_ops['++'], day, ' morning') : ((_elm_lang$core$Native_Utils.cmp(hour, 12) < 0) ? A2(
-			_elm_lang$core$Basics_ops['++'],
-			'late ',
-			A2(_elm_lang$core$Basics_ops['++'], day, ' morning')) : (_elm_lang$core$Native_Utils.eq(hour, 12) ? A2(_elm_lang$core$Basics_ops['++'], day, ' at noon') : ((_elm_lang$core$Native_Utils.cmp(hour, 15) < 0) ? A2(_elm_lang$core$Basics_ops['++'], day, ' afternoon') : ((_elm_lang$core$Native_Utils.cmp(hour, 17) < 0) ? A2(
-			_elm_lang$core$Basics_ops['++'],
-			'late ',
-			A2(_elm_lang$core$Basics_ops['++'], day, ' afternoon')) : ((_elm_lang$core$Native_Utils.cmp(hour, 20) < 0) ? A2(_elm_lang$core$Basics_ops['++'], day, ' evening') : ((_elm_lang$core$Native_Utils.cmp(hour, 23) < 0) ? A2(_elm_lang$core$Basics_ops['++'], day, ' night') : ((_elm_lang$core$Native_Utils.cmp(hour, 24) < 0) ? A2(
-			_elm_lang$core$Basics_ops['++'],
-			'late ',
-			A2(_elm_lang$core$Basics_ops['++'], day, ' night')) : 'For some reason, I think there are more than 24 hours in a day.')))))))))));
-	});
-var _user$project$Main$simpleTime = F2(
-	function (delta, maybeEventDate) {
-		var _p5 = maybeEventDate;
-		if (_p5.ctor === 'Nothing') {
-			return 'welp, I couldn\'t determine the date of the event';
-		} else {
-			var _p6 = _p5._0;
-			return A2(
-				_elm_lang$core$String$contains,
-				'-',
-				_elm_lang$core$Basics$toString(delta)) ? 'happening now' : ((_elm_lang$core$Native_Utils.cmp(delta.year, 1) > 0) ? 'in over a year' : (_elm_lang$core$Native_Utils.eq(delta.year, 1) ? 'in a year' : ((_elm_lang$core$Native_Utils.cmp(delta.month, 1) > 0) ? A2(
-				_elm_lang$core$Basics_ops['++'],
-				'in ',
-				_rluiten$elm_date_extra$Date_Extra_I18n_I_en_us$monthName(
-					_elm_lang$core$Date$month(_p6))) : (_elm_lang$core$Native_Utils.eq(delta.month, 1) ? 'next month' : ((_elm_lang$core$Native_Utils.cmp(delta.day, 13) > 0) ? A2(
-				_elm_lang$core$Basics_ops['++'],
-				'in ',
-				A2(
-					_elm_lang$core$Basics_ops['++'],
-					_elm_lang$core$Basics$toString((delta.day / 7) | 0),
-					' weeks')) : ((_elm_lang$core$Native_Utils.cmp(delta.day, 6) > 0) ? A2(
-				_elm_lang$core$Basics_ops['++'],
-				'next ',
-				_rluiten$elm_date_extra$Date_Extra_I18n_I_en_us$dayName(
-					_elm_lang$core$Date$dayOfWeek(_p6))) : ((_elm_lang$core$Native_Utils.cmp(delta.day, 1) > 0) ? A2(
-				_user$project$Main$somePartOfDay,
-				_elm_lang$core$Date$hour(_p6),
-				_rluiten$elm_date_extra$Date_Extra_I18n_I_en_us$dayName(
-					_elm_lang$core$Date$dayOfWeek(_p6))) : (_elm_lang$core$Native_Utils.eq(delta.day, 1) ? A2(
-				_user$project$Main$somePartOfDay,
-				_elm_lang$core$Date$hour(_p6),
-				_rluiten$elm_date_extra$Date_Extra_I18n_I_en_us$dayName(
-					_elm_lang$core$Date$dayOfWeek(_p6))) : _user$project$Main$thisPartOfDay(
-				_elm_lang$core$Date$hour(_p6))))))))));
-		}
-	});
-var _user$project$Main$maybeEventDate = function (date) {
-	return _elm_lang$core$Result$toMaybe(
-		_elm_lang$core$Date$fromString(date));
-};
-var _user$project$Main$eventTime = F2(
-	function (event, maybeNow) {
-		var clockTime = function (x) {
-			return A3(_rluiten$elm_date_extra$Date_Extra_Format$format, _rluiten$elm_date_extra$Date_Extra_Config_Config_en_us$config, '%-I:%M %P', x);
-		};
-		var fullDate = function (x) {
-			return A3(_rluiten$elm_date_extra$Date_Extra_Format$format, _rluiten$elm_date_extra$Date_Extra_Config_Config_en_us$config, '%A, %B %@e, %Y', x);
-		};
-		var eventDateView = function () {
-			var _p7 = _user$project$Main$maybeEventDate(event.datetime_local);
-			if (_p7.ctor === 'Nothing') {
-				return {
-					ctor: '::',
-					_0: _elm_lang$html$Html$text('not sure what time this event is'),
-					_1: {ctor: '[]'}
-				};
-			} else {
-				var _p8 = _p7._0;
-				return {
-					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html$div,
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('fw7 f3 lh-solid pb2'),
-							_1: {ctor: '[]'}
-						},
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html$text(
-								clockTime(_p8)),
-							_1: {ctor: '[]'}
-						}),
-					_1: {
-						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$div,
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$class('fw4 f5 lh-solid'),
-								_1: {ctor: '[]'}
-							},
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html$text(
-									fullDate(_p8)),
-								_1: {ctor: '[]'}
-							}),
-						_1: {ctor: '[]'}
-					}
-				};
-			}
-		}();
-		return A2(
-			_elm_lang$html$Html$div,
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class('pv4 mh4 bb b--white-20 flex justify-between'),
-				_1: {ctor: '[]'}
-			},
-			{
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$div,
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class('mh1'),
-						_1: {ctor: '[]'}
-					},
-					eventDateView),
-				_1: {
-					ctor: '::',
-					_0: _user$project$Main$eventTickets(event),
-					_1: {ctor: '[]'}
-				}
-			});
-	});
-var _user$project$Main$deltaTime = F2(
-	function (now, upcoming) {
-		return A3(_elm_lang$core$Maybe$map2, _rluiten$elm_date_extra$Date_Extra_Duration$diff, upcoming, now);
-	});
-var _user$project$Main$eventTitle = function (event) {
-	var textSize = F2(
-		function (x, y) {
-			var _p9 = (_elm_lang$core$String$length(x) / y) | 0;
-			switch (_p9) {
-				case 0:
-					return ' f-subheadline';
-				case 1:
-					return ' f1';
-				default:
-					return ' f2';
-			}
-		});
-	var icon = function (x) {
-		return A2(
-			_elm_lang$html$Html$div,
-			{
-				ctor: '::',
-				_0: _user$project$Icon$feather(x),
-				_1: {
-					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class('contain dib bg-center grow ml1 mr2 pt1 pb3 pl1 pr3'),
-					_1: {ctor: '[]'}
-				}
-			},
-			{ctor: '[]'});
-	};
-	return A2(
-		_elm_lang$html$Html$div,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('pt4 pb3 mh4 bb b--white-20'),
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$div,
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class(
-						A2(
-							_elm_lang$core$Basics_ops['++'],
-							'fw6 pv1 lh-solid ttn',
-							A2(textSize, event.title, 30))),
-					_1: {ctor: '[]'}
-				},
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html$text(event.title),
-					_1: {ctor: '[]'}
-				}),
-			_1: {
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$div,
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class('fw5 pv1 f4 flex items-center o-80 ttn'),
-						_1: {ctor: '[]'}
-					},
-					{
-						ctor: '::',
-						_0: icon('at-sign'),
-						_1: {
-							ctor: '::',
-							_0: _elm_lang$html$Html$text(event.venue.name),
-							_1: {ctor: '[]'}
-						}
-					}),
-				_1: {ctor: '[]'}
-			}
-		});
-};
-var _user$project$Main$selectedEvent = function (model) {
-	return _elm_lang$core$List$head(
-		A2(
-			_elm_lang$core$List$filter,
-			function (x) {
-				return _elm_lang$core$Native_Utils.eq(
-					model.selectedEvent,
-					_elm_lang$core$Maybe$Just(x.id));
-			},
-			model.seatgeek.events));
-};
-var _user$project$Main$discoverToolsView = function () {
-	var icon = function (x) {
-		return A2(
-			_elm_lang$html$Html$div,
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class('animated bounceIn pointer hover-bg-black-50 br-pill pa2'),
-				_1: {ctor: '[]'}
-			},
-			{
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$div,
-					{
-						ctor: '::',
-						_0: _user$project$Icon$feather(x),
-						_1: {
-							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('contain bg-center grow pt3 pb2 pl3 pr2'),
-							_1: {ctor: '[]'}
-						}
-					},
-					{ctor: '[]'}),
-				_1: {ctor: '[]'}
-			});
-	};
-	return A2(
-		_elm_lang$html$Html$div,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('flex justify-end'),
-			_1: {ctor: '[]'}
-		},
-		A2(
-			_elm_lang$core$List$map,
-			icon,
-			{
-				ctor: '::',
-				_0: 'search',
-				_1: {
-					ctor: '::',
-					_0: 'map-pin',
-					_1: {
-						ctor: '::',
-						_0: 'thumbs-up',
-						_1: {
-							ctor: '::',
-							_0: 'tag',
-							_1: {
-								ctor: '::',
-								_0: 'at-sign',
-								_1: {ctor: '[]'}
-							}
-						}
-					}
-				}
-			}));
-}();
-var _user$project$Main$gradients = {
+var _user$project$Assets$gradients = {
 	ctor: '::',
 	_0: 'lg-magenta-red',
 	_1: {
@@ -14514,98 +11814,420 @@ var _user$project$Main$gradients = {
 		}
 	}
 };
-var _user$project$Main$randomGradient = function (event) {
-	var randomSeed = _elm_lang$core$String$length(event.title) * _elm_lang$core$String$length(event.url);
-	var randomIndex = A2(
-		_elm_lang$core$Basics_ops['%'],
-		randomSeed,
-		_elm_lang$core$List$length(_user$project$Main$gradients));
-	var selectedGradient = _elm_lang$core$List$head(
-		A2(_elm_lang$core$List$drop, randomIndex, _user$project$Main$gradients));
-	var _p10 = selectedGradient;
-	if (_p10.ctor === 'Nothing') {
-		return '';
-	} else {
-		return A2(_elm_lang$core$Basics_ops['++'], _p10._0, '');
+var _user$project$Assets$bgImg = function (imgPath) {
+	return _elm_lang$html$Html_Attributes$style(
+		{
+			ctor: '::',
+			_0: {
+				ctor: '_Tuple2',
+				_0: 'background-image',
+				_1: A2(
+					_elm_lang$core$Basics_ops['++'],
+					'url(\'',
+					A2(_elm_lang$core$Basics_ops['++'], imgPath, '\')'))
+			},
+			_1: {ctor: '[]'}
+		});
+};
+var _user$project$Assets$feather = function (icon) {
+	return _user$project$Assets$bgImg(
+		A2(
+			_elm_lang$core$Basics_ops['++'],
+			'https://icongr.am/feather/',
+			A2(_elm_lang$core$Basics_ops['++'], icon, '.svg?size=20&color=ffffff')));
+};
+
+var _user$project$SeatGeekTypes$initArguments = {performers: '', venues: '', datetime: '', query: '', id: '', taxonomies: '', slug: '', genres: '', city: '', state: '', country: '', postal_code: ''};
+var _user$project$SeatGeekTypes$emptyReply = {
+	meta: {
+		per_page: 0,
+		took: 0,
+		geolocation: {state: '', postal_code: '', lat: 0.0, range: '', display_name: '', city: '', country: '', lon: 0.0},
+		total: 0,
+		page: 0
+	},
+	events: {ctor: '[]'}
+};
+var _user$project$SeatGeekTypes$SeatGeek = F2(
+	function (a, b) {
+		return {reply: a, query: b};
+	});
+var _user$project$SeatGeekTypes$Reply = F2(
+	function (a, b) {
+		return {meta: a, events: b};
+	});
+var _user$project$SeatGeekTypes$Query = function (a) {
+	return function (b) {
+		return function (c) {
+			return function (d) {
+				return function (e) {
+					return function (f) {
+						return function (g) {
+							return function (h) {
+								return function (i) {
+									return function (j) {
+										return function (k) {
+											return function (l) {
+												return {endpoint: a, $arguments: b, geoip: c, lat: d, lon: e, range: f, per_page: g, page: h, sort: i, aid: j, rid: k, client_id: l};
+											};
+										};
+									};
+								};
+							};
+						};
+					};
+				};
+			};
+		};
+	};
+};
+var _user$project$SeatGeekTypes$Arguments = function (a) {
+	return function (b) {
+		return function (c) {
+			return function (d) {
+				return function (e) {
+					return function (f) {
+						return function (g) {
+							return function (h) {
+								return function (i) {
+									return function (j) {
+										return function (k) {
+											return function (l) {
+												return {performers: a, venues: b, datetime: c, query: d, id: e, taxonomies: f, slug: g, genres: h, city: i, state: j, country: k, postal_code: l};
+											};
+										};
+									};
+								};
+							};
+						};
+					};
+				};
+			};
+		};
+	};
+};
+var _user$project$SeatGeekTypes$SortArguments = F2(
+	function (a, b) {
+		return {field: a, direction: b};
+	});
+var _user$project$SeatGeekTypes$MetaGeolocation = F8(
+	function (a, b, c, d, e, f, g, h) {
+		return {state: a, postal_code: b, lat: c, range: d, display_name: e, city: f, country: g, lon: h};
+	});
+var _user$project$SeatGeekTypes$ReplyMeta = F5(
+	function (a, b, c, d, e) {
+		return {per_page: a, took: b, geolocation: c, total: d, page: e};
+	});
+var _user$project$SeatGeekTypes$Event = function (a) {
+	return function (b) {
+		return function (c) {
+			return function (d) {
+				return function (e) {
+					return function (f) {
+						return function (g) {
+							return function (h) {
+								return function (i) {
+									return function (j) {
+										return function (k) {
+											return function (l) {
+												return function (m) {
+													return function (n) {
+														return function (o) {
+															return function (p) {
+																return function (q) {
+																	return function (r) {
+																		return {datetime_utc: a, visible_until_utc: b, datetime_local: c, time_tbd: d, taxonomies: e, category: f, created_at: g, performers: h, score: i, short_title: j, venue: k, id: l, stats: m, date_tbd: n, title: o, popularity: p, url: q, announce_date: r};
+																	};
+																};
+															};
+														};
+													};
+												};
+											};
+										};
+									};
+								};
+							};
+						};
+					};
+				};
+			};
+		};
+	};
+};
+var _user$project$SeatGeekTypes$GCS = F2(
+	function (a, b) {
+		return {lon: a, lat: b};
+	});
+var _user$project$SeatGeekTypes$Venue = function (a) {
+	return function (b) {
+		return function (c) {
+			return function (d) {
+				return function (e) {
+					return function (f) {
+						return function (g) {
+							return function (h) {
+								return function (i) {
+									return function (j) {
+										return function (k) {
+											return function (l) {
+												return function (m) {
+													return function (n) {
+														return function (o) {
+															return function (p) {
+																return function (q) {
+																	return {name: a, display_location: b, popularity: c, extended_address: d, location: e, name_v2: f, state: g, num_upcoming_events: h, id: i, slug: j, timezone: k, url: l, postal_code: m, city: n, country: o, score: p, address: q};
+																};
+															};
+														};
+													};
+												};
+											};
+										};
+									};
+								};
+							};
+						};
+					};
+				};
+			};
+		};
+	};
+};
+var _user$project$SeatGeekTypes$Tickets = F5(
+	function (a, b, c, d, e) {
+		return {listing_count: a, highest_price: b, average_price: c, lowest_price_good_deals: d, lowest_price: e};
+	});
+var _user$project$SeatGeekTypes$Performer = function (a) {
+	return function (b) {
+		return function (c) {
+			return function (d) {
+				return function (e) {
+					return function (f) {
+						return function (g) {
+							return function (h) {
+								return function (i) {
+									return function (j) {
+										return function (k) {
+											return function (l) {
+												return function (m) {
+													return function (n) {
+														return function (o) {
+															return function (p) {
+																return function (q) {
+																	return function (r) {
+																		return function (s) {
+																			return function (t) {
+																				return {image: a, images: b, image_attribution: c, num_upcoming_events: d, divisions: e, genres: f, stats: g, url: h, home_venue_id: i, category: j, score: k, slug: l, primary: m, colors: n, image_license: o, name: p, popularity: q, taxonomies: r, id: s, short_name: t};
+																			};
+																		};
+																	};
+																};
+															};
+														};
+													};
+												};
+											};
+										};
+									};
+								};
+							};
+						};
+					};
+				};
+			};
+		};
+	};
+};
+var _user$project$SeatGeekTypes$PerformerColor = F3(
+	function (a, b, c) {
+		return {primary: a, all: b, iconic: c};
+	});
+var _user$project$SeatGeekTypes$PerformerStats = function (a) {
+	return {event_count: a};
+};
+var _user$project$SeatGeekTypes$TaxonomyStats = F2(
+	function (a, b) {
+		return {performer_count: a, event_count: b};
+	});
+var _user$project$SeatGeekTypes$Taxonomy = F9(
+	function (a, b, c, d, e, f, g, h, i) {
+		return {images: a, name: b, short_name: c, parent_id: d, stats: e, id: f, slug: g, image: h, is_visible: i};
+	});
+var _user$project$SeatGeekTypes$Genre = F5(
+	function (a, b, c, d, e) {
+		return {slug: a, name: b, image: c, id: d, images: e};
+	});
+var _user$project$SeatGeekTypes$Division = F6(
+	function (a, b, c, d, e, f) {
+		return {display_type: a, short_name: b, display_name: c, division_level: d, slug: e, taxonomy_id: f};
+	});
+var _user$project$SeatGeekTypes$Genres = {ctor: 'Genres'};
+var _user$project$SeatGeekTypes$Taxonomies = {ctor: 'Taxonomies'};
+var _user$project$SeatGeekTypes$Recommendations = {ctor: 'Recommendations'};
+var _user$project$SeatGeekTypes$Venues = function (a) {
+	return {ctor: 'Venues', _0: a};
+};
+var _user$project$SeatGeekTypes$Performers = function (a) {
+	return {ctor: 'Performers', _0: a};
+};
+var _user$project$SeatGeekTypes$Events = function (a) {
+	return {ctor: 'Events', _0: a};
+};
+var _user$project$SeatGeekTypes$Announce_date = {ctor: 'Announce_date'};
+var _user$project$SeatGeekTypes$Datetime_utc = {ctor: 'Datetime_utc'};
+var _user$project$SeatGeekTypes$Datetime_local = {ctor: 'Datetime_local'};
+var _user$project$SeatGeekTypes$Desc = {ctor: 'Desc'};
+var _user$project$SeatGeekTypes$Asc = {ctor: 'Asc'};
+var _user$project$SeatGeekTypes$initQuery = {
+	endpoint: _user$project$SeatGeekTypes$Events(_elm_lang$core$Maybe$Nothing),
+	$arguments: _user$project$SeatGeekTypes$initArguments,
+	geoip: '',
+	lat: '',
+	lon: '',
+	range: '',
+	per_page: '',
+	page: '',
+	sort: {field: _user$project$SeatGeekTypes$Datetime_utc, direction: _user$project$SeatGeekTypes$Asc},
+	aid: '',
+	rid: '',
+	client_id: 'MzUwNDE1NnwxNDgxNjA1ODM2'
+};
+
+var _user$project$Types$initEvents = {seatgeek: _user$project$SeatGeekTypes$emptyReply, selectedEvent: _elm_lang$core$Maybe$Nothing, currentDatetime: _elm_lang$core$Maybe$Nothing};
+var _user$project$Types$initTrait = {
+	ctor: '::',
+	_0: {name: 'night owl', from: 'tommy', datetime: ''},
+	_1: {
+		ctor: '::',
+		_0: {name: 'flirty', from: 'tommy', datetime: ''},
+		_1: {
+			ctor: '::',
+			_0: {name: 'talkative', from: 'tommy', datetime: ''},
+			_1: {
+				ctor: '::',
+				_0: {name: 'funny', from: 'tommy', datetime: ''},
+				_1: {ctor: '[]'}
+			}
+		}
 	}
 };
-var _user$project$Main$eventBanner = function (event) {
-	var heroImg = function () {
-		var _p11 = _user$project$Main$maybeImage(event.performers);
-		if (_p11.ctor === 'Nothing') {
-			return _elm_lang$html$Html_Attributes$class(
-				_user$project$Main$randomGradient(event));
-		} else {
-			return _elm_lang$html$Html_Attributes$style(
-				{
-					ctor: '::',
-					_0: {
-						ctor: '_Tuple2',
-						_0: 'background-image',
-						_1: A2(
-							_elm_lang$core$Basics_ops['++'],
-							'url(',
-							A2(_elm_lang$core$Basics_ops['++'], _p11._0, ')'))
-					},
-					_1: {ctor: '[]'}
-				});
-		}
-	}();
+var _user$project$Types$initProfile = {
+	avi: {
+		ctor: '::',
+		_0: 'https://images.unsplash.com/photo-1496361001419-80f0d1be777a?dpr=1&auto=format&fit=crop&w=1000&q=80&cs=tinysrgb&ixid=dW5zcGxhc2guY29tOzs7Ozs%3D',
+		_1: {ctor: '[]'}
+	},
+	name: 'Hannah Hazeldine',
+	traits: _user$project$Types$initTrait
+};
+var _user$project$Types$initChat = {
+	input: '',
+	messages: {ctor: '[]'},
+	userAvi: 'https://images.unsplash.com/photo-1496361001419-80f0d1be777a?dpr=1&auto=format&fit=crop&w=1000&q=80&cs=tinysrgb&ixid=dW5zcGxhc2guY29tOzs7Ozs%3D'
+};
+var _user$project$Types$Model = F4(
+	function (a, b, c, d) {
+		return {route: a, chat: b, profile: c, events: d};
+	});
+var _user$project$Types$Page = F3(
+	function (a, b, c) {
+		return {name: a, icon: b, route: c};
+	});
+var _user$project$Types$Chat = F3(
+	function (a, b, c) {
+		return {input: a, messages: b, userAvi: c};
+	});
+var _user$project$Types$Profile = F3(
+	function (a, b, c) {
+		return {avi: a, name: b, traits: c};
+	});
+var _user$project$Types$Trait = F3(
+	function (a, b, c) {
+		return {name: a, from: b, datetime: c};
+	});
+var _user$project$Types$Events = F3(
+	function (a, b, c) {
+		return {seatgeek: a, selectedEvent: b, currentDatetime: c};
+	});
+var _user$project$Types$GoEvents = {ctor: 'GoEvents'};
+var _user$project$Types$GoEvent = {ctor: 'GoEvent'};
+var _user$project$Types$GoProfile = {ctor: 'GoProfile'};
+var _user$project$Types$GoChat = {ctor: 'GoChat'};
+var _user$project$Types$initModel = A4(_user$project$Types$Model, _user$project$Types$GoChat, _user$project$Types$initChat, _user$project$Types$initProfile, _user$project$Types$initEvents);
+var _user$project$Types$GetReply = function (a) {
+	return {ctor: 'GetReply', _0: a};
+};
+var _user$project$Types$OnDatetime = function (a) {
+	return {ctor: 'OnDatetime', _0: a};
+};
+var _user$project$Types$ViewEvent = function (a) {
+	return {ctor: 'ViewEvent', _0: a};
+};
+var _user$project$Types$NewMessage = function (a) {
+	return {ctor: 'NewMessage', _0: a};
+};
+var _user$project$Types$SendChatMessage = {ctor: 'SendChatMessage'};
+var _user$project$Types$Input = function (a) {
+	return {ctor: 'Input', _0: a};
+};
+var _user$project$Types$ChangeTo = function (a) {
+	return {ctor: 'ChangeTo', _0: a};
+};
+
+var _user$project$Nav$tab = function (x) {
+	var captionClasses = _elm_lang$html$Html_Attributes$class('pa3 pa2-m dn dib-ns');
+	var iconClasses = _elm_lang$html$Html_Attributes$class('w2 h2 w1-m h1-m contain');
+	var route = x.route;
+	var name = x.name;
+	var icon = x.icon;
 	return A2(
 		_elm_lang$html$Html$div,
 		{
 			ctor: '::',
-			_0: heroImg,
+			_0: _elm_lang$html$Html_Attributes$class('white link flex flex-auto'),
 			_1: {
 				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class('bg-center cover aspect-ratio aspect-ratio--16x9 bb b--white-20'),
+				_0: _elm_lang$html$Html_Events$onClick(
+					_user$project$Types$ChangeTo(route)),
 				_1: {ctor: '[]'}
 			}
 		},
 		{
 			ctor: '::',
 			_0: A2(
-				_elm_lang$html$Html$div,
+				_elm_lang$html$Html$li,
 				{
 					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$style(
-						{
-							ctor: '::',
-							_0: {ctor: '_Tuple2', _0: 'background-image', _1: 'linear-gradient( rgba(0,0,0,0.3), transparent)'},
-							_1: {ctor: '[]'}
-						}),
-					_1: {
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class('aspect-ratio--object cover bg-center flex flex-column items-end justify-between pa4 pb0'),
-						_1: {ctor: '[]'}
-					}
+					_0: _elm_lang$html$Html_Attributes$class('animated zoomInLeft grow pr3-l pl4-l pv2-l mv2-l ph2 pointer hover-bg-black-50 z-999 flex flex-auto justify-center items-center br--right-l br-pill-l '),
+					_1: {ctor: '[]'}
 				},
 				{
 					ctor: '::',
-					_0: _user$project$Main$discoverToolsView,
+					_0: A2(
+						_elm_lang$html$Html$div,
+						{
+							ctor: '::',
+							_0: iconClasses,
+							_1: {
+								ctor: '::',
+								_0: _user$project$Assets$feather(icon),
+								_1: {ctor: '[]'}
+							}
+						},
+						{ctor: '[]'}),
 					_1: {
 						ctor: '::',
 						_0: A2(
 							_elm_lang$html$Html$div,
 							{
 								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$class('pa3 lg-breathe-50 br-pill relative top-2 right-1 shadow-2 flex grow justify-center items-center'),
+								_0: captionClasses,
 								_1: {ctor: '[]'}
 							},
 							{
 								ctor: '::',
-								_0: A2(
-									_elm_lang$html$Html$div,
-									{
-										ctor: '::',
-										_0: _user$project$Main$featherIcon('life-buoy'),
-										_1: {
-											ctor: '::',
-											_0: _elm_lang$html$Html_Attributes$class('h3 w3 contain'),
-											_1: {ctor: '[]'}
-										}
-									},
-									{ctor: '[]'}),
+								_0: _elm_lang$html$Html$text(name),
 								_1: {ctor: '[]'}
 							}),
 						_1: {ctor: '[]'}
@@ -14614,123 +12236,1962 @@ var _user$project$Main$eventBanner = function (event) {
 			_1: {ctor: '[]'}
 		});
 };
-var _user$project$Main$eventView = function (model) {
-	var now = model.currentDatetime;
-	var event = _user$project$Main$selectedEvent(model);
-	var _p12 = event;
-	if (_p12.ctor === 'Nothing') {
-		return _elm_lang$html$Html$text('');
-	} else {
-		var _p13 = _p12._0;
-		return A2(
-			_elm_lang$html$Html$section,
+var _user$project$Nav$home = A2(
+	_elm_lang$html$Html$div,
+	{
+		ctor: '::',
+		_0: _elm_lang$html$Html_Attributes$class('grow-large ph4-l pv4-l ph3 flex-ns flex-column-l items-center dn'),
+		_1: {ctor: '[]'}
+	},
+	{
+		ctor: '::',
+		_0: A2(
+			_elm_lang$html$Html$div,
 			{
 				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class('dn db-ns vh-100 animated overflow-auto fadeInLeft mw7-ns flex-grow-1 bg-black-20'),
+				_0: _user$project$Assets$bgImg('Assets/WhitePlusOneLogo.svg'),
+				_1: {
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('animated bounceIn contain bg-center h3-l w3-l h2 w2'),
+					_1: {ctor: '[]'}
+				}
+			},
+			{ctor: '[]'}),
+		_1: {
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$div,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('animated bounceInLeft fw7 pa3-m f4 dib-l dn ttn'),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text('PlusOne'),
+					_1: {ctor: '[]'}
+				}),
+			_1: {ctor: '[]'}
+		}
+	});
+var _user$project$Nav$selections = function () {
+	var makePage = function (_p0) {
+		var _p1 = _p0;
+		return A3(_user$project$Types$Page, _p1._0, _p1._1, _p1._2);
+	};
+	return A2(
+		_elm_lang$core$List$map,
+		makePage,
+		{
+			ctor: '::',
+			_0: {ctor: '_Tuple3', _0: 'discover', _1: 'compass', _2: _user$project$Types$GoEvents},
+			_1: {
+				ctor: '::',
+				_0: {ctor: '_Tuple3', _0: 'add', _1: 'plus-square', _2: _user$project$Types$GoEvent},
+				_1: {
+					ctor: '::',
+					_0: {ctor: '_Tuple3', _0: 'share', _1: 'share-2', _2: _user$project$Types$GoChat},
+					_1: {
+						ctor: '::',
+						_0: {ctor: '_Tuple3', _0: 'chats', _1: 'message-square', _2: _user$project$Types$GoChat},
+						_1: {
+							ctor: '::',
+							_0: {ctor: '_Tuple3', _0: 'profile', _1: 'user', _2: _user$project$Types$GoProfile},
+							_1: {ctor: '[]'}
+						}
+					}
+				}
+			}
+		});
+}();
+var _user$project$Nav$bar = A2(
+	_elm_lang$html$Html$nav,
+	{
+		ctor: '::',
+		_0: _elm_lang$html$Html_Attributes$class('z-9999 w-100 w-auto-l h3 vh-100-l tc-l fixed flex-m flex-row-m items-center-m self-start-m absolute static-l top-0-m bottom-0 bg-black-60-ns '),
+		_1: {ctor: '[]'}
+	},
+	{
+		ctor: '::',
+		_0: _user$project$Nav$home,
+		_1: {
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$ul,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('list ma0 pa0 flex flex-column-l items-start-l justify-around flex-auto items-start-l items-stretch h3 h-auto-l pr3-l f6 o-90-ns bg-0-ns'),
+					_1: {ctor: '[]'}
+				},
+				A2(_elm_lang$core$List$map, _user$project$Nav$tab, _user$project$Nav$selections)),
+			_1: {ctor: '[]'}
+		}
+	});
+
+var _user$project$Profile$stringToEmoji = function (string) {
+	var _p0 = string;
+	switch (_p0) {
+		case 'night owl':
+			return '🦉';
+		case 'talkative':
+			return '🗣️';
+		case 'flirty':
+			return '😏';
+		case 'funny':
+			return '🤣';
+		default:
+			return '🤷';
+	}
+};
+var _user$project$Profile$traitsIcons = function (traits) {
+	var toIcon = function (x) {
+		return A2(
+			_elm_lang$html$Html$li,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('flex w4 flex-column items-center overflow-hidden pointer animated zoomIn'),
 				_1: {ctor: '[]'}
 			},
 			{
 				ctor: '::',
-				_0: _user$project$Main$eventBanner(_p13),
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('f-subheadline-l f1 grow'),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text(
+							_user$project$Profile$stringToEmoji(x.name)),
+						_1: {ctor: '[]'}
+					}),
 				_1: {
 					ctor: '::',
-					_0: _user$project$Main$eventTitle(_p13),
-					_1: {
+					_0: A2(
+						_elm_lang$html$Html$div,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class('pv2 o-80'),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text(
+								A2(
+									_elm_lang$core$Maybe$withDefault,
+									x.name,
+									_elm_lang$core$List$head(
+										A2(_elm_lang$core$String$split, '_', x.name)))),
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				}
+			});
+	};
+	return A2(
+		_elm_lang$html$Html$ul,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('list mv0 mh4 ph0 pt4 pb3 flex justify-around items-center bb b--white-20'),
+			_1: {ctor: '[]'}
+		},
+		A2(_elm_lang$core$List$map, toIcon, traits));
+};
+var _user$project$Profile$profileToolsView = function () {
+	var icon = function (x) {
+		return A2(
+			_elm_lang$html$Html$div,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('animated bounceIn pointer hover-bg-black-50 br-2 pa3 flex items-center'),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{
 						ctor: '::',
-						_0: _user$project$Main$eventIcons(_p13),
+						_0: _user$project$Assets$feather(x),
 						_1: {
 							ctor: '::',
-							_0: A2(_user$project$Main$eventTime, _p13, now),
+							_0: _elm_lang$html$Html_Attributes$class('contain bg-center grow pt3 pb2 pl3 pr2'),
+							_1: {ctor: '[]'}
+						}
+					},
+					{ctor: '[]'}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$div,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class('pa2'),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text(x),
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				}
+			});
+	};
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('flex justify-end'),
+			_1: {ctor: '[]'}
+		},
+		A2(
+			_elm_lang$core$List$map,
+			icon,
+			{
+				ctor: '::',
+				_0: 'settings',
+				_1: {
+					ctor: '::',
+					_0: 'edit',
+					_1: {ctor: '[]'}
+				}
+			}));
+}();
+var _user$project$Profile$pastEvents = function (model) {
+	var eventCard = function (_p1) {
+		var _p2 = _p1;
+		return A2(
+			_elm_lang$html$Html$td,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('pr3 pl0 pt0 pb4 bb b--white-20'),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('w5 aspect-ratio--16x9 lg-breathe-50'),
+						_1: {ctor: '[]'}
+					},
+					{ctor: '[]'}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$div,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class('f4 fw6 pt2'),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text(_p2._0),
+							_1: {ctor: '[]'}
+						}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$div,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$class('f6 fw4 pt1'),
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text(_p2._1),
+								_1: {ctor: '[]'}
+							}),
+						_1: {ctor: '[]'}
+					}
+				}
+			});
+	};
+	var prevEvents = {
+		ctor: '::',
+		_0: {ctor: '_Tuple2', _0: 'Kanye West', _1: 'Rose Music Hall'},
+		_1: {
+			ctor: '::',
+			_0: {ctor: '_Tuple2', _0: 'Chance the Rapper', _1: 'The Blue Note'},
+			_1: {
+				ctor: '::',
+				_0: {ctor: '_Tuple2', _0: 'LCD Soundsystem', _1: 'Jesse Hall'},
+				_1: {
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 'Vulfpeck', _1: 'Ready room'},
+					_1: {
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 'MU Tigers', _1: 'Football arena'},
+						_1: {ctor: '[]'}
+					}
+				}
+			}
+		}
+	};
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('ma0 pt4'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$div,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('fw7 pv2 mh4 f4'),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text('previous events'),
+					_1: {ctor: '[]'}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('mv2 overflow-auto'),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$table,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$class('white collapse mh4'),
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$tr,
+									{ctor: '[]'},
+									A2(
+										_elm_lang$core$Basics_ops['++'],
+										A2(_elm_lang$core$List$map, eventCard, prevEvents),
+										{
+											ctor: '::',
+											_0: A2(
+												_elm_lang$html$Html$td,
+												{
+													ctor: '::',
+													_0: _elm_lang$html$Html_Attributes$class('ph3'),
+													_1: {ctor: '[]'}
+												},
+												{ctor: '[]'}),
+											_1: {ctor: '[]'}
+										})),
+								_1: {ctor: '[]'}
+							}),
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			}
+		});
+};
+var _user$project$Profile$profileBio = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('mv0 mh4 ph2 pv4 bb b--white-20'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$div,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('fw7 pv2 f4'),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text('bio'),
+					_1: {ctor: '[]'}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('pv2 lh-copy measure'),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text('\n                look. life is bad. everyone\'s sad. we\'re all gonna die. but I already bought this inflatable bouncy castle, so are you gonna take your shoes off or what?\n                '),
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			}
+		});
+};
+var _user$project$Profile$profileAvi = function (avis) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('w5 bounceIn animated z-9'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$div,
+				{
+					ctor: '::',
+					_0: _user$project$Assets$bgImg(
+						A2(
+							_elm_lang$core$Maybe$withDefault,
+							'',
+							_elm_lang$core$List$head(avis))),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('aspect-ratio--1x1 bg-white br-pill shadow-2 ba bw1 cover br-pill'),
+						_1: {ctor: '[]'}
+					}
+				},
+				{ctor: '[]'}),
+			_1: {ctor: '[]'}
+		});
+};
+var _user$project$Profile$view = function (x) {
+	var model = x.profile;
+	return A2(
+		_elm_lang$html$Html$section,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('w-100 mw7-l overflow-auto'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$div,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('flex h5 ph3 ph4-m ph5-l pt6 items-center'),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: _user$project$Profile$profileAvi(model.avi),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$div,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$class('f2 fw7 ml3 fadeInUp animated'),
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text(model.name),
+								_1: {ctor: '[]'}
+							}),
+						_1: {ctor: '[]'}
+					}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('bg-black-70'),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$div,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$class('ph3 bg-black-30 w-100'),
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: _user$project$Profile$profileToolsView,
+								_1: {ctor: '[]'}
+							}),
+						_1: {
+							ctor: '::',
+							_0: _user$project$Profile$profileBio(model),
 							_1: {
 								ctor: '::',
-								_0: _user$project$Main$eventPool,
+								_0: _user$project$Profile$traitsIcons(model.traits),
 								_1: {
 									ctor: '::',
-									_0: _user$project$Main$eventPopularity(_p13),
+									_0: _user$project$Profile$pastEvents(model),
 									_1: {
 										ctor: '::',
-										_0: _user$project$Main$yetToBeAdded,
+										_0: _user$project$Profile$traitsIcons(model.traits),
 										_1: {ctor: '[]'}
 									}
 								}
 							}
 						}
+					}),
+				_1: {ctor: '[]'}
+			}
+		});
+};
+
+var _user$project$Chat$nameBar = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('bg-black-90 flex items-stretch absolute w-100 measure-wide z-2 h3 fadeIn animated'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$div,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('flex items-center grow'),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$div,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class('bounceIn animated h3 ph3 pt3 overflow-visible'),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$div,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$class('w3'),
+									_1: {ctor: '[]'}
+								},
+								{
+									ctor: '::',
+									_0: A2(
+										_elm_lang$html$Html$div,
+										{
+											ctor: '::',
+											_0: _user$project$Assets$bgImg(model.userAvi),
+											_1: {
+												ctor: '::',
+												_0: _elm_lang$html$Html_Attributes$class('aspect-ratio--1x1 bg-white br-pill shadow-2 ba bw1 cover br-pill'),
+												_1: {ctor: '[]'}
+											}
+										},
+										{ctor: '[]'}),
+									_1: {ctor: '[]'}
+								}),
+							_1: {ctor: '[]'}
+						}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$div,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$class('f3 fw6'),
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text('hannah'),
+								_1: {ctor: '[]'}
+							}),
+						_1: {ctor: '[]'}
 					}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('flex flex-auto justify-end items-center'),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$div,
+							{
+								ctor: '::',
+								_0: _user$project$Assets$feather('more-vertical'),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$class('grow pa3 pt2 contain mh2'),
+									_1: {ctor: '[]'}
+								}
+							},
+							{ctor: '[]'}),
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			}
+		});
+};
+var _user$project$Chat$messageBar = function (x) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('bg-black-40 flex h4 z-2 items-stretch overflow-hidden slideInUp animated'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$textarea,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$value(x),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$rows(1),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class('white bg-transparent items-center ma3 pa1 pb0 bn flex-auto outline-0'),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$placeholder('Type Message'),
+								_1: {ctor: '[]'}
+							}
+						}
+					}
+				},
+				{ctor: '[]'}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('bg-black-60 pa2 flex items-center hover-bg-blue grow'),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$div,
+							{
+								ctor: '::',
+								_0: _user$project$Assets$feather('chevron-right'),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$class('w2 h2 contain'),
+									_1: {ctor: '[]'}
+								}
+							},
+							{ctor: '[]'}),
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			}
+		});
+};
+var _user$project$Chat$toast = A2(
+	_elm_lang$html$Html$div,
+	{
+		ctor: '::',
+		_0: _elm_lang$html$Html_Attributes$class('flex justify-center flex-auto pa4 fadeInUp animated'),
+		_1: {ctor: '[]'}
+	},
+	{
+		ctor: '::',
+		_0: A2(
+			_elm_lang$html$Html$div,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('measure-narrow tc'),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html$text('conversation initiated by hannah'),
+				_1: {ctor: '[]'}
+			}),
+		_1: {ctor: '[]'}
+	});
+var _user$project$Chat$sent = A2(
+	_elm_lang$html$Html$div,
+	{
+		ctor: '::',
+		_0: _elm_lang$html$Html_Attributes$class('flex justify-end flex-auto pb3 pl5 slideInRight animated'),
+		_1: {ctor: '[]'}
+	},
+	{
+		ctor: '::',
+		_0: A2(
+			_elm_lang$html$Html$div,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('measure-narrow bg-black-50 br2 ph3 pv2'),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html$text('Woah, That\'s cool. This game seems pretty volitile when it comes to score. Is it stressful?'),
+				_1: {ctor: '[]'}
+			}),
+		_1: {ctor: '[]'}
+	});
+var _user$project$Chat$recieved = A2(
+	_elm_lang$html$Html$div,
+	{
+		ctor: '::',
+		_0: _elm_lang$html$Html_Attributes$class('flex flex-auto pb3 pr5 slideInLeft animated'),
+		_1: {ctor: '[]'}
+	},
+	{
+		ctor: '::',
+		_0: A2(
+			_elm_lang$html$Html$div,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('measure-narrow bg-blue-50 br2 ph3 pv2'),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html$text('Woah, That\'s cool. This game seems pretty volitile when it comes to score. Is it stressful?'),
+				_1: {ctor: '[]'}
+			}),
+		_1: {ctor: '[]'}
+	});
+var _user$project$Chat$viewMessage = function (msg) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('dib pa2 mv1 mh2 bg-light-blue br3 measure-narrow shadow-1'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text(msg),
+			_1: {ctor: '[]'}
+		});
+};
+var _user$project$Chat$view = function (x) {
+	var model = x.chat;
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('bg-black-70 flex flex-column flex-auto measure-wide pa0 ma0'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _user$project$Chat$nameBar(model),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$section,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('flex-auto lh-copy overflow-auto ph3 pt5 z-1 inner-shadow-1'),
+						_1: {ctor: '[]'}
+					},
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						{
+							ctor: '::',
+							_0: _user$project$Chat$toast,
+							_1: {
+								ctor: '::',
+								_0: _user$project$Chat$sent,
+								_1: {
+									ctor: '::',
+									_0: _user$project$Chat$recieved,
+									_1: {
+										ctor: '::',
+										_0: _user$project$Chat$sent,
+										_1: {
+											ctor: '::',
+											_0: _user$project$Chat$recieved,
+											_1: {
+												ctor: '::',
+												_0: _user$project$Chat$sent,
+												_1: {
+													ctor: '::',
+													_0: _user$project$Chat$recieved,
+													_1: {
+														ctor: '::',
+														_0: _user$project$Chat$sent,
+														_1: {
+															ctor: '::',
+															_0: _user$project$Chat$recieved,
+															_1: {
+																ctor: '::',
+																_0: _user$project$Chat$sent,
+																_1: {
+																	ctor: '::',
+																	_0: _user$project$Chat$recieved,
+																	_1: {
+																		ctor: '::',
+																		_0: _user$project$Chat$sent,
+																		_1: {
+																			ctor: '::',
+																			_0: _user$project$Chat$recieved,
+																			_1: {
+																				ctor: '::',
+																				_0: _user$project$Chat$sent,
+																				_1: {
+																					ctor: '::',
+																					_0: _user$project$Chat$recieved,
+																					_1: {
+																						ctor: '::',
+																						_0: _user$project$Chat$sent,
+																						_1: {
+																							ctor: '::',
+																							_0: _user$project$Chat$recieved,
+																							_1: {
+																								ctor: '::',
+																								_0: _user$project$Chat$sent,
+																								_1: {
+																									ctor: '::',
+																									_0: _user$project$Chat$recieved,
+																									_1: {ctor: '[]'}
+																								}
+																							}
+																						}
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						},
+						A2(
+							_elm_lang$core$List$map,
+							_user$project$Chat$viewMessage,
+							_elm_lang$core$List$reverse(model.messages)))),
+				_1: {
+					ctor: '::',
+					_0: _user$project$Chat$messageBar(model.input),
+					_1: {ctor: '[]'}
+				}
+			}
+		});
+};
+
+var _user$project$SeatGeek$composeArgument = F2(
+	function (name, value) {
+		var _p0 = value;
+		if (_p0 === '') {
+			return '';
+		} else {
+			return A2(
+				_elm_lang$core$Basics_ops['++'],
+				'&',
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					name,
+					A2(_elm_lang$core$Basics_ops['++'], '=', value)));
+		}
+	});
+var _user$project$SeatGeek$composeRequest = function (query) {
+	var start = A2(
+		_elm_lang$core$Basics_ops['++'],
+		A2(
+			_elm_lang$core$Basics_ops['++'],
+			'?',
+			A2(_elm_lang$core$Basics_ops['++'], 'client_id=', query.client_id)),
+		A2(
+			_elm_lang$core$Basics_ops['++'],
+			'&postal_code=65203&per_page=30',
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				A2(_user$project$SeatGeek$composeArgument, 'aid', query.aid),
+				A2(_user$project$SeatGeek$composeArgument, 'rid', query.rid))));
+	var url = 'https://api.seatgeek.com/2/';
+	var _p1 = query.endpoint;
+	switch (_p1.ctor) {
+		case 'Events':
+			if (_p1._0.ctor === 'Nothing') {
+				return A2(
+					_elm_lang$core$Basics_ops['++'],
+					url,
+					A2(_elm_lang$core$Basics_ops['++'], 'events', start));
+			} else {
+				return A2(
+					_elm_lang$core$Basics_ops['++'],
+					url,
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						'events/',
+						A2(_elm_lang$core$Basics_ops['++'], _p1._0._0, start)));
+			}
+		case 'Performers':
+			if (_p1._0.ctor === 'Nothing') {
+				return A2(
+					_elm_lang$core$Basics_ops['++'],
+					url,
+					A2(_elm_lang$core$Basics_ops['++'], 'performers', start));
+			} else {
+				return A2(
+					_elm_lang$core$Basics_ops['++'],
+					url,
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						'performers/',
+						A2(_elm_lang$core$Basics_ops['++'], _p1._0._0, start)));
+			}
+		case 'Venues':
+			if (_p1._0.ctor === 'Nothing') {
+				return A2(
+					_elm_lang$core$Basics_ops['++'],
+					url,
+					A2(_elm_lang$core$Basics_ops['++'], 'venues', start));
+			} else {
+				return A2(
+					_elm_lang$core$Basics_ops['++'],
+					url,
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						'venues/',
+						A2(_elm_lang$core$Basics_ops['++'], _p1._0._0, start)));
+			}
+		case 'Recommendations':
+			return A2(
+				_elm_lang$core$Basics_ops['++'],
+				url,
+				A2(_elm_lang$core$Basics_ops['++'], 'recommendations', start));
+		case 'Taxonomies':
+			return A2(
+				_elm_lang$core$Basics_ops['++'],
+				url,
+				A2(_elm_lang$core$Basics_ops['++'], 'taxonomies', start));
+		default:
+			return A2(
+				_elm_lang$core$Basics_ops['++'],
+				url,
+				A2(_elm_lang$core$Basics_ops['++'], 'genres', start));
+	}
+};
+var _user$project$SeatGeek_ops = _user$project$SeatGeek_ops || {};
+_user$project$SeatGeek_ops['?'] = _elm_lang$core$Maybe$withDefault;
+var _user$project$SeatGeek_ops = _user$project$SeatGeek_ops || {};
+_user$project$SeatGeek_ops[':='] = _elm_lang$core$Json_Decode$field;
+var _user$project$SeatGeek$decodeGenre = A2(
+	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+	A2(
+		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+		A2(
+			_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+			A2(
+				_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+				A2(
+					_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+					_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeekTypes$Genre),
+					A2(_user$project$SeatGeek_ops[':='], 'slug', _elm_lang$core$Json_Decode$string)),
+				A2(_user$project$SeatGeek_ops[':='], 'name', _elm_lang$core$Json_Decode$string)),
+			_elm_lang$core$Json_Decode$maybe(
+				A2(_user$project$SeatGeek_ops[':='], 'image', _elm_lang$core$Json_Decode$string))),
+		A2(_user$project$SeatGeek_ops[':='], 'id', _elm_lang$core$Json_Decode$int)),
+	A2(
+		_elm_community$json_extra$Json_Decode_Extra$withDefault,
+		{ctor: '[]'},
+		A2(
+			_user$project$SeatGeek_ops[':='],
+			'images',
+			_elm_community$json_extra$Json_Decode_Extra$collection(_elm_lang$core$Json_Decode$string))));
+var _user$project$SeatGeek$decodeDivision = A2(
+	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+	A2(
+		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+		A2(
+			_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+			A2(
+				_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+				A2(
+					_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+					A2(
+						_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+						_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeekTypes$Division),
+						A2(_user$project$SeatGeek_ops[':='], 'display_type', _elm_lang$core$Json_Decode$string)),
+					_elm_lang$core$Json_Decode$maybe(
+						A2(_user$project$SeatGeek_ops[':='], 'short_name', _elm_lang$core$Json_Decode$string))),
+				A2(_user$project$SeatGeek_ops[':='], 'display_name', _elm_lang$core$Json_Decode$string)),
+			A2(_user$project$SeatGeek_ops[':='], 'division_level', _elm_lang$core$Json_Decode$int)),
+		_elm_lang$core$Json_Decode$maybe(
+			A2(_user$project$SeatGeek_ops[':='], 'slug', _elm_lang$core$Json_Decode$string))),
+	A2(_user$project$SeatGeek_ops[':='], 'taxonomy_id', _elm_lang$core$Json_Decode$int));
+var _user$project$SeatGeek$decodeTaxonomyStats = A2(
+	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+	A2(
+		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+		_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeekTypes$TaxonomyStats),
+		A2(_user$project$SeatGeek_ops[':='], 'performer_count', _elm_lang$core$Json_Decode$int)),
+	A2(_user$project$SeatGeek_ops[':='], 'event_count', _elm_lang$core$Json_Decode$int));
+var _user$project$SeatGeek$decodeTaxonomy = A2(
+	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+	A2(
+		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+		A2(
+			_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+			A2(
+				_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+				A2(
+					_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+					A2(
+						_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+						A2(
+							_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+							A2(
+								_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+								A2(
+									_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+									_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeekTypes$Taxonomy),
+									A2(
+										_elm_community$json_extra$Json_Decode_Extra$withDefault,
+										{ctor: '[]'},
+										A2(
+											_user$project$SeatGeek_ops[':='],
+											'images',
+											_elm_community$json_extra$Json_Decode_Extra$collection(_elm_lang$core$Json_Decode$string)))),
+								A2(_user$project$SeatGeek_ops[':='], 'name', _elm_lang$core$Json_Decode$string)),
+							_elm_lang$core$Json_Decode$maybe(
+								A2(_user$project$SeatGeek_ops[':='], 'short_name', _elm_lang$core$Json_Decode$string))),
+						_elm_lang$core$Json_Decode$maybe(
+							A2(_user$project$SeatGeek_ops[':='], 'parent_id', _elm_lang$core$Json_Decode$int))),
+					_elm_lang$core$Json_Decode$maybe(
+						A2(_user$project$SeatGeek_ops[':='], 'stats', _user$project$SeatGeek$decodeTaxonomyStats))),
+				A2(_user$project$SeatGeek_ops[':='], 'id', _elm_lang$core$Json_Decode$int)),
+			_elm_lang$core$Json_Decode$maybe(
+				A2(_user$project$SeatGeek_ops[':='], 'slug', _elm_lang$core$Json_Decode$string))),
+		_elm_lang$core$Json_Decode$maybe(
+			A2(_user$project$SeatGeek_ops[':='], 'image', _elm_lang$core$Json_Decode$string))),
+	_elm_lang$core$Json_Decode$maybe(
+		A2(_user$project$SeatGeek_ops[':='], 'is_visible', _elm_lang$core$Json_Decode$bool)));
+var _user$project$SeatGeek$decodePerformerStats = A2(
+	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+	_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeekTypes$PerformerStats),
+	A2(_user$project$SeatGeek_ops[':='], 'event_count', _elm_lang$core$Json_Decode$int));
+var _user$project$SeatGeek$decodePerformerColor = A2(
+	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+	A2(
+		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+		A2(
+			_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+			_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeekTypes$PerformerColor),
+			A2(
+				_user$project$SeatGeek_ops[':='],
+				'primary',
+				_elm_lang$core$Json_Decode$list(_elm_lang$core$Json_Decode$string))),
+		A2(
+			_user$project$SeatGeek_ops[':='],
+			'all',
+			_elm_lang$core$Json_Decode$list(_elm_lang$core$Json_Decode$string))),
+	A2(_user$project$SeatGeek_ops[':='], 'iconic', _elm_lang$core$Json_Decode$string));
+var _user$project$SeatGeek$decodePerformer = A2(
+	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+	A2(
+		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+		A2(
+			_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+			A2(
+				_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+				A2(
+					_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+					A2(
+						_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+						A2(
+							_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+							A2(
+								_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+								A2(
+									_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+									A2(
+										_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+										A2(
+											_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+											A2(
+												_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+												A2(
+													_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+													A2(
+														_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+														A2(
+															_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+															A2(
+																_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+																A2(
+																	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+																	A2(
+																		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+																		A2(
+																			_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+																			A2(
+																				_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+																				_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeekTypes$Performer),
+																				_elm_lang$core$Json_Decode$maybe(
+																					A2(_user$project$SeatGeek_ops[':='], 'image', _elm_lang$core$Json_Decode$string))),
+																			A2(
+																				_elm_community$json_extra$Json_Decode_Extra$withDefault,
+																				{ctor: '[]'},
+																				A2(
+																					_user$project$SeatGeek_ops[':='],
+																					'images',
+																					_elm_community$json_extra$Json_Decode_Extra$collection(_elm_lang$core$Json_Decode$string)))),
+																		_elm_lang$core$Json_Decode$maybe(
+																			A2(_user$project$SeatGeek_ops[':='], 'image_attribution', _elm_lang$core$Json_Decode$string))),
+																	A2(_user$project$SeatGeek_ops[':='], 'num_upcoming_events', _elm_lang$core$Json_Decode$int)),
+																_elm_lang$core$Json_Decode$maybe(
+																	A2(
+																		_user$project$SeatGeek_ops[':='],
+																		'divisions',
+																		_elm_lang$core$Json_Decode$list(_user$project$SeatGeek$decodeDivision)))),
+															_elm_lang$core$Json_Decode$maybe(
+																A2(
+																	_user$project$SeatGeek_ops[':='],
+																	'genres',
+																	_elm_lang$core$Json_Decode$list(_user$project$SeatGeek$decodeGenre)))),
+														A2(_user$project$SeatGeek_ops[':='], 'stats', _user$project$SeatGeek$decodePerformerStats)),
+													A2(_user$project$SeatGeek_ops[':='], 'url', _elm_lang$core$Json_Decode$string)),
+												_elm_lang$core$Json_Decode$maybe(
+													A2(_user$project$SeatGeek_ops[':='], 'home_venue_id', _elm_lang$core$Json_Decode$int))),
+											A2(_user$project$SeatGeek_ops[':='], 'type', _elm_lang$core$Json_Decode$string)),
+										A2(
+											_elm_community$json_extra$Json_Decode_Extra$withDefault,
+											0.0,
+											A2(_user$project$SeatGeek_ops[':='], 'score', _elm_lang$core$Json_Decode$float))),
+									A2(_user$project$SeatGeek_ops[':='], 'slug', _elm_lang$core$Json_Decode$string)),
+								_elm_lang$core$Json_Decode$maybe(
+									A2(_user$project$SeatGeek_ops[':='], 'primary', _elm_lang$core$Json_Decode$bool))),
+							_elm_lang$core$Json_Decode$maybe(
+								A2(_user$project$SeatGeek_ops[':='], 'colors', _user$project$SeatGeek$decodePerformerColor))),
+						_elm_lang$core$Json_Decode$maybe(
+							A2(_user$project$SeatGeek_ops[':='], 'image_license', _elm_lang$core$Json_Decode$string))),
+					A2(_user$project$SeatGeek_ops[':='], 'name', _elm_lang$core$Json_Decode$string)),
+				A2(_user$project$SeatGeek_ops[':='], 'popularity', _elm_lang$core$Json_Decode$float)),
+			A2(
+				_user$project$SeatGeek_ops[':='],
+				'taxonomies',
+				_elm_lang$core$Json_Decode$list(_user$project$SeatGeek$decodeTaxonomy))),
+		A2(_user$project$SeatGeek_ops[':='], 'id', _elm_lang$core$Json_Decode$int)),
+	A2(_user$project$SeatGeek_ops[':='], 'short_name', _elm_lang$core$Json_Decode$string));
+var _user$project$SeatGeek$decodeGCS = A2(
+	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+	A2(
+		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+		_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeekTypes$GCS),
+		A2(_user$project$SeatGeek_ops[':='], 'lon', _elm_lang$core$Json_Decode$float)),
+	A2(_user$project$SeatGeek_ops[':='], 'lat', _elm_lang$core$Json_Decode$float));
+var _user$project$SeatGeek$decodeVenue = A2(
+	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+	A2(
+		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+		A2(
+			_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+			A2(
+				_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+				A2(
+					_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+					A2(
+						_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+						A2(
+							_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+							A2(
+								_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+								A2(
+									_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+									A2(
+										_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+										A2(
+											_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+											A2(
+												_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+												A2(
+													_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+													A2(
+														_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+														A2(
+															_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+															A2(
+																_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+																A2(
+																	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+																	_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeekTypes$Venue),
+																	A2(_user$project$SeatGeek_ops[':='], 'name', _elm_lang$core$Json_Decode$string)),
+																A2(_user$project$SeatGeek_ops[':='], 'display_location', _elm_lang$core$Json_Decode$string)),
+															A2(_user$project$SeatGeek_ops[':='], 'popularity', _elm_lang$core$Json_Decode$float)),
+														A2(_user$project$SeatGeek_ops[':='], 'extended_address', _elm_lang$core$Json_Decode$string)),
+													A2(_user$project$SeatGeek_ops[':='], 'location', _user$project$SeatGeek$decodeGCS)),
+												A2(_user$project$SeatGeek_ops[':='], 'name_v2', _elm_lang$core$Json_Decode$string)),
+											_elm_lang$core$Json_Decode$maybe(
+												A2(_user$project$SeatGeek_ops[':='], 'state', _elm_lang$core$Json_Decode$string))),
+										A2(_user$project$SeatGeek_ops[':='], 'num_upcoming_events', _elm_lang$core$Json_Decode$int)),
+									A2(_user$project$SeatGeek_ops[':='], 'id', _elm_lang$core$Json_Decode$int)),
+								A2(_user$project$SeatGeek_ops[':='], 'slug', _elm_lang$core$Json_Decode$string)),
+							_elm_lang$core$Json_Decode$maybe(
+								A2(_user$project$SeatGeek_ops[':='], 'timezone', _elm_lang$core$Json_Decode$string))),
+						A2(_user$project$SeatGeek_ops[':='], 'url', _elm_lang$core$Json_Decode$string)),
+					A2(_user$project$SeatGeek_ops[':='], 'postal_code', _elm_lang$core$Json_Decode$string)),
+				A2(_user$project$SeatGeek_ops[':='], 'city', _elm_lang$core$Json_Decode$string)),
+			A2(_user$project$SeatGeek_ops[':='], 'country', _elm_lang$core$Json_Decode$string)),
+		A2(_user$project$SeatGeek_ops[':='], 'score', _elm_lang$core$Json_Decode$float)),
+	A2(_user$project$SeatGeek_ops[':='], 'address', _elm_lang$core$Json_Decode$string));
+var _user$project$SeatGeek$decodeTickets = A2(
+	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+	A2(
+		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+		A2(
+			_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+			A2(
+				_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+				A2(
+					_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+					_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeekTypes$Tickets),
+					_elm_lang$core$Json_Decode$maybe(
+						A2(_user$project$SeatGeek_ops[':='], 'listing_count', _elm_lang$core$Json_Decode$int))),
+				_elm_lang$core$Json_Decode$maybe(
+					A2(_user$project$SeatGeek_ops[':='], 'highest_price', _elm_lang$core$Json_Decode$float))),
+			_elm_lang$core$Json_Decode$maybe(
+				A2(_user$project$SeatGeek_ops[':='], 'average_price', _elm_lang$core$Json_Decode$float))),
+		_elm_lang$core$Json_Decode$maybe(
+			A2(_user$project$SeatGeek_ops[':='], 'lowest_price_good_deals', _elm_lang$core$Json_Decode$float))),
+	_elm_lang$core$Json_Decode$maybe(
+		A2(_user$project$SeatGeek_ops[':='], 'lowest_price', _elm_lang$core$Json_Decode$float)));
+var _user$project$SeatGeek$decodeEvent = A2(
+	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+	A2(
+		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+		A2(
+			_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+			A2(
+				_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+				A2(
+					_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+					A2(
+						_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+						A2(
+							_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+							A2(
+								_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+								A2(
+									_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+									A2(
+										_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+										A2(
+											_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+											A2(
+												_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+												A2(
+													_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+													A2(
+														_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+														A2(
+															_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+															A2(
+																_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+																A2(
+																	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+																	A2(
+																		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+																		_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeekTypes$Event),
+																		A2(_user$project$SeatGeek_ops[':='], 'datetime_utc', _elm_lang$core$Json_Decode$string)),
+																	A2(_user$project$SeatGeek_ops[':='], 'visible_until_utc', _elm_lang$core$Json_Decode$string)),
+																A2(_user$project$SeatGeek_ops[':='], 'datetime_local', _elm_lang$core$Json_Decode$string)),
+															A2(_user$project$SeatGeek_ops[':='], 'time_tbd', _elm_lang$core$Json_Decode$bool)),
+														A2(
+															_user$project$SeatGeek_ops[':='],
+															'taxonomies',
+															_elm_lang$core$Json_Decode$list(_user$project$SeatGeek$decodeTaxonomy))),
+													A2(_user$project$SeatGeek_ops[':='], 'type', _elm_lang$core$Json_Decode$string)),
+												A2(_user$project$SeatGeek_ops[':='], 'created_at', _elm_lang$core$Json_Decode$string)),
+											A2(
+												_user$project$SeatGeek_ops[':='],
+												'performers',
+												_elm_lang$core$Json_Decode$list(_user$project$SeatGeek$decodePerformer))),
+										A2(
+											_elm_community$json_extra$Json_Decode_Extra$withDefault,
+											0.0,
+											A2(_user$project$SeatGeek_ops[':='], 'score', _elm_lang$core$Json_Decode$float))),
+									A2(_user$project$SeatGeek_ops[':='], 'short_title', _elm_lang$core$Json_Decode$string)),
+								A2(_user$project$SeatGeek_ops[':='], 'venue', _user$project$SeatGeek$decodeVenue)),
+							A2(_user$project$SeatGeek_ops[':='], 'id', _elm_lang$core$Json_Decode$int)),
+						A2(_user$project$SeatGeek_ops[':='], 'stats', _user$project$SeatGeek$decodeTickets)),
+					A2(_user$project$SeatGeek_ops[':='], 'date_tbd', _elm_lang$core$Json_Decode$bool)),
+				A2(_user$project$SeatGeek_ops[':='], 'title', _elm_lang$core$Json_Decode$string)),
+			A2(_user$project$SeatGeek_ops[':='], 'popularity', _elm_lang$core$Json_Decode$float)),
+		A2(_user$project$SeatGeek_ops[':='], 'url', _elm_lang$core$Json_Decode$string)),
+	A2(_user$project$SeatGeek_ops[':='], 'announce_date', _elm_lang$core$Json_Decode$string));
+var _user$project$SeatGeek$decodeMetaGeolocation = A2(
+	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+	A2(
+		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+		A2(
+			_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+			A2(
+				_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+				A2(
+					_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+					A2(
+						_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+						A2(
+							_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+							A2(
+								_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+								_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeekTypes$MetaGeolocation),
+								A2(_user$project$SeatGeek_ops[':='], 'state', _elm_lang$core$Json_Decode$string)),
+							A2(_user$project$SeatGeek_ops[':='], 'postal_code', _elm_lang$core$Json_Decode$string)),
+						A2(_user$project$SeatGeek_ops[':='], 'lat', _elm_lang$core$Json_Decode$float)),
+					A2(_user$project$SeatGeek_ops[':='], 'range', _elm_lang$core$Json_Decode$string)),
+				A2(_user$project$SeatGeek_ops[':='], 'display_name', _elm_lang$core$Json_Decode$string)),
+			A2(_user$project$SeatGeek_ops[':='], 'city', _elm_lang$core$Json_Decode$string)),
+		A2(_user$project$SeatGeek_ops[':='], 'country', _elm_lang$core$Json_Decode$string)),
+	A2(_user$project$SeatGeek_ops[':='], 'lon', _elm_lang$core$Json_Decode$float));
+var _user$project$SeatGeek$decodeReplyMeta = A2(
+	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+	A2(
+		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+		A2(
+			_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+			A2(
+				_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+				A2(
+					_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+					_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeekTypes$ReplyMeta),
+					A2(_user$project$SeatGeek_ops[':='], 'per_page', _elm_lang$core$Json_Decode$int)),
+				A2(_user$project$SeatGeek_ops[':='], 'took', _elm_lang$core$Json_Decode$int)),
+			A2(_user$project$SeatGeek_ops[':='], 'geolocation', _user$project$SeatGeek$decodeMetaGeolocation)),
+		A2(_user$project$SeatGeek_ops[':='], 'total', _elm_lang$core$Json_Decode$int)),
+	A2(_user$project$SeatGeek_ops[':='], 'page', _elm_lang$core$Json_Decode$int));
+var _user$project$SeatGeek$decodeReply = A2(
+	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+	A2(
+		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+		_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeekTypes$Reply),
+		A2(_user$project$SeatGeek_ops[':='], 'meta', _user$project$SeatGeek$decodeReplyMeta)),
+	A2(
+		_user$project$SeatGeek_ops[':='],
+		'events',
+		_elm_lang$core$Json_Decode$list(_user$project$SeatGeek$decodeEvent)));
+var _user$project$SeatGeek$askQuery = function (query) {
+	var url = _user$project$SeatGeek$composeRequest(query);
+	var request = A2(_elm_lang$http$Http$get, url, _user$project$SeatGeek$decodeReply);
+	return A2(_elm_lang$http$Http$send, _user$project$Types$GetReply, request);
+};
+
+var _user$project$Events$subscriptions = function (model) {
+	return _elm_lang$core$Platform_Sub$none;
+};
+var _user$project$Events$stringToEmoji = function (string) {
+	var _p0 = string;
+	switch (_p0) {
+		case 'concert':
+			return '🎵';
+		case 'music_festival':
+			return '🎶';
+		case 'sports':
+			return '🏆';
+		case 'theater':
+			return '🎭';
+		case 'basketball':
+			return '🏀';
+		case 'nba':
+			return '⛹';
+		case 'ncaa_football':
+			return '👨🏻‍🎓';
+		case 'ncaa_basketball':
+			return '👨🏻‍🎓';
+		case 'ncaa_womens_basketball':
+			return '👩‍🎓';
+		case 'wnba':
+			return '⛹️‍♀️';
+		case 'family':
+			return '🚸';
+		case 'broadway_tickets_national':
+			return '🎟';
+		case 'dance_performance_tour':
+			return '💃';
+		case 'classical':
+			return '🎼';
+		case 'classical_orchestral_instrumental':
+			return '🎻';
+		case 'comedy':
+			return '🤣';
+		case 'hockey':
+			return '🏒';
+		case 'fighting':
+			return '🤼‍♂️';
+		case 'soccer':
+			return '⚽';
+		case 'wrestling':
+			return '🤼';
+		case 'football':
+			return '🏈';
+		case 'auto_racing':
+			return '🏎️';
+		case 'animal_sports':
+			return '🐾';
+		case 'horse_racing':
+			return '🏇';
+		case 'rodeo':
+			return '🤠';
+		case 'nfl':
+			return '🏟️';
+		case 'cirque_du_soleil':
+			return '🤸';
+		case 'classical_opera':
+			return '🎤';
+		default:
+			return '🤷';
+	}
+};
+var _user$project$Events$maybeImage = function (performers) {
+	var _p1 = _elm_lang$core$List$head(performers);
+	if (_p1.ctor === 'Just') {
+		return _p1._0.image;
+	} else {
+		return _elm_lang$core$Maybe$Nothing;
+	}
+};
+var _user$project$Events$randomGradient = function (event) {
+	var randomSeed = _elm_lang$core$String$length(event.title) * _elm_lang$core$String$length(event.url);
+	var randomIndex = A2(
+		_elm_lang$core$Basics_ops['%'],
+		randomSeed,
+		_elm_lang$core$List$length(_user$project$Assets$gradients));
+	var selectedGradient = _elm_lang$core$List$head(
+		A2(_elm_lang$core$List$drop, randomIndex, _user$project$Assets$gradients));
+	var _p2 = selectedGradient;
+	if (_p2.ctor === 'Nothing') {
+		return '';
+	} else {
+		return A2(_elm_lang$core$Basics_ops['++'], _p2._0, '');
+	}
+};
+var _user$project$Events$eventIcons = function (event) {
+	var toIcon = function (x) {
+		return A2(
+			_elm_lang$html$Html$li,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('flex w4 flex-column items-center overflow-hidden pointer animated zoomIn'),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('f-subheadline f1-m grow'),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text(
+							_user$project$Events$stringToEmoji(x.name)),
+						_1: {ctor: '[]'}
+					}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$div,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class('pv2 o-80'),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text(
+								A2(
+									_elm_lang$core$Maybe$withDefault,
+									x.name,
+									_elm_lang$core$List$head(
+										A2(_elm_lang$core$String$split, '_', x.name)))),
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				}
+			});
+	};
+	return A2(
+		_elm_lang$html$Html$ul,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('list mv0 mh4 ph0 pt4 pb3 flex justify-around items-center bb b--white-20'),
+			_1: {ctor: '[]'}
+		},
+		A2(_elm_lang$core$List$map, toIcon, event.taxonomies));
+};
+var _user$project$Events$progressBar = function (num) {
+	var percent = num * 100;
+	var _p3 = percent;
+	if (_p3 === 0.0) {
+		return _elm_lang$html$Html$text('');
+	} else {
+		return A2(
+			_elm_lang$html$Html$div,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('w-100 bg-black-20 overflow-hidden br-pill'),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$style(
+							{
+								ctor: '::',
+								_0: {
+									ctor: '_Tuple2',
+									_0: 'width',
+									_1: A2(
+										_elm_lang$core$Basics_ops['++'],
+										_elm_lang$core$Basics$toString(_p3),
+										'%')
+								},
+								_1: {ctor: '[]'}
+							}),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class('animated slideInleft pt2 bg-red-50'),
+							_1: {ctor: '[]'}
+						}
+					},
+					{ctor: '[]'}),
+				_1: {ctor: '[]'}
+			});
+	}
+};
+var _user$project$Events$eventPool = A2(
+	_elm_lang$html$Html$div,
+	{
+		ctor: '::',
+		_0: _elm_lang$html$Html_Attributes$class('flex items-center justify-around mh4 pv4 bb b--white-20'),
+		_1: {ctor: '[]'}
+	},
+	{
+		ctor: '::',
+		_0: A2(
+			_elm_lang$html$Html$a,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$href('Pool.html'),
+				_1: {
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('white link br-pill pa2 mh1 flex items-center mh1 grow'),
+					_1: {ctor: '[]'}
+				}
+			},
+			{
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{
+						ctor: '::',
+						_0: _user$project$Assets$feather('info'),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class('h2 w2 contain bg-center'),
+							_1: {ctor: '[]'}
+						}
+					},
+					{ctor: '[]'}),
+				_1: {ctor: '[]'}
+			}),
+		_1: {
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$a,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$href('Pool.html'),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('white link lg-breathe-50 br1 pa2 mh1 flex items-center mh1 grow'),
+						_1: {ctor: '[]'}
+					}
+				},
+				{
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$div,
+						{
+							ctor: '::',
+							_0: _user$project$Assets$feather('life-buoy'),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$class('h2 w2 mh1 contain bg-center'),
+								_1: {ctor: '[]'}
+							}
+						},
+						{ctor: '[]'}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$div,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$class('mh2 f4 fw4 ttn'),
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text('join pool'),
+								_1: {ctor: '[]'}
+							}),
+						_1: {ctor: '[]'}
+					}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('mr3 f2'),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text('🏊'),
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			}
+		}
+	});
+var _user$project$Events$yetToBeAdded = A2(
+	_elm_lang$html$Html$div,
+	{
+		ctor: '::',
+		_0: _elm_lang$html$Html_Attributes$class('flex items-center justify-around mh4 pv4 bb b--white-20 lh-copy'),
+		_1: {ctor: '[]'}
+	},
+	{
+		ctor: '::',
+		_0: _elm_lang$html$Html$text('I still need to add genres in the emojis.\n                I need to have photo galleries for extra photos,\n                other events at the venue, other venues the artist will be at,\n                spotify, Last.fm, and google maps integration. I also need to make\n                events that do not have defined times do not display a time.\n\n                Sed ut perspiciatis, unde omnis iste natus error sit voluptatem\n                accusantium doloremque laudantium, totam rem aperiam eaque ipsa,\n                quae ab illo inventore veritatis et quasi architecto beatae vitae\n                dicta sunt, explicabo. Nemo enim ipsam voluptatem, quia voluptas sit,\n                aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos,\n                qui ratione voluptatem sequi nesciunt, neque porro quisquam est.\n                qui dolorem ipsum, quia dolor sit amet consectetur adipisci.\n                velit, sed quia non numquam [do] eius modi tempora inci[di]dunt,\n                ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima\n                veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam,\n                nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure\n                reprehenderit, qui in ea voluptate velit esse, quam nihil molestiae\n                consequatur, vel illum, qui dolorem eum fugiat, quo voluptas nulla pariatur?\n                '),
+		_1: {ctor: '[]'}
+	});
+var _user$project$Events$eventPopularity = function (event) {
+	var _p4 = event.popularity;
+	if (_p4 === 0.0) {
+		return _elm_lang$html$Html$text('');
+	} else {
+		return A2(
+			_elm_lang$html$Html$div,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('flex items-center mh4 pv4 bb b--white-20'),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('mr3 f2'),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text('🔥'),
+						_1: {ctor: '[]'}
+					}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$div,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class('flex flex-column flex-auto h2 justify-around'),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: _user$project$Events$progressBar(event.popularity),
+							_1: {
+								ctor: '::',
+								_0: _user$project$Events$progressBar(event.score),
+								_1: {ctor: '[]'}
+							}
+						}),
+					_1: {ctor: '[]'}
 				}
 			});
 	}
 };
-var _user$project$Main$Model = F3(
-	function (a, b, c) {
-		return {seatgeek: a, selectedEvent: b, currentDatetime: c};
-	});
-var _user$project$Main$update = F2(
-	function (msg, model) {
-		var _p14 = msg;
-		switch (_p14.ctor) {
-			case 'GetReply':
-				if (_p14._0.ctor === 'Ok') {
-					var _p15 = _p14._0._0;
-					return {
-						ctor: '_Tuple2',
-						_0: A3(
-							_user$project$Main$Model,
-							A2(
-								_user$project$SeatGeek$Reply,
-								_p15.meta,
-								A2(_elm_lang$core$Basics_ops['++'], model.seatgeek.events, _p15.events)),
-							model.selectedEvent,
-							model.currentDatetime),
-						_1: _elm_lang$core$Platform_Cmd$none
-					};
-				} else {
-					var _p16 = A2(_elm_lang$core$Debug$log, 'err', _p14._0._0);
-					return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+var _user$project$Events$eventTickets = function (event) {
+	var emptyTickets = A2(
+		_elm_lang$core$List$all,
+		function (x) {
+			return _elm_lang$core$Native_Utils.eq(x, _elm_lang$core$Maybe$Nothing);
+		},
+		{
+			ctor: '::',
+			_0: event.stats.highest_price,
+			_1: {
+				ctor: '::',
+				_0: event.stats.average_price,
+				_1: {
+					ctor: '::',
+					_0: event.stats.lowest_price,
+					_1: {
+						ctor: '::',
+						_0: event.stats.lowest_price_good_deals,
+						_1: {ctor: '[]'}
+					}
 				}
-			case 'ViewEvent':
-				if (_p14._0.ctor === 'Just') {
-					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Native_Utils.update(
-							model,
+			}
+		});
+	var _p5 = event.stats.lowest_price;
+	if (_p5.ctor === 'Just') {
+		return A2(
+			_elm_lang$html$Html$a,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$href(event.url),
+				_1: {
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$target('_blank'),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('bg-white br1 pa2 mh1 flex items-center mh1 no-underline'),
+						_1: {ctor: '[]'}
+					}
+				}
+			},
+			{
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$style(
 							{
-								selectedEvent: _elm_lang$core$Maybe$Just(_p14._0._0)
+								ctor: '::',
+								_0: {ctor: '_Tuple2', _0: 'background-image', _1: 'url(\'Assets/SeatGeekLogo.svg\')'},
+								_1: {ctor: '[]'}
 							}),
-						_1: _elm_lang$core$Platform_Cmd$none
-					};
-				} else {
-					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Native_Utils.update(
-							model,
-							{selectedEvent: _elm_lang$core$Maybe$Nothing}),
-						_1: _elm_lang$core$Platform_Cmd$none
-					};
-				}
-			default:
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class('h2 w2 mh1 contain bg-center'),
+							_1: {ctor: '[]'}
+						}
+					},
+					{ctor: '[]'}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$div,
 						{
-							currentDatetime: _elm_lang$core$Maybe$Just(_p14._0)
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class('blue-80 mh2 f4 fw4 ttn'),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text(
+								A2(
+									_elm_lang$core$Basics_ops['++'],
+									'$',
+									A2(
+										_elm_lang$core$Basics_ops['++'],
+										_elm_lang$core$Basics$toString(_p5._0),
+										' tickets'))),
+							_1: {ctor: '[]'}
 						}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
+					_1: {ctor: '[]'}
+				}
+			});
+	} else {
+		return _elm_lang$html$Html$text('');
+	}
+};
+var _user$project$Events$thisPartOfDay = function (hour) {
+	return _elm_lang$core$Native_Utils.eq(hour, 1) ? 'in an hour' : A2(
+		_elm_lang$core$Basics_ops['++'],
+		'in ',
+		A2(
+			_elm_lang$core$Basics_ops['++'],
+			_elm_lang$core$Basics$toString(hour),
+			' hours'));
+};
+var _user$project$Events$somePartOfDay = F2(
+	function (hour, day) {
+		return _elm_lang$core$Native_Utils.eq(hour, 0) ? A2(_elm_lang$core$Basics_ops['++'], day, ' at midnight') : ((_elm_lang$core$Native_Utils.cmp(hour, 3) < 0) ? A2(_elm_lang$core$Basics_ops['++'], day, ' after midnight') : ((_elm_lang$core$Native_Utils.cmp(hour, 5) < 0) ? A2(_elm_lang$core$Basics_ops['++'], day, ' at dawn') : ((_elm_lang$core$Native_Utils.cmp(hour, 8) < 0) ? A2(
+			_elm_lang$core$Basics_ops['++'],
+			'early ',
+			A2(_elm_lang$core$Basics_ops['++'], day, ' morning')) : ((_elm_lang$core$Native_Utils.cmp(hour, 10) < 0) ? A2(_elm_lang$core$Basics_ops['++'], day, ' morning') : ((_elm_lang$core$Native_Utils.cmp(hour, 12) < 0) ? A2(
+			_elm_lang$core$Basics_ops['++'],
+			'late ',
+			A2(_elm_lang$core$Basics_ops['++'], day, ' morning')) : (_elm_lang$core$Native_Utils.eq(hour, 12) ? A2(_elm_lang$core$Basics_ops['++'], day, ' at noon') : ((_elm_lang$core$Native_Utils.cmp(hour, 15) < 0) ? A2(_elm_lang$core$Basics_ops['++'], day, ' afternoon') : ((_elm_lang$core$Native_Utils.cmp(hour, 17) < 0) ? A2(
+			_elm_lang$core$Basics_ops['++'],
+			'late ',
+			A2(_elm_lang$core$Basics_ops['++'], day, ' afternoon')) : ((_elm_lang$core$Native_Utils.cmp(hour, 20) < 0) ? A2(_elm_lang$core$Basics_ops['++'], day, ' evening') : ((_elm_lang$core$Native_Utils.cmp(hour, 23) < 0) ? A2(_elm_lang$core$Basics_ops['++'], day, ' night') : ((_elm_lang$core$Native_Utils.cmp(hour, 24) < 0) ? A2(
+			_elm_lang$core$Basics_ops['++'],
+			'late ',
+			A2(_elm_lang$core$Basics_ops['++'], day, ' night')) : 'For some reason, I think there are more than 24 hours in a day.')))))))))));
+	});
+var _user$project$Events$simpleTime = F2(
+	function (delta, maybeEventDate) {
+		var _p6 = maybeEventDate;
+		if (_p6.ctor === 'Nothing') {
+			return 'welp, I couldn\'t determine the date of the event';
+		} else {
+			var _p7 = _p6._0;
+			return A2(
+				_elm_lang$core$String$contains,
+				'-',
+				_elm_lang$core$Basics$toString(delta)) ? 'happening now' : ((_elm_lang$core$Native_Utils.cmp(delta.year, 1) > 0) ? 'in over a year' : (_elm_lang$core$Native_Utils.eq(delta.year, 1) ? 'in a year' : ((_elm_lang$core$Native_Utils.cmp(delta.month, 1) > 0) ? A2(
+				_elm_lang$core$Basics_ops['++'],
+				'in ',
+				_rluiten$elm_date_extra$Date_Extra_I18n_I_en_us$monthName(
+					_elm_lang$core$Date$month(_p7))) : (_elm_lang$core$Native_Utils.eq(delta.month, 1) ? 'next month' : ((_elm_lang$core$Native_Utils.cmp(delta.day, 13) > 0) ? A2(
+				_elm_lang$core$Basics_ops['++'],
+				'in ',
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					_elm_lang$core$Basics$toString((delta.day / 7) | 0),
+					' weeks')) : ((_elm_lang$core$Native_Utils.cmp(delta.day, 6) > 0) ? A2(
+				_elm_lang$core$Basics_ops['++'],
+				'next ',
+				_rluiten$elm_date_extra$Date_Extra_I18n_I_en_us$dayName(
+					_elm_lang$core$Date$dayOfWeek(_p7))) : ((_elm_lang$core$Native_Utils.cmp(delta.day, 1) > 0) ? A2(
+				_user$project$Events$somePartOfDay,
+				_elm_lang$core$Date$hour(_p7),
+				_rluiten$elm_date_extra$Date_Extra_I18n_I_en_us$dayName(
+					_elm_lang$core$Date$dayOfWeek(_p7))) : (_elm_lang$core$Native_Utils.eq(delta.day, 1) ? A2(
+				_user$project$Events$somePartOfDay,
+				_elm_lang$core$Date$hour(_p7),
+				_rluiten$elm_date_extra$Date_Extra_I18n_I_en_us$dayName(
+					_elm_lang$core$Date$dayOfWeek(_p7))) : _user$project$Events$thisPartOfDay(
+				_elm_lang$core$Date$hour(_p7))))))))));
 		}
 	});
-var _user$project$Main$OnDatetime = function (a) {
-	return {ctor: 'OnDatetime', _0: a};
+var _user$project$Events$maybeEventDate = function (date) {
+	return _elm_lang$core$Result$toMaybe(
+		_elm_lang$core$Date$fromString(date));
 };
-var _user$project$Main$getDatetime = A2(_elm_lang$core$Task$perform, _user$project$Main$OnDatetime, _elm_lang$core$Date$now);
-var _user$project$Main$ViewEvent = function (a) {
-	return {ctor: 'ViewEvent', _0: a};
-};
-var _user$project$Main$eventListView = F2(
+var _user$project$Events$eventTime = F2(
+	function (event, maybeNow) {
+		var clockTime = function (x) {
+			return A3(_rluiten$elm_date_extra$Date_Extra_Format$format, _rluiten$elm_date_extra$Date_Extra_Config_Config_en_us$config, '%-I:%M %P', x);
+		};
+		var fullDate = function (x) {
+			return A3(_rluiten$elm_date_extra$Date_Extra_Format$format, _rluiten$elm_date_extra$Date_Extra_Config_Config_en_us$config, '%A, %B %@e, %Y', x);
+		};
+		var eventDateView = function () {
+			var _p8 = _user$project$Events$maybeEventDate(event.datetime_local);
+			if (_p8.ctor === 'Nothing') {
+				return {
+					ctor: '::',
+					_0: _elm_lang$html$Html$text('not sure what time this event is'),
+					_1: {ctor: '[]'}
+				};
+			} else {
+				var _p9 = _p8._0;
+				return {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$div,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class('fw7 f3 lh-solid pb2'),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text(
+								clockTime(_p9)),
+							_1: {ctor: '[]'}
+						}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$div,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$class('fw4 f5 lh-solid'),
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text(
+									fullDate(_p9)),
+								_1: {ctor: '[]'}
+							}),
+						_1: {ctor: '[]'}
+					}
+				};
+			}
+		}();
+		return A2(
+			_elm_lang$html$Html$div,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('pv4 mh4 bb b--white-20 flex justify-between'),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('mh1'),
+						_1: {ctor: '[]'}
+					},
+					eventDateView),
+				_1: {
+					ctor: '::',
+					_0: _user$project$Events$eventTickets(event),
+					_1: {ctor: '[]'}
+				}
+			});
+	});
+var _user$project$Events$deltaTime = F2(
+	function (now, upcoming) {
+		return A3(_elm_lang$core$Maybe$map2, _rluiten$elm_date_extra$Date_Extra_Duration$diff, upcoming, now);
+	});
+var _user$project$Events$eventListView = F2(
 	function (maybeNow, event) {
 		var cardImage = function () {
-			var _p17 = _user$project$Main$maybeImage(event.performers);
-			if (_p17.ctor === 'Just') {
+			var _p10 = _user$project$Events$maybeImage(event.performers);
+			if (_p10.ctor === 'Just') {
 				return A2(
 					_elm_lang$html$Html$div,
 					{
@@ -14739,7 +14200,7 @@ var _user$project$Main$eventListView = F2(
 							A2(
 								_elm_lang$core$Basics_ops['++'],
 								'w-100 mb2 mt1 ',
-								_user$project$Main$randomGradient(event))),
+								_user$project$Events$randomGradient(event))),
 						_1: {ctor: '[]'}
 					},
 					{
@@ -14757,7 +14218,7 @@ var _user$project$Main$eventListView = F2(
 											_1: A2(
 												_elm_lang$core$Basics_ops['++'],
 												'url(',
-												A2(_elm_lang$core$Basics_ops['++'], _p17._0, ')'))
+												A2(_elm_lang$core$Basics_ops['++'], _p10._0, ')'))
 										},
 										_1: {ctor: '[]'}
 									}),
@@ -14778,7 +14239,7 @@ var _user$project$Main$eventListView = F2(
 			_elm_lang$html$Html$div,
 			{
 				ctor: '::',
-				_0: _user$project$Main$featherIcon('at-sign'),
+				_0: _user$project$Assets$feather('at-sign'),
 				_1: {
 					ctor: '::',
 					_0: _elm_lang$html$Html_Attributes$class('contain dib bg-center mr1 mt1 pb3 pr3'),
@@ -14787,17 +14248,17 @@ var _user$project$Main$eventListView = F2(
 			},
 			{ctor: '[]'});
 		var viewTime = function () {
-			var _p18 = A2(
-				_user$project$Main$deltaTime,
+			var _p11 = A2(
+				_user$project$Events$deltaTime,
 				maybeNow,
-				_user$project$Main$maybeEventDate(event.datetime_local));
-			if (_p18.ctor === 'Nothing') {
+				_user$project$Events$maybeEventDate(event.datetime_local));
+			if (_p11.ctor === 'Nothing') {
 				return 'whoopsie, viewTime messed up';
 			} else {
 				return A2(
-					_user$project$Main$simpleTime,
-					_p18._0,
-					_user$project$Main$maybeEventDate(event.datetime_local));
+					_user$project$Events$simpleTime,
+					_p11._0,
+					_user$project$Events$maybeEventDate(event.datetime_local));
 			}
 		}();
 		return A2(
@@ -14808,7 +14269,7 @@ var _user$project$Main$eventListView = F2(
 				_1: {
 					ctor: '::',
 					_0: _elm_lang$html$Html_Events$onClick(
-						_user$project$Main$ViewEvent(
+						_user$project$Types$ViewEvent(
 							_elm_lang$core$Maybe$Just(event.id))),
 					_1: {ctor: '[]'}
 				}
@@ -14914,7 +14375,7 @@ var _user$project$Main$eventListView = F2(
 															{
 																ctor: '::',
 																_0: _elm_lang$html$Html$text(
-																	_user$project$Main$stringToEmoji(x.name)),
+																	_user$project$Events$stringToEmoji(x.name)),
 																_1: {ctor: '[]'}
 															});
 													},
@@ -14929,7 +14390,281 @@ var _user$project$Main$eventListView = F2(
 				}
 			});
 	});
-var _user$project$Main$eventsView = function (model) {
+var _user$project$Events$eventTitle = function (event) {
+	var textSize = F2(
+		function (x, y) {
+			var _p12 = (_elm_lang$core$String$length(x) / y) | 0;
+			switch (_p12) {
+				case 0:
+					return ' f-subheadline';
+				case 1:
+					return ' f1';
+				default:
+					return ' f2';
+			}
+		});
+	var icon = function (x) {
+		return A2(
+			_elm_lang$html$Html$div,
+			{
+				ctor: '::',
+				_0: _user$project$Assets$feather(x),
+				_1: {
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('contain dib bg-center grow ml1 mr2 pt1 pb3 pl1 pr3'),
+					_1: {ctor: '[]'}
+				}
+			},
+			{ctor: '[]'});
+	};
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('pt4 pb3 mh4 bb b--white-20'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$div,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class(
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							'fw6 pv1 lh-solid ttn',
+							A2(textSize, event.title, 30))),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text(event.title),
+					_1: {ctor: '[]'}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('fw5 pv1 f4 flex items-center o-80 ttn'),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: icon('at-sign'),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html$text(event.venue.name),
+							_1: {ctor: '[]'}
+						}
+					}),
+				_1: {ctor: '[]'}
+			}
+		});
+};
+var _user$project$Events$selectedEvent = function (model) {
+	return _elm_lang$core$List$head(
+		A2(
+			_elm_lang$core$List$filter,
+			function (x) {
+				return _elm_lang$core$Native_Utils.eq(
+					model.selectedEvent,
+					_elm_lang$core$Maybe$Just(x.id));
+			},
+			model.seatgeek.events));
+};
+var _user$project$Events$discoverToolsView = function () {
+	var icon = function (x) {
+		return A2(
+			_elm_lang$html$Html$div,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('animated bounceIn pointer hover-bg-black-50 br-pill pa2'),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{
+						ctor: '::',
+						_0: _user$project$Assets$feather(x),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class('contain bg-center grow pt3 pb2 pl3 pr2'),
+							_1: {ctor: '[]'}
+						}
+					},
+					{ctor: '[]'}),
+				_1: {ctor: '[]'}
+			});
+	};
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('flex justify-end'),
+			_1: {ctor: '[]'}
+		},
+		A2(
+			_elm_lang$core$List$map,
+			icon,
+			{
+				ctor: '::',
+				_0: 'search',
+				_1: {
+					ctor: '::',
+					_0: 'map-pin',
+					_1: {
+						ctor: '::',
+						_0: 'thumbs-up',
+						_1: {
+							ctor: '::',
+							_0: 'tag',
+							_1: {
+								ctor: '::',
+								_0: 'at-sign',
+								_1: {ctor: '[]'}
+							}
+						}
+					}
+				}
+			}));
+}();
+var _user$project$Events$eventBanner = function (event) {
+	var heroImg = function () {
+		var _p13 = _user$project$Events$maybeImage(event.performers);
+		if (_p13.ctor === 'Nothing') {
+			return _elm_lang$html$Html_Attributes$class(
+				_user$project$Events$randomGradient(event));
+		} else {
+			return _elm_lang$html$Html_Attributes$style(
+				{
+					ctor: '::',
+					_0: {
+						ctor: '_Tuple2',
+						_0: 'background-image',
+						_1: A2(
+							_elm_lang$core$Basics_ops['++'],
+							'url(',
+							A2(_elm_lang$core$Basics_ops['++'], _p13._0, ')'))
+					},
+					_1: {ctor: '[]'}
+				});
+		}
+	}();
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: heroImg,
+			_1: {
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('bg-center cover aspect-ratio aspect-ratio--16x9 bb b--white-20'),
+				_1: {ctor: '[]'}
+			}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$div,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$style(
+						{
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: 'background-image', _1: 'linear-gradient( rgba(0,0,0,0.3), transparent)'},
+							_1: {ctor: '[]'}
+						}),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('aspect-ratio--object cover bg-center flex flex-column items-end justify-between pa4 pb0'),
+						_1: {ctor: '[]'}
+					}
+				},
+				{
+					ctor: '::',
+					_0: _user$project$Events$discoverToolsView,
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$div,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$class('pa3 lg-breathe-50 br-pill relative top-2 right-1 shadow-2 flex grow justify-center items-center'),
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$div,
+									{
+										ctor: '::',
+										_0: _user$project$Assets$feather('life-buoy'),
+										_1: {
+											ctor: '::',
+											_0: _elm_lang$html$Html_Attributes$class('h3 w3 contain'),
+											_1: {ctor: '[]'}
+										}
+									},
+									{ctor: '[]'}),
+								_1: {ctor: '[]'}
+							}),
+						_1: {ctor: '[]'}
+					}
+				}),
+			_1: {ctor: '[]'}
+		});
+};
+var _user$project$Events$eventView = function (model) {
+	var now = model.currentDatetime;
+	var event = _user$project$Events$selectedEvent(model);
+	var _p14 = event;
+	if (_p14.ctor === 'Nothing') {
+		return _elm_lang$html$Html$text('');
+	} else {
+		var _p15 = _p14._0;
+		return A2(
+			_elm_lang$html$Html$section,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('dn db-ns vh-100 animated overflow-auto fadeInLeft mw7-ns flex-grow-1 bg-black-20'),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: _user$project$Events$eventBanner(_p15),
+				_1: {
+					ctor: '::',
+					_0: _user$project$Events$eventTitle(_p15),
+					_1: {
+						ctor: '::',
+						_0: _user$project$Events$eventIcons(_p15),
+						_1: {
+							ctor: '::',
+							_0: A2(_user$project$Events$eventTime, _p15, now),
+							_1: {
+								ctor: '::',
+								_0: _user$project$Events$eventPool,
+								_1: {
+									ctor: '::',
+									_0: _user$project$Events$eventPopularity(_p15),
+									_1: {
+										ctor: '::',
+										_0: _user$project$Events$yetToBeAdded,
+										_1: {ctor: '[]'}
+									}
+								}
+							}
+						}
+					}
+				}
+			});
+	}
+};
+var _user$project$Events$eventsView = function (model) {
 	return A2(
 		_elm_lang$html$Html$section,
 		{
@@ -14948,7 +14683,7 @@ var _user$project$Main$eventsView = function (model) {
 				},
 				{
 					ctor: '::',
-					_0: _user$project$Main$discoverToolsView,
+					_0: _user$project$Events$discoverToolsView,
 					_1: {
 						ctor: '::',
 						_0: A2(
@@ -14973,13 +14708,13 @@ var _user$project$Main$eventsView = function (model) {
 					{ctor: '[]'},
 					A2(
 						_elm_lang$core$List$map,
-						_user$project$Main$eventListView(model.currentDatetime),
+						_user$project$Events$eventListView(model.currentDatetime),
 						model.seatgeek.events)),
 				_1: {ctor: '[]'}
 			}
 		});
 };
-var _user$project$Main$view = function (model) {
+var _user$project$Events$view = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
 		{
@@ -15001,10 +14736,10 @@ var _user$project$Main$view = function (model) {
 					},
 					{
 						ctor: '::',
-						_0: _user$project$Main$eventsView(model),
+						_0: _user$project$Events$eventsView(model),
 						_1: {
 							ctor: '::',
-							_0: _user$project$Main$eventView(model),
+							_0: _user$project$Events$eventView(model),
 							_1: {ctor: '[]'}
 						}
 					}),
@@ -15012,30 +14747,210 @@ var _user$project$Main$view = function (model) {
 			}
 		});
 };
-var _user$project$Main$GetReply = function (a) {
-	return {ctor: 'GetReply', _0: a};
-};
-var _user$project$Main$askQuery = function (query) {
+var _user$project$Events$askQuery = function (query) {
 	var url = _user$project$SeatGeek$composeRequest(query);
 	var request = A2(_elm_lang$http$Http$get, url, _user$project$SeatGeek$decodeReply);
-	return A2(_elm_lang$http$Http$send, _user$project$Main$GetReply, request);
+	return A2(_elm_lang$http$Http$send, _user$project$Types$GetReply, request);
 };
-var _user$project$Main$init = {
-	ctor: '_Tuple2',
-	_0: {seatgeek: _user$project$SeatGeek$emptyReply, selectedEvent: _elm_lang$core$Maybe$Nothing, currentDatetime: _elm_lang$core$Maybe$Nothing},
-	_1: _elm_lang$core$Platform_Cmd$batch(
+
+var _user$project$Proto$bg = function (x) {
+	return A2(
+		_elm_lang$html$Html$div,
 		{
 			ctor: '::',
-			_0: _user$project$Main$askQuery(_user$project$SeatGeek$initQuery),
+			_0: _elm_lang$html$Html_Attributes$class('lg-breathe-50'),
+			_1: {ctor: '[]'}
+		},
+		x);
+};
+var _user$project$Proto$toStylesheet = function (x) {
+	return A3(
+		_elm_lang$html$Html$node,
+		'link',
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$rel('stylesheet'),
 			_1: {
 				ctor: '::',
-				_0: _user$project$Main$getDatetime,
+				_0: _elm_lang$html$Html_Attributes$href(x),
 				_1: {ctor: '[]'}
 			}
-		})
+		},
+		{ctor: '[]'});
 };
+var _user$project$Proto$linkURLs = {
+	ctor: '::',
+	_0: 'Admin/tachyons.css',
+	_1: {
+		ctor: '::',
+		_0: 'Admin/plusOne.css',
+		_1: {
+			ctor: '::',
+			_0: 'https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css',
+			_1: {ctor: '[]'}
+		}
+	}
+};
+var _user$project$Proto$importLinks = A2(_elm_lang$core$List$map, _user$project$Proto$toStylesheet, _user$project$Proto$linkURLs);
+
+var _user$project$View$page = function (model) {
+	var _p0 = model.route;
+	switch (_p0.ctor) {
+		case 'GoChat':
+			return _user$project$Chat$view(model);
+		case 'GoProfile':
+			return _user$project$Profile$view(model);
+		case 'GoEvent':
+			return _user$project$Chat$view(model);
+		default:
+			return _user$project$Events$eventsView(model.events);
+	}
+};
+var _user$project$View$render = function (model) {
+	return _user$project$Proto$bg(
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$div,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('overflow-hidden animated fadeIn ttl white flex fw4 vh-100'),
+					_1: {ctor: '[]'}
+				},
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					_user$project$Proto$importLinks,
+					{
+						ctor: '::',
+						_0: _user$project$Nav$bar,
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$main_,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$class('flex-auto pt5-m pb5 pb0-ns flex justify-stretch'),
+									_1: {ctor: '[]'}
+								},
+								{
+									ctor: '::',
+									_0: _user$project$View$page(model),
+									_1: {ctor: '[]'}
+								}),
+							_1: {ctor: '[]'}
+						}
+					})),
+			_1: {ctor: '[]'}
+		});
+};
+
+var _user$project$Main$subscriptions = function (model) {
+	return _elm_lang$core$Platform_Sub$none;
+};
+var _user$project$Main$update = F2(
+	function (msg, model) {
+		var events = model.events;
+		var _p0 = msg;
+		switch (_p0.ctor) {
+			case 'ChangeTo':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{route: _p0._0}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'Input':
+				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+			case 'SendChatMessage':
+				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+			case 'NewMessage':
+				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+			case 'ViewEvent':
+				if (_p0._0.ctor === 'Just') {
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{
+								events: _elm_lang$core$Native_Utils.update(
+									events,
+									{
+										selectedEvent: _elm_lang$core$Maybe$Just(_p0._0._0)
+									})
+							}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
+				} else {
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{
+								events: _elm_lang$core$Native_Utils.update(
+									events,
+									{selectedEvent: _elm_lang$core$Maybe$Nothing})
+							}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
+				}
+			case 'OnDatetime':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							events: _elm_lang$core$Native_Utils.update(
+								events,
+								{
+									currentDatetime: _elm_lang$core$Maybe$Just(_p0._0)
+								})
+						}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			default:
+				if (_p0._0.ctor === 'Ok') {
+					var _p1 = _p0._0._0;
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{
+								events: _elm_lang$core$Native_Utils.update(
+									events,
+									{
+										seatgeek: A2(
+											_user$project$SeatGeekTypes$Reply,
+											_p1.meta,
+											A2(_elm_lang$core$Basics_ops['++'], events.seatgeek.events, _p1.events))
+									})
+							}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
+				} else {
+					var _p2 = A2(_elm_lang$core$Debug$log, 'err', _p0._0._0);
+					return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+				}
+		}
+	});
+var _user$project$Main$view = function (model) {
+	return _user$project$View$render(model);
+};
+var _user$project$Main$getDatetime = A2(_elm_lang$core$Task$perform, _user$project$Types$OnDatetime, _elm_lang$core$Date$now);
+var _user$project$Main$initCmd = _elm_lang$core$Platform_Cmd$batch(
+	{
+		ctor: '::',
+		_0: _user$project$SeatGeek$askQuery(_user$project$SeatGeekTypes$initQuery),
+		_1: {
+			ctor: '::',
+			_0: _user$project$Main$getDatetime,
+			_1: {ctor: '[]'}
+		}
+	});
+var _user$project$Main$init = {ctor: '_Tuple2', _0: _user$project$Types$initModel, _1: _user$project$Main$initCmd};
 var _user$project$Main$main = _elm_lang$html$Html$program(
 	{init: _user$project$Main$init, view: _user$project$Main$view, update: _user$project$Main$update, subscriptions: _user$project$Main$subscriptions})();
+var _user$project$Main$echoServer = 'wss://echo.websocket.org';
 
 var Elm = {};
 Elm['Main'] = Elm['Main'] || {};
