@@ -2,6 +2,10 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
 }
 
+textarea {
+  resize: none;
+}
+
 .shadow-hi {
   background-image: -webkit-linear-gradient(left, rgba(0, 0, 0, .25), rgba(0, 0, 0, 0)), -webkit-linear-gradient(right, rgba(0, 0, 0, .25), rgba(0, 0, 0, 0));
   background-position: 0 0, 100% 0;
@@ -1328,5 +1332,11 @@ Blur
 @media screen and (min-width:30em) {
   .bg-0-ns {
     background: transparent;
+  }
+  .bg-black-60-ns {
+    background: rgba(0, 0, 0, 0.6);
+  }
+  .bg-black-40-ns {
+    background: rgba(0, 0, 0, 0.4);
   }
 }

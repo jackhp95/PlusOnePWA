@@ -1,484 +1,107 @@
-var _user$project$Main$stringToEmoji = function (string) {
-	var _p0 = string;
-	switch (_p0) {
-		case 'night owl':
-			return '🦉';
-		case 'talkative':
-			return '🗣️';
-		case 'flirty':
-			return '😏';
-		case 'funny':
-			return '🤣';
-		default:
-			return '🤷';
-	}
-};
-var _user$project$Main$traitsIcons = function (traits) {
-	var toIcon = function (x) {
-		return A2(
-			_elm_lang$html$Html$li,
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class('flex w4 flex-column items-center overflow-hidden pointer animated zoomIn'),
-				_1: {ctor: '[]'}
-			},
-			{
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$div,
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class('f-subheadline-l f1 grow'),
-						_1: {ctor: '[]'}
-					},
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html$text(
-							_user$project$Main$stringToEmoji(x.name)),
-						_1: {ctor: '[]'}
-					}),
-				_1: {
-					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html$div,
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('pv2 o-80'),
-							_1: {ctor: '[]'}
-						},
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html$text(
-								A2(
-									_elm_lang$core$Maybe$withDefault,
-									x.name,
-									_elm_lang$core$List$head(
-										A2(_elm_lang$core$String$split, '_', x.name)))),
-							_1: {ctor: '[]'}
-						}),
-					_1: {ctor: '[]'}
-				}
-			});
-	};
-	return A2(
-		_elm_lang$html$Html$ul,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('list mv0 mh4 ph0 pt4 pb3 flex justify-around items-center bb b--white-20'),
-			_1: {ctor: '[]'}
-		},
-		A2(_elm_lang$core$List$map, toIcon, traits));
-};
-var _user$project$Main$profileToolsView = function () {
-	var icon = function (x) {
-		return A2(
-			_elm_lang$html$Html$div,
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class('animated bounceIn pointer hover-bg-black-50 br-2 pa3 flex items-center'),
-				_1: {ctor: '[]'}
-			},
-			{
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$div,
-					{
-						ctor: '::',
-						_0: _user$project$Icon$feather(x),
-						_1: {
-							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('contain bg-center grow pt3 pb2 pl3 pr2'),
-							_1: {ctor: '[]'}
-						}
-					},
-					{ctor: '[]'}),
-				_1: {
-					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html$div,
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('pa2'),
-							_1: {ctor: '[]'}
-						},
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html$text(x),
-							_1: {ctor: '[]'}
-						}),
-					_1: {ctor: '[]'}
-				}
-			});
-	};
-	return A2(
-		_elm_lang$html$Html$div,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('flex justify-end'),
-			_1: {ctor: '[]'}
-		},
-		A2(
-			_elm_lang$core$List$map,
-			icon,
-			{
-				ctor: '::',
-				_0: 'settings',
-				_1: {
-					ctor: '::',
-					_0: 'edit',
-					_1: {ctor: '[]'}
-				}
-			}));
-}();
-var _user$project$Main$pastEvents = function (model) {
-	var eventCard = function (_p1) {
-		var _p2 = _p1;
-		return A2(
-			_elm_lang$html$Html$td,
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class('pr3 pl0 pt0 pb3'),
-				_1: {ctor: '[]'}
-			},
-			{
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$div,
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class('w5 aspect-ratio--16x9 lg-breathe-50'),
-						_1: {ctor: '[]'}
-					},
-					{ctor: '[]'}),
-				_1: {
-					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html$div,
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('f4 fw6 pt2'),
-							_1: {ctor: '[]'}
-						},
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html$text(_p2._0),
-							_1: {ctor: '[]'}
-						}),
-					_1: {
-						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$div,
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$class('f6 fw4 pt1'),
-								_1: {ctor: '[]'}
-							},
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html$text(_p2._1),
-								_1: {ctor: '[]'}
-							}),
-						_1: {ctor: '[]'}
-					}
-				}
-			});
-	};
-	var prevEvents = {
-		ctor: '::',
-		_0: {ctor: '_Tuple2', _0: 'Kanye West', _1: 'Rose Music Hall'},
-		_1: {
-			ctor: '::',
-			_0: {ctor: '_Tuple2', _0: 'Chance the Rapper', _1: 'The Blue Note'},
-			_1: {
-				ctor: '::',
-				_0: {ctor: '_Tuple2', _0: 'LCD Soundsystem', _1: 'Jesse Hall'},
-				_1: {
-					ctor: '::',
-					_0: {ctor: '_Tuple2', _0: 'Vulfpeck', _1: 'Ready room'},
-					_1: {
-						ctor: '::',
-						_0: {ctor: '_Tuple2', _0: 'MU Tigers', _1: 'Football arena'},
-						_1: {ctor: '[]'}
-					}
-				}
-			}
-		}
-	};
-	return A2(
-		_elm_lang$html$Html$div,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('ma0 pv4 bb b--white-20'),
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$div,
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class('fw7 pv2 mh4 f4'),
-					_1: {ctor: '[]'}
-				},
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html$text('previous events'),
-					_1: {ctor: '[]'}
-				}),
-			_1: {
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$div,
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class('mv2 overflow-auto'),
-						_1: {ctor: '[]'}
-					},
-					{
-						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$table,
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$class('ph4 white'),
-								_1: {ctor: '[]'}
-							},
-							{
-								ctor: '::',
-								_0: A2(
-									_elm_lang$html$Html$tr,
-									{ctor: '[]'},
-									A2(_elm_lang$core$List$map, eventCard, prevEvents)),
-								_1: {ctor: '[]'}
-							}),
-						_1: {ctor: '[]'}
-					}),
-				_1: {ctor: '[]'}
-			}
-		});
-};
-var _user$project$Main$profileBio = function (model) {
-	return A2(
-		_elm_lang$html$Html$div,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('mv0 mh4 ph2 pv4 bb b--white-20'),
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$div,
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class('fw7 pv2 f4'),
-					_1: {ctor: '[]'}
-				},
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html$text('bio'),
-					_1: {ctor: '[]'}
-				}),
-			_1: {
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$div,
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class('pv2 lh-copy measure'),
-						_1: {ctor: '[]'}
-					},
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html$text('\n                look. life is bad. everyone\'s sad. we\'re all gonna die. but I already bought this inflatable bouncy castle, so are you gonna take your shoes off or what?\n                '),
-						_1: {ctor: '[]'}
-					}),
-				_1: {ctor: '[]'}
-			}
-		});
-};
-var _user$project$Main$profileAvi = function (avis) {
-	return A2(
-		_elm_lang$html$Html$div,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('w5'),
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$div,
-				{
-					ctor: '::',
-					_0: _user$project$Icon$bgImg(
-						A2(
-							_elm_lang$core$Maybe$withDefault,
-							'',
-							_elm_lang$core$List$head(avis))),
-					_1: {
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class('aspect-ratio--1x1 bg-white br-pill shadow-2 ba bw1 cover br-pill'),
-						_1: {ctor: '[]'}
-					}
-				},
-				{ctor: '[]'}),
-			_1: {ctor: '[]'}
-		});
-};
-var _user$project$Main$profileView = function (model) {
-	return A2(
-		_elm_lang$html$Html$section,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('w-100 bg-black-20 mw7-l overflow-auto'),
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$div,
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class('lg-breathe-50 flex h5 ph3 ph4-m ph5-l pt6 items-center'),
-					_1: {ctor: '[]'}
-				},
-				{
-					ctor: '::',
-					_0: _user$project$Main$profileAvi(model.avi),
-					_1: {
-						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$div,
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$class('f2 fw7 ml3'),
-								_1: {ctor: '[]'}
-							},
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html$text(model.name),
-								_1: {ctor: '[]'}
-							}),
-						_1: {ctor: '[]'}
-					}
-				}),
-			_1: {
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$div,
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class('ph3 bg-black-20 w-100'),
-						_1: {ctor: '[]'}
-					},
-					{
-						ctor: '::',
-						_0: _user$project$Main$profileToolsView,
-						_1: {ctor: '[]'}
-					}),
-				_1: {
-					ctor: '::',
-					_0: _user$project$Main$profileBio(model),
-					_1: {
-						ctor: '::',
-						_0: _user$project$Main$traitsIcons(model.traits),
-						_1: {
-							ctor: '::',
-							_0: _user$project$Main$pastEvents(model),
-							_1: {
-								ctor: '::',
-								_0: _user$project$Main$traitsIcons(model.traits),
-								_1: {ctor: '[]'}
-							}
-						}
-					}
-				}
-			}
-		});
-};
-var _user$project$Main$view = function (model) {
-	return A2(
-		_elm_lang$html$Html$div,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('lg-breathe-50 overflow-hidden'),
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$div,
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class('white flex fw1 vh-100 bg-black-60'),
-					_1: {ctor: '[]'}
-				},
-				{
-					ctor: '::',
-					_0: _user$project$Nav$bar,
-					_1: {
-						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$main_,
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$class('flex-auto pt5-m mb5 mb0-ns flex justify-stretch'),
-								_1: {ctor: '[]'}
-							},
-							{
-								ctor: '::',
-								_0: _user$project$Main$profileView(model),
-								_1: {ctor: '[]'}
-							}),
-						_1: {ctor: '[]'}
-					}
-				}),
-			_1: {ctor: '[]'}
-		});
+var _user$project$Main$subscriptions = function (model) {
+	return _elm_lang$core$Platform_Sub$none;
 };
 var _user$project$Main$update = F2(
 	function (msg, model) {
-		var _p3 = msg;
-		return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+		var events = model.events;
+		var _p0 = msg;
+		switch (_p0.ctor) {
+			case 'ChangeTo':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{route: _p0._0}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'Input':
+				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+			case 'SendChatMessage':
+				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+			case 'NewMessage':
+				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+			case 'ViewEvent':
+				if (_p0._0.ctor === 'Just') {
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{
+								events: _elm_lang$core$Native_Utils.update(
+									events,
+									{
+										selectedEvent: _elm_lang$core$Maybe$Just(_p0._0._0)
+									})
+							}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
+				} else {
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{
+								events: _elm_lang$core$Native_Utils.update(
+									events,
+									{selectedEvent: _elm_lang$core$Maybe$Nothing})
+							}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
+				}
+			case 'OnDatetime':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							events: _elm_lang$core$Native_Utils.update(
+								events,
+								{
+									currentDatetime: _elm_lang$core$Maybe$Just(_p0._0)
+								})
+						}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			default:
+				if (_p0._0.ctor === 'Ok') {
+					var _p1 = _p0._0._0;
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{
+								events: _elm_lang$core$Native_Utils.update(
+									events,
+									{
+										seatgeek: A2(
+											_user$project$SeatGeekTypes$Reply,
+											_p1.meta,
+											A2(_elm_lang$core$Basics_ops['++'], events.seatgeek.events, _p1.events))
+									})
+							}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
+				} else {
+					var _p2 = A2(_elm_lang$core$Debug$log, 'err', _p0._0._0);
+					return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+				}
+		}
 	});
-var _user$project$Main$subscriptions = function (_p4) {
-	return _elm_lang$core$Platform_Sub$none;
+var _user$project$Main$view = function (model) {
+	return _user$project$View$render(model);
 };
-var _user$project$Main$initModel = {
-	name: 'Hannah Hazeldine',
-	avi: {
+var _user$project$Main$getDatetime = A2(_elm_lang$core$Task$perform, _user$project$Types$OnDatetime, _elm_lang$core$Date$now);
+var _user$project$Main$initCmd = _elm_lang$core$Platform_Cmd$batch(
+	{
 		ctor: '::',
-		_0: 'https://images.unsplash.com/photo-1496361001419-80f0d1be777a?dpr=1&auto=format&fit=crop&w=1000&q=80&cs=tinysrgb&ixid=dW5zcGxhc2guY29tOzs7Ozs%3D',
-		_1: {ctor: '[]'}
-	},
-	traits: {
-		ctor: '::',
-		_0: {name: 'night owl', from: 'tommy', datetime: ''},
+		_0: _user$project$SeatGeek$askQuery(_user$project$SeatGeekTypes$initQuery),
 		_1: {
 			ctor: '::',
-			_0: {name: 'flirty', from: 'tommy', datetime: ''},
-			_1: {
-				ctor: '::',
-				_0: {name: 'talkative', from: 'tommy', datetime: ''},
-				_1: {
-					ctor: '::',
-					_0: {name: 'funny', from: 'tommy', datetime: ''},
-					_1: {ctor: '[]'}
-				}
-			}
+			_0: _user$project$Main$getDatetime,
+			_1: {ctor: '[]'}
 		}
-	}
-};
-var _user$project$Main$init = {ctor: '_Tuple2', _0: _user$project$Main$initModel, _1: _elm_lang$core$Platform_Cmd$none};
+	});
+var _user$project$Main$init = {ctor: '_Tuple2', _0: _user$project$Types$initModel, _1: _user$project$Main$initCmd};
 var _user$project$Main$main = _elm_lang$html$Html$program(
-	{init: _user$project$Main$init, subscriptions: _user$project$Main$subscriptions, update: _user$project$Main$update, view: _user$project$Main$view})();
-var _user$project$Main$Model = F3(
-	function (a, b, c) {
-		return {name: a, avi: b, traits: c};
-	});
-var _user$project$Main$Trait = F3(
-	function (a, b, c) {
-		return {name: a, from: b, datetime: c};
-	});
-var _user$project$Main$Test = {ctor: 'Test'};
+	{init: _user$project$Main$init, view: _user$project$Main$view, update: _user$project$Main$update, subscriptions: _user$project$Main$subscriptions})();
+var _user$project$Main$echoServer = 'wss://echo.websocket.org';

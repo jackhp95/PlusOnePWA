@@ -1,0 +1,159 @@
+var _user$project$Assets$gradients = {
+	ctor: '::',
+	_0: 'lg-magenta-red',
+	_1: {
+		ctor: '::',
+		_0: 'lg-purple-magenta',
+		_1: {
+			ctor: '::',
+			_0: 'lg-blue-purple',
+			_1: {
+				ctor: '::',
+				_0: 'lg-teal-blue',
+				_1: {
+					ctor: '::',
+					_0: 'lg-mint-teal',
+					_1: {
+						ctor: '::',
+						_0: 'lg-green-mint',
+						_1: {
+							ctor: '::',
+							_0: 'lg-yellow-green',
+							_1: {
+								ctor: '::',
+								_0: 'lg-red-yellow',
+								_1: {
+									ctor: '::',
+									_0: 'lg-magenta-yellow',
+									_1: {
+										ctor: '::',
+										_0: 'lg-purple-red',
+										_1: {
+											ctor: '::',
+											_0: 'lg-blue-magenta',
+											_1: {
+												ctor: '::',
+												_0: 'lg-teal-purple',
+												_1: {
+													ctor: '::',
+													_0: 'lg-mint-blue',
+													_1: {
+														ctor: '::',
+														_0: 'lg-green-teal',
+														_1: {
+															ctor: '::',
+															_0: 'lg-yellow-mint',
+															_1: {
+																ctor: '::',
+																_0: 'lg-red-green',
+																_1: {
+																	ctor: '::',
+																	_0: 'lg-yellow-purple',
+																	_1: {
+																		ctor: '::',
+																		_0: 'lg-red-blue',
+																		_1: {
+																			ctor: '::',
+																			_0: 'lg-magenta-blue',
+																			_1: {
+																				ctor: '::',
+																				_0: 'lg-purple-teal',
+																				_1: {
+																					ctor: '::',
+																					_0: 'lg-blue-mint',
+																					_1: {
+																						ctor: '::',
+																						_0: 'lg-teal-green',
+																						_1: {
+																							ctor: '::',
+																							_0: 'lg-mint-yellow',
+																							_1: {
+																								ctor: '::',
+																								_0: 'lg-green-red',
+																								_1: {
+																									ctor: '::',
+																									_0: 'lg-yellow-magenta',
+																									_1: {
+																										ctor: '::',
+																										_0: 'lg-red-purple',
+																										_1: {
+																											ctor: '::',
+																											_0: 'lg-magenta-purple',
+																											_1: {
+																												ctor: '::',
+																												_0: 'lg-purple-blue',
+																												_1: {
+																													ctor: '::',
+																													_0: 'lg-blue-teal',
+																													_1: {
+																														ctor: '::',
+																														_0: 'lg-teal-mint',
+																														_1: {
+																															ctor: '::',
+																															_0: 'lg-mint-green',
+																															_1: {
+																																ctor: '::',
+																																_0: 'lg-green-yellow',
+																																_1: {
+																																	ctor: '::',
+																																	_0: 'lg-yellow-red',
+																																	_1: {
+																																		ctor: '::',
+																																		_0: 'lg-red-magenta',
+																																		_1: {ctor: '[]'}
+																																	}
+																																}
+																															}
+																														}
+																													}
+																												}
+																											}
+																										}
+																									}
+																								}
+																							}
+																						}
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+};
+var _user$project$Assets$bgImg = function (imgPath) {
+	return _elm_lang$html$Html_Attributes$style(
+		{
+			ctor: '::',
+			_0: {
+				ctor: '_Tuple2',
+				_0: 'background-image',
+				_1: A2(
+					_elm_lang$core$Basics_ops['++'],
+					'url(\'',
+					A2(_elm_lang$core$Basics_ops['++'], imgPath, '\')'))
+			},
+			_1: {ctor: '[]'}
+		});
+};
+var _user$project$Assets$feather = function (icon) {
+	return _user$project$Assets$bgImg(
+		A2(
+			_elm_lang$core$Basics_ops['++'],
+			'https://icongr.am/feather/',
+			A2(_elm_lang$core$Basics_ops['++'], icon, '.svg?size=20&color=ffffff')));
+};

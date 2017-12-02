@@ -1,0 +1,50 @@
+var _user$project$View$page = function (model) {
+	var _p0 = model.route;
+	switch (_p0.ctor) {
+		case 'GoChat':
+			return _user$project$Chat$view(model);
+		case 'GoProfile':
+			return _user$project$Profile$view(model);
+		case 'GoEvent':
+			return _user$project$Chat$view(model);
+		default:
+			return _user$project$Events$eventsView(model.events);
+	}
+};
+var _user$project$View$render = function (model) {
+	return _user$project$Proto$bg(
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$div,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('overflow-hidden animated fadeIn ttl white flex fw4 vh-100'),
+					_1: {ctor: '[]'}
+				},
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					_user$project$Proto$importLinks,
+					{
+						ctor: '::',
+						_0: _user$project$Nav$bar,
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$main_,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$class('flex-auto pt5-m pb5 pb0-ns flex justify-stretch'),
+									_1: {ctor: '[]'}
+								},
+								{
+									ctor: '::',
+									_0: _user$project$View$page(model),
+									_1: {ctor: '[]'}
+								}),
+							_1: {ctor: '[]'}
+						}
+					})),
+			_1: {ctor: '[]'}
+		});
+};

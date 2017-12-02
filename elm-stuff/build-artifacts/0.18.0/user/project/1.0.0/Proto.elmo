@@ -1,0 +1,39 @@
+var _user$project$Proto$bg = function (x) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('lg-breathe-50'),
+			_1: {ctor: '[]'}
+		},
+		x);
+};
+var _user$project$Proto$toStylesheet = function (x) {
+	return A3(
+		_elm_lang$html$Html$node,
+		'link',
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$rel('stylesheet'),
+			_1: {
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$href(x),
+				_1: {ctor: '[]'}
+			}
+		},
+		{ctor: '[]'});
+};
+var _user$project$Proto$linkURLs = {
+	ctor: '::',
+	_0: 'Admin/tachyons.css',
+	_1: {
+		ctor: '::',
+		_0: 'Admin/plusOne.css',
+		_1: {
+			ctor: '::',
+			_0: 'https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css',
+			_1: {ctor: '[]'}
+		}
+	}
+};
+var _user$project$Proto$importLinks = A2(_elm_lang$core$List$map, _user$project$Proto$toStylesheet, _user$project$Proto$linkURLs);

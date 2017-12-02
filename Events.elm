@@ -2,11 +2,13 @@
 -- https://guide.elm-lang.org/architecture/effects/http.html
 
 
-module Main exposing (..)
+module Events exposing (..)
 
+import Types exposing (Msg, Events)
 import SeatGeek exposing (..)
+import SeatGeekTypes as SG
 import Nav exposing (bar)
-import Icon exposing (feather)
+import Assets exposing (feather)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
@@ -19,154 +21,23 @@ import Date.Extra.Config.Config_en_us exposing (..)
 import Date.Extra.I18n.I_en_us exposing (..)
 
 
-main =
-    Html.program
-        { init = init
-        , view = view
-        , update = update
-        , subscriptions = subscriptions
-        }
-
-
-
--- MODEL
-
-
-type alias Model =
-    { seatgeek : SeatGeek.Reply
-    , selectedEvent : Maybe Int
-    , currentDatetime : Maybe Date
-    }
-
-
-gradients : List String
-gradients =
-    [ "lg-magenta-red"
-    , "lg-purple-magenta"
-    , "lg-blue-purple"
-    , "lg-teal-blue"
-    , "lg-mint-teal"
-    , "lg-green-mint"
-    , "lg-yellow-green"
-    , "lg-red-yellow"
-    , "lg-magenta-yellow"
-    , "lg-purple-red"
-    , "lg-blue-magenta"
-    , "lg-teal-purple"
-    , "lg-mint-blue"
-    , "lg-green-teal"
-    , "lg-yellow-mint"
-    , "lg-red-green"
-
-    -- , "lg-magenta-green"
-    -- , "lg-purple-yellow"
-    -- , "lg-blue-red"
-    -- , "lg-teal-magenta"
-    -- , "lg-mint-purple"
-    -- , "lg-green-blue"
-    -- , "lg-yellow-teal"
-    -- , "lg-red-mint"
-    -- , "lg-magenta-mint"
-    -- , "lg-purple-green"
-    -- , "lg-blue-yellow"
-    -- , "lg-teal-red"
-    -- , "lg-mint-magenta"
-    -- , "lg-green-purple"
-    -- , "lg-yellow-blue"
-    -- , "lg-red-teal"
-    -- , "lg-magenta-teal"
-    -- , "lg-purple-mint"
-    -- , "lg-blue-green"
-    -- , "lg-teal-yellow"
-    -- , "lg-mint-red"
-    -- , "lg-green-magenta"
-    , "lg-yellow-purple"
-    , "lg-red-blue"
-    , "lg-magenta-blue"
-    , "lg-purple-teal"
-    , "lg-blue-mint"
-    , "lg-teal-green"
-    , "lg-mint-yellow"
-    , "lg-green-red"
-    , "lg-yellow-magenta"
-    , "lg-red-purple"
-    , "lg-magenta-purple"
-    , "lg-purple-blue"
-    , "lg-blue-teal"
-    , "lg-teal-mint"
-    , "lg-mint-green"
-    , "lg-green-yellow"
-    , "lg-yellow-red"
-    , "lg-red-magenta"
-    ]
-
-
-askQuery : Query -> Cmd Msg
+askQuery : SG.Query -> Cmd Msg
 askQuery query =
     let
         url =
-            composeRequest query
+            SeatGeek.composeRequest query
 
         request =
-            Http.get url decodeReply
+            Http.get url SeatGeek.decodeReply
     in
-        Http.send GetReply request
-
-
-init : ( Model, Cmd Msg )
-init =
-    ( { seatgeek = SeatGeek.emptyReply
-      , selectedEvent = Nothing
-      , currentDatetime = Nothing
-      }
-    , Cmd.batch [ askQuery initQuery, getDatetime ]
-    )
-
-
-getDatetime : Cmd Msg
-getDatetime =
-    Date.now
-        |> Task.perform OnDatetime
-
-
-
--- UPDATE
-
-
-type Msg
-    = GetReply (Result Http.Error Reply)
-    | ViewEvent (Maybe Int)
-    | OnDatetime Date
-
-
-update : Msg -> Model -> ( Model, Cmd msg )
-update msg model =
-    case msg of
-        GetReply (Ok recieved) ->
-            ( Model (SeatGeek.Reply recieved.meta (model.seatgeek.events ++ recieved.events)) model.selectedEvent model.currentDatetime, Cmd.none )
-
-        GetReply (Err e) ->
-            let
-                _ =
-                    Debug.log "err" e
-            in
-                ( model, Cmd.none )
-
-        ViewEvent (Just id) ->
-            ( { model | selectedEvent = Just id }, Cmd.none )
-
-        ViewEvent Nothing ->
-            ( { model | selectedEvent = Nothing }, Cmd.none )
-
-        OnDatetime now ->
-            ( { model | currentDatetime = Just now }, Cmd.none )
+        Http.send Types.GetReply request
 
 
 
 -- VIEW
 
 
-view : Model -> Html Msg
+view : Types.Events -> Html Msg
 view model =
     div [ class "overflow-hidden animated fadeIn ttl white flex fw4 vh-100 bg-black-60" ]
         [ Nav.bar
@@ -177,7 +48,7 @@ view model =
         ]
 
 
-eventsView : Model -> Html Msg
+eventsView : Types.Events -> Html Msg
 eventsView model =
     section [ class "animated fadeInUp mw6-ns bg-black-40 overflow-auto z-999 shadow-2-l mr3-l mr2-m flex-grow-1" ]
         [ div [ class "lg-breathe-50 h5 flex flex-column justify-between pa3" ]
@@ -194,7 +65,7 @@ discoverToolsView =
     let
         icon x =
             div [ class "animated bounceIn pointer hover-bg-black-50 br-pill pa2" ]
-                [ div [ Icon.feather x, class "contain bg-center grow pt3 pb2 pl3 pr2" ] []
+                [ div [ Assets.feather x, class "contain bg-center grow pt3 pb2 pl3 pr2" ] []
                 ]
     in
         div [ class "flex justify-end" ]
@@ -208,12 +79,12 @@ discoverToolsView =
             )
 
 
-selectedEvent : Model -> Maybe Event
+selectedEvent : Types.Events -> Maybe SG.Event
 selectedEvent model =
     List.head (List.filter (\x -> model.selectedEvent == Just x.id) model.seatgeek.events)
 
 
-eventView : Model -> Html msg
+eventView : Types.Events -> Html msg
 eventView model =
     let
         event =
@@ -238,11 +109,11 @@ eventView model =
                     ]
 
 
-eventTitle : Event -> Html msg
+eventTitle : SG.Event -> Html msg
 eventTitle event =
     let
         icon x =
-            div [ Icon.feather x, class "contain dib bg-center grow ml1 mr2 pt1 pb3 pl1 pr3" ] []
+            div [ Assets.feather x, class "contain dib bg-center grow ml1 mr2 pt1 pb3 pl1 pr3" ] []
 
         textSize x y =
             case ((String.length x) // y) of
@@ -274,7 +145,7 @@ maybeEventDate date =
     (Result.toMaybe (Date.fromString date))
 
 
-eventTime : Event -> Maybe Date -> Html msg
+eventTime : SG.Event -> Maybe Date -> Html msg
 eventTime event maybeNow =
     let
         fullDate x =
@@ -366,7 +237,7 @@ thisPartOfDay hour =
         "in " ++ (toString hour) ++ " hours"
 
 
-eventTickets : Event -> Html msg
+eventTickets : SG.Event -> Html msg
 eventTickets event =
     let
         emptyTickets =
@@ -392,7 +263,7 @@ eventTickets event =
                 text ""
 
 
-eventPopularity : Event -> Html msg
+eventPopularity : SG.Event -> Html msg
 eventPopularity event =
     case event.popularity of
         0.0 ->
@@ -438,10 +309,10 @@ eventPool : Html msg
 eventPool =
     div [ class "flex items-center justify-around mh4 pv4 bb b--white-20" ]
         [ a [ href "Pool.html", class "white link br-pill pa2 mh1 flex items-center mh1 grow" ]
-            [ div [ Icon.feather "info", class "h2 w2 contain bg-center" ] []
+            [ div [ Assets.feather "info", class "h2 w2 contain bg-center" ] []
             ]
         , a [ href "Pool.html", class "white link lg-breathe-50 br1 pa2 mh1 flex items-center mh1 grow" ]
-            [ div [ Icon.feather "life-buoy", class "h2 w2 mh1 contain bg-center" ] []
+            [ div [ Assets.feather "life-buoy", class "h2 w2 mh1 contain bg-center" ] []
             , div [ class "mh2 f4 fw4 ttn" ] [ text ("join pool") ]
             ]
         , div [ class "mr3 f2" ] [ text "🏊" ]
@@ -464,7 +335,7 @@ progressBar num =
                     ]
 
 
-eventIcons : Event -> Html msg
+eventIcons : SG.Event -> Html msg
 eventIcons event =
     let
         toIcon x =
@@ -477,17 +348,17 @@ eventIcons event =
             (List.map toIcon event.taxonomies)
 
 
-randomGradient : Event -> String
+randomGradient : SG.Event -> String
 randomGradient event =
     let
         randomSeed =
             ((String.length event.title) * (String.length event.url))
 
         randomIndex =
-            randomSeed % (List.length gradients)
+            randomSeed % (List.length Assets.gradients)
 
         selectedGradient =
-            List.head (List.drop randomIndex gradients)
+            List.head (List.drop randomIndex Assets.gradients)
     in
         case selectedGradient of
             Nothing ->
@@ -497,7 +368,7 @@ randomGradient event =
                 result ++ ""
 
 
-eventBanner : Event -> Html msg
+eventBanner : SG.Event -> Html msg
 eventBanner event =
     let
         heroImg =
@@ -513,13 +384,13 @@ eventBanner event =
             [ div [ style [ ( "background-image", "linear-gradient( rgba(0,0,0,0.3), transparent)" ) ], class "aspect-ratio--object cover bg-center flex flex-column items-end justify-between pa4 pb0" ]
                 [ discoverToolsView
                 , div [ class "pa3 lg-breathe-50 br-pill relative top-2 right-1 shadow-2 flex grow justify-center items-center" ]
-                    [ div [ featherIcon "life-buoy", class "h3 w3 contain" ] []
+                    [ div [ Assets.feather "life-buoy", class "h3 w3 contain" ] []
                     ]
                 ]
             ]
 
 
-eventListView : Maybe Date -> Event -> Html Msg
+eventListView : Maybe Date -> SG.Event -> Html Msg
 eventListView maybeNow event =
     let
         viewTime =
@@ -532,7 +403,7 @@ eventListView maybeNow event =
 
         atIcon =
             div
-                [ featherIcon "at-sign"
+                [ Assets.feather "at-sign"
                 , class "contain dib bg-center mr1 mt1 pb3 pr3"
                 ]
                 []
@@ -548,7 +419,7 @@ eventListView maybeNow event =
                 Nothing ->
                     text ""
     in
-        div [ class "animated fadeInUp ph3 pt3 hover-bg-black-30", onClick (ViewEvent (Just event.id)) ]
+        div [ class "animated fadeInUp ph3 pt3 hover-bg-black-30", onClick (Types.ViewEvent (Just event.id)) ]
             [ cardImage
             , div [ class "pb3 bb b--white-20" ]
                 [ div [ class "pb1 f4 pv2" ]
@@ -566,7 +437,7 @@ eventListView maybeNow event =
             ]
 
 
-maybeImage : List Performer -> Maybe String
+maybeImage : List SG.Performer -> Maybe String
 maybeImage performers =
     case (List.head performers) of
         Just performer ->
@@ -574,11 +445,6 @@ maybeImage performers =
 
         Nothing ->
             Nothing
-
-
-featherIcon : String -> Attribute msg
-featherIcon icon =
-    (style [ ( "background-image", ("url('https://icongr.am/feather/" ++ icon ++ ".svg?size=20&color=ffffff')") ) ])
 
 
 stringToEmoji : String -> String
@@ -676,7 +542,7 @@ stringToEmoji string =
 -- SUBSCRIPTIONS
 
 
-subscriptions : Model -> Sub Msg
+subscriptions : Types.Events -> Sub Msg
 subscriptions model =
     Sub.none
 

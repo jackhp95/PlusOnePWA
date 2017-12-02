@@ -2,17 +2,15 @@
 -- https://guide.elm-lang.org/architecture/effects/http.html
 
 
-module Events exposing (..)
+module Event exposing (..)
 
 import SeatGeek exposing (..)
 import Nav exposing (bar)
-import Icon exposing (feather)
+import Assets exposing (feather)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Http exposing (..)
-import Date exposing (..)
-import Task exposing (..)
 import Date.Extra.Format exposing (..)
 import Date.Extra.Duration exposing (..)
 import Date.Extra.Config.Config_en_us exposing (..)
@@ -199,7 +197,7 @@ discoverToolsView =
     let
         icon x =
             div [ class "animated bounceIn pointer hover-bg-black-50 br-pill pa2" ]
-                [ div [ Icon.feather x, class "contain bg-center grow pt3 pb2 pl3 pr2" ] []
+                [ div [ Assets.feather x, class "contain bg-center grow pt3 pb2 pl3 pr2" ] []
                 ]
     in
         div [ class "flex justify-end" ]
@@ -247,7 +245,7 @@ eventTitle : Event -> Html msg
 eventTitle event =
     let
         icon x =
-            div [ Icon.feather x, class "contain dib bg-center grow ml1 mr2 pt1 pb3 pl1 pr3" ] []
+            div [ Assets.feather x, class "contain dib bg-center grow ml1 mr2 pt1 pb3 pl1 pr3" ] []
 
         textSize x y =
             case ((String.length x) // y) of
@@ -443,10 +441,10 @@ eventPool : Html msg
 eventPool =
     div [ class "flex items-center justify-around mh4 pv4 bb b--white-20" ]
         [ a [ class "br-pill pa2 mh1 flex items-center mh1 grow" ]
-            [ div [ Icon.feather "info", class "h2 w2 contain bg-center" ] []
+            [ div [ Assets.feather "info", class "h2 w2 contain bg-center" ] []
             ]
         , a [ class "lg-breathe-50 br1 pa2 mh1 flex items-center mh1 grow" ]
-            [ div [ Icon.feather "life-buoy", class "h2 w2 mh1 contain bg-center" ] []
+            [ div [ Assets.feather "life-buoy", class "h2 w2 mh1 contain bg-center" ] []
             , div [ class "mh2 f4 fw3 ttn" ] [ text ("join pool") ]
             ]
         , div [ class "mr3 f2" ] [ text "🏊" ]
