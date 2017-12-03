@@ -16,6 +16,13 @@ textarea {
 }
 
 
+/* I think this adds smoothscrolling on iOS */
+
+* {
+  -webkit-overflow-scrolling: touch;
+}
+
+
 /*
 #############
 Breathe BG/LG

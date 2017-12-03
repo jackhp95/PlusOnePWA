@@ -1,0 +1,54 @@
+var _user$project$TextArea$textareaStyles = function (x) {
+	var height = function () {
+		var _p0 = x;
+		if (_p0 === 0) {
+			return '22px';
+		} else {
+			return A2(
+				_elm_lang$core$Basics_ops['++'],
+				_elm_lang$core$Basics$toString(x - 4),
+				'px');
+		}
+	}();
+	return _elm_lang$html$Html_Attributes$style(
+		{
+			ctor: '::',
+			_0: {ctor: '_Tuple2', _0: 'resize', _1: 'none'},
+			_1: {
+				ctor: '::',
+				_0: {ctor: '_Tuple2', _0: 'height', _1: height},
+				_1: {
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 'max-height', _1: '50vh'},
+					_1: {ctor: '[]'}
+				}
+			}
+		});
+};
+var _user$project$TextArea$scrollHeightDecoder = A2(
+	_elm_lang$core$Json_Decode$map,
+	_user$project$Types$TextAreaResizer,
+	A2(
+		_elm_lang$core$Json_Decode$at,
+		{
+			ctor: '::',
+			_0: 'target',
+			_1: {
+				ctor: '::',
+				_0: 'scrollHeight',
+				_1: {ctor: '[]'}
+			}
+		},
+		_elm_lang$core$Json_Decode$int));
+var _user$project$TextArea$auto = function (client) {
+	var height = client.textAreaHeight;
+	return {
+		ctor: '::',
+		_0: A2(_elm_lang$html$Html_Events$on, 'input', _user$project$TextArea$scrollHeightDecoder),
+		_1: {
+			ctor: '::',
+			_0: _user$project$TextArea$textareaStyles(height),
+			_1: {ctor: '[]'}
+		}
+	};
+};

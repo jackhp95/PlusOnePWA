@@ -1,6 +1,6 @@
 -- Read more about this program in the official Elm guide:
 -- https://guide.elm-lang.org/architecture/effects/web_sockets.html
--- ```Html.map ChatMsg (Chat.extra model)
+-- ```Html.map ChatMsg (Chat.extra chat)
 -- ```
 -- assuming you have something like
 -- ```type Msg
@@ -18,6 +18,7 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Types
+import TextArea exposing (auto)
 
 
 -- VIEW
@@ -28,14 +29,17 @@ viewMessage msg =
     div [ class "dib pa2 mv1 mh2 bg-light-blue br3 measure-narrow shadow-1" ] [ text msg ]
 
 
-view : Types.Model -> Html msg
+view : Types.Model -> Html Types.Msg
 view x =
     let
-        model =
+        chat =
             x.chat
+
+        client =
+            x.client
     in
         div [ class "bg-black-70 flex flex-column flex-auto measure-wide pa0 ma0 shadow-2-l" ]
-            [ nameBar model
+            [ nameBar chat
             , section [ class "flex-auto lh-copy overflow-auto ph3 pt5 z-1 inner-shadow-1" ]
                 ([ toast
                  , sent
@@ -57,9 +61,9 @@ view x =
                  , sent
                  , recieved
                  ]
-                    ++ (List.map viewMessage (List.reverse model.messages))
+                    ++ (List.map viewMessage (List.reverse chat.messages))
                 )
-            , messageBar model.input
+            , messageBar chat client
             ]
 
 
@@ -87,10 +91,15 @@ toast =
         ]
 
 
-messageBar : String -> Html msg
-messageBar x =
-    div [ class "bg-black-40 flex h4 z-2 items-stretch overflow-hidden slideInUp animated" ]
-        [ Html.textarea [ {- onInput Input, -} value x, rows 1, class "white bg-transparent items-center ma3 pa1 pb0 bn flex-auto outline-0", placeholder "Type Message" ]
+messageBar : Types.Chat -> Types.Client -> Html Types.Msg
+messageBar chat client =
+    div [ class "bg-black-40 flex flex-none z-2 items-stretch overflow-hidden pl2 slideInUp animated" ]
+        [ Html.textarea
+            ((TextArea.auto client)
+                ++ [ class "white bg-transparent overflow-visible items-center ma3 pv1 ph0 bn flex-auto outline-0"
+                   , placeholder "strike up a convo"
+                   ]
+            )
             []
         , div [ class "bg-black-60 pa2 flex items-center hover-bg-blue grow" ]
             [ div [ {- onClick SendChatMessage, -} Assets.feather "chevron-right", class "w2 h2 contain" ] []
@@ -99,12 +108,12 @@ messageBar x =
 
 
 nameBar : Types.Chat -> Html msg
-nameBar model =
+nameBar chat =
     div [ class "bg-black-90 flex items-stretch absolute w-100 measure-wide z-2 h3 fadeIn animated" ]
         [ div [ class "flex items-center grow" ]
             [ div [ class "bounceIn animated h3 ph3 pt3 overflow-visible" ]
                 [ div [ class "w3" ]
-                    [ div [ bgImg model.userAvi, class "aspect-ratio--1x1 bg-white br-pill shadow-2 ba bw1 cover br-pill" ] []
+                    [ div [ bgImg chat.userAvi, class "aspect-ratio--1x1 bg-white br-pill shadow-2 ba bw1 cover br-pill" ] []
                     ]
                 ]
             , div [ class "f3 fw6" ] [ text "hannah" ]

@@ -16,6 +16,7 @@ type alias Model =
     , chat : Chat
     , profile : Profile
     , events : Events
+    , client : Client
     }
 
 
@@ -26,6 +27,7 @@ initModel =
         initChat
         initProfile
         initEvents
+        initClient
 
 
 type alias Page =
@@ -50,7 +52,8 @@ type Route
 
 
 type alias Chat =
-    { input : String
+    { uid : String
+    , input : String
     , messages : List String
     , userAvi : String
     }
@@ -58,7 +61,8 @@ type alias Chat =
 
 initChat : Chat
 initChat =
-    { input = ""
+    { uid = "string"
+    , input = ""
     , messages = []
     , userAvi =
         "https://images.unsplash.com/photo-1496361001419-80f0d1be777a?dpr=1&auto=format&fit=crop&w=1000&q=80&cs=tinysrgb&ixid=dW5zcGxhc2guY29tOzs7Ozs%3D"
@@ -111,6 +115,16 @@ initEvents =
     }
 
 
+type alias Client =
+    { textAreaHeight : Int
+    }
+
+
+initClient : Client
+initClient =
+    { textAreaHeight = 0 }
+
+
 
 -- MESSAGES --
 
@@ -127,5 +141,6 @@ type
     | ViewEvent (Maybe Int)
     | OnDatetime Date
       -- SeatGeek
-    -- | Discover
+      -- | Discover
     | GetReply (Result Http.Error SG.Reply)
+    | TextAreaResizer Int

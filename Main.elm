@@ -57,6 +57,9 @@ update msg model =
     let
         events =
             model.events
+
+        client =
+            model.client
     in
         case msg of
             ChangeTo newRoute ->
@@ -108,6 +111,17 @@ update msg model =
                     | events =
                         { events
                             | seatgeek = (SG.Reply recieved.meta (events.seatgeek.events ++ recieved.events))
+                        }
+                  }
+                , Cmd.none
+                )
+
+            -- ChatBox Updates
+            TextAreaResizer height ->
+                ( { model
+                    | client =
+                        { client
+                            | textAreaHeight = height
                         }
                   }
                 , Cmd.none

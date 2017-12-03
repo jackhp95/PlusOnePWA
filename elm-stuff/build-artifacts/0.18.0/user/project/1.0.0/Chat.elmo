@@ -1,4 +1,4 @@
-var _user$project$Chat$nameBar = function (model) {
+var _user$project$Chat$nameBar = function (chat) {
 	return A2(
 		_elm_lang$html$Html$div,
 		{
@@ -39,7 +39,7 @@ var _user$project$Chat$nameBar = function (model) {
 										_elm_lang$html$Html$div,
 										{
 											ctor: '::',
-											_0: _user$project$Assets$bgImg(model.userAvi),
+											_0: _user$project$Assets$bgImg(chat.userAvi),
 											_1: {
 												ctor: '::',
 												_0: _elm_lang$html$Html_Attributes$class('aspect-ratio--1x1 bg-white br-pill shadow-2 ba bw1 cover br-pill'),
@@ -97,65 +97,61 @@ var _user$project$Chat$nameBar = function (model) {
 			}
 		});
 };
-var _user$project$Chat$messageBar = function (x) {
-	return A2(
-		_elm_lang$html$Html$div,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('bg-black-40 flex h4 z-2 items-stretch overflow-hidden slideInUp animated'),
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$textarea,
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$value(x),
-					_1: {
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$rows(1),
-						_1: {
-							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('white bg-transparent items-center ma3 pa1 pb0 bn flex-auto outline-0'),
-							_1: {
-								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$placeholder('Type Message'),
-								_1: {ctor: '[]'}
-							}
-						}
-					}
-				},
-				{ctor: '[]'}),
-			_1: {
+var _user$project$Chat$messageBar = F2(
+	function (chat, client) {
+		return A2(
+			_elm_lang$html$Html$div,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('bg-black-40 flex flex-none z-2 items-stretch overflow-hidden pl2 slideInUp animated'),
+				_1: {ctor: '[]'}
+			},
+			{
 				ctor: '::',
 				_0: A2(
-					_elm_lang$html$Html$div,
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class('bg-black-60 pa2 flex items-center hover-bg-blue grow'),
-						_1: {ctor: '[]'}
-					},
-					{
-						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$div,
-							{
+					_elm_lang$html$Html$textarea,
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						_user$project$TextArea$auto(client),
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class('white bg-transparent overflow-visible items-center ma3 pv1 ph0 bn flex-auto outline-0'),
+							_1: {
 								ctor: '::',
-								_0: _user$project$Assets$feather('chevron-right'),
-								_1: {
+								_0: _elm_lang$html$Html_Attributes$placeholder('strike up a convo'),
+								_1: {ctor: '[]'}
+							}
+						}),
+					{ctor: '[]'}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$div,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class('bg-black-60 pa2 flex items-center hover-bg-blue grow'),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$div,
+								{
 									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$class('w2 h2 contain'),
-									_1: {ctor: '[]'}
-								}
-							},
-							{ctor: '[]'}),
-						_1: {ctor: '[]'}
-					}),
-				_1: {ctor: '[]'}
-			}
-		});
-};
+									_0: _user$project$Assets$feather('chevron-right'),
+									_1: {
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$class('w2 h2 contain'),
+										_1: {ctor: '[]'}
+									}
+								},
+								{ctor: '[]'}),
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				}
+			});
+	});
 var _user$project$Chat$toast = A2(
 	_elm_lang$html$Html$div,
 	{
@@ -240,7 +236,8 @@ var _user$project$Chat$viewMessage = function (msg) {
 		});
 };
 var _user$project$Chat$view = function (x) {
-	var model = x.chat;
+	var client = x.client;
+	var chat = x.chat;
 	return A2(
 		_elm_lang$html$Html$div,
 		{
@@ -250,7 +247,7 @@ var _user$project$Chat$view = function (x) {
 		},
 		{
 			ctor: '::',
-			_0: _user$project$Chat$nameBar(model),
+			_0: _user$project$Chat$nameBar(chat),
 			_1: {
 				ctor: '::',
 				_0: A2(
@@ -342,10 +339,10 @@ var _user$project$Chat$view = function (x) {
 						A2(
 							_elm_lang$core$List$map,
 							_user$project$Chat$viewMessage,
-							_elm_lang$core$List$reverse(model.messages)))),
+							_elm_lang$core$List$reverse(chat.messages)))),
 				_1: {
 					ctor: '::',
-					_0: _user$project$Chat$messageBar(model.input),
+					_0: A2(_user$project$Chat$messageBar, chat, client),
 					_1: {ctor: '[]'}
 				}
 			}

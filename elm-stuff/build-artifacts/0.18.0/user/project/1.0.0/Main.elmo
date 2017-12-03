@@ -3,6 +3,7 @@ var _user$project$Main$subscriptions = function (model) {
 };
 var _user$project$Main$update = F2(
 	function (msg, model) {
+		var client = model.client;
 		var events = model.events;
 		var _p0 = msg;
 		switch (_p0.ctor) {
@@ -59,6 +60,18 @@ var _user$project$Main$update = F2(
 								{
 									currentDatetime: _elm_lang$core$Maybe$Just(_p0._0)
 								})
+						}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'TextAreaResizer':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							client: _elm_lang$core$Native_Utils.update(
+								client,
+								{textAreaHeight: _p0._0})
 						}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
