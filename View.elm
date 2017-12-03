@@ -12,9 +12,10 @@ import Html.Events exposing (..)
 
 -- PAGES --
 
-import Chat exposing (..)
-import Profile exposing (..)
-import Events exposing (..)
+import Pages.Chat as Chat
+import Pages.Profile as Profile
+import Pages.Events as Events
+import Pages.Event as Event
 
 
 -- SUBVIEWS --
@@ -30,23 +31,27 @@ render model =
             (Proto.importLinks
                 ++ [ Nav.bar
                    , main_ [ class "flex-auto pt5-m pb5 pb0-ns flex justify-stretch" ]
-                        [ page model ]
+                        (page model)
                    ]
             )
         ]
 
 
-page : Types.Model -> Html Types.Msg
+page : Types.Model -> List (Html Types.Msg)
 page model =
     case model.route of
         Types.GoChat ->
-            Chat.view model
+            [ Chat.view model ]
 
         Types.GoProfile ->
-            Profile.view model
+            [ Profile.view model ]
 
-        Types.GoEvent ->
-            Chat.view model
+        Types.GoEvents event ->
+            case event of
+                Nothing ->
+                    [ Events.view model ]
 
-        Types.GoEvents ->
-            Events.eventsView model.events
+                Just x ->
+                    [ Events.view model
+                    , Event.view x model.events.currentDatetime
+                    ]

@@ -10,10 +10,10 @@
 -- @Jack H. Peterson You could also make your views message type agnostic. https://medium.com/@matthew.buscemi/high-level-dependency-strategies-in-elm-1135ec877d49
 
 
-module Chat exposing (..)
+module Pages.Chat exposing (..)
 
 import Assets exposing (..)
-import Profile exposing (profileAvi)
+import Pages.Profile exposing (profileAvi)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
@@ -98,6 +98,7 @@ messageBar chat client =
             ((TextArea.auto client)
                 ++ [ class "white bg-transparent overflow-visible pa3 items-center self-center flex-auto bn outline-0"
                    , placeholder "strike up a convo"
+                   , autofocus True
                    ]
             )
             []
@@ -107,10 +108,10 @@ messageBar chat client =
         ]
 
 
-nameBar : Types.Chat -> Html msg
+nameBar : Types.Chat -> Html Types.Msg
 nameBar chat =
     div [ class "bg-black-90 flex items-stretch absolute w-100 measure-wide z-2 h3 fadeIn animated" ]
-        [ div [ class "flex items-center grow" ]
+        [ div [ class "flex items-center grow", onClick (Types.ChangeTo Types.GoProfile) ]
             [ div [ class "bounceIn animated h3 ph3 pt3 overflow-visible" ]
                 [ div [ class "w3" ]
                     [ div [ bgImg chat.userAvi, class "aspect-ratio--1x1 bg-white br-pill shadow-2 ba bw1 cover br-pill" ] []

@@ -135,6 +135,83 @@ var _user$project$Assets$gradients = {
 		}
 	}
 };
+var _user$project$Assets$randomGradient = function (seed) {
+	var randomIndex = A2(
+		_elm_lang$core$Basics_ops['%'],
+		seed,
+		_elm_lang$core$List$length(_user$project$Assets$gradients));
+	var selectedGradient = _elm_lang$core$List$head(
+		A2(_elm_lang$core$List$drop, randomIndex, _user$project$Assets$gradients));
+	var _p0 = selectedGradient;
+	if (_p0.ctor === 'Nothing') {
+		return '';
+	} else {
+		return A2(_elm_lang$core$Basics_ops['++'], _p0._0, '');
+	}
+};
+var _user$project$Assets$stringToEmoji = function (string) {
+	var _p1 = string;
+	switch (_p1) {
+		case 'concert':
+			return '🎵';
+		case 'music_festival':
+			return '🎶';
+		case 'sports':
+			return '🏆';
+		case 'theater':
+			return '🎭';
+		case 'basketball':
+			return '🏀';
+		case 'nba':
+			return '⛹';
+		case 'ncaa_football':
+			return '👨🏻‍🎓';
+		case 'ncaa_basketball':
+			return '👨🏻‍🎓';
+		case 'ncaa_womens_basketball':
+			return '👩‍🎓';
+		case 'wnba':
+			return '⛹️‍♀️';
+		case 'family':
+			return '🚸';
+		case 'broadway_tickets_national':
+			return '🎟';
+		case 'dance_performance_tour':
+			return '💃';
+		case 'classical':
+			return '🎼';
+		case 'classical_orchestral_instrumental':
+			return '🎻';
+		case 'comedy':
+			return '🤣';
+		case 'hockey':
+			return '🏒';
+		case 'fighting':
+			return '🤼‍♂️';
+		case 'soccer':
+			return '⚽';
+		case 'wrestling':
+			return '🤼';
+		case 'football':
+			return '🏈';
+		case 'auto_racing':
+			return '🏎️';
+		case 'animal_sports':
+			return '🐾';
+		case 'horse_racing':
+			return '🏇';
+		case 'rodeo':
+			return '🤠';
+		case 'nfl':
+			return '🏟️';
+		case 'cirque_du_soleil':
+			return '🤸';
+		case 'classical_opera':
+			return '🎤';
+		default:
+			return '🤷';
+	}
+};
 var _user$project$Assets$bgImg = function (imgPath) {
 	return _elm_lang$html$Html_Attributes$style(
 		{
@@ -157,3 +234,61 @@ var _user$project$Assets$feather = function (icon) {
 			'https://icongr.am/feather/',
 			A2(_elm_lang$core$Basics_ops['++'], icon, '.svg?size=20&color=ffffff')));
 };
+var _user$project$Assets$discoverToolsView = function () {
+	var icon = function (x) {
+		return A2(
+			_elm_lang$html$Html$div,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('animated bounceIn pointer hover-bg-black-50 br-pill pa2'),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{
+						ctor: '::',
+						_0: _user$project$Assets$feather(x),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class('contain bg-center grow pt3 pb2 pl3 pr2'),
+							_1: {ctor: '[]'}
+						}
+					},
+					{ctor: '[]'}),
+				_1: {ctor: '[]'}
+			});
+	};
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('flex justify-end'),
+			_1: {ctor: '[]'}
+		},
+		A2(
+			_elm_lang$core$List$map,
+			icon,
+			{
+				ctor: '::',
+				_0: 'search',
+				_1: {
+					ctor: '::',
+					_0: 'map-pin',
+					_1: {
+						ctor: '::',
+						_0: 'thumbs-up',
+						_1: {
+							ctor: '::',
+							_0: 'tag',
+							_1: {
+								ctor: '::',
+								_0: 'at-sign',
+								_1: {ctor: '[]'}
+							}
+						}
+					}
+				}
+			}));
+}();

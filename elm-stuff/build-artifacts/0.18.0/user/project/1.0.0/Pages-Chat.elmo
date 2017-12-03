@@ -1,4 +1,4 @@
-var _user$project$Chat$nameBar = function (chat) {
+var _user$project$Pages_Chat$nameBar = function (chat) {
 	return A2(
 		_elm_lang$html$Html$div,
 		{
@@ -13,7 +13,12 @@ var _user$project$Chat$nameBar = function (chat) {
 				{
 					ctor: '::',
 					_0: _elm_lang$html$Html_Attributes$class('flex items-center grow'),
-					_1: {ctor: '[]'}
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html_Events$onClick(
+							_user$project$Types$ChangeTo(_user$project$Types$GoProfile)),
+						_1: {ctor: '[]'}
+					}
 				},
 				{
 					ctor: '::',
@@ -97,7 +102,7 @@ var _user$project$Chat$nameBar = function (chat) {
 			}
 		});
 };
-var _user$project$Chat$messageBar = F2(
+var _user$project$Pages_Chat$messageBar = F2(
 	function (chat, client) {
 		return A2(
 			_elm_lang$html$Html$div,
@@ -156,7 +161,7 @@ var _user$project$Chat$messageBar = F2(
 				}
 			});
 	});
-var _user$project$Chat$toast = A2(
+var _user$project$Pages_Chat$toast = A2(
 	_elm_lang$html$Html$div,
 	{
 		ctor: '::',
@@ -179,7 +184,7 @@ var _user$project$Chat$toast = A2(
 			}),
 		_1: {ctor: '[]'}
 	});
-var _user$project$Chat$sent = A2(
+var _user$project$Pages_Chat$sent = A2(
 	_elm_lang$html$Html$div,
 	{
 		ctor: '::',
@@ -202,7 +207,7 @@ var _user$project$Chat$sent = A2(
 			}),
 		_1: {ctor: '[]'}
 	});
-var _user$project$Chat$recieved = A2(
+var _user$project$Pages_Chat$recieved = A2(
 	_elm_lang$html$Html$div,
 	{
 		ctor: '::',
@@ -225,7 +230,7 @@ var _user$project$Chat$recieved = A2(
 			}),
 		_1: {ctor: '[]'}
 	});
-var _user$project$Chat$viewMessage = function (msg) {
+var _user$project$Pages_Chat$viewMessage = function (msg) {
 	return A2(
 		_elm_lang$html$Html$div,
 		{
@@ -239,7 +244,7 @@ var _user$project$Chat$viewMessage = function (msg) {
 			_1: {ctor: '[]'}
 		});
 };
-var _user$project$Chat$view = function (x) {
+var _user$project$Pages_Chat$view = function (x) {
 	var client = x.client;
 	var chat = x.chat;
 	return A2(
@@ -251,7 +256,7 @@ var _user$project$Chat$view = function (x) {
 		},
 		{
 			ctor: '::',
-			_0: _user$project$Chat$nameBar(chat),
+			_0: _user$project$Pages_Chat$nameBar(chat),
 			_1: {
 				ctor: '::',
 				_0: A2(
@@ -265,61 +270,61 @@ var _user$project$Chat$view = function (x) {
 						_elm_lang$core$Basics_ops['++'],
 						{
 							ctor: '::',
-							_0: _user$project$Chat$toast,
+							_0: _user$project$Pages_Chat$toast,
 							_1: {
 								ctor: '::',
-								_0: _user$project$Chat$sent,
+								_0: _user$project$Pages_Chat$sent,
 								_1: {
 									ctor: '::',
-									_0: _user$project$Chat$recieved,
+									_0: _user$project$Pages_Chat$recieved,
 									_1: {
 										ctor: '::',
-										_0: _user$project$Chat$sent,
+										_0: _user$project$Pages_Chat$sent,
 										_1: {
 											ctor: '::',
-											_0: _user$project$Chat$recieved,
+											_0: _user$project$Pages_Chat$recieved,
 											_1: {
 												ctor: '::',
-												_0: _user$project$Chat$sent,
+												_0: _user$project$Pages_Chat$sent,
 												_1: {
 													ctor: '::',
-													_0: _user$project$Chat$recieved,
+													_0: _user$project$Pages_Chat$recieved,
 													_1: {
 														ctor: '::',
-														_0: _user$project$Chat$sent,
+														_0: _user$project$Pages_Chat$sent,
 														_1: {
 															ctor: '::',
-															_0: _user$project$Chat$recieved,
+															_0: _user$project$Pages_Chat$recieved,
 															_1: {
 																ctor: '::',
-																_0: _user$project$Chat$sent,
+																_0: _user$project$Pages_Chat$sent,
 																_1: {
 																	ctor: '::',
-																	_0: _user$project$Chat$recieved,
+																	_0: _user$project$Pages_Chat$recieved,
 																	_1: {
 																		ctor: '::',
-																		_0: _user$project$Chat$sent,
+																		_0: _user$project$Pages_Chat$sent,
 																		_1: {
 																			ctor: '::',
-																			_0: _user$project$Chat$recieved,
+																			_0: _user$project$Pages_Chat$recieved,
 																			_1: {
 																				ctor: '::',
-																				_0: _user$project$Chat$sent,
+																				_0: _user$project$Pages_Chat$sent,
 																				_1: {
 																					ctor: '::',
-																					_0: _user$project$Chat$recieved,
+																					_0: _user$project$Pages_Chat$recieved,
 																					_1: {
 																						ctor: '::',
-																						_0: _user$project$Chat$sent,
+																						_0: _user$project$Pages_Chat$sent,
 																						_1: {
 																							ctor: '::',
-																							_0: _user$project$Chat$recieved,
+																							_0: _user$project$Pages_Chat$recieved,
 																							_1: {
 																								ctor: '::',
-																								_0: _user$project$Chat$sent,
+																								_0: _user$project$Pages_Chat$sent,
 																								_1: {
 																									ctor: '::',
-																									_0: _user$project$Chat$recieved,
+																									_0: _user$project$Pages_Chat$recieved,
 																									_1: {ctor: '[]'}
 																								}
 																							}
@@ -342,11 +347,11 @@ var _user$project$Chat$view = function (x) {
 						},
 						A2(
 							_elm_lang$core$List$map,
-							_user$project$Chat$viewMessage,
+							_user$project$Pages_Chat$viewMessage,
 							_elm_lang$core$List$reverse(chat.messages)))),
 				_1: {
 					ctor: '::',
-					_0: A2(_user$project$Chat$messageBar, chat, client),
+					_0: A2(_user$project$Pages_Chat$messageBar, chat, client),
 					_1: {ctor: '[]'}
 				}
 			}

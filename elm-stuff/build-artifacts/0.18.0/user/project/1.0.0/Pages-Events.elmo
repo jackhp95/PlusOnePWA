@@ -1,0 +1,283 @@
+var _user$project$Pages_Events$subscriptions = _elm_lang$core$Platform_Sub$none;
+var _user$project$Pages_Events$maybeImage = function (performers) {
+	var _p0 = _elm_lang$core$List$head(performers);
+	if (_p0.ctor === 'Just') {
+		return _p0._0.image;
+	} else {
+		return _elm_lang$core$Maybe$Nothing;
+	}
+};
+var _user$project$Pages_Events$eventListView = F2(
+	function (maybeNow, event) {
+		var cardImage = function () {
+			var seed = _elm_lang$core$String$length(event.title) * _elm_lang$core$String$length(event.url);
+			var _p1 = _user$project$Pages_Events$maybeImage(event.performers);
+			if (_p1.ctor === 'Just') {
+				return A2(
+					_elm_lang$html$Html$div,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class(
+							A2(
+								_elm_lang$core$Basics_ops['++'],
+								'w-100 mb2 mt1 ',
+								_user$project$Assets$randomGradient(seed))),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$div,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$style(
+									{
+										ctor: '::',
+										_0: {
+											ctor: '_Tuple2',
+											_0: 'background-image',
+											_1: A2(
+												_elm_lang$core$Basics_ops['++'],
+												'url(',
+												A2(_elm_lang$core$Basics_ops['++'], _p1._0, ')'))
+										},
+										_1: {ctor: '[]'}
+									}),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$class('aspect-ratio--8x5 cover'),
+									_1: {ctor: '[]'}
+								}
+							},
+							{ctor: '[]'}),
+						_1: {ctor: '[]'}
+					});
+			} else {
+				return _elm_lang$html$Html$text('');
+			}
+		}();
+		var atIcon = A2(
+			_elm_lang$html$Html$div,
+			{
+				ctor: '::',
+				_0: _user$project$Assets$feather('at-sign'),
+				_1: {
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('contain dib bg-center mr1 mt1 pb3 pr3'),
+					_1: {ctor: '[]'}
+				}
+			},
+			{ctor: '[]'});
+		var viewTime = function () {
+			var _p2 = A2(
+				_user$project$Moment$deltaTime,
+				maybeNow,
+				_user$project$Moment$maybeEventDate(event.datetime_local));
+			if (_p2.ctor === 'Nothing') {
+				return 'whoopsie, viewTime messed up';
+			} else {
+				return A2(
+					_user$project$Moment$simpleTime,
+					_p2._0,
+					_user$project$Moment$maybeEventDate(event.datetime_local));
+			}
+		}();
+		return A2(
+			_elm_lang$html$Html$div,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('animated fadeInUp ph3 pt3 hover-bg-black-30'),
+				_1: {
+					ctor: '::',
+					_0: _elm_lang$html$Html_Events$onClick(
+						_user$project$Types$ViewEvent(
+							_user$project$Types$GoEvents(
+								_elm_lang$core$Maybe$Just(event)))),
+					_1: {ctor: '[]'}
+				}
+			},
+			{
+				ctor: '::',
+				_0: cardImage,
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$div,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class('pb3 bb b--white-20'),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$div,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$class('pb1 f4 pv2'),
+									_1: {ctor: '[]'}
+								},
+								{
+									ctor: '::',
+									_0: A2(
+										_elm_lang$html$Html$span,
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html_Attributes$class('mr2 fw5'),
+											_1: {ctor: '[]'}
+										},
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html$text(event.title),
+											_1: {ctor: '[]'}
+										}),
+									_1: {
+										ctor: '::',
+										_0: A2(
+											_elm_lang$html$Html$div,
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html_Attributes$class('fw5 o-80 dib'),
+												_1: {ctor: '[]'}
+											},
+											{
+												ctor: '::',
+												_0: atIcon,
+												_1: {
+													ctor: '::',
+													_0: _elm_lang$html$Html$text(event.venue.name),
+													_1: {ctor: '[]'}
+												}
+											}),
+										_1: {ctor: '[]'}
+									}
+								}),
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$div,
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$class('pb2 flex justify-between items-center'),
+										_1: {ctor: '[]'}
+									},
+									{
+										ctor: '::',
+										_0: A2(
+											_elm_lang$html$Html$span,
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html_Attributes$class('fw4 o-60 ma0'),
+												_1: {ctor: '[]'}
+											},
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html$text(viewTime),
+												_1: {ctor: '[]'}
+											}),
+										_1: {
+											ctor: '::',
+											_0: A2(
+												_elm_lang$html$Html$ul,
+												{
+													ctor: '::',
+													_0: _elm_lang$html$Html_Attributes$class('pa0 ma0 list dib'),
+													_1: {ctor: '[]'}
+												},
+												A2(
+													_elm_lang$core$List$map,
+													function (x) {
+														return A2(
+															_elm_lang$html$Html$li,
+															{
+																ctor: '::',
+																_0: _elm_lang$html$Html_Attributes$class('ml2 dib'),
+																_1: {ctor: '[]'}
+															},
+															{
+																ctor: '::',
+																_0: _elm_lang$html$Html$text(
+																	_user$project$Assets$stringToEmoji(x.name)),
+																_1: {ctor: '[]'}
+															});
+													},
+													event.taxonomies)),
+											_1: {ctor: '[]'}
+										}
+									}),
+								_1: {ctor: '[]'}
+							}
+						}),
+					_1: {ctor: '[]'}
+				}
+			});
+	});
+var _user$project$Pages_Events$view = function (model) {
+	var mobileHide = function () {
+		var _p3 = model.route;
+		if ((_p3.ctor === 'GoEvents') && (_p3._0.ctor === 'Just')) {
+			return ' dn db-l ';
+		} else {
+			return '';
+		}
+	}();
+	var events = model.events;
+	return A2(
+		_elm_lang$html$Html$section,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class(
+				A2(_elm_lang$core$Basics_ops['++'], 'animated fadeInUp w-100 mw6-l overflow-auto z-999 flex-grow-1 shadow-2-l', mobileHide)),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$div,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('h5 flex flex-column justify-between pa3'),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: _user$project$Assets$discoverToolsView,
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$div,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$class('f1 f2-m lh-solid fw7 ma0 pa0'),
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text('discover events'),
+								_1: {ctor: '[]'}
+							}),
+						_1: {ctor: '[]'}
+					}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('bg-black-70'),
+						_1: {ctor: '[]'}
+					},
+					A2(
+						_elm_lang$core$List$map,
+						_user$project$Pages_Events$eventListView(events.currentDatetime),
+						events.seatgeek.events)),
+				_1: {ctor: '[]'}
+			}
+		});
+};
+var _user$project$Pages_Events$askQuery = function (query) {
+	var url = _user$project$SeatGeek_Query$composeRequest(query);
+	var request = A2(_elm_lang$http$Http$get, url, _user$project$SeatGeek_Decode$decodeReply);
+	return A2(_elm_lang$http$Http$send, _user$project$Types$GetReply, request);
+};

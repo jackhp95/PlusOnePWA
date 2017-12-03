@@ -1,0 +1,399 @@
+var _user$project$SeatGeek_Decode_ops = _user$project$SeatGeek_Decode_ops || {};
+_user$project$SeatGeek_Decode_ops['?'] = _elm_lang$core$Maybe$withDefault;
+var _user$project$SeatGeek_Decode_ops = _user$project$SeatGeek_Decode_ops || {};
+_user$project$SeatGeek_Decode_ops[':='] = _elm_lang$core$Json_Decode$field;
+var _user$project$SeatGeek_Decode$decodeGenre = A2(
+	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+	A2(
+		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+		A2(
+			_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+			A2(
+				_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+				A2(
+					_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+					_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeek_Types$Genre),
+					A2(_user$project$SeatGeek_Decode_ops[':='], 'slug', _elm_lang$core$Json_Decode$string)),
+				A2(_user$project$SeatGeek_Decode_ops[':='], 'name', _elm_lang$core$Json_Decode$string)),
+			_elm_lang$core$Json_Decode$maybe(
+				A2(_user$project$SeatGeek_Decode_ops[':='], 'image', _elm_lang$core$Json_Decode$string))),
+		A2(_user$project$SeatGeek_Decode_ops[':='], 'id', _elm_lang$core$Json_Decode$int)),
+	A2(
+		_elm_community$json_extra$Json_Decode_Extra$withDefault,
+		{ctor: '[]'},
+		A2(
+			_user$project$SeatGeek_Decode_ops[':='],
+			'images',
+			_elm_community$json_extra$Json_Decode_Extra$collection(_elm_lang$core$Json_Decode$string))));
+var _user$project$SeatGeek_Decode$decodeDivision = A2(
+	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+	A2(
+		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+		A2(
+			_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+			A2(
+				_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+				A2(
+					_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+					A2(
+						_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+						_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeek_Types$Division),
+						A2(_user$project$SeatGeek_Decode_ops[':='], 'display_type', _elm_lang$core$Json_Decode$string)),
+					_elm_lang$core$Json_Decode$maybe(
+						A2(_user$project$SeatGeek_Decode_ops[':='], 'short_name', _elm_lang$core$Json_Decode$string))),
+				A2(_user$project$SeatGeek_Decode_ops[':='], 'display_name', _elm_lang$core$Json_Decode$string)),
+			A2(_user$project$SeatGeek_Decode_ops[':='], 'division_level', _elm_lang$core$Json_Decode$int)),
+		_elm_lang$core$Json_Decode$maybe(
+			A2(_user$project$SeatGeek_Decode_ops[':='], 'slug', _elm_lang$core$Json_Decode$string))),
+	A2(_user$project$SeatGeek_Decode_ops[':='], 'taxonomy_id', _elm_lang$core$Json_Decode$int));
+var _user$project$SeatGeek_Decode$decodeTaxonomyStats = A2(
+	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+	A2(
+		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+		_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeek_Types$TaxonomyStats),
+		A2(_user$project$SeatGeek_Decode_ops[':='], 'performer_count', _elm_lang$core$Json_Decode$int)),
+	A2(_user$project$SeatGeek_Decode_ops[':='], 'event_count', _elm_lang$core$Json_Decode$int));
+var _user$project$SeatGeek_Decode$decodeTaxonomy = A2(
+	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+	A2(
+		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+		A2(
+			_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+			A2(
+				_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+				A2(
+					_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+					A2(
+						_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+						A2(
+							_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+							A2(
+								_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+								A2(
+									_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+									_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeek_Types$Taxonomy),
+									A2(
+										_elm_community$json_extra$Json_Decode_Extra$withDefault,
+										{ctor: '[]'},
+										A2(
+											_user$project$SeatGeek_Decode_ops[':='],
+											'images',
+											_elm_community$json_extra$Json_Decode_Extra$collection(_elm_lang$core$Json_Decode$string)))),
+								A2(_user$project$SeatGeek_Decode_ops[':='], 'name', _elm_lang$core$Json_Decode$string)),
+							_elm_lang$core$Json_Decode$maybe(
+								A2(_user$project$SeatGeek_Decode_ops[':='], 'short_name', _elm_lang$core$Json_Decode$string))),
+						_elm_lang$core$Json_Decode$maybe(
+							A2(_user$project$SeatGeek_Decode_ops[':='], 'parent_id', _elm_lang$core$Json_Decode$int))),
+					_elm_lang$core$Json_Decode$maybe(
+						A2(_user$project$SeatGeek_Decode_ops[':='], 'stats', _user$project$SeatGeek_Decode$decodeTaxonomyStats))),
+				A2(_user$project$SeatGeek_Decode_ops[':='], 'id', _elm_lang$core$Json_Decode$int)),
+			_elm_lang$core$Json_Decode$maybe(
+				A2(_user$project$SeatGeek_Decode_ops[':='], 'slug', _elm_lang$core$Json_Decode$string))),
+		_elm_lang$core$Json_Decode$maybe(
+			A2(_user$project$SeatGeek_Decode_ops[':='], 'image', _elm_lang$core$Json_Decode$string))),
+	_elm_lang$core$Json_Decode$maybe(
+		A2(_user$project$SeatGeek_Decode_ops[':='], 'is_visible', _elm_lang$core$Json_Decode$bool)));
+var _user$project$SeatGeek_Decode$decodePerformerStats = A2(
+	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+	_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeek_Types$PerformerStats),
+	A2(_user$project$SeatGeek_Decode_ops[':='], 'event_count', _elm_lang$core$Json_Decode$int));
+var _user$project$SeatGeek_Decode$decodePerformerColor = A2(
+	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+	A2(
+		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+		A2(
+			_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+			_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeek_Types$PerformerColor),
+			A2(
+				_user$project$SeatGeek_Decode_ops[':='],
+				'primary',
+				_elm_lang$core$Json_Decode$list(_elm_lang$core$Json_Decode$string))),
+		A2(
+			_user$project$SeatGeek_Decode_ops[':='],
+			'all',
+			_elm_lang$core$Json_Decode$list(_elm_lang$core$Json_Decode$string))),
+	A2(_user$project$SeatGeek_Decode_ops[':='], 'iconic', _elm_lang$core$Json_Decode$string));
+var _user$project$SeatGeek_Decode$decodePerformer = A2(
+	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+	A2(
+		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+		A2(
+			_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+			A2(
+				_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+				A2(
+					_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+					A2(
+						_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+						A2(
+							_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+							A2(
+								_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+								A2(
+									_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+									A2(
+										_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+										A2(
+											_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+											A2(
+												_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+												A2(
+													_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+													A2(
+														_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+														A2(
+															_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+															A2(
+																_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+																A2(
+																	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+																	A2(
+																		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+																		A2(
+																			_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+																			A2(
+																				_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+																				_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeek_Types$Performer),
+																				_elm_lang$core$Json_Decode$maybe(
+																					A2(_user$project$SeatGeek_Decode_ops[':='], 'image', _elm_lang$core$Json_Decode$string))),
+																			A2(
+																				_elm_community$json_extra$Json_Decode_Extra$withDefault,
+																				{ctor: '[]'},
+																				A2(
+																					_user$project$SeatGeek_Decode_ops[':='],
+																					'images',
+																					_elm_community$json_extra$Json_Decode_Extra$collection(_elm_lang$core$Json_Decode$string)))),
+																		_elm_lang$core$Json_Decode$maybe(
+																			A2(_user$project$SeatGeek_Decode_ops[':='], 'image_attribution', _elm_lang$core$Json_Decode$string))),
+																	A2(_user$project$SeatGeek_Decode_ops[':='], 'num_upcoming_events', _elm_lang$core$Json_Decode$int)),
+																_elm_lang$core$Json_Decode$maybe(
+																	A2(
+																		_user$project$SeatGeek_Decode_ops[':='],
+																		'divisions',
+																		_elm_lang$core$Json_Decode$list(_user$project$SeatGeek_Decode$decodeDivision)))),
+															_elm_lang$core$Json_Decode$maybe(
+																A2(
+																	_user$project$SeatGeek_Decode_ops[':='],
+																	'genres',
+																	_elm_lang$core$Json_Decode$list(_user$project$SeatGeek_Decode$decodeGenre)))),
+														A2(_user$project$SeatGeek_Decode_ops[':='], 'stats', _user$project$SeatGeek_Decode$decodePerformerStats)),
+													A2(_user$project$SeatGeek_Decode_ops[':='], 'url', _elm_lang$core$Json_Decode$string)),
+												_elm_lang$core$Json_Decode$maybe(
+													A2(_user$project$SeatGeek_Decode_ops[':='], 'home_venue_id', _elm_lang$core$Json_Decode$int))),
+											A2(_user$project$SeatGeek_Decode_ops[':='], 'type', _elm_lang$core$Json_Decode$string)),
+										A2(
+											_elm_community$json_extra$Json_Decode_Extra$withDefault,
+											0.0,
+											A2(_user$project$SeatGeek_Decode_ops[':='], 'score', _elm_lang$core$Json_Decode$float))),
+									A2(_user$project$SeatGeek_Decode_ops[':='], 'slug', _elm_lang$core$Json_Decode$string)),
+								_elm_lang$core$Json_Decode$maybe(
+									A2(_user$project$SeatGeek_Decode_ops[':='], 'primary', _elm_lang$core$Json_Decode$bool))),
+							_elm_lang$core$Json_Decode$maybe(
+								A2(_user$project$SeatGeek_Decode_ops[':='], 'colors', _user$project$SeatGeek_Decode$decodePerformerColor))),
+						_elm_lang$core$Json_Decode$maybe(
+							A2(_user$project$SeatGeek_Decode_ops[':='], 'image_license', _elm_lang$core$Json_Decode$string))),
+					A2(_user$project$SeatGeek_Decode_ops[':='], 'name', _elm_lang$core$Json_Decode$string)),
+				A2(_user$project$SeatGeek_Decode_ops[':='], 'popularity', _elm_lang$core$Json_Decode$float)),
+			A2(
+				_user$project$SeatGeek_Decode_ops[':='],
+				'taxonomies',
+				_elm_lang$core$Json_Decode$list(_user$project$SeatGeek_Decode$decodeTaxonomy))),
+		A2(_user$project$SeatGeek_Decode_ops[':='], 'id', _elm_lang$core$Json_Decode$int)),
+	A2(_user$project$SeatGeek_Decode_ops[':='], 'short_name', _elm_lang$core$Json_Decode$string));
+var _user$project$SeatGeek_Decode$decodeGCS = A2(
+	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+	A2(
+		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+		_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeek_Types$GCS),
+		A2(_user$project$SeatGeek_Decode_ops[':='], 'lon', _elm_lang$core$Json_Decode$float)),
+	A2(_user$project$SeatGeek_Decode_ops[':='], 'lat', _elm_lang$core$Json_Decode$float));
+var _user$project$SeatGeek_Decode$decodeVenue = A2(
+	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+	A2(
+		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+		A2(
+			_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+			A2(
+				_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+				A2(
+					_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+					A2(
+						_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+						A2(
+							_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+							A2(
+								_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+								A2(
+									_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+									A2(
+										_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+										A2(
+											_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+											A2(
+												_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+												A2(
+													_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+													A2(
+														_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+														A2(
+															_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+															A2(
+																_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+																A2(
+																	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+																	_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeek_Types$Venue),
+																	A2(_user$project$SeatGeek_Decode_ops[':='], 'name', _elm_lang$core$Json_Decode$string)),
+																A2(_user$project$SeatGeek_Decode_ops[':='], 'display_location', _elm_lang$core$Json_Decode$string)),
+															A2(_user$project$SeatGeek_Decode_ops[':='], 'popularity', _elm_lang$core$Json_Decode$float)),
+														A2(_user$project$SeatGeek_Decode_ops[':='], 'extended_address', _elm_lang$core$Json_Decode$string)),
+													A2(_user$project$SeatGeek_Decode_ops[':='], 'location', _user$project$SeatGeek_Decode$decodeGCS)),
+												A2(_user$project$SeatGeek_Decode_ops[':='], 'name_v2', _elm_lang$core$Json_Decode$string)),
+											_elm_lang$core$Json_Decode$maybe(
+												A2(_user$project$SeatGeek_Decode_ops[':='], 'state', _elm_lang$core$Json_Decode$string))),
+										A2(_user$project$SeatGeek_Decode_ops[':='], 'num_upcoming_events', _elm_lang$core$Json_Decode$int)),
+									A2(_user$project$SeatGeek_Decode_ops[':='], 'id', _elm_lang$core$Json_Decode$int)),
+								A2(_user$project$SeatGeek_Decode_ops[':='], 'slug', _elm_lang$core$Json_Decode$string)),
+							_elm_lang$core$Json_Decode$maybe(
+								A2(_user$project$SeatGeek_Decode_ops[':='], 'timezone', _elm_lang$core$Json_Decode$string))),
+						A2(_user$project$SeatGeek_Decode_ops[':='], 'url', _elm_lang$core$Json_Decode$string)),
+					A2(_user$project$SeatGeek_Decode_ops[':='], 'postal_code', _elm_lang$core$Json_Decode$string)),
+				A2(_user$project$SeatGeek_Decode_ops[':='], 'city', _elm_lang$core$Json_Decode$string)),
+			A2(_user$project$SeatGeek_Decode_ops[':='], 'country', _elm_lang$core$Json_Decode$string)),
+		A2(_user$project$SeatGeek_Decode_ops[':='], 'score', _elm_lang$core$Json_Decode$float)),
+	A2(_user$project$SeatGeek_Decode_ops[':='], 'address', _elm_lang$core$Json_Decode$string));
+var _user$project$SeatGeek_Decode$decodeTickets = A2(
+	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+	A2(
+		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+		A2(
+			_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+			A2(
+				_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+				A2(
+					_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+					_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeek_Types$Tickets),
+					_elm_lang$core$Json_Decode$maybe(
+						A2(_user$project$SeatGeek_Decode_ops[':='], 'listing_count', _elm_lang$core$Json_Decode$int))),
+				_elm_lang$core$Json_Decode$maybe(
+					A2(_user$project$SeatGeek_Decode_ops[':='], 'highest_price', _elm_lang$core$Json_Decode$float))),
+			_elm_lang$core$Json_Decode$maybe(
+				A2(_user$project$SeatGeek_Decode_ops[':='], 'average_price', _elm_lang$core$Json_Decode$float))),
+		_elm_lang$core$Json_Decode$maybe(
+			A2(_user$project$SeatGeek_Decode_ops[':='], 'lowest_price_good_deals', _elm_lang$core$Json_Decode$float))),
+	_elm_lang$core$Json_Decode$maybe(
+		A2(_user$project$SeatGeek_Decode_ops[':='], 'lowest_price', _elm_lang$core$Json_Decode$float)));
+var _user$project$SeatGeek_Decode$decodeEvent = A2(
+	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+	A2(
+		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+		A2(
+			_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+			A2(
+				_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+				A2(
+					_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+					A2(
+						_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+						A2(
+							_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+							A2(
+								_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+								A2(
+									_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+									A2(
+										_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+										A2(
+											_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+											A2(
+												_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+												A2(
+													_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+													A2(
+														_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+														A2(
+															_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+															A2(
+																_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+																A2(
+																	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+																	A2(
+																		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+																		_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeek_Types$Event),
+																		A2(_user$project$SeatGeek_Decode_ops[':='], 'datetime_utc', _elm_lang$core$Json_Decode$string)),
+																	A2(_user$project$SeatGeek_Decode_ops[':='], 'visible_until_utc', _elm_lang$core$Json_Decode$string)),
+																A2(_user$project$SeatGeek_Decode_ops[':='], 'datetime_local', _elm_lang$core$Json_Decode$string)),
+															A2(_user$project$SeatGeek_Decode_ops[':='], 'time_tbd', _elm_lang$core$Json_Decode$bool)),
+														A2(
+															_user$project$SeatGeek_Decode_ops[':='],
+															'taxonomies',
+															_elm_lang$core$Json_Decode$list(_user$project$SeatGeek_Decode$decodeTaxonomy))),
+													A2(_user$project$SeatGeek_Decode_ops[':='], 'type', _elm_lang$core$Json_Decode$string)),
+												A2(_user$project$SeatGeek_Decode_ops[':='], 'created_at', _elm_lang$core$Json_Decode$string)),
+											A2(
+												_user$project$SeatGeek_Decode_ops[':='],
+												'performers',
+												_elm_lang$core$Json_Decode$list(_user$project$SeatGeek_Decode$decodePerformer))),
+										A2(
+											_elm_community$json_extra$Json_Decode_Extra$withDefault,
+											0.0,
+											A2(_user$project$SeatGeek_Decode_ops[':='], 'score', _elm_lang$core$Json_Decode$float))),
+									A2(_user$project$SeatGeek_Decode_ops[':='], 'short_title', _elm_lang$core$Json_Decode$string)),
+								A2(_user$project$SeatGeek_Decode_ops[':='], 'venue', _user$project$SeatGeek_Decode$decodeVenue)),
+							A2(_user$project$SeatGeek_Decode_ops[':='], 'id', _elm_lang$core$Json_Decode$int)),
+						A2(_user$project$SeatGeek_Decode_ops[':='], 'stats', _user$project$SeatGeek_Decode$decodeTickets)),
+					A2(_user$project$SeatGeek_Decode_ops[':='], 'date_tbd', _elm_lang$core$Json_Decode$bool)),
+				A2(_user$project$SeatGeek_Decode_ops[':='], 'title', _elm_lang$core$Json_Decode$string)),
+			A2(_user$project$SeatGeek_Decode_ops[':='], 'popularity', _elm_lang$core$Json_Decode$float)),
+		A2(_user$project$SeatGeek_Decode_ops[':='], 'url', _elm_lang$core$Json_Decode$string)),
+	A2(_user$project$SeatGeek_Decode_ops[':='], 'announce_date', _elm_lang$core$Json_Decode$string));
+var _user$project$SeatGeek_Decode$decodeMetaGeolocation = A2(
+	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+	A2(
+		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+		A2(
+			_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+			A2(
+				_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+				A2(
+					_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+					A2(
+						_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+						A2(
+							_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+							A2(
+								_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+								_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeek_Types$MetaGeolocation),
+								A2(_user$project$SeatGeek_Decode_ops[':='], 'state', _elm_lang$core$Json_Decode$string)),
+							A2(_user$project$SeatGeek_Decode_ops[':='], 'postal_code', _elm_lang$core$Json_Decode$string)),
+						A2(_user$project$SeatGeek_Decode_ops[':='], 'lat', _elm_lang$core$Json_Decode$float)),
+					A2(_user$project$SeatGeek_Decode_ops[':='], 'range', _elm_lang$core$Json_Decode$string)),
+				A2(_user$project$SeatGeek_Decode_ops[':='], 'display_name', _elm_lang$core$Json_Decode$string)),
+			A2(_user$project$SeatGeek_Decode_ops[':='], 'city', _elm_lang$core$Json_Decode$string)),
+		A2(_user$project$SeatGeek_Decode_ops[':='], 'country', _elm_lang$core$Json_Decode$string)),
+	A2(_user$project$SeatGeek_Decode_ops[':='], 'lon', _elm_lang$core$Json_Decode$float));
+var _user$project$SeatGeek_Decode$decodeReplyMeta = A2(
+	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+	A2(
+		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+		A2(
+			_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+			A2(
+				_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+				A2(
+					_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+					_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeek_Types$ReplyMeta),
+					A2(_user$project$SeatGeek_Decode_ops[':='], 'per_page', _elm_lang$core$Json_Decode$int)),
+				A2(_user$project$SeatGeek_Decode_ops[':='], 'took', _elm_lang$core$Json_Decode$int)),
+			A2(_user$project$SeatGeek_Decode_ops[':='], 'geolocation', _user$project$SeatGeek_Decode$decodeMetaGeolocation)),
+		A2(_user$project$SeatGeek_Decode_ops[':='], 'total', _elm_lang$core$Json_Decode$int)),
+	A2(_user$project$SeatGeek_Decode_ops[':='], 'page', _elm_lang$core$Json_Decode$int));
+var _user$project$SeatGeek_Decode$decodeReply = A2(
+	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+	A2(
+		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+		_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeek_Types$Reply),
+		A2(_user$project$SeatGeek_Decode_ops[':='], 'meta', _user$project$SeatGeek_Decode$decodeReplyMeta)),
+	A2(
+		_user$project$SeatGeek_Decode_ops[':='],
+		'events',
+		_elm_lang$core$Json_Decode$list(_user$project$SeatGeek_Decode$decodeEvent)));

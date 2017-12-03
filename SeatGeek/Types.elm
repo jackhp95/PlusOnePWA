@@ -1,10 +1,14 @@
-module SeatGeekTypes exposing (..)
+module SeatGeek.Types exposing (..)
 
 
 type alias SeatGeek =
     { reply : Reply
     , query : Query
     }
+
+
+
+-- REPLY --
 
 
 type alias Reply =
@@ -33,98 +37,6 @@ emptyReply =
         }
     , events = []
     }
-
-
-type alias Query =
-    { endpoint : Endpoint
-    , arguments : Arguments
-    , geoip : String
-    , lat : String
-    , lon : String
-    , range : String
-    , per_page : String
-    , page : String
-    , sort : SortArguments
-    , aid : String
-    , rid : String
-    , client_id : String
-    }
-
-
-initQuery : Query
-initQuery =
-    { endpoint = Events Nothing
-    , arguments = initArguments
-    , geoip = ""
-    , lat = ""
-    , lon = ""
-    , range = ""
-    , per_page = ""
-    , page = ""
-    , sort = { field = Datetime_utc, direction = Asc }
-    , aid = ""
-    , rid = ""
-    , client_id = "MzUwNDE1NnwxNDgxNjA1ODM2"
-    }
-
-
-type Endpoint
-    = Events (Maybe String)
-    | Performers (Maybe String)
-    | Venues (Maybe String)
-    | Recommendations
-    | Taxonomies
-    | Genres
-
-
-type alias Arguments =
-    { performers : String
-    , venues : String
-    , datetime : String
-    , query : String
-    , id : String
-    , taxonomies : String
-    , slug : String
-    , genres : String
-    , city : String
-    , state : String
-    , country : String
-    , postal_code : String
-    }
-
-
-initArguments : Arguments
-initArguments =
-    { performers = ""
-    , venues = ""
-    , datetime = ""
-    , query = ""
-    , id = ""
-    , taxonomies = ""
-    , slug = ""
-    , genres = ""
-    , city = ""
-    , state = ""
-    , country = ""
-    , postal_code = ""
-    }
-
-
-type alias SortArguments =
-    { field : SortField
-    , direction : SortDirection
-    }
-
-
-type SortField
-    = Datetime_local
-    | Datetime_utc
-    | Announce_date
-
-
-type SortDirection
-    = Asc
-    | Desc
 
 
 type alias MetaGeolocation =
@@ -288,3 +200,99 @@ type alias Division =
     , slug : Maybe String
     , taxonomy_id : Int
     }
+
+
+
+-- QUERY --
+
+
+type alias Query =
+    { endpoint : Endpoint
+    , arguments : Arguments
+    , geoip : String
+    , lat : String
+    , lon : String
+    , range : String
+    , per_page : String
+    , page : String
+    , sort : SortArguments
+    , aid : String
+    , rid : String
+    , client_id : String
+    }
+
+
+initQuery : Query
+initQuery =
+    { endpoint = Events Nothing
+    , arguments = initArguments
+    , geoip = ""
+    , lat = ""
+    , lon = ""
+    , range = ""
+    , per_page = ""
+    , page = ""
+    , sort = { field = Datetime_utc, direction = Asc }
+    , aid = ""
+    , rid = ""
+    , client_id = "MzUwNDE1NnwxNDgxNjA1ODM2"
+    }
+
+
+type Endpoint
+    = Events (Maybe String)
+    | Performers (Maybe String)
+    | Venues (Maybe String)
+    | Recommendations
+    | Taxonomies
+    | Genres
+
+
+type alias Arguments =
+    { performers : String
+    , venues : String
+    , datetime : String
+    , query : String
+    , id : String
+    , taxonomies : String
+    , slug : String
+    , genres : String
+    , city : String
+    , state : String
+    , country : String
+    , postal_code : String
+    }
+
+
+initArguments : Arguments
+initArguments =
+    { performers = ""
+    , venues = ""
+    , datetime = ""
+    , query = ""
+    , id = ""
+    , taxonomies = ""
+    , slug = ""
+    , genres = ""
+    , city = ""
+    , state = ""
+    , country = ""
+    , postal_code = ""
+    }
+
+
+type alias SortArguments =
+    { field : SortField
+    , direction : SortDirection
+    }
+
+
+type SortField
+    = Datetime_local
+    | Datetime_utc
+    | Announce_date
+
+
+type SortDirection
+    = Asc
+    | Desc

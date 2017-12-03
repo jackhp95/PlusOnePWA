@@ -1,5 +1,5 @@
 var _user$project$Types$initClient = {textAreaHeight: 10};
-var _user$project$Types$initEvents = {seatgeek: _user$project$SeatGeekTypes$emptyReply, selectedEvent: _elm_lang$core$Maybe$Nothing, currentDatetime: _elm_lang$core$Maybe$Nothing};
+var _user$project$Types$initEvents = {seatgeek: _user$project$SeatGeek_Types$emptyReply, currentDatetime: _elm_lang$core$Maybe$Nothing};
 var _user$project$Types$initTrait = {
 	ctor: '::',
 	_0: {name: 'night owl', from: 'tommy', datetime: ''},
@@ -52,18 +52,25 @@ var _user$project$Types$Trait = F3(
 	function (a, b, c) {
 		return {name: a, from: b, datetime: c};
 	});
-var _user$project$Types$Events = F3(
-	function (a, b, c) {
-		return {seatgeek: a, selectedEvent: b, currentDatetime: c};
+var _user$project$Types$Events = F2(
+	function (a, b) {
+		return {seatgeek: a, currentDatetime: b};
 	});
 var _user$project$Types$Client = function (a) {
 	return {textAreaHeight: a};
 };
-var _user$project$Types$GoEvents = {ctor: 'GoEvents'};
-var _user$project$Types$GoEvent = {ctor: 'GoEvent'};
+var _user$project$Types$GoEvents = function (a) {
+	return {ctor: 'GoEvents', _0: a};
+};
+var _user$project$Types$initModel = A5(
+	_user$project$Types$Model,
+	_user$project$Types$GoEvents(_elm_lang$core$Maybe$Nothing),
+	_user$project$Types$initChat,
+	_user$project$Types$initProfile,
+	_user$project$Types$initEvents,
+	_user$project$Types$initClient);
 var _user$project$Types$GoProfile = {ctor: 'GoProfile'};
 var _user$project$Types$GoChat = {ctor: 'GoChat'};
-var _user$project$Types$initModel = A5(_user$project$Types$Model, _user$project$Types$GoChat, _user$project$Types$initChat, _user$project$Types$initProfile, _user$project$Types$initEvents, _user$project$Types$initClient);
 var _user$project$Types$TextAreaResizer = function (a) {
 	return {ctor: 'TextAreaResizer', _0: a};
 };

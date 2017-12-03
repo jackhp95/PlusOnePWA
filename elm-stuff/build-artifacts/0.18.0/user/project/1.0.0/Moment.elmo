@@ -1,0 +1,75 @@
+var _user$project$Moment$clockTime = function (x) {
+	return A3(_rluiten$elm_date_extra$Date_Extra_Format$format, _rluiten$elm_date_extra$Date_Extra_Config_Config_en_us$config, '%-I:%M %P', x);
+};
+var _user$project$Moment$fullDate = function (x) {
+	return A3(_rluiten$elm_date_extra$Date_Extra_Format$format, _rluiten$elm_date_extra$Date_Extra_Config_Config_en_us$config, '%A, %B %@e, %Y', x);
+};
+var _user$project$Moment$thisPartOfDay = function (hour) {
+	return _elm_lang$core$Native_Utils.eq(hour, 1) ? 'in an hour' : A2(
+		_elm_lang$core$Basics_ops['++'],
+		'in ',
+		A2(
+			_elm_lang$core$Basics_ops['++'],
+			_elm_lang$core$Basics$toString(hour),
+			' hours'));
+};
+var _user$project$Moment$somePartOfDay = F2(
+	function (hour, day) {
+		return _elm_lang$core$Native_Utils.eq(hour, 0) ? A2(_elm_lang$core$Basics_ops['++'], day, ' at midnight') : ((_elm_lang$core$Native_Utils.cmp(hour, 3) < 0) ? A2(_elm_lang$core$Basics_ops['++'], day, ' after midnight') : ((_elm_lang$core$Native_Utils.cmp(hour, 5) < 0) ? A2(_elm_lang$core$Basics_ops['++'], day, ' at dawn') : ((_elm_lang$core$Native_Utils.cmp(hour, 8) < 0) ? A2(
+			_elm_lang$core$Basics_ops['++'],
+			'early ',
+			A2(_elm_lang$core$Basics_ops['++'], day, ' morning')) : ((_elm_lang$core$Native_Utils.cmp(hour, 10) < 0) ? A2(_elm_lang$core$Basics_ops['++'], day, ' morning') : ((_elm_lang$core$Native_Utils.cmp(hour, 12) < 0) ? A2(
+			_elm_lang$core$Basics_ops['++'],
+			'late ',
+			A2(_elm_lang$core$Basics_ops['++'], day, ' morning')) : (_elm_lang$core$Native_Utils.eq(hour, 12) ? A2(_elm_lang$core$Basics_ops['++'], day, ' at noon') : ((_elm_lang$core$Native_Utils.cmp(hour, 15) < 0) ? A2(_elm_lang$core$Basics_ops['++'], day, ' afternoon') : ((_elm_lang$core$Native_Utils.cmp(hour, 17) < 0) ? A2(
+			_elm_lang$core$Basics_ops['++'],
+			'late ',
+			A2(_elm_lang$core$Basics_ops['++'], day, ' afternoon')) : ((_elm_lang$core$Native_Utils.cmp(hour, 20) < 0) ? A2(_elm_lang$core$Basics_ops['++'], day, ' evening') : ((_elm_lang$core$Native_Utils.cmp(hour, 23) < 0) ? A2(_elm_lang$core$Basics_ops['++'], day, ' night') : ((_elm_lang$core$Native_Utils.cmp(hour, 24) < 0) ? A2(
+			_elm_lang$core$Basics_ops['++'],
+			'late ',
+			A2(_elm_lang$core$Basics_ops['++'], day, ' night')) : 'For some reason, I think there are more than 24 hours in a day.')))))))))));
+	});
+var _user$project$Moment$simpleTime = F2(
+	function (delta, maybeEventDate) {
+		var _p0 = maybeEventDate;
+		if (_p0.ctor === 'Nothing') {
+			return 'welp, I couldn\'t determine the date of the event';
+		} else {
+			var _p1 = _p0._0;
+			return A2(
+				_elm_lang$core$String$contains,
+				'-',
+				_elm_lang$core$Basics$toString(delta)) ? 'happening now' : ((_elm_lang$core$Native_Utils.cmp(delta.year, 1) > 0) ? 'in over a year' : (_elm_lang$core$Native_Utils.eq(delta.year, 1) ? 'in a year' : ((_elm_lang$core$Native_Utils.cmp(delta.month, 1) > 0) ? A2(
+				_elm_lang$core$Basics_ops['++'],
+				'in ',
+				_rluiten$elm_date_extra$Date_Extra_I18n_I_en_us$monthName(
+					_elm_lang$core$Date$month(_p1))) : (_elm_lang$core$Native_Utils.eq(delta.month, 1) ? 'next month' : ((_elm_lang$core$Native_Utils.cmp(delta.day, 13) > 0) ? A2(
+				_elm_lang$core$Basics_ops['++'],
+				'in ',
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					_elm_lang$core$Basics$toString((delta.day / 7) | 0),
+					' weeks')) : ((_elm_lang$core$Native_Utils.cmp(delta.day, 6) > 0) ? A2(
+				_elm_lang$core$Basics_ops['++'],
+				'next ',
+				_rluiten$elm_date_extra$Date_Extra_I18n_I_en_us$dayName(
+					_elm_lang$core$Date$dayOfWeek(_p1))) : ((_elm_lang$core$Native_Utils.cmp(delta.day, 1) > 0) ? A2(
+				_user$project$Moment$somePartOfDay,
+				_elm_lang$core$Date$hour(_p1),
+				_rluiten$elm_date_extra$Date_Extra_I18n_I_en_us$dayName(
+					_elm_lang$core$Date$dayOfWeek(_p1))) : (_elm_lang$core$Native_Utils.eq(delta.day, 1) ? A2(
+				_user$project$Moment$somePartOfDay,
+				_elm_lang$core$Date$hour(_p1),
+				_rluiten$elm_date_extra$Date_Extra_I18n_I_en_us$dayName(
+					_elm_lang$core$Date$dayOfWeek(_p1))) : _user$project$Moment$thisPartOfDay(
+				_elm_lang$core$Date$hour(_p1))))))))));
+		}
+	});
+var _user$project$Moment$maybeEventDate = function (date) {
+	return _elm_lang$core$Result$toMaybe(
+		_elm_lang$core$Date$fromString(date));
+};
+var _user$project$Moment$deltaTime = F2(
+	function (now, upcoming) {
+		return A3(_elm_lang$core$Maybe$map2, _rluiten$elm_date_extra$Date_Extra_Duration$diff, upcoming, now);
+	});

@@ -2,13 +2,36 @@ var _user$project$View$page = function (model) {
 	var _p0 = model.route;
 	switch (_p0.ctor) {
 		case 'GoChat':
-			return _user$project$Chat$view(model);
+			return {
+				ctor: '::',
+				_0: _user$project$Pages_Chat$view(model),
+				_1: {ctor: '[]'}
+			};
 		case 'GoProfile':
-			return _user$project$Profile$view(model);
-		case 'GoEvent':
-			return _user$project$Chat$view(model);
+			return {
+				ctor: '::',
+				_0: _user$project$Pages_Profile$view(model),
+				_1: {ctor: '[]'}
+			};
 		default:
-			return _user$project$Events$eventsView(model.events);
+			var _p1 = _p0._0;
+			if (_p1.ctor === 'Nothing') {
+				return {
+					ctor: '::',
+					_0: _user$project$Pages_Events$view(model),
+					_1: {ctor: '[]'}
+				};
+			} else {
+				return {
+					ctor: '::',
+					_0: _user$project$Pages_Events$view(model),
+					_1: {
+						ctor: '::',
+						_0: A2(_user$project$Pages_Event$view, _p1._0, model.events.currentDatetime),
+						_1: {ctor: '[]'}
+					}
+				};
+			}
 	}
 };
 var _user$project$View$render = function (model) {
@@ -37,11 +60,7 @@ var _user$project$View$render = function (model) {
 									_0: _elm_lang$html$Html_Attributes$class('flex-auto pt5-m pb5 pb0-ns flex justify-stretch'),
 									_1: {ctor: '[]'}
 								},
-								{
-									ctor: '::',
-									_0: _user$project$View$page(model),
-									_1: {ctor: '[]'}
-								}),
+								_user$project$View$page(model)),
 							_1: {ctor: '[]'}
 						}
 					})),

@@ -2,7 +2,7 @@
 -- http://package.elm-lang.org/packages/mpizenberg/elm-touch-events/latest
 
 
-module Main exposing (..)
+module Pages.Pool exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)

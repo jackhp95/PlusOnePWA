@@ -19,8 +19,8 @@ selections =
             Page x y z
     in
         List.map makePage
-            [ ( "discover", "compass", GoEvents )
-            , ( "add", "plus-square", GoEvent )
+            [ ( "discover", "compass", GoEvents Nothing )
+            , ( "add", "plus-square", GoEvents Nothing )
             , ( "share", "share-2", GoChat )
             , ( "chats", "message-square", GoChat )
             , ( "profile", "user", GoProfile )

@@ -5,7 +5,7 @@ module Types exposing (..)
 import Http exposing (Error)
 import Date exposing (..)
 import Task exposing (perform)
-import SeatGeekTypes as SG
+import SeatGeek.Types as SG
 
 
 -- MODEL --
@@ -23,7 +23,7 @@ type alias Model =
 initModel : Model
 initModel =
     Model
-        GoChat
+        (GoEvents Nothing)
         initChat
         initProfile
         initEvents
@@ -40,8 +40,7 @@ type alias Page =
 type Route
     = GoChat
     | GoProfile
-    | GoEvent
-    | GoEvents
+    | GoEvents (Maybe SG.Event)
 
 
 
@@ -102,7 +101,6 @@ initTrait =
 
 type alias Events =
     { seatgeek : SG.Reply
-    , selectedEvent : Maybe Int
     , currentDatetime : Maybe Date
     }
 
@@ -110,7 +108,6 @@ type alias Events =
 initEvents : Events
 initEvents =
     { seatgeek = SG.emptyReply
-    , selectedEvent = Nothing
     , currentDatetime = Nothing
     }
 
@@ -138,7 +135,7 @@ type
     | SendChatMessage
     | NewMessage String
       -- Events
-    | ViewEvent (Maybe Int)
+    | ViewEvent Route
     | OnDatetime Date
       -- SeatGeek
       -- | Discover

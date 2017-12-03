@@ -4,8 +4,9 @@ import View exposing (render)
 import Types exposing (..)
 import Html exposing (..)
 import WebSocket
-import SeatGeek
-import SeatGeekTypes as SG
+import SeatGeek.Query
+import SeatGeek.Decode
+import SeatGeek.Types as SG
 
 
 -- Try to reomve these?
@@ -21,7 +22,10 @@ echoServer =
 
 initCmd : Cmd Msg
 initCmd =
-    Cmd.batch [ SeatGeek.askQuery SG.initQuery, getDatetime ]
+    Cmd.batch
+        [ SeatGeek.Query.askQuery SG.initQuery
+        , getDatetime
+        ]
 
 
 getDatetime : Cmd Msg
@@ -77,20 +81,9 @@ update msg model =
                 ( model, Cmd.none )
 
             -- EVENTS
-            ViewEvent (Just id) ->
+            ViewEvent event ->
                 ( { model
-                    | events =
-                        { events | selectedEvent = Just id }
-                  }
-                , Cmd.none
-                )
-
-            ViewEvent Nothing ->
-                ( { model
-                    | events =
-                        { events
-                            | selectedEvent = Nothing
-                        }
+                    | route = event
                   }
                 , Cmd.none
                 )

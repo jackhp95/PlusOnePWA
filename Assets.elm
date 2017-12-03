@@ -6,7 +6,7 @@
 module Assets exposing (..)
 
 import Html exposing (..)
-import Html.Attributes exposing (style)
+import Html.Attributes exposing (style, class)
 
 
 bgImg : String -> Attribute msg
@@ -17,6 +17,120 @@ bgImg imgPath =
 feather : String -> Html.Attribute msg
 feather icon =
     bgImg ("https://icongr.am/feather/" ++ icon ++ ".svg?size=20&color=ffffff")
+
+
+discoverToolsView : Html msg
+discoverToolsView =
+    let
+        icon x =
+            div [ class "animated bounceIn pointer hover-bg-black-50 br-pill pa2" ]
+                [ div [ feather x, class "contain bg-center grow pt3 pb2 pl3 pr2" ] []
+                ]
+    in
+        div [ class "flex justify-end" ]
+            (List.map icon
+                [ "search"
+                , "map-pin"
+                , "thumbs-up"
+                , "tag"
+                , "at-sign"
+                ]
+            )
+
+
+stringToEmoji : String -> String
+stringToEmoji string =
+    case string of
+        "concert" ->
+            "🎵"
+
+        "music_festival" ->
+            "🎶"
+
+        "sports" ->
+            "🏆"
+
+        "theater" ->
+            "🎭"
+
+        "basketball" ->
+            "🏀"
+
+        "nba" ->
+            "⛹"
+
+        "ncaa_football" ->
+            "👨\x1F3FB\x200D🎓"
+
+        "ncaa_basketball" ->
+            "👨\x1F3FB\x200D🎓"
+
+        "ncaa_womens_basketball" ->
+            "👩\x200D🎓"
+
+        "wnba" ->
+            "⛹️\x200D♀️"
+
+        "family" ->
+            "🚸"
+
+        "broadway_tickets_national" ->
+            "🎟"
+
+        "dance_performance_tour" ->
+            "💃"
+
+        "classical" ->
+            "🎼"
+
+        "classical_orchestral_instrumental" ->
+            "🎻"
+
+        "comedy" ->
+            "\x1F923"
+
+        "hockey" ->
+            "\x1F3D2"
+
+        "fighting" ->
+            "\x1F93C\x200D♂️"
+
+        "soccer" ->
+            "⚽"
+
+        "wrestling" ->
+            "\x1F93C"
+
+        "football" ->
+            "🏈"
+
+        "auto_racing" ->
+            "🏎️"
+
+        "animal_sports" ->
+            "🐾"
+
+        "horse_racing" ->
+            "🏇"
+
+        "rodeo" ->
+            "\x1F920"
+
+        "nfl" ->
+            "🏟️"
+
+        "cirque_du_soleil" ->
+            "\x1F938"
+
+        "classical_opera" ->
+            "🎤"
+
+        _ ->
+            "\x1F937"
+
+
+
+-- GRADIENTS --
 
 
 gradients : List String
@@ -79,3 +193,20 @@ gradients =
     , "lg-yellow-red"
     , "lg-red-magenta"
     ]
+
+
+randomGradient : Int -> String
+randomGradient seed =
+    let
+        randomIndex =
+            seed % (List.length gradients)
+
+        selectedGradient =
+            List.head (List.drop randomIndex gradients)
+    in
+        case selectedGradient of
+            Nothing ->
+                ""
+
+            Just result ->
+                result ++ ""

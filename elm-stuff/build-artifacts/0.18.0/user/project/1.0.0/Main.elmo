@@ -22,33 +22,13 @@ var _user$project$Main$update = F2(
 			case 'NewMessage':
 				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 			case 'ViewEvent':
-				if (_p0._0.ctor === 'Just') {
-					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Native_Utils.update(
-							model,
-							{
-								events: _elm_lang$core$Native_Utils.update(
-									events,
-									{
-										selectedEvent: _elm_lang$core$Maybe$Just(_p0._0._0)
-									})
-							}),
-						_1: _elm_lang$core$Platform_Cmd$none
-					};
-				} else {
-					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Native_Utils.update(
-							model,
-							{
-								events: _elm_lang$core$Native_Utils.update(
-									events,
-									{selectedEvent: _elm_lang$core$Maybe$Nothing})
-							}),
-						_1: _elm_lang$core$Platform_Cmd$none
-					};
-				}
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{route: _p0._0}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
 			case 'OnDatetime':
 				return {
 					ctor: '_Tuple2',
@@ -87,7 +67,7 @@ var _user$project$Main$update = F2(
 									events,
 									{
 										seatgeek: A2(
-											_user$project$SeatGeekTypes$Reply,
+											_user$project$SeatGeek_Types$Reply,
 											_p1.meta,
 											A2(_elm_lang$core$Basics_ops['++'], events.seatgeek.events, _p1.events))
 									})
@@ -107,7 +87,7 @@ var _user$project$Main$getDatetime = A2(_elm_lang$core$Task$perform, _user$proje
 var _user$project$Main$initCmd = _elm_lang$core$Platform_Cmd$batch(
 	{
 		ctor: '::',
-		_0: _user$project$SeatGeek$askQuery(_user$project$SeatGeekTypes$initQuery),
+		_0: _user$project$SeatGeek_Query$askQuery(_user$project$SeatGeek_Types$initQuery),
 		_1: {
 			ctor: '::',
 			_0: _user$project$Main$getDatetime,
