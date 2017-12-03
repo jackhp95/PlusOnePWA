@@ -145,8 +145,13 @@ var _user$project$Pages_Event$eventBanner = function (event) {
 										_0: _user$project$Assets$feather('life-buoy'),
 										_1: {
 											ctor: '::',
-											_0: _elm_lang$html$Html_Attributes$class('h3 w3 contain'),
-											_1: {ctor: '[]'}
+											_0: _elm_lang$html$Html_Events$onClick(
+												_user$project$Types$ChangeTo(_user$project$Types$GoPool)),
+											_1: {
+												ctor: '::',
+												_0: _elm_lang$html$Html_Attributes$class('h3 w3 contain'),
+												_1: {ctor: '[]'}
+											}
 										}
 									},
 									{ctor: '[]'}),
@@ -299,7 +304,8 @@ var _user$project$Pages_Event$eventPool = A2(
 				_elm_lang$html$Html$a,
 				{
 					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$href('Pool.html'),
+					_0: _elm_lang$html$Html_Events$onClick(
+						_user$project$Types$ChangeTo(_user$project$Types$GoPool)),
 					_1: {
 						ctor: '::',
 						_0: _elm_lang$html$Html_Attributes$class('white link lg-breathe-50 br1 pa2 mh1 flex items-center mh1 grow'),
@@ -344,7 +350,12 @@ var _user$project$Pages_Event$eventPool = A2(
 					{
 						ctor: '::',
 						_0: _elm_lang$html$Html_Attributes$class('mr3 f2'),
-						_1: {ctor: '[]'}
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html_Events$onClick(
+								_user$project$Types$ChangeTo(_user$project$Types$GoPool)),
+							_1: {ctor: '[]'}
+						}
 					},
 					{
 						ctor: '::',

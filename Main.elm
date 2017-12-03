@@ -7,6 +7,9 @@ import WebSocket
 import SeatGeek.Query
 import SeatGeek.Decode
 import SeatGeek.Types as SG
+import Mouse
+import Window exposing (size)
+import Pages.Pool exposing (getPosition, determineTubers)
 
 
 -- Try to reomve these?
@@ -25,7 +28,13 @@ initCmd =
     Cmd.batch
         [ SeatGeek.Query.askQuery SG.initQuery
         , getDatetime
+        , initWindow
         ]
+
+
+initWindow : Cmd Msg
+initWindow =
+    Task.perform InitialWindow Window.size
 
 
 getDatetime : Cmd Msg
@@ -64,6 +73,9 @@ update msg model =
 
         client =
             model.client
+
+        pool =
+            model.pool
     in
         case msg of
             ChangeTo newRoute ->
@@ -120,6 +132,60 @@ update msg model =
                 , Cmd.none
                 )
 
+            -- POOL
+            MouseStart xy ->
+                ( { model
+                    | pool =
+                        { pool
+                            | move = (Just (Move xy xy))
+                        }
+                  }
+                , Cmd.none
+                )
+
+            MouseMove xy ->
+                ( { model
+                    | pool =
+                        { pool
+                            | move = (Maybe.map (\{ start } -> Move start xy) pool.move)
+                        }
+                  }
+                , Cmd.none
+                )
+
+            MouseEnd _ ->
+                ( { model
+                    | pool =
+                        { pool
+                            | position = (getPosition pool)
+                            , move = Nothing
+                        }
+                  }
+                , Cmd.none
+                )
+
+            ResizePool windowSize ->
+                ( { model
+                    | pool =
+                        { pool
+                            | windowSize = windowSize
+                            , tubers = (determineTubers pool windowSize)
+                        }
+                  }
+                , Cmd.none
+                )
+
+            InitialWindow windowSize ->
+                ( { model
+                    | pool =
+                        { pool
+                            | windowSize = windowSize
+                            , tubers = (determineTubers pool windowSize)
+                        }
+                  }
+                , Cmd.none
+                )
+
             -- Discover ->
             --     ( model, SeatGeek.askQuery SG.initQuery )
             GetReply (Err e) ->
@@ -131,13 +197,22 @@ update msg model =
 
 
 
--- ( { model | messages = (str :: model.messages) }, Cmd.none )
--- Subscriptions --
+-- SUBSCRIPTIONS
 
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.none
+    Sub.batch [ Window.resizes ResizePool, mouseMoveSubs model ]
+
+
+mouseMoveSubs : Model -> Sub Msg
+mouseMoveSubs model =
+    case model.pool.move of
+        Nothing ->
+            Sub.none
+
+        Just _ ->
+            Sub.batch [ Mouse.moves MouseMove, Mouse.ups MouseEnd ]
 
 
 

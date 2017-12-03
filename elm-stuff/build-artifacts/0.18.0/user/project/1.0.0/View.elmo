@@ -13,6 +13,12 @@ var _user$project$View$page = function (model) {
 				_0: _user$project$Pages_Profile$view(model),
 				_1: {ctor: '[]'}
 			};
+		case 'GoPool':
+			return {
+				ctor: '::',
+				_0: _user$project$Pages_Pool$view(model.pool),
+				_1: {ctor: '[]'}
+			};
 		default:
 			var _p1 = _p0._0;
 			if (_p1.ctor === 'Nothing') {

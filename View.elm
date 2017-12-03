@@ -16,6 +16,7 @@ import Pages.Chat as Chat
 import Pages.Profile as Profile
 import Pages.Events as Events
 import Pages.Event as Event
+import Pages.Pool as Pool
 
 
 -- SUBVIEWS --
@@ -45,6 +46,9 @@ page model =
 
         Types.GoProfile ->
             [ Profile.view model ]
+
+        Types.GoPool ->
+            [ Pool.view model.pool ]
 
         Types.GoEvents event ->
             case event of

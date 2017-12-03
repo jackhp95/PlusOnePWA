@@ -30,8 +30,7 @@ documentation.json
 .LSOverride
 
 # Icon must end with two \r
-Icon
-
+Icon
 
 # Thumbnails
 ._*
@@ -41,7 +40,7 @@ Icon
 .fseventsd
 .Spotlight-V100
 .TemporaryItems
-.TrasheAssets.
+.Trashes
 .VolumeIcon.icns
 .com.apple.timemachine.donotpresent
 

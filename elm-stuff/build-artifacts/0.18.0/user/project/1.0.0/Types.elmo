@@ -1,3 +1,8 @@
+var _user$project$Types$initWindow = A2(_elm_lang$window$Window$Size, 1440, 1440);
+var _user$project$Types$initRing = {width: 2, padding: 3};
+var _user$project$Types$initTube = {diameter: 100, ring: _user$project$Types$initRing, spacing: 300, pop: 110};
+var _user$project$Types$initMove = _elm_lang$core$Maybe$Nothing;
+var _user$project$Types$initPosition = {x: 0, y: 0};
 var _user$project$Types$initClient = {textAreaHeight: 10};
 var _user$project$Types$initEvents = {seatgeek: _user$project$SeatGeek_Types$emptyReply, currentDatetime: _elm_lang$core$Maybe$Nothing};
 var _user$project$Types$initTrait = {
@@ -32,9 +37,9 @@ var _user$project$Types$initChat = {
 	messages: {ctor: '[]'},
 	userAvi: 'https://images.unsplash.com/photo-1496361001419-80f0d1be777a?dpr=1&auto=format&fit=crop&w=1000&q=80&cs=tinysrgb&ixid=dW5zcGxhc2guY29tOzs7Ozs%3D'
 };
-var _user$project$Types$Model = F5(
-	function (a, b, c, d, e) {
-		return {route: a, chat: b, profile: c, events: d, client: e};
+var _user$project$Types$Model = F6(
+	function (a, b, c, d, e, f) {
+		return {route: a, chat: b, profile: c, events: d, pool: e, client: f};
 	});
 var _user$project$Types$Page = F3(
 	function (a, b, c) {
@@ -59,18 +64,99 @@ var _user$project$Types$Events = F2(
 var _user$project$Types$Client = function (a) {
 	return {textAreaHeight: a};
 };
+var _user$project$Types$Pool = F6(
+	function (a, b, c, d, e, f) {
+		return {position: a, move: b, tube: c, windowSize: d, tubers: e, users: f};
+	});
+var _user$project$Types$Move = F2(
+	function (a, b) {
+		return {start: a, current: b};
+	});
+var _user$project$Types$Tube = F4(
+	function (a, b, c, d) {
+		return {diameter: a, ring: b, spacing: c, pop: d};
+	});
+var _user$project$Types$Ring = F2(
+	function (a, b) {
+		return {width: a, padding: b};
+	});
+var _user$project$Types$Tuber = F2(
+	function (a, b) {
+		return {uniqueID: a, offset: b};
+	});
+var _user$project$Types$loremTubers = {
+	ctor: '::',
+	_0: A2(
+		_user$project$Types$Tuber,
+		1,
+		A2(_elm_lang$mouse$Mouse$Position, 0, 0)),
+	_1: {
+		ctor: '::',
+		_0: A2(
+			_user$project$Types$Tuber,
+			2,
+			A2(_elm_lang$mouse$Mouse$Position, 300, 300)),
+		_1: {
+			ctor: '::',
+			_0: A2(
+				_user$project$Types$Tuber,
+				3,
+				A2(_elm_lang$mouse$Mouse$Position, 600, 600)),
+			_1: {ctor: '[]'}
+		}
+	}
+};
+var _user$project$Types$User = F6(
+	function (a, b, c, d, e, f) {
+		return {uniqueID: a, name: b, pic: c, online: d, chattor: e, chattee: f};
+	});
+var _user$project$Types$loremUsers = {
+	ctor: '::',
+	_0: A6(_user$project$Types$User, 1, 'doug', 'https://randomuser.me/api/portraits/men/1.jpg', true, true, true),
+	_1: {
+		ctor: '::',
+		_0: A6(_user$project$Types$User, 2, 'lillith', 'https://randomuser.me/api/portraits/men/2.jpg', true, true, true),
+		_1: {
+			ctor: '::',
+			_0: A6(_user$project$Types$User, 3, 'kyle', 'https://randomuser.me/api/portraits/men/3.jpg', true, true, true),
+			_1: {
+				ctor: '::',
+				_0: A6(_user$project$Types$User, 4, 'borf', 'https://randomuser.me/api/portraits/men/4.jpg', true, true, true),
+				_1: {ctor: '[]'}
+			}
+		}
+	}
+};
+var _user$project$Types$initPool = {position: _user$project$Types$initPosition, move: _elm_lang$core$Maybe$Nothing, tube: _user$project$Types$initTube, windowSize: _user$project$Types$initWindow, tubers: _user$project$Types$loremTubers, users: _user$project$Types$loremUsers};
+var _user$project$Types$GoPool = {ctor: 'GoPool'};
 var _user$project$Types$GoEvents = function (a) {
 	return {ctor: 'GoEvents', _0: a};
 };
-var _user$project$Types$initModel = A5(
+var _user$project$Types$initModel = A6(
 	_user$project$Types$Model,
 	_user$project$Types$GoEvents(_elm_lang$core$Maybe$Nothing),
 	_user$project$Types$initChat,
 	_user$project$Types$initProfile,
 	_user$project$Types$initEvents,
+	_user$project$Types$initPool,
 	_user$project$Types$initClient);
 var _user$project$Types$GoProfile = {ctor: 'GoProfile'};
 var _user$project$Types$GoChat = {ctor: 'GoChat'};
+var _user$project$Types$InitialWindow = function (a) {
+	return {ctor: 'InitialWindow', _0: a};
+};
+var _user$project$Types$ResizePool = function (a) {
+	return {ctor: 'ResizePool', _0: a};
+};
+var _user$project$Types$MouseEnd = function (a) {
+	return {ctor: 'MouseEnd', _0: a};
+};
+var _user$project$Types$MouseMove = function (a) {
+	return {ctor: 'MouseMove', _0: a};
+};
+var _user$project$Types$MouseStart = function (a) {
+	return {ctor: 'MouseStart', _0: a};
+};
 var _user$project$Types$TextAreaResizer = function (a) {
 	return {ctor: 'TextAreaResizer', _0: a};
 };

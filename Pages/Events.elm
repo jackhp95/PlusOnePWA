@@ -58,7 +58,9 @@ view model =
                 , div [ class "f1 f2-m lh-solid fw7 ma0 pa0" ]
                     [ text "discover events" ]
                 ]
-            , div [ class "bg-black-70" ] (List.map (eventListView events.currentDatetime) events.seatgeek.events)
+            , div
+                [ class "bg-black-70" ]
+                (List.map (eventListView events.currentDatetime) events.seatgeek.events)
             ]
 
 

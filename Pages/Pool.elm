@@ -12,87 +12,29 @@ import Mouse exposing (Position)
 import Window exposing (..)
 import Task exposing (..)
 import Random exposing (..)
-import Touch
-import SingleTouch
+import Types exposing (..)
 
 
-main =
-    Html.program
-        { init = init
-        , view = view
-        , update = update
-        , subscriptions = subscriptions
-        }
+-- VIEW
 
 
-
--- MODEL
--- windowSize = window.size + tubeSize ( or greater for margin)
--- if ( windowSize < tubeOffset ) {tubeOffset - poolsize}
--- Determine offset with indexMap in arrays
+(=>) =
+    (,)
 
 
-type alias Model =
-    { position : Position
-    , move : Maybe Move
-    , tube : Tube
-    , windowSize : Size
-    , tubers : List Tuber
-    , users : List User
-    }
+view : Pool -> Html Msg
+view pool =
+    div [ class "overflow-hidden bg-black-80 flex-auto" ]
+        [ div
+            [ onMouseDown
+            , class "flex-auto overflow-hidden"
+            , style [ "cursor" => "move" ]
+            ]
+            (populateTubes pool)
+        ]
 
 
-initialModel : Model
-initialModel =
-    { position = initialPosition
-    , move = Nothing
-    , tube =
-        initialTube
-
-    -- 1440 is just placeholder until the task to get the window size runs
-    , windowSize = Size 140 140
-    , tubers = loremTubers
-    , users = loremUsers
-    }
-
-
-type alias Move =
-    { start : Position
-    , current : Position
-    }
-
-
-type alias Tube =
-    { diameter : Int
-    , ring : Ring
-    , spacing : Int
-    , pop : Int
-    }
-
-
-initialTube : Tube
-initialTube =
-    { diameter = 100
-    , ring = initialRing
-    , spacing = 300
-    , pop = 110
-    }
-
-
-type alias Ring =
-    { width : Int
-    , padding : Int
-    }
-
-
-initialRing : Ring
-initialRing =
-    { width = 2
-    , padding = 3
-    }
-
-
-poolSize : Model -> Size -> Size
+poolSize : Pool -> Size -> Size
 poolSize model windowSize =
     let
         spacingX =
@@ -118,49 +60,33 @@ spaceY spacing =
     round (((*) (sin (degrees 30)) (toFloat spacing)) / 2)
 
 
-type alias Tuber =
-    { uniqueID : Int
-    , offset : Position
-    }
-
-
-type alias User =
-    { uniqueID : Int
-    , name : String
-    , pic : String
-    , online : Bool
-    , chattor : Bool
-    , chattee : Bool
-    }
-
-
-
--- Position Was Imported
-
-
-initialPosition : Position
-initialPosition =
-    { x = 0
-    , y = 0
-    }
-
-
-type alias Size =
-    { width : Int
-    , height : Int
-    }
-
-
-determineTubers : Model -> Size -> List Tuber
+determineTubers : Pool -> Size -> List Tuber
 determineTubers model windowSize =
     let
         poolRows =
-            List.range 0 ((.width (poolSize model windowSize)) // model.tube.spacing)
+            List.range 0
+                ((.width
+                    (poolSize model windowSize)
+                 )
+                    // model.tube.spacing
+                )
 
         poolCols =
-            List.range 0 ((.height (poolSize model windowSize)) // (spaceY model.tube.spacing))
+            List.range 0
+                ((.height
+                    (poolSize model windowSize)
+                 )
+                    // (spaceY model.tube.spacing)
+                )
     in
-        List.indexedMap Tuber (List.concatMap (\x -> List.map (\y -> (staggerTubes x y model.tube.spacing)) (List.map ((*) (spaceY model.tube.spacing)) poolCols)) (List.map ((*) model.tube.spacing) poolRows))
+        List.indexedMap Tuber
+            (List.concatMap
+                (\x ->
+                    List.map (\y -> (staggerTubes x y model.tube.spacing))
+                        (List.map ((*) (spaceY model.tube.spacing)) poolCols)
+                )
+                (List.map ((*) model.tube.spacing) poolRows)
+            )
 
 
 staggerTubes : Int -> Int -> Int -> Position
@@ -177,186 +103,36 @@ staggerTubes x y spacing =
                 Position x y
 
 
-loremTubers : List Tuber
-loremTubers =
-    [ Tuber 1 (Position 0 0)
-    , Tuber 2 (Position 300 300)
-    , Tuber 3 (Position 600 600)
-    ]
-
-
-loremUsers : List User
-loremUsers =
-    [ User 1 "doug" "https://randomuser.me/api/portraits/men/1.jpg" True True True
-    , User 2 "lillith" "https://randomuser.me/api/portraits/men/2.jpg" True True True
-    , User 3 "kyle" "https://randomuser.me/api/portraits/men/3.jpg" True True True
-    , User 4 "borf" "https://randomuser.me/api/portraits/men/4.jpg" True True True
-    ]
-
-
-initialWindow : Cmd Msg
-initialWindow =
-    Task.perform InitialWindow Window.size
-
-
-init : ( Model, Cmd Msg )
-init =
-    ( initialModel, initialWindow )
-
-
-
--- UPDATE
-
-
-type Msg
-    = MouseStart Position
-    | MouseMove Position
-    | MouseEnd Position
-    | ResizePool Size
-    | InitialWindow Size
-    | TouchStart Touch.Coordinates
-    | TouchMove Touch.Coordinates
-    | TouchEnd Touch.Coordinates
-    | TouchCancel Touch.Coordinates
-
-
-update : Msg -> Model -> ( Model, Cmd Msg )
-update msg model =
-    ( updateHelp msg model, Cmd.none )
-
-
-updateHelp : Msg -> Model -> Model
-updateHelp msg ({ position, move, tube, windowSize, tubers, users } as model) =
-    case msg of
-        TouchStart coordinates ->
-            -- Model (Start <|
-            { model
-                | move =
-                    (Just
-                        (Move
-                            (Position
-                                (round (Tuple.first (Touch.clientPos coordinates)))
-                                (round (Tuple.second (Touch.clientPos coordinates)))
-                            )
-                            (Position
-                                (round (Tuple.first (Touch.clientPos coordinates)))
-                                (round (Tuple.second (Touch.clientPos coordinates)))
-                            )
-                        )
-                    )
-            }
-
-        TouchMove coordinates ->
-            -- Model (Move <| Touch.clientPos coordinates)
-            { model
-                | move =
-                    Maybe.map
-                        (\{ start } ->
-                            (Move
-                                start
-                                (Position
-                                    (round (Tuple.first (Touch.clientPos coordinates)))
-                                    (round (Tuple.second (Touch.clientPos coordinates)))
-                                )
-                            )
-                        )
-                        move
-            }
-
-        TouchEnd coordinates ->
-            -- Model (End <| Touch.clientPos coordinates)
-            Model (getPosition model) Nothing tube windowSize tubers users
-
-        TouchCancel coordinates ->
-            -- Model (Cancel <| Touch.clientPos coordinates)
-            Model (getPosition model) Nothing tube windowSize tubers users
-
-        MouseStart xy ->
-            { model | move = (Just (Move xy xy)) }
-
-        MouseMove xy ->
-            { model | move = (Maybe.map (\{ start } -> Move start xy) move) }
-
-        MouseEnd _ ->
-            Model (getPosition model) Nothing tube windowSize tubers users
-
-        ResizePool windowSize ->
-            Model position move tube windowSize (determineTubers model windowSize) users
-
-        InitialWindow windowSize ->
-            Model position move tube windowSize (determineTubers model windowSize) users
-
-
 tubePop : Tube -> Tube
 tubePop tube =
     Tube tube.pop tube.ring tube.spacing tube.diameter
 
 
-
--- SUBSCRIPTIONS
-
-
-subscriptions : Model -> Sub Msg
-subscriptions model =
-    Sub.batch [ Window.resizes ResizePool, mouseMoveSubs model ]
-
-
-mouseMoveSubs : Model -> Sub Msg
-mouseMoveSubs model =
-    case model.move of
-        Nothing ->
-            Sub.none
-
-        Just _ ->
-            Sub.batch [ Mouse.moves MouseMove, Mouse.ups MouseEnd ]
-
-
-
--- VIEW
-
-
-(=>) =
-    (,)
-
-
-tachyonsCSS : String
-tachyonsCSS =
-    "tachyons.css"
-
-
-view : Model -> Html Msg
-view model =
-    div [ class "overflow-hidden" ]
-        [ Html.node "link" [ Html.Attributes.rel "stylesheet", Html.Attributes.href tachyonsCSS ] []
-        , div
-            [ onMouseDown
-            , class "bg-black-90"
-            , style
-                [ "cursor" => "move"
-                , "transform" => "scale(1.05)"
-
-                -- , "background-color" => "#333"
-                , "height" => px model.windowSize.height
-                , "overflow" => "hidden"
-                ]
-            ]
-            (populateTubes model)
-        ]
-
-
-populateTubes : Model -> List (Html Msg)
+populateTubes : Pool -> List (Html Msg)
 populateTubes model =
     List.map (modelTube model) model.tubers
 
 
-modelTube : Model -> Tuber -> Html Msg
+modelTube : Pool -> Tuber -> Html Msg
 modelTube model tuber =
     let
         x =
-            ((%) (tuber.offset.x + (.x (getPosition model))) (.width (poolSize model model.windowSize))) - (model.tube.diameter // 2)
+            ((%)
+                (tuber.offset.x
+                    + (.x (getPosition model))
+                )
+                (.width (poolSize model model.windowSize))
+            )
+                - (model.tube.diameter // 2)
 
         y =
-            ((%) (tuber.offset.y + (.y (getPosition model))) (.height (poolSize model model.windowSize))) - (model.tube.diameter // 2)
+            ((%)
+                (tuber.offset.y
+                    + (.y (getPosition model))
+                )
+                (.height (poolSize model model.windowSize))
+            )
+                - (model.tube.diameter // 2)
     in
         div
             [ class "dim"
@@ -401,7 +177,7 @@ px number =
     toString number ++ "px"
 
 
-getPosition : Model -> Position
+getPosition : Pool -> Position
 getPosition model =
     case model.move of
         Nothing ->
@@ -418,10 +194,8 @@ onMouseDown =
     on "mousedown" (Decode.map MouseStart Mouse.position)
 
 
-touchEvents : List (Html.Attribute Msg)
-touchEvents =
-    [ SingleTouch.onStart TouchStart
-    , SingleTouch.onMove TouchMove
-    , SingleTouch.onEnd TouchEnd
-    , SingleTouch.onCancel TouchCancel
-    ]
+
+-- MODEL
+-- windowSize = window.size + tubeSize ( or greater for margin)
+-- if ( windowSize < tubeOffset ) {tubeOffset - poolsize}
+-- Determine offset with indexMap in arrays

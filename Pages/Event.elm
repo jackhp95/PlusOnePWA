@@ -35,7 +35,7 @@ askQuery query =
 -- VIEW
 
 
-view : SG.Event -> Maybe Date -> Html msg
+view : SG.Event -> Maybe Date -> Html Msg
 view event now =
     section [ class "overflow-auto w-100 w-auto-ns flex-auto animated fadeInLeft mw7-ns flex-shrink-0 bg-black-70 shadow-2-l" ]
         [ eventBanner event
@@ -161,17 +161,24 @@ yetToBeAdded =
         ]
 
 
-eventPool : Html msg
+eventPool : Html Msg
 eventPool =
     div [ class "flex items-center justify-around mh4 pv4 bb b--white-20" ]
         [ a [ href "Pool.html", class "white link br-pill pa2 mh1 flex items-center mh1 grow" ]
             [ div [ Assets.feather "info", class "h2 w2 contain bg-center" ] []
             ]
-        , a [ href "Pool.html", class "white link lg-breathe-50 br1 pa2 mh1 flex items-center mh1 grow" ]
+        , a
+            [ onClick (Types.ChangeTo Types.GoPool)
+            , class "white link lg-breathe-50 br1 pa2 mh1 flex items-center mh1 grow"
+            ]
             [ div [ Assets.feather "life-buoy", class "h2 w2 mh1 contain bg-center" ] []
             , div [ class "mh2 f4 fw4 ttn" ] [ text ("join pool") ]
             ]
-        , div [ class "mr3 f2" ] [ text "🏊" ]
+        , div
+            [ class "mr3 f2"
+            , onClick (Types.ChangeTo Types.GoPool)
+            ]
+            [ text "🏊" ]
         ]
 
 
@@ -204,7 +211,7 @@ eventEmojis event =
             (List.map toIcon event.taxonomies)
 
 
-eventBanner : SG.Event -> Html msg
+eventBanner : SG.Event -> Html Msg
 eventBanner event =
     let
         heroImg =
@@ -221,10 +228,18 @@ eventBanner event =
     in
         div
             [ heroImg, class ("bg-center cover aspect-ratio aspect-ratio--16x9 bb b--white-20") ]
-            [ div [ style [ ( "background-image", "linear-gradient( rgba(0,0,0,0.3), transparent)" ) ], class "aspect-ratio--object cover bg-center flex flex-column items-end justify-between pa4 pb0" ]
+            [ div
+                [ style [ ( "background-image", "linear-gradient( rgba(0,0,0,0.3), transparent)" ) ]
+                , class "aspect-ratio--object cover bg-center flex flex-column items-end justify-between pa4 pb0"
+                ]
                 [ Assets.discoverToolsView
                 , div [ class "pa3 lg-breathe-50 br-pill relative top-2 right-1 flex grow justify-center items-center" ]
-                    [ div [ Assets.feather "life-buoy", class "h3 w3 contain" ] []
+                    [ div
+                        [ Assets.feather "life-buoy"
+                        , onClick (Types.ChangeTo Types.GoPool)
+                        , class "h3 w3 contain"
+                        ]
+                        []
                     ]
                 ]
             ]
