@@ -1,4 +1,4 @@
-var _user$project$Types$initClient = {textAreaHeight: 0};
+var _user$project$Types$initClient = {textAreaHeight: 10};
 var _user$project$Types$initEvents = {seatgeek: _user$project$SeatGeekTypes$emptyReply, selectedEvent: _elm_lang$core$Maybe$Nothing, currentDatetime: _elm_lang$core$Maybe$Nothing};
 var _user$project$Types$initTrait = {
 	ctor: '::',

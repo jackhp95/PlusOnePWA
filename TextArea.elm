@@ -14,7 +14,8 @@ auto client =
             client.textAreaHeight
     in
         [ on "input" scrollHeightDecoder
-        , textareaStyles height
+        , textareaStyles
+        , textareaRows height
         ]
 
 
@@ -24,19 +25,24 @@ scrollHeightDecoder =
         (at [ "target", "scrollHeight" ] int)
 
 
-textareaStyles : Int -> Html.Attribute msg
-textareaStyles x =
+textareaRows : Int -> Html.Attribute msg
+textareaRows x =
     let
-        height =
-            case x of
-                0 ->
-                    "22px"
+        calc =
+            round ((toFloat (x - 32)) / 18.4)
 
-                _ ->
-                    (toString (x - 4)) ++ "px"
+        rowsNum =
+            if calc < 2 then
+                1
+            else
+                calc - 1
     in
-        style
-            [ ( "resize", "none" )
-            , ( "height", height )
-            , ( "max-height", "50vh" )
-            ]
+        rows rowsNum
+
+
+textareaStyles : Html.Attribute msg
+textareaStyles =
+    style
+        [ ( "resize", "none" )
+        , ( "max-height", "40vh" )
+        ]

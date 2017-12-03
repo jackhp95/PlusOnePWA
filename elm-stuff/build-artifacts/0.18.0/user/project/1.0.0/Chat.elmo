@@ -115,7 +115,7 @@ var _user$project$Chat$messageBar = F2(
 						_user$project$TextArea$auto(client),
 						{
 							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('white bg-transparent overflow-visible items-center ma3 pv1 ph0 bn flex-auto outline-0'),
+							_0: _elm_lang$html$Html_Attributes$class('white bg-transparent overflow-visible pa3 items-center self-center flex-auto bn outline-0'),
 							_1: {
 								ctor: '::',
 								_0: _elm_lang$html$Html_Attributes$placeholder('strike up a convo'),

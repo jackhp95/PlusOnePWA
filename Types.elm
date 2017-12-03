@@ -122,7 +122,7 @@ type alias Client =
 
 initClient : Client
 initClient =
-    { textAreaHeight = 0 }
+    { textAreaHeight = 10 }
 
 
 

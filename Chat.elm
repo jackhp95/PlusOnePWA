@@ -94,9 +94,9 @@ toast =
 messageBar : Types.Chat -> Types.Client -> Html Types.Msg
 messageBar chat client =
     div [ class "bg-black-40 flex flex-none z-2 items-stretch overflow-hidden pl2 slideInUp animated" ]
-        [ Html.textarea
+        [ textarea
             ((TextArea.auto client)
-                ++ [ class "white bg-transparent overflow-visible items-center ma3 pv1 ph0 bn flex-auto outline-0"
+                ++ [ class "white bg-transparent overflow-visible pa3 items-center self-center flex-auto bn outline-0"
                    , placeholder "strike up a convo"
                    ]
             )

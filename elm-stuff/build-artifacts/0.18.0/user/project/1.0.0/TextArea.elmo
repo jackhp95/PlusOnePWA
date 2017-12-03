@@ -1,29 +1,18 @@
-var _user$project$TextArea$textareaStyles = function (x) {
-	var height = function () {
-		var _p0 = x;
-		if (_p0 === 0) {
-			return '22px';
-		} else {
-			return A2(
-				_elm_lang$core$Basics_ops['++'],
-				_elm_lang$core$Basics$toString(x - 4),
-				'px');
-		}
-	}();
-	return _elm_lang$html$Html_Attributes$style(
-		{
+var _user$project$TextArea$textareaStyles = _elm_lang$html$Html_Attributes$style(
+	{
+		ctor: '::',
+		_0: {ctor: '_Tuple2', _0: 'resize', _1: 'none'},
+		_1: {
 			ctor: '::',
-			_0: {ctor: '_Tuple2', _0: 'resize', _1: 'none'},
-			_1: {
-				ctor: '::',
-				_0: {ctor: '_Tuple2', _0: 'height', _1: height},
-				_1: {
-					ctor: '::',
-					_0: {ctor: '_Tuple2', _0: 'max-height', _1: '50vh'},
-					_1: {ctor: '[]'}
-				}
-			}
-		});
+			_0: {ctor: '_Tuple2', _0: 'max-height', _1: '40vh'},
+			_1: {ctor: '[]'}
+		}
+	});
+var _user$project$TextArea$textareaRows = function (x) {
+	var calc = _elm_lang$core$Basics$round(
+		_elm_lang$core$Basics$toFloat(x - 32) / 18.4);
+	var rowsNum = (_elm_lang$core$Native_Utils.cmp(calc, 2) < 0) ? 1 : (calc - 1);
+	return _elm_lang$html$Html_Attributes$rows(rowsNum);
 };
 var _user$project$TextArea$scrollHeightDecoder = A2(
 	_elm_lang$core$Json_Decode$map,
@@ -47,8 +36,12 @@ var _user$project$TextArea$auto = function (client) {
 		_0: A2(_elm_lang$html$Html_Events$on, 'input', _user$project$TextArea$scrollHeightDecoder),
 		_1: {
 			ctor: '::',
-			_0: _user$project$TextArea$textareaStyles(height),
-			_1: {ctor: '[]'}
+			_0: _user$project$TextArea$textareaStyles,
+			_1: {
+				ctor: '::',
+				_0: _user$project$TextArea$textareaRows(height),
+				_1: {ctor: '[]'}
+			}
 		}
 	};
 };
