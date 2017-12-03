@@ -86,7 +86,7 @@ var _user$project$Pages_Events$eventListView = F2(
 			_elm_lang$html$Html$div,
 			{
 				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class('animated fadeInUp ph3 pt3 hover-bg-black-30'),
+				_0: _elm_lang$html$Html_Attributes$class('animated fadeInUp ph3 pt3 ph4-m pt4-m hover-bg-black-30'),
 				_1: {
 					ctor: '::',
 					_0: _elm_lang$html$Html_Events$onClick(
@@ -105,7 +105,7 @@ var _user$project$Pages_Events$eventListView = F2(
 						_elm_lang$html$Html$div,
 						{
 							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('pb3 bb b--white-20'),
+							_0: _elm_lang$html$Html_Attributes$class('pb3 pb4-m bb b--white-20'),
 							_1: {ctor: '[]'}
 						},
 						{
@@ -114,7 +114,7 @@ var _user$project$Pages_Events$eventListView = F2(
 								_elm_lang$html$Html$div,
 								{
 									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$class('pb1 f4 pv2'),
+									_0: _elm_lang$html$Html_Attributes$class('pb1 f4 f3-m pt3-m pt2'),
 									_1: {ctor: '[]'}
 								},
 								{

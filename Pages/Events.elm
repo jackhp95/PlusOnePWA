@@ -96,12 +96,12 @@ eventListView maybeNow event =
                         text ""
     in
         div
-            [ class "animated fadeInUp ph3 pt3 hover-bg-black-30"
+            [ class "animated fadeInUp ph3 pt3 ph4-m pt4-m hover-bg-black-30"
             , onClick (Types.ViewEvent (Types.GoEvents (Just event)))
             ]
             [ cardImage
-            , div [ class "pb3 bb b--white-20" ]
-                [ div [ class "pb1 f4 pv2" ]
+            , div [ class "pb3 pb4-m bb b--white-20" ]
+                [ div [ class "pb1 f4 f3-m pt3-m pt2" ]
                     [ span [ class "mr2 fw5" ] [ text event.title ]
                     , div [ class "fw5 o-80 dib" ]
                         [ atIcon, text event.venue.name ]
