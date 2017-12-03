@@ -11814,6 +11814,83 @@ var _user$project$Assets$gradients = {
 		}
 	}
 };
+var _user$project$Assets$randomGradient = function (seed) {
+	var randomIndex = A2(
+		_elm_lang$core$Basics_ops['%'],
+		seed,
+		_elm_lang$core$List$length(_user$project$Assets$gradients));
+	var selectedGradient = _elm_lang$core$List$head(
+		A2(_elm_lang$core$List$drop, randomIndex, _user$project$Assets$gradients));
+	var _p0 = selectedGradient;
+	if (_p0.ctor === 'Nothing') {
+		return '';
+	} else {
+		return A2(_elm_lang$core$Basics_ops['++'], _p0._0, '');
+	}
+};
+var _user$project$Assets$stringToEmoji = function (string) {
+	var _p1 = string;
+	switch (_p1) {
+		case 'concert':
+			return '🎵';
+		case 'music_festival':
+			return '🎶';
+		case 'sports':
+			return '🏆';
+		case 'theater':
+			return '🎭';
+		case 'basketball':
+			return '🏀';
+		case 'nba':
+			return '⛹';
+		case 'ncaa_football':
+			return '👨🏻‍🎓';
+		case 'ncaa_basketball':
+			return '👨🏻‍🎓';
+		case 'ncaa_womens_basketball':
+			return '👩‍🎓';
+		case 'wnba':
+			return '⛹️‍♀️';
+		case 'family':
+			return '🚸';
+		case 'broadway_tickets_national':
+			return '🎟';
+		case 'dance_performance_tour':
+			return '💃';
+		case 'classical':
+			return '🎼';
+		case 'classical_orchestral_instrumental':
+			return '🎻';
+		case 'comedy':
+			return '🤣';
+		case 'hockey':
+			return '🏒';
+		case 'fighting':
+			return '🤼‍♂️';
+		case 'soccer':
+			return '⚽';
+		case 'wrestling':
+			return '🤼';
+		case 'football':
+			return '🏈';
+		case 'auto_racing':
+			return '🏎️';
+		case 'animal_sports':
+			return '🐾';
+		case 'horse_racing':
+			return '🏇';
+		case 'rodeo':
+			return '🤠';
+		case 'nfl':
+			return '🏟️';
+		case 'cirque_du_soleil':
+			return '🤸';
+		case 'classical_opera':
+			return '🎤';
+		default:
+			return '🤷';
+	}
+};
 var _user$project$Assets$bgImg = function (imgPath) {
 	return _elm_lang$html$Html_Attributes$style(
 		{
@@ -11836,9 +11913,67 @@ var _user$project$Assets$feather = function (icon) {
 			'https://icongr.am/feather/',
 			A2(_elm_lang$core$Basics_ops['++'], icon, '.svg?size=20&color=ffffff')));
 };
+var _user$project$Assets$discoverToolsView = function () {
+	var icon = function (x) {
+		return A2(
+			_elm_lang$html$Html$div,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('animated bounceIn pointer hover-bg-black-50 br-pill pa2'),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{
+						ctor: '::',
+						_0: _user$project$Assets$feather(x),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class('contain bg-center grow pt3 pb2 pl3 pr2'),
+							_1: {ctor: '[]'}
+						}
+					},
+					{ctor: '[]'}),
+				_1: {ctor: '[]'}
+			});
+	};
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('flex justify-end'),
+			_1: {ctor: '[]'}
+		},
+		A2(
+			_elm_lang$core$List$map,
+			icon,
+			{
+				ctor: '::',
+				_0: 'search',
+				_1: {
+					ctor: '::',
+					_0: 'map-pin',
+					_1: {
+						ctor: '::',
+						_0: 'thumbs-up',
+						_1: {
+							ctor: '::',
+							_0: 'tag',
+							_1: {
+								ctor: '::',
+								_0: 'at-sign',
+								_1: {ctor: '[]'}
+							}
+						}
+					}
+				}
+			}));
+}();
 
-var _user$project$SeatGeekTypes$initArguments = {performers: '', venues: '', datetime: '', query: '', id: '', taxonomies: '', slug: '', genres: '', city: '', state: '', country: '', postal_code: ''};
-var _user$project$SeatGeekTypes$emptyReply = {
+var _user$project$SeatGeek_Types$initArguments = {performers: '', venues: '', datetime: '', query: '', id: '', taxonomies: '', slug: '', genres: '', city: '', state: '', country: '', postal_code: ''};
+var _user$project$SeatGeek_Types$emptyReply = {
 	meta: {
 		per_page: 0,
 		took: 0,
@@ -11848,77 +11983,23 @@ var _user$project$SeatGeekTypes$emptyReply = {
 	},
 	events: {ctor: '[]'}
 };
-var _user$project$SeatGeekTypes$SeatGeek = F2(
+var _user$project$SeatGeek_Types$SeatGeek = F2(
 	function (a, b) {
 		return {reply: a, query: b};
 	});
-var _user$project$SeatGeekTypes$Reply = F2(
+var _user$project$SeatGeek_Types$Reply = F2(
 	function (a, b) {
 		return {meta: a, events: b};
 	});
-var _user$project$SeatGeekTypes$Query = function (a) {
-	return function (b) {
-		return function (c) {
-			return function (d) {
-				return function (e) {
-					return function (f) {
-						return function (g) {
-							return function (h) {
-								return function (i) {
-									return function (j) {
-										return function (k) {
-											return function (l) {
-												return {endpoint: a, $arguments: b, geoip: c, lat: d, lon: e, range: f, per_page: g, page: h, sort: i, aid: j, rid: k, client_id: l};
-											};
-										};
-									};
-								};
-							};
-						};
-					};
-				};
-			};
-		};
-	};
-};
-var _user$project$SeatGeekTypes$Arguments = function (a) {
-	return function (b) {
-		return function (c) {
-			return function (d) {
-				return function (e) {
-					return function (f) {
-						return function (g) {
-							return function (h) {
-								return function (i) {
-									return function (j) {
-										return function (k) {
-											return function (l) {
-												return {performers: a, venues: b, datetime: c, query: d, id: e, taxonomies: f, slug: g, genres: h, city: i, state: j, country: k, postal_code: l};
-											};
-										};
-									};
-								};
-							};
-						};
-					};
-				};
-			};
-		};
-	};
-};
-var _user$project$SeatGeekTypes$SortArguments = F2(
-	function (a, b) {
-		return {field: a, direction: b};
-	});
-var _user$project$SeatGeekTypes$MetaGeolocation = F8(
+var _user$project$SeatGeek_Types$MetaGeolocation = F8(
 	function (a, b, c, d, e, f, g, h) {
 		return {state: a, postal_code: b, lat: c, range: d, display_name: e, city: f, country: g, lon: h};
 	});
-var _user$project$SeatGeekTypes$ReplyMeta = F5(
+var _user$project$SeatGeek_Types$ReplyMeta = F5(
 	function (a, b, c, d, e) {
 		return {per_page: a, took: b, geolocation: c, total: d, page: e};
 	});
-var _user$project$SeatGeekTypes$Event = function (a) {
+var _user$project$SeatGeek_Types$Event = function (a) {
 	return function (b) {
 		return function (c) {
 			return function (d) {
@@ -11955,11 +12036,11 @@ var _user$project$SeatGeekTypes$Event = function (a) {
 		};
 	};
 };
-var _user$project$SeatGeekTypes$GCS = F2(
+var _user$project$SeatGeek_Types$GCS = F2(
 	function (a, b) {
 		return {lon: a, lat: b};
 	});
-var _user$project$SeatGeekTypes$Venue = function (a) {
+var _user$project$SeatGeek_Types$Venue = function (a) {
 	return function (b) {
 		return function (c) {
 			return function (d) {
@@ -11994,11 +12075,11 @@ var _user$project$SeatGeekTypes$Venue = function (a) {
 		};
 	};
 };
-var _user$project$SeatGeekTypes$Tickets = F5(
+var _user$project$SeatGeek_Types$Tickets = F5(
 	function (a, b, c, d, e) {
 		return {listing_count: a, highest_price: b, average_price: c, lowest_price_good_deals: d, lowest_price: e};
 	});
-var _user$project$SeatGeekTypes$Performer = function (a) {
+var _user$project$SeatGeek_Types$Performer = function (a) {
 	return function (b) {
 		return function (c) {
 			return function (d) {
@@ -12039,63 +12120,117 @@ var _user$project$SeatGeekTypes$Performer = function (a) {
 		};
 	};
 };
-var _user$project$SeatGeekTypes$PerformerColor = F3(
+var _user$project$SeatGeek_Types$PerformerColor = F3(
 	function (a, b, c) {
 		return {primary: a, all: b, iconic: c};
 	});
-var _user$project$SeatGeekTypes$PerformerStats = function (a) {
+var _user$project$SeatGeek_Types$PerformerStats = function (a) {
 	return {event_count: a};
 };
-var _user$project$SeatGeekTypes$TaxonomyStats = F2(
+var _user$project$SeatGeek_Types$TaxonomyStats = F2(
 	function (a, b) {
 		return {performer_count: a, event_count: b};
 	});
-var _user$project$SeatGeekTypes$Taxonomy = F9(
+var _user$project$SeatGeek_Types$Taxonomy = F9(
 	function (a, b, c, d, e, f, g, h, i) {
 		return {images: a, name: b, short_name: c, parent_id: d, stats: e, id: f, slug: g, image: h, is_visible: i};
 	});
-var _user$project$SeatGeekTypes$Genre = F5(
+var _user$project$SeatGeek_Types$Genre = F5(
 	function (a, b, c, d, e) {
 		return {slug: a, name: b, image: c, id: d, images: e};
 	});
-var _user$project$SeatGeekTypes$Division = F6(
+var _user$project$SeatGeek_Types$Division = F6(
 	function (a, b, c, d, e, f) {
 		return {display_type: a, short_name: b, display_name: c, division_level: d, slug: e, taxonomy_id: f};
 	});
-var _user$project$SeatGeekTypes$Genres = {ctor: 'Genres'};
-var _user$project$SeatGeekTypes$Taxonomies = {ctor: 'Taxonomies'};
-var _user$project$SeatGeekTypes$Recommendations = {ctor: 'Recommendations'};
-var _user$project$SeatGeekTypes$Venues = function (a) {
+var _user$project$SeatGeek_Types$Query = function (a) {
+	return function (b) {
+		return function (c) {
+			return function (d) {
+				return function (e) {
+					return function (f) {
+						return function (g) {
+							return function (h) {
+								return function (i) {
+									return function (j) {
+										return function (k) {
+											return function (l) {
+												return {endpoint: a, $arguments: b, geoip: c, lat: d, lon: e, range: f, per_page: g, page: h, sort: i, aid: j, rid: k, client_id: l};
+											};
+										};
+									};
+								};
+							};
+						};
+					};
+				};
+			};
+		};
+	};
+};
+var _user$project$SeatGeek_Types$Arguments = function (a) {
+	return function (b) {
+		return function (c) {
+			return function (d) {
+				return function (e) {
+					return function (f) {
+						return function (g) {
+							return function (h) {
+								return function (i) {
+									return function (j) {
+										return function (k) {
+											return function (l) {
+												return {performers: a, venues: b, datetime: c, query: d, id: e, taxonomies: f, slug: g, genres: h, city: i, state: j, country: k, postal_code: l};
+											};
+										};
+									};
+								};
+							};
+						};
+					};
+				};
+			};
+		};
+	};
+};
+var _user$project$SeatGeek_Types$SortArguments = F2(
+	function (a, b) {
+		return {field: a, direction: b};
+	});
+var _user$project$SeatGeek_Types$Genres = {ctor: 'Genres'};
+var _user$project$SeatGeek_Types$Taxonomies = {ctor: 'Taxonomies'};
+var _user$project$SeatGeek_Types$Recommendations = {ctor: 'Recommendations'};
+var _user$project$SeatGeek_Types$Venues = function (a) {
 	return {ctor: 'Venues', _0: a};
 };
-var _user$project$SeatGeekTypes$Performers = function (a) {
+var _user$project$SeatGeek_Types$Performers = function (a) {
 	return {ctor: 'Performers', _0: a};
 };
-var _user$project$SeatGeekTypes$Events = function (a) {
+var _user$project$SeatGeek_Types$Events = function (a) {
 	return {ctor: 'Events', _0: a};
 };
-var _user$project$SeatGeekTypes$Announce_date = {ctor: 'Announce_date'};
-var _user$project$SeatGeekTypes$Datetime_utc = {ctor: 'Datetime_utc'};
-var _user$project$SeatGeekTypes$Datetime_local = {ctor: 'Datetime_local'};
-var _user$project$SeatGeekTypes$Desc = {ctor: 'Desc'};
-var _user$project$SeatGeekTypes$Asc = {ctor: 'Asc'};
-var _user$project$SeatGeekTypes$initQuery = {
-	endpoint: _user$project$SeatGeekTypes$Events(_elm_lang$core$Maybe$Nothing),
-	$arguments: _user$project$SeatGeekTypes$initArguments,
+var _user$project$SeatGeek_Types$Announce_date = {ctor: 'Announce_date'};
+var _user$project$SeatGeek_Types$Datetime_utc = {ctor: 'Datetime_utc'};
+var _user$project$SeatGeek_Types$Datetime_local = {ctor: 'Datetime_local'};
+var _user$project$SeatGeek_Types$Desc = {ctor: 'Desc'};
+var _user$project$SeatGeek_Types$Asc = {ctor: 'Asc'};
+var _user$project$SeatGeek_Types$initQuery = {
+	endpoint: _user$project$SeatGeek_Types$Events(_elm_lang$core$Maybe$Nothing),
+	$arguments: _user$project$SeatGeek_Types$initArguments,
 	geoip: '',
 	lat: '',
 	lon: '',
 	range: '',
 	per_page: '',
 	page: '',
-	sort: {field: _user$project$SeatGeekTypes$Datetime_utc, direction: _user$project$SeatGeekTypes$Asc},
+	sort: {field: _user$project$SeatGeek_Types$Datetime_utc, direction: _user$project$SeatGeek_Types$Asc},
 	aid: '',
 	rid: '',
 	client_id: 'MzUwNDE1NnwxNDgxNjA1ODM2'
 };
 
 var _user$project$Types$initClient = {textAreaHeight: 10};
-var _user$project$Types$initEvents = {seatgeek: _user$project$SeatGeekTypes$emptyReply, selectedEvent: _elm_lang$core$Maybe$Nothing, currentDatetime: _elm_lang$core$Maybe$Nothing};
+var _user$project$Types$initEvents = {seatgeek: _user$project$SeatGeek_Types$emptyReply, currentDatetime: _elm_lang$core$Maybe$Nothing};
 var _user$project$Types$initTrait = {
 	ctor: '::',
 	_0: {name: 'night owl', from: 'tommy', datetime: ''},
@@ -12148,18 +12283,25 @@ var _user$project$Types$Trait = F3(
 	function (a, b, c) {
 		return {name: a, from: b, datetime: c};
 	});
-var _user$project$Types$Events = F3(
-	function (a, b, c) {
-		return {seatgeek: a, selectedEvent: b, currentDatetime: c};
+var _user$project$Types$Events = F2(
+	function (a, b) {
+		return {seatgeek: a, currentDatetime: b};
 	});
 var _user$project$Types$Client = function (a) {
 	return {textAreaHeight: a};
 };
-var _user$project$Types$GoEvents = {ctor: 'GoEvents'};
-var _user$project$Types$GoEvent = {ctor: 'GoEvent'};
+var _user$project$Types$GoEvents = function (a) {
+	return {ctor: 'GoEvents', _0: a};
+};
+var _user$project$Types$initModel = A5(
+	_user$project$Types$Model,
+	_user$project$Types$GoEvents(_elm_lang$core$Maybe$Nothing),
+	_user$project$Types$initChat,
+	_user$project$Types$initProfile,
+	_user$project$Types$initEvents,
+	_user$project$Types$initClient);
 var _user$project$Types$GoProfile = {ctor: 'GoProfile'};
 var _user$project$Types$GoChat = {ctor: 'GoChat'};
-var _user$project$Types$initModel = A5(_user$project$Types$Model, _user$project$Types$GoChat, _user$project$Types$initChat, _user$project$Types$initProfile, _user$project$Types$initEvents, _user$project$Types$initClient);
 var _user$project$Types$TextAreaResizer = function (a) {
 	return {ctor: 'TextAreaResizer', _0: a};
 };
@@ -12292,10 +12434,20 @@ var _user$project$Nav$selections = function () {
 		makePage,
 		{
 			ctor: '::',
-			_0: {ctor: '_Tuple3', _0: 'discover', _1: 'compass', _2: _user$project$Types$GoEvents},
+			_0: {
+				ctor: '_Tuple3',
+				_0: 'discover',
+				_1: 'compass',
+				_2: _user$project$Types$GoEvents(_elm_lang$core$Maybe$Nothing)
+			},
 			_1: {
 				ctor: '::',
-				_0: {ctor: '_Tuple3', _0: 'add', _1: 'plus-square', _2: _user$project$Types$GoEvent},
+				_0: {
+					ctor: '_Tuple3',
+					_0: 'add',
+					_1: 'plus-square',
+					_2: _user$project$Types$GoEvents(_elm_lang$core$Maybe$Nothing)
+				},
 				_1: {
 					ctor: '::',
 					_0: {ctor: '_Tuple3', _0: 'share', _1: 'share-2', _2: _user$project$Types$GoChat},
@@ -12336,7 +12488,7 @@ var _user$project$Nav$bar = A2(
 		}
 	});
 
-var _user$project$Profile$stringToEmoji = function (string) {
+var _user$project$Pages_Profile$stringToEmoji = function (string) {
 	var _p0 = string;
 	switch (_p0) {
 		case 'night owl':
@@ -12351,7 +12503,7 @@ var _user$project$Profile$stringToEmoji = function (string) {
 			return '🤷';
 	}
 };
-var _user$project$Profile$traitsIcons = function (traits) {
+var _user$project$Pages_Profile$traitsIcons = function (traits) {
 	var toIcon = function (x) {
 		return A2(
 			_elm_lang$html$Html$li,
@@ -12372,7 +12524,7 @@ var _user$project$Profile$traitsIcons = function (traits) {
 					{
 						ctor: '::',
 						_0: _elm_lang$html$Html$text(
-							_user$project$Profile$stringToEmoji(x.name)),
+							_user$project$Pages_Profile$stringToEmoji(x.name)),
 						_1: {ctor: '[]'}
 					}),
 				_1: {
@@ -12407,7 +12559,7 @@ var _user$project$Profile$traitsIcons = function (traits) {
 		},
 		A2(_elm_lang$core$List$map, toIcon, traits));
 };
-var _user$project$Profile$profileToolsView = function () {
+var _user$project$Pages_Profile$profileToolsView = function () {
 	var icon = function (x) {
 		return A2(
 			_elm_lang$html$Html$div,
@@ -12468,7 +12620,7 @@ var _user$project$Profile$profileToolsView = function () {
 				}
 			}));
 }();
-var _user$project$Profile$pastEvents = function (model) {
+var _user$project$Pages_Profile$pastEvents = function (model) {
 	var eventCard = function (_p1) {
 		var _p2 = _p1;
 		return A2(
@@ -12609,7 +12761,7 @@ var _user$project$Profile$pastEvents = function (model) {
 			}
 		});
 };
-var _user$project$Profile$profileBio = function (model) {
+var _user$project$Pages_Profile$profileBio = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
 		{
@@ -12649,7 +12801,7 @@ var _user$project$Profile$profileBio = function (model) {
 			}
 		});
 };
-var _user$project$Profile$profileAvi = function (avis) {
+var _user$project$Pages_Profile$profileAvi = function (avis) {
 	return A2(
 		_elm_lang$html$Html$div,
 		{
@@ -12678,7 +12830,7 @@ var _user$project$Profile$profileAvi = function (avis) {
 			_1: {ctor: '[]'}
 		});
 };
-var _user$project$Profile$view = function (x) {
+var _user$project$Pages_Profile$view = function (x) {
 	var model = x.profile;
 	return A2(
 		_elm_lang$html$Html$section,
@@ -12698,7 +12850,7 @@ var _user$project$Profile$view = function (x) {
 				},
 				{
 					ctor: '::',
-					_0: _user$project$Profile$profileAvi(model.avi),
+					_0: _user$project$Pages_Profile$profileAvi(model.avi),
 					_1: {
 						ctor: '::',
 						_0: A2(
@@ -12736,21 +12888,21 @@ var _user$project$Profile$view = function (x) {
 							},
 							{
 								ctor: '::',
-								_0: _user$project$Profile$profileToolsView,
+								_0: _user$project$Pages_Profile$profileToolsView,
 								_1: {ctor: '[]'}
 							}),
 						_1: {
 							ctor: '::',
-							_0: _user$project$Profile$profileBio(model),
+							_0: _user$project$Pages_Profile$profileBio(model),
 							_1: {
 								ctor: '::',
-								_0: _user$project$Profile$traitsIcons(model.traits),
+								_0: _user$project$Pages_Profile$traitsIcons(model.traits),
 								_1: {
 									ctor: '::',
-									_0: _user$project$Profile$pastEvents(model),
+									_0: _user$project$Pages_Profile$pastEvents(model),
 									_1: {
 										ctor: '::',
-										_0: _user$project$Profile$traitsIcons(model.traits),
+										_0: _user$project$Pages_Profile$traitsIcons(model.traits),
 										_1: {ctor: '[]'}
 									}
 								}
@@ -12810,7 +12962,7 @@ var _user$project$TextArea$auto = function (client) {
 	};
 };
 
-var _user$project$Chat$nameBar = function (chat) {
+var _user$project$Pages_Chat$nameBar = function (chat) {
 	return A2(
 		_elm_lang$html$Html$div,
 		{
@@ -12825,7 +12977,12 @@ var _user$project$Chat$nameBar = function (chat) {
 				{
 					ctor: '::',
 					_0: _elm_lang$html$Html_Attributes$class('flex items-center grow'),
-					_1: {ctor: '[]'}
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html_Events$onClick(
+							_user$project$Types$ChangeTo(_user$project$Types$GoProfile)),
+						_1: {ctor: '[]'}
+					}
 				},
 				{
 					ctor: '::',
@@ -12909,7 +13066,7 @@ var _user$project$Chat$nameBar = function (chat) {
 			}
 		});
 };
-var _user$project$Chat$messageBar = F2(
+var _user$project$Pages_Chat$messageBar = F2(
 	function (chat, client) {
 		return A2(
 			_elm_lang$html$Html$div,
@@ -12931,7 +13088,11 @@ var _user$project$Chat$messageBar = F2(
 							_1: {
 								ctor: '::',
 								_0: _elm_lang$html$Html_Attributes$placeholder('strike up a convo'),
-								_1: {ctor: '[]'}
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$autofocus(true),
+									_1: {ctor: '[]'}
+								}
 							}
 						}),
 					{ctor: '[]'}),
@@ -12964,7 +13125,7 @@ var _user$project$Chat$messageBar = F2(
 				}
 			});
 	});
-var _user$project$Chat$toast = A2(
+var _user$project$Pages_Chat$toast = A2(
 	_elm_lang$html$Html$div,
 	{
 		ctor: '::',
@@ -12987,7 +13148,7 @@ var _user$project$Chat$toast = A2(
 			}),
 		_1: {ctor: '[]'}
 	});
-var _user$project$Chat$sent = A2(
+var _user$project$Pages_Chat$sent = A2(
 	_elm_lang$html$Html$div,
 	{
 		ctor: '::',
@@ -13010,7 +13171,7 @@ var _user$project$Chat$sent = A2(
 			}),
 		_1: {ctor: '[]'}
 	});
-var _user$project$Chat$recieved = A2(
+var _user$project$Pages_Chat$recieved = A2(
 	_elm_lang$html$Html$div,
 	{
 		ctor: '::',
@@ -13033,7 +13194,7 @@ var _user$project$Chat$recieved = A2(
 			}),
 		_1: {ctor: '[]'}
 	});
-var _user$project$Chat$viewMessage = function (msg) {
+var _user$project$Pages_Chat$viewMessage = function (msg) {
 	return A2(
 		_elm_lang$html$Html$div,
 		{
@@ -13047,7 +13208,7 @@ var _user$project$Chat$viewMessage = function (msg) {
 			_1: {ctor: '[]'}
 		});
 };
-var _user$project$Chat$view = function (x) {
+var _user$project$Pages_Chat$view = function (x) {
 	var client = x.client;
 	var chat = x.chat;
 	return A2(
@@ -13059,7 +13220,7 @@ var _user$project$Chat$view = function (x) {
 		},
 		{
 			ctor: '::',
-			_0: _user$project$Chat$nameBar(chat),
+			_0: _user$project$Pages_Chat$nameBar(chat),
 			_1: {
 				ctor: '::',
 				_0: A2(
@@ -13073,61 +13234,61 @@ var _user$project$Chat$view = function (x) {
 						_elm_lang$core$Basics_ops['++'],
 						{
 							ctor: '::',
-							_0: _user$project$Chat$toast,
+							_0: _user$project$Pages_Chat$toast,
 							_1: {
 								ctor: '::',
-								_0: _user$project$Chat$sent,
+								_0: _user$project$Pages_Chat$sent,
 								_1: {
 									ctor: '::',
-									_0: _user$project$Chat$recieved,
+									_0: _user$project$Pages_Chat$recieved,
 									_1: {
 										ctor: '::',
-										_0: _user$project$Chat$sent,
+										_0: _user$project$Pages_Chat$sent,
 										_1: {
 											ctor: '::',
-											_0: _user$project$Chat$recieved,
+											_0: _user$project$Pages_Chat$recieved,
 											_1: {
 												ctor: '::',
-												_0: _user$project$Chat$sent,
+												_0: _user$project$Pages_Chat$sent,
 												_1: {
 													ctor: '::',
-													_0: _user$project$Chat$recieved,
+													_0: _user$project$Pages_Chat$recieved,
 													_1: {
 														ctor: '::',
-														_0: _user$project$Chat$sent,
+														_0: _user$project$Pages_Chat$sent,
 														_1: {
 															ctor: '::',
-															_0: _user$project$Chat$recieved,
+															_0: _user$project$Pages_Chat$recieved,
 															_1: {
 																ctor: '::',
-																_0: _user$project$Chat$sent,
+																_0: _user$project$Pages_Chat$sent,
 																_1: {
 																	ctor: '::',
-																	_0: _user$project$Chat$recieved,
+																	_0: _user$project$Pages_Chat$recieved,
 																	_1: {
 																		ctor: '::',
-																		_0: _user$project$Chat$sent,
+																		_0: _user$project$Pages_Chat$sent,
 																		_1: {
 																			ctor: '::',
-																			_0: _user$project$Chat$recieved,
+																			_0: _user$project$Pages_Chat$recieved,
 																			_1: {
 																				ctor: '::',
-																				_0: _user$project$Chat$sent,
+																				_0: _user$project$Pages_Chat$sent,
 																				_1: {
 																					ctor: '::',
-																					_0: _user$project$Chat$recieved,
+																					_0: _user$project$Pages_Chat$recieved,
 																					_1: {
 																						ctor: '::',
-																						_0: _user$project$Chat$sent,
+																						_0: _user$project$Pages_Chat$sent,
 																						_1: {
 																							ctor: '::',
-																							_0: _user$project$Chat$recieved,
+																							_0: _user$project$Pages_Chat$recieved,
 																							_1: {
 																								ctor: '::',
-																								_0: _user$project$Chat$sent,
+																								_0: _user$project$Pages_Chat$sent,
 																								_1: {
 																									ctor: '::',
-																									_0: _user$project$Chat$recieved,
+																									_0: _user$project$Pages_Chat$recieved,
 																									_1: {ctor: '[]'}
 																								}
 																							}
@@ -13150,18 +13311,418 @@ var _user$project$Chat$view = function (x) {
 						},
 						A2(
 							_elm_lang$core$List$map,
-							_user$project$Chat$viewMessage,
+							_user$project$Pages_Chat$viewMessage,
 							_elm_lang$core$List$reverse(chat.messages)))),
 				_1: {
 					ctor: '::',
-					_0: A2(_user$project$Chat$messageBar, chat, client),
+					_0: A2(_user$project$Pages_Chat$messageBar, chat, client),
 					_1: {ctor: '[]'}
 				}
 			}
 		});
 };
 
-var _user$project$SeatGeek$composeArgument = F2(
+var _user$project$SeatGeek_Decode_ops = _user$project$SeatGeek_Decode_ops || {};
+_user$project$SeatGeek_Decode_ops['?'] = _elm_lang$core$Maybe$withDefault;
+var _user$project$SeatGeek_Decode_ops = _user$project$SeatGeek_Decode_ops || {};
+_user$project$SeatGeek_Decode_ops[':='] = _elm_lang$core$Json_Decode$field;
+var _user$project$SeatGeek_Decode$decodeGenre = A2(
+	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+	A2(
+		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+		A2(
+			_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+			A2(
+				_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+				A2(
+					_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+					_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeek_Types$Genre),
+					A2(_user$project$SeatGeek_Decode_ops[':='], 'slug', _elm_lang$core$Json_Decode$string)),
+				A2(_user$project$SeatGeek_Decode_ops[':='], 'name', _elm_lang$core$Json_Decode$string)),
+			_elm_lang$core$Json_Decode$maybe(
+				A2(_user$project$SeatGeek_Decode_ops[':='], 'image', _elm_lang$core$Json_Decode$string))),
+		A2(_user$project$SeatGeek_Decode_ops[':='], 'id', _elm_lang$core$Json_Decode$int)),
+	A2(
+		_elm_community$json_extra$Json_Decode_Extra$withDefault,
+		{ctor: '[]'},
+		A2(
+			_user$project$SeatGeek_Decode_ops[':='],
+			'images',
+			_elm_community$json_extra$Json_Decode_Extra$collection(_elm_lang$core$Json_Decode$string))));
+var _user$project$SeatGeek_Decode$decodeDivision = A2(
+	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+	A2(
+		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+		A2(
+			_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+			A2(
+				_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+				A2(
+					_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+					A2(
+						_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+						_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeek_Types$Division),
+						A2(_user$project$SeatGeek_Decode_ops[':='], 'display_type', _elm_lang$core$Json_Decode$string)),
+					_elm_lang$core$Json_Decode$maybe(
+						A2(_user$project$SeatGeek_Decode_ops[':='], 'short_name', _elm_lang$core$Json_Decode$string))),
+				A2(_user$project$SeatGeek_Decode_ops[':='], 'display_name', _elm_lang$core$Json_Decode$string)),
+			A2(_user$project$SeatGeek_Decode_ops[':='], 'division_level', _elm_lang$core$Json_Decode$int)),
+		_elm_lang$core$Json_Decode$maybe(
+			A2(_user$project$SeatGeek_Decode_ops[':='], 'slug', _elm_lang$core$Json_Decode$string))),
+	A2(_user$project$SeatGeek_Decode_ops[':='], 'taxonomy_id', _elm_lang$core$Json_Decode$int));
+var _user$project$SeatGeek_Decode$decodeTaxonomyStats = A2(
+	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+	A2(
+		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+		_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeek_Types$TaxonomyStats),
+		A2(_user$project$SeatGeek_Decode_ops[':='], 'performer_count', _elm_lang$core$Json_Decode$int)),
+	A2(_user$project$SeatGeek_Decode_ops[':='], 'event_count', _elm_lang$core$Json_Decode$int));
+var _user$project$SeatGeek_Decode$decodeTaxonomy = A2(
+	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+	A2(
+		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+		A2(
+			_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+			A2(
+				_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+				A2(
+					_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+					A2(
+						_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+						A2(
+							_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+							A2(
+								_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+								A2(
+									_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+									_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeek_Types$Taxonomy),
+									A2(
+										_elm_community$json_extra$Json_Decode_Extra$withDefault,
+										{ctor: '[]'},
+										A2(
+											_user$project$SeatGeek_Decode_ops[':='],
+											'images',
+											_elm_community$json_extra$Json_Decode_Extra$collection(_elm_lang$core$Json_Decode$string)))),
+								A2(_user$project$SeatGeek_Decode_ops[':='], 'name', _elm_lang$core$Json_Decode$string)),
+							_elm_lang$core$Json_Decode$maybe(
+								A2(_user$project$SeatGeek_Decode_ops[':='], 'short_name', _elm_lang$core$Json_Decode$string))),
+						_elm_lang$core$Json_Decode$maybe(
+							A2(_user$project$SeatGeek_Decode_ops[':='], 'parent_id', _elm_lang$core$Json_Decode$int))),
+					_elm_lang$core$Json_Decode$maybe(
+						A2(_user$project$SeatGeek_Decode_ops[':='], 'stats', _user$project$SeatGeek_Decode$decodeTaxonomyStats))),
+				A2(_user$project$SeatGeek_Decode_ops[':='], 'id', _elm_lang$core$Json_Decode$int)),
+			_elm_lang$core$Json_Decode$maybe(
+				A2(_user$project$SeatGeek_Decode_ops[':='], 'slug', _elm_lang$core$Json_Decode$string))),
+		_elm_lang$core$Json_Decode$maybe(
+			A2(_user$project$SeatGeek_Decode_ops[':='], 'image', _elm_lang$core$Json_Decode$string))),
+	_elm_lang$core$Json_Decode$maybe(
+		A2(_user$project$SeatGeek_Decode_ops[':='], 'is_visible', _elm_lang$core$Json_Decode$bool)));
+var _user$project$SeatGeek_Decode$decodePerformerStats = A2(
+	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+	_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeek_Types$PerformerStats),
+	A2(_user$project$SeatGeek_Decode_ops[':='], 'event_count', _elm_lang$core$Json_Decode$int));
+var _user$project$SeatGeek_Decode$decodePerformerColor = A2(
+	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+	A2(
+		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+		A2(
+			_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+			_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeek_Types$PerformerColor),
+			A2(
+				_user$project$SeatGeek_Decode_ops[':='],
+				'primary',
+				_elm_lang$core$Json_Decode$list(_elm_lang$core$Json_Decode$string))),
+		A2(
+			_user$project$SeatGeek_Decode_ops[':='],
+			'all',
+			_elm_lang$core$Json_Decode$list(_elm_lang$core$Json_Decode$string))),
+	A2(_user$project$SeatGeek_Decode_ops[':='], 'iconic', _elm_lang$core$Json_Decode$string));
+var _user$project$SeatGeek_Decode$decodePerformer = A2(
+	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+	A2(
+		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+		A2(
+			_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+			A2(
+				_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+				A2(
+					_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+					A2(
+						_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+						A2(
+							_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+							A2(
+								_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+								A2(
+									_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+									A2(
+										_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+										A2(
+											_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+											A2(
+												_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+												A2(
+													_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+													A2(
+														_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+														A2(
+															_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+															A2(
+																_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+																A2(
+																	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+																	A2(
+																		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+																		A2(
+																			_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+																			A2(
+																				_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+																				_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeek_Types$Performer),
+																				_elm_lang$core$Json_Decode$maybe(
+																					A2(_user$project$SeatGeek_Decode_ops[':='], 'image', _elm_lang$core$Json_Decode$string))),
+																			A2(
+																				_elm_community$json_extra$Json_Decode_Extra$withDefault,
+																				{ctor: '[]'},
+																				A2(
+																					_user$project$SeatGeek_Decode_ops[':='],
+																					'images',
+																					_elm_community$json_extra$Json_Decode_Extra$collection(_elm_lang$core$Json_Decode$string)))),
+																		_elm_lang$core$Json_Decode$maybe(
+																			A2(_user$project$SeatGeek_Decode_ops[':='], 'image_attribution', _elm_lang$core$Json_Decode$string))),
+																	A2(_user$project$SeatGeek_Decode_ops[':='], 'num_upcoming_events', _elm_lang$core$Json_Decode$int)),
+																_elm_lang$core$Json_Decode$maybe(
+																	A2(
+																		_user$project$SeatGeek_Decode_ops[':='],
+																		'divisions',
+																		_elm_lang$core$Json_Decode$list(_user$project$SeatGeek_Decode$decodeDivision)))),
+															_elm_lang$core$Json_Decode$maybe(
+																A2(
+																	_user$project$SeatGeek_Decode_ops[':='],
+																	'genres',
+																	_elm_lang$core$Json_Decode$list(_user$project$SeatGeek_Decode$decodeGenre)))),
+														A2(_user$project$SeatGeek_Decode_ops[':='], 'stats', _user$project$SeatGeek_Decode$decodePerformerStats)),
+													A2(_user$project$SeatGeek_Decode_ops[':='], 'url', _elm_lang$core$Json_Decode$string)),
+												_elm_lang$core$Json_Decode$maybe(
+													A2(_user$project$SeatGeek_Decode_ops[':='], 'home_venue_id', _elm_lang$core$Json_Decode$int))),
+											A2(_user$project$SeatGeek_Decode_ops[':='], 'type', _elm_lang$core$Json_Decode$string)),
+										A2(
+											_elm_community$json_extra$Json_Decode_Extra$withDefault,
+											0.0,
+											A2(_user$project$SeatGeek_Decode_ops[':='], 'score', _elm_lang$core$Json_Decode$float))),
+									A2(_user$project$SeatGeek_Decode_ops[':='], 'slug', _elm_lang$core$Json_Decode$string)),
+								_elm_lang$core$Json_Decode$maybe(
+									A2(_user$project$SeatGeek_Decode_ops[':='], 'primary', _elm_lang$core$Json_Decode$bool))),
+							_elm_lang$core$Json_Decode$maybe(
+								A2(_user$project$SeatGeek_Decode_ops[':='], 'colors', _user$project$SeatGeek_Decode$decodePerformerColor))),
+						_elm_lang$core$Json_Decode$maybe(
+							A2(_user$project$SeatGeek_Decode_ops[':='], 'image_license', _elm_lang$core$Json_Decode$string))),
+					A2(_user$project$SeatGeek_Decode_ops[':='], 'name', _elm_lang$core$Json_Decode$string)),
+				A2(_user$project$SeatGeek_Decode_ops[':='], 'popularity', _elm_lang$core$Json_Decode$float)),
+			A2(
+				_user$project$SeatGeek_Decode_ops[':='],
+				'taxonomies',
+				_elm_lang$core$Json_Decode$list(_user$project$SeatGeek_Decode$decodeTaxonomy))),
+		A2(_user$project$SeatGeek_Decode_ops[':='], 'id', _elm_lang$core$Json_Decode$int)),
+	A2(_user$project$SeatGeek_Decode_ops[':='], 'short_name', _elm_lang$core$Json_Decode$string));
+var _user$project$SeatGeek_Decode$decodeGCS = A2(
+	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+	A2(
+		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+		_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeek_Types$GCS),
+		A2(_user$project$SeatGeek_Decode_ops[':='], 'lon', _elm_lang$core$Json_Decode$float)),
+	A2(_user$project$SeatGeek_Decode_ops[':='], 'lat', _elm_lang$core$Json_Decode$float));
+var _user$project$SeatGeek_Decode$decodeVenue = A2(
+	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+	A2(
+		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+		A2(
+			_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+			A2(
+				_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+				A2(
+					_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+					A2(
+						_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+						A2(
+							_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+							A2(
+								_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+								A2(
+									_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+									A2(
+										_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+										A2(
+											_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+											A2(
+												_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+												A2(
+													_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+													A2(
+														_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+														A2(
+															_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+															A2(
+																_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+																A2(
+																	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+																	_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeek_Types$Venue),
+																	A2(_user$project$SeatGeek_Decode_ops[':='], 'name', _elm_lang$core$Json_Decode$string)),
+																A2(_user$project$SeatGeek_Decode_ops[':='], 'display_location', _elm_lang$core$Json_Decode$string)),
+															A2(_user$project$SeatGeek_Decode_ops[':='], 'popularity', _elm_lang$core$Json_Decode$float)),
+														A2(_user$project$SeatGeek_Decode_ops[':='], 'extended_address', _elm_lang$core$Json_Decode$string)),
+													A2(_user$project$SeatGeek_Decode_ops[':='], 'location', _user$project$SeatGeek_Decode$decodeGCS)),
+												A2(_user$project$SeatGeek_Decode_ops[':='], 'name_v2', _elm_lang$core$Json_Decode$string)),
+											_elm_lang$core$Json_Decode$maybe(
+												A2(_user$project$SeatGeek_Decode_ops[':='], 'state', _elm_lang$core$Json_Decode$string))),
+										A2(_user$project$SeatGeek_Decode_ops[':='], 'num_upcoming_events', _elm_lang$core$Json_Decode$int)),
+									A2(_user$project$SeatGeek_Decode_ops[':='], 'id', _elm_lang$core$Json_Decode$int)),
+								A2(_user$project$SeatGeek_Decode_ops[':='], 'slug', _elm_lang$core$Json_Decode$string)),
+							_elm_lang$core$Json_Decode$maybe(
+								A2(_user$project$SeatGeek_Decode_ops[':='], 'timezone', _elm_lang$core$Json_Decode$string))),
+						A2(_user$project$SeatGeek_Decode_ops[':='], 'url', _elm_lang$core$Json_Decode$string)),
+					A2(_user$project$SeatGeek_Decode_ops[':='], 'postal_code', _elm_lang$core$Json_Decode$string)),
+				A2(_user$project$SeatGeek_Decode_ops[':='], 'city', _elm_lang$core$Json_Decode$string)),
+			A2(_user$project$SeatGeek_Decode_ops[':='], 'country', _elm_lang$core$Json_Decode$string)),
+		A2(_user$project$SeatGeek_Decode_ops[':='], 'score', _elm_lang$core$Json_Decode$float)),
+	A2(_user$project$SeatGeek_Decode_ops[':='], 'address', _elm_lang$core$Json_Decode$string));
+var _user$project$SeatGeek_Decode$decodeTickets = A2(
+	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+	A2(
+		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+		A2(
+			_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+			A2(
+				_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+				A2(
+					_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+					_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeek_Types$Tickets),
+					_elm_lang$core$Json_Decode$maybe(
+						A2(_user$project$SeatGeek_Decode_ops[':='], 'listing_count', _elm_lang$core$Json_Decode$int))),
+				_elm_lang$core$Json_Decode$maybe(
+					A2(_user$project$SeatGeek_Decode_ops[':='], 'highest_price', _elm_lang$core$Json_Decode$float))),
+			_elm_lang$core$Json_Decode$maybe(
+				A2(_user$project$SeatGeek_Decode_ops[':='], 'average_price', _elm_lang$core$Json_Decode$float))),
+		_elm_lang$core$Json_Decode$maybe(
+			A2(_user$project$SeatGeek_Decode_ops[':='], 'lowest_price_good_deals', _elm_lang$core$Json_Decode$float))),
+	_elm_lang$core$Json_Decode$maybe(
+		A2(_user$project$SeatGeek_Decode_ops[':='], 'lowest_price', _elm_lang$core$Json_Decode$float)));
+var _user$project$SeatGeek_Decode$decodeEvent = A2(
+	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+	A2(
+		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+		A2(
+			_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+			A2(
+				_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+				A2(
+					_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+					A2(
+						_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+						A2(
+							_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+							A2(
+								_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+								A2(
+									_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+									A2(
+										_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+										A2(
+											_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+											A2(
+												_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+												A2(
+													_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+													A2(
+														_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+														A2(
+															_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+															A2(
+																_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+																A2(
+																	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+																	A2(
+																		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+																		_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeek_Types$Event),
+																		A2(_user$project$SeatGeek_Decode_ops[':='], 'datetime_utc', _elm_lang$core$Json_Decode$string)),
+																	A2(_user$project$SeatGeek_Decode_ops[':='], 'visible_until_utc', _elm_lang$core$Json_Decode$string)),
+																A2(_user$project$SeatGeek_Decode_ops[':='], 'datetime_local', _elm_lang$core$Json_Decode$string)),
+															A2(_user$project$SeatGeek_Decode_ops[':='], 'time_tbd', _elm_lang$core$Json_Decode$bool)),
+														A2(
+															_user$project$SeatGeek_Decode_ops[':='],
+															'taxonomies',
+															_elm_lang$core$Json_Decode$list(_user$project$SeatGeek_Decode$decodeTaxonomy))),
+													A2(_user$project$SeatGeek_Decode_ops[':='], 'type', _elm_lang$core$Json_Decode$string)),
+												A2(_user$project$SeatGeek_Decode_ops[':='], 'created_at', _elm_lang$core$Json_Decode$string)),
+											A2(
+												_user$project$SeatGeek_Decode_ops[':='],
+												'performers',
+												_elm_lang$core$Json_Decode$list(_user$project$SeatGeek_Decode$decodePerformer))),
+										A2(
+											_elm_community$json_extra$Json_Decode_Extra$withDefault,
+											0.0,
+											A2(_user$project$SeatGeek_Decode_ops[':='], 'score', _elm_lang$core$Json_Decode$float))),
+									A2(_user$project$SeatGeek_Decode_ops[':='], 'short_title', _elm_lang$core$Json_Decode$string)),
+								A2(_user$project$SeatGeek_Decode_ops[':='], 'venue', _user$project$SeatGeek_Decode$decodeVenue)),
+							A2(_user$project$SeatGeek_Decode_ops[':='], 'id', _elm_lang$core$Json_Decode$int)),
+						A2(_user$project$SeatGeek_Decode_ops[':='], 'stats', _user$project$SeatGeek_Decode$decodeTickets)),
+					A2(_user$project$SeatGeek_Decode_ops[':='], 'date_tbd', _elm_lang$core$Json_Decode$bool)),
+				A2(_user$project$SeatGeek_Decode_ops[':='], 'title', _elm_lang$core$Json_Decode$string)),
+			A2(_user$project$SeatGeek_Decode_ops[':='], 'popularity', _elm_lang$core$Json_Decode$float)),
+		A2(_user$project$SeatGeek_Decode_ops[':='], 'url', _elm_lang$core$Json_Decode$string)),
+	A2(_user$project$SeatGeek_Decode_ops[':='], 'announce_date', _elm_lang$core$Json_Decode$string));
+var _user$project$SeatGeek_Decode$decodeMetaGeolocation = A2(
+	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+	A2(
+		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+		A2(
+			_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+			A2(
+				_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+				A2(
+					_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+					A2(
+						_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+						A2(
+							_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+							A2(
+								_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+								_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeek_Types$MetaGeolocation),
+								A2(_user$project$SeatGeek_Decode_ops[':='], 'state', _elm_lang$core$Json_Decode$string)),
+							A2(_user$project$SeatGeek_Decode_ops[':='], 'postal_code', _elm_lang$core$Json_Decode$string)),
+						A2(_user$project$SeatGeek_Decode_ops[':='], 'lat', _elm_lang$core$Json_Decode$float)),
+					A2(_user$project$SeatGeek_Decode_ops[':='], 'range', _elm_lang$core$Json_Decode$string)),
+				A2(_user$project$SeatGeek_Decode_ops[':='], 'display_name', _elm_lang$core$Json_Decode$string)),
+			A2(_user$project$SeatGeek_Decode_ops[':='], 'city', _elm_lang$core$Json_Decode$string)),
+		A2(_user$project$SeatGeek_Decode_ops[':='], 'country', _elm_lang$core$Json_Decode$string)),
+	A2(_user$project$SeatGeek_Decode_ops[':='], 'lon', _elm_lang$core$Json_Decode$float));
+var _user$project$SeatGeek_Decode$decodeReplyMeta = A2(
+	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+	A2(
+		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+		A2(
+			_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+			A2(
+				_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+				A2(
+					_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+					_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeek_Types$ReplyMeta),
+					A2(_user$project$SeatGeek_Decode_ops[':='], 'per_page', _elm_lang$core$Json_Decode$int)),
+				A2(_user$project$SeatGeek_Decode_ops[':='], 'took', _elm_lang$core$Json_Decode$int)),
+			A2(_user$project$SeatGeek_Decode_ops[':='], 'geolocation', _user$project$SeatGeek_Decode$decodeMetaGeolocation)),
+		A2(_user$project$SeatGeek_Decode_ops[':='], 'total', _elm_lang$core$Json_Decode$int)),
+	A2(_user$project$SeatGeek_Decode_ops[':='], 'page', _elm_lang$core$Json_Decode$int));
+var _user$project$SeatGeek_Decode$decodeReply = A2(
+	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+	A2(
+		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
+		_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeek_Types$Reply),
+		A2(_user$project$SeatGeek_Decode_ops[':='], 'meta', _user$project$SeatGeek_Decode$decodeReplyMeta)),
+	A2(
+		_user$project$SeatGeek_Decode_ops[':='],
+		'events',
+		_elm_lang$core$Json_Decode$list(_user$project$SeatGeek_Decode$decodeEvent)));
+
+var _user$project$SeatGeek_Query$composeArgument = F2(
 	function (name, value) {
 		var _p0 = value;
 		if (_p0 === '') {
@@ -13176,7 +13737,7 @@ var _user$project$SeatGeek$composeArgument = F2(
 					A2(_elm_lang$core$Basics_ops['++'], '=', value)));
 		}
 	});
-var _user$project$SeatGeek$composeRequest = function (query) {
+var _user$project$SeatGeek_Query$composeRequest = function (query) {
 	var start = A2(
 		_elm_lang$core$Basics_ops['++'],
 		A2(
@@ -13188,8 +13749,8 @@ var _user$project$SeatGeek$composeRequest = function (query) {
 			'&postal_code=65203&per_page=30',
 			A2(
 				_elm_lang$core$Basics_ops['++'],
-				A2(_user$project$SeatGeek$composeArgument, 'aid', query.aid),
-				A2(_user$project$SeatGeek$composeArgument, 'rid', query.rid))));
+				A2(_user$project$SeatGeek_Query$composeArgument, 'aid', query.aid),
+				A2(_user$project$SeatGeek_Query$composeArgument, 'rid', query.rid))));
 	var url = 'https://api.seatgeek.com/2/';
 	var _p1 = query.endpoint;
 	switch (_p1.ctor) {
@@ -13255,415 +13816,376 @@ var _user$project$SeatGeek$composeRequest = function (query) {
 				A2(_elm_lang$core$Basics_ops['++'], 'genres', start));
 	}
 };
-var _user$project$SeatGeek_ops = _user$project$SeatGeek_ops || {};
-_user$project$SeatGeek_ops['?'] = _elm_lang$core$Maybe$withDefault;
-var _user$project$SeatGeek_ops = _user$project$SeatGeek_ops || {};
-_user$project$SeatGeek_ops[':='] = _elm_lang$core$Json_Decode$field;
-var _user$project$SeatGeek$decodeGenre = A2(
-	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-	A2(
-		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-		A2(
-			_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-			A2(
-				_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-				A2(
-					_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-					_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeekTypes$Genre),
-					A2(_user$project$SeatGeek_ops[':='], 'slug', _elm_lang$core$Json_Decode$string)),
-				A2(_user$project$SeatGeek_ops[':='], 'name', _elm_lang$core$Json_Decode$string)),
-			_elm_lang$core$Json_Decode$maybe(
-				A2(_user$project$SeatGeek_ops[':='], 'image', _elm_lang$core$Json_Decode$string))),
-		A2(_user$project$SeatGeek_ops[':='], 'id', _elm_lang$core$Json_Decode$int)),
-	A2(
-		_elm_community$json_extra$Json_Decode_Extra$withDefault,
-		{ctor: '[]'},
-		A2(
-			_user$project$SeatGeek_ops[':='],
-			'images',
-			_elm_community$json_extra$Json_Decode_Extra$collection(_elm_lang$core$Json_Decode$string))));
-var _user$project$SeatGeek$decodeDivision = A2(
-	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-	A2(
-		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-		A2(
-			_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-			A2(
-				_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-				A2(
-					_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-					A2(
-						_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-						_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeekTypes$Division),
-						A2(_user$project$SeatGeek_ops[':='], 'display_type', _elm_lang$core$Json_Decode$string)),
-					_elm_lang$core$Json_Decode$maybe(
-						A2(_user$project$SeatGeek_ops[':='], 'short_name', _elm_lang$core$Json_Decode$string))),
-				A2(_user$project$SeatGeek_ops[':='], 'display_name', _elm_lang$core$Json_Decode$string)),
-			A2(_user$project$SeatGeek_ops[':='], 'division_level', _elm_lang$core$Json_Decode$int)),
-		_elm_lang$core$Json_Decode$maybe(
-			A2(_user$project$SeatGeek_ops[':='], 'slug', _elm_lang$core$Json_Decode$string))),
-	A2(_user$project$SeatGeek_ops[':='], 'taxonomy_id', _elm_lang$core$Json_Decode$int));
-var _user$project$SeatGeek$decodeTaxonomyStats = A2(
-	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-	A2(
-		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-		_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeekTypes$TaxonomyStats),
-		A2(_user$project$SeatGeek_ops[':='], 'performer_count', _elm_lang$core$Json_Decode$int)),
-	A2(_user$project$SeatGeek_ops[':='], 'event_count', _elm_lang$core$Json_Decode$int));
-var _user$project$SeatGeek$decodeTaxonomy = A2(
-	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-	A2(
-		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-		A2(
-			_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-			A2(
-				_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-				A2(
-					_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-					A2(
-						_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-						A2(
-							_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-							A2(
-								_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-								A2(
-									_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-									_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeekTypes$Taxonomy),
-									A2(
-										_elm_community$json_extra$Json_Decode_Extra$withDefault,
-										{ctor: '[]'},
-										A2(
-											_user$project$SeatGeek_ops[':='],
-											'images',
-											_elm_community$json_extra$Json_Decode_Extra$collection(_elm_lang$core$Json_Decode$string)))),
-								A2(_user$project$SeatGeek_ops[':='], 'name', _elm_lang$core$Json_Decode$string)),
-							_elm_lang$core$Json_Decode$maybe(
-								A2(_user$project$SeatGeek_ops[':='], 'short_name', _elm_lang$core$Json_Decode$string))),
-						_elm_lang$core$Json_Decode$maybe(
-							A2(_user$project$SeatGeek_ops[':='], 'parent_id', _elm_lang$core$Json_Decode$int))),
-					_elm_lang$core$Json_Decode$maybe(
-						A2(_user$project$SeatGeek_ops[':='], 'stats', _user$project$SeatGeek$decodeTaxonomyStats))),
-				A2(_user$project$SeatGeek_ops[':='], 'id', _elm_lang$core$Json_Decode$int)),
-			_elm_lang$core$Json_Decode$maybe(
-				A2(_user$project$SeatGeek_ops[':='], 'slug', _elm_lang$core$Json_Decode$string))),
-		_elm_lang$core$Json_Decode$maybe(
-			A2(_user$project$SeatGeek_ops[':='], 'image', _elm_lang$core$Json_Decode$string))),
-	_elm_lang$core$Json_Decode$maybe(
-		A2(_user$project$SeatGeek_ops[':='], 'is_visible', _elm_lang$core$Json_Decode$bool)));
-var _user$project$SeatGeek$decodePerformerStats = A2(
-	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-	_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeekTypes$PerformerStats),
-	A2(_user$project$SeatGeek_ops[':='], 'event_count', _elm_lang$core$Json_Decode$int));
-var _user$project$SeatGeek$decodePerformerColor = A2(
-	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-	A2(
-		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-		A2(
-			_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-			_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeekTypes$PerformerColor),
-			A2(
-				_user$project$SeatGeek_ops[':='],
-				'primary',
-				_elm_lang$core$Json_Decode$list(_elm_lang$core$Json_Decode$string))),
-		A2(
-			_user$project$SeatGeek_ops[':='],
-			'all',
-			_elm_lang$core$Json_Decode$list(_elm_lang$core$Json_Decode$string))),
-	A2(_user$project$SeatGeek_ops[':='], 'iconic', _elm_lang$core$Json_Decode$string));
-var _user$project$SeatGeek$decodePerformer = A2(
-	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-	A2(
-		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-		A2(
-			_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-			A2(
-				_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-				A2(
-					_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-					A2(
-						_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-						A2(
-							_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-							A2(
-								_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-								A2(
-									_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-									A2(
-										_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-										A2(
-											_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-											A2(
-												_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-												A2(
-													_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-													A2(
-														_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-														A2(
-															_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-															A2(
-																_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-																A2(
-																	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-																	A2(
-																		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-																		A2(
-																			_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-																			A2(
-																				_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-																				_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeekTypes$Performer),
-																				_elm_lang$core$Json_Decode$maybe(
-																					A2(_user$project$SeatGeek_ops[':='], 'image', _elm_lang$core$Json_Decode$string))),
-																			A2(
-																				_elm_community$json_extra$Json_Decode_Extra$withDefault,
-																				{ctor: '[]'},
-																				A2(
-																					_user$project$SeatGeek_ops[':='],
-																					'images',
-																					_elm_community$json_extra$Json_Decode_Extra$collection(_elm_lang$core$Json_Decode$string)))),
-																		_elm_lang$core$Json_Decode$maybe(
-																			A2(_user$project$SeatGeek_ops[':='], 'image_attribution', _elm_lang$core$Json_Decode$string))),
-																	A2(_user$project$SeatGeek_ops[':='], 'num_upcoming_events', _elm_lang$core$Json_Decode$int)),
-																_elm_lang$core$Json_Decode$maybe(
-																	A2(
-																		_user$project$SeatGeek_ops[':='],
-																		'divisions',
-																		_elm_lang$core$Json_Decode$list(_user$project$SeatGeek$decodeDivision)))),
-															_elm_lang$core$Json_Decode$maybe(
-																A2(
-																	_user$project$SeatGeek_ops[':='],
-																	'genres',
-																	_elm_lang$core$Json_Decode$list(_user$project$SeatGeek$decodeGenre)))),
-														A2(_user$project$SeatGeek_ops[':='], 'stats', _user$project$SeatGeek$decodePerformerStats)),
-													A2(_user$project$SeatGeek_ops[':='], 'url', _elm_lang$core$Json_Decode$string)),
-												_elm_lang$core$Json_Decode$maybe(
-													A2(_user$project$SeatGeek_ops[':='], 'home_venue_id', _elm_lang$core$Json_Decode$int))),
-											A2(_user$project$SeatGeek_ops[':='], 'type', _elm_lang$core$Json_Decode$string)),
-										A2(
-											_elm_community$json_extra$Json_Decode_Extra$withDefault,
-											0.0,
-											A2(_user$project$SeatGeek_ops[':='], 'score', _elm_lang$core$Json_Decode$float))),
-									A2(_user$project$SeatGeek_ops[':='], 'slug', _elm_lang$core$Json_Decode$string)),
-								_elm_lang$core$Json_Decode$maybe(
-									A2(_user$project$SeatGeek_ops[':='], 'primary', _elm_lang$core$Json_Decode$bool))),
-							_elm_lang$core$Json_Decode$maybe(
-								A2(_user$project$SeatGeek_ops[':='], 'colors', _user$project$SeatGeek$decodePerformerColor))),
-						_elm_lang$core$Json_Decode$maybe(
-							A2(_user$project$SeatGeek_ops[':='], 'image_license', _elm_lang$core$Json_Decode$string))),
-					A2(_user$project$SeatGeek_ops[':='], 'name', _elm_lang$core$Json_Decode$string)),
-				A2(_user$project$SeatGeek_ops[':='], 'popularity', _elm_lang$core$Json_Decode$float)),
-			A2(
-				_user$project$SeatGeek_ops[':='],
-				'taxonomies',
-				_elm_lang$core$Json_Decode$list(_user$project$SeatGeek$decodeTaxonomy))),
-		A2(_user$project$SeatGeek_ops[':='], 'id', _elm_lang$core$Json_Decode$int)),
-	A2(_user$project$SeatGeek_ops[':='], 'short_name', _elm_lang$core$Json_Decode$string));
-var _user$project$SeatGeek$decodeGCS = A2(
-	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-	A2(
-		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-		_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeekTypes$GCS),
-		A2(_user$project$SeatGeek_ops[':='], 'lon', _elm_lang$core$Json_Decode$float)),
-	A2(_user$project$SeatGeek_ops[':='], 'lat', _elm_lang$core$Json_Decode$float));
-var _user$project$SeatGeek$decodeVenue = A2(
-	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-	A2(
-		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-		A2(
-			_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-			A2(
-				_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-				A2(
-					_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-					A2(
-						_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-						A2(
-							_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-							A2(
-								_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-								A2(
-									_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-									A2(
-										_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-										A2(
-											_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-											A2(
-												_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-												A2(
-													_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-													A2(
-														_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-														A2(
-															_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-															A2(
-																_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-																A2(
-																	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-																	_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeekTypes$Venue),
-																	A2(_user$project$SeatGeek_ops[':='], 'name', _elm_lang$core$Json_Decode$string)),
-																A2(_user$project$SeatGeek_ops[':='], 'display_location', _elm_lang$core$Json_Decode$string)),
-															A2(_user$project$SeatGeek_ops[':='], 'popularity', _elm_lang$core$Json_Decode$float)),
-														A2(_user$project$SeatGeek_ops[':='], 'extended_address', _elm_lang$core$Json_Decode$string)),
-													A2(_user$project$SeatGeek_ops[':='], 'location', _user$project$SeatGeek$decodeGCS)),
-												A2(_user$project$SeatGeek_ops[':='], 'name_v2', _elm_lang$core$Json_Decode$string)),
-											_elm_lang$core$Json_Decode$maybe(
-												A2(_user$project$SeatGeek_ops[':='], 'state', _elm_lang$core$Json_Decode$string))),
-										A2(_user$project$SeatGeek_ops[':='], 'num_upcoming_events', _elm_lang$core$Json_Decode$int)),
-									A2(_user$project$SeatGeek_ops[':='], 'id', _elm_lang$core$Json_Decode$int)),
-								A2(_user$project$SeatGeek_ops[':='], 'slug', _elm_lang$core$Json_Decode$string)),
-							_elm_lang$core$Json_Decode$maybe(
-								A2(_user$project$SeatGeek_ops[':='], 'timezone', _elm_lang$core$Json_Decode$string))),
-						A2(_user$project$SeatGeek_ops[':='], 'url', _elm_lang$core$Json_Decode$string)),
-					A2(_user$project$SeatGeek_ops[':='], 'postal_code', _elm_lang$core$Json_Decode$string)),
-				A2(_user$project$SeatGeek_ops[':='], 'city', _elm_lang$core$Json_Decode$string)),
-			A2(_user$project$SeatGeek_ops[':='], 'country', _elm_lang$core$Json_Decode$string)),
-		A2(_user$project$SeatGeek_ops[':='], 'score', _elm_lang$core$Json_Decode$float)),
-	A2(_user$project$SeatGeek_ops[':='], 'address', _elm_lang$core$Json_Decode$string));
-var _user$project$SeatGeek$decodeTickets = A2(
-	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-	A2(
-		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-		A2(
-			_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-			A2(
-				_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-				A2(
-					_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-					_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeekTypes$Tickets),
-					_elm_lang$core$Json_Decode$maybe(
-						A2(_user$project$SeatGeek_ops[':='], 'listing_count', _elm_lang$core$Json_Decode$int))),
-				_elm_lang$core$Json_Decode$maybe(
-					A2(_user$project$SeatGeek_ops[':='], 'highest_price', _elm_lang$core$Json_Decode$float))),
-			_elm_lang$core$Json_Decode$maybe(
-				A2(_user$project$SeatGeek_ops[':='], 'average_price', _elm_lang$core$Json_Decode$float))),
-		_elm_lang$core$Json_Decode$maybe(
-			A2(_user$project$SeatGeek_ops[':='], 'lowest_price_good_deals', _elm_lang$core$Json_Decode$float))),
-	_elm_lang$core$Json_Decode$maybe(
-		A2(_user$project$SeatGeek_ops[':='], 'lowest_price', _elm_lang$core$Json_Decode$float)));
-var _user$project$SeatGeek$decodeEvent = A2(
-	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-	A2(
-		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-		A2(
-			_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-			A2(
-				_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-				A2(
-					_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-					A2(
-						_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-						A2(
-							_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-							A2(
-								_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-								A2(
-									_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-									A2(
-										_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-										A2(
-											_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-											A2(
-												_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-												A2(
-													_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-													A2(
-														_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-														A2(
-															_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-															A2(
-																_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-																A2(
-																	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-																	A2(
-																		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-																		_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeekTypes$Event),
-																		A2(_user$project$SeatGeek_ops[':='], 'datetime_utc', _elm_lang$core$Json_Decode$string)),
-																	A2(_user$project$SeatGeek_ops[':='], 'visible_until_utc', _elm_lang$core$Json_Decode$string)),
-																A2(_user$project$SeatGeek_ops[':='], 'datetime_local', _elm_lang$core$Json_Decode$string)),
-															A2(_user$project$SeatGeek_ops[':='], 'time_tbd', _elm_lang$core$Json_Decode$bool)),
-														A2(
-															_user$project$SeatGeek_ops[':='],
-															'taxonomies',
-															_elm_lang$core$Json_Decode$list(_user$project$SeatGeek$decodeTaxonomy))),
-													A2(_user$project$SeatGeek_ops[':='], 'type', _elm_lang$core$Json_Decode$string)),
-												A2(_user$project$SeatGeek_ops[':='], 'created_at', _elm_lang$core$Json_Decode$string)),
-											A2(
-												_user$project$SeatGeek_ops[':='],
-												'performers',
-												_elm_lang$core$Json_Decode$list(_user$project$SeatGeek$decodePerformer))),
-										A2(
-											_elm_community$json_extra$Json_Decode_Extra$withDefault,
-											0.0,
-											A2(_user$project$SeatGeek_ops[':='], 'score', _elm_lang$core$Json_Decode$float))),
-									A2(_user$project$SeatGeek_ops[':='], 'short_title', _elm_lang$core$Json_Decode$string)),
-								A2(_user$project$SeatGeek_ops[':='], 'venue', _user$project$SeatGeek$decodeVenue)),
-							A2(_user$project$SeatGeek_ops[':='], 'id', _elm_lang$core$Json_Decode$int)),
-						A2(_user$project$SeatGeek_ops[':='], 'stats', _user$project$SeatGeek$decodeTickets)),
-					A2(_user$project$SeatGeek_ops[':='], 'date_tbd', _elm_lang$core$Json_Decode$bool)),
-				A2(_user$project$SeatGeek_ops[':='], 'title', _elm_lang$core$Json_Decode$string)),
-			A2(_user$project$SeatGeek_ops[':='], 'popularity', _elm_lang$core$Json_Decode$float)),
-		A2(_user$project$SeatGeek_ops[':='], 'url', _elm_lang$core$Json_Decode$string)),
-	A2(_user$project$SeatGeek_ops[':='], 'announce_date', _elm_lang$core$Json_Decode$string));
-var _user$project$SeatGeek$decodeMetaGeolocation = A2(
-	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-	A2(
-		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-		A2(
-			_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-			A2(
-				_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-				A2(
-					_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-					A2(
-						_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-						A2(
-							_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-							A2(
-								_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-								_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeekTypes$MetaGeolocation),
-								A2(_user$project$SeatGeek_ops[':='], 'state', _elm_lang$core$Json_Decode$string)),
-							A2(_user$project$SeatGeek_ops[':='], 'postal_code', _elm_lang$core$Json_Decode$string)),
-						A2(_user$project$SeatGeek_ops[':='], 'lat', _elm_lang$core$Json_Decode$float)),
-					A2(_user$project$SeatGeek_ops[':='], 'range', _elm_lang$core$Json_Decode$string)),
-				A2(_user$project$SeatGeek_ops[':='], 'display_name', _elm_lang$core$Json_Decode$string)),
-			A2(_user$project$SeatGeek_ops[':='], 'city', _elm_lang$core$Json_Decode$string)),
-		A2(_user$project$SeatGeek_ops[':='], 'country', _elm_lang$core$Json_Decode$string)),
-	A2(_user$project$SeatGeek_ops[':='], 'lon', _elm_lang$core$Json_Decode$float));
-var _user$project$SeatGeek$decodeReplyMeta = A2(
-	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-	A2(
-		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-		A2(
-			_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-			A2(
-				_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-				A2(
-					_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-					_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeekTypes$ReplyMeta),
-					A2(_user$project$SeatGeek_ops[':='], 'per_page', _elm_lang$core$Json_Decode$int)),
-				A2(_user$project$SeatGeek_ops[':='], 'took', _elm_lang$core$Json_Decode$int)),
-			A2(_user$project$SeatGeek_ops[':='], 'geolocation', _user$project$SeatGeek$decodeMetaGeolocation)),
-		A2(_user$project$SeatGeek_ops[':='], 'total', _elm_lang$core$Json_Decode$int)),
-	A2(_user$project$SeatGeek_ops[':='], 'page', _elm_lang$core$Json_Decode$int));
-var _user$project$SeatGeek$decodeReply = A2(
-	_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-	A2(
-		_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-		_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeekTypes$Reply),
-		A2(_user$project$SeatGeek_ops[':='], 'meta', _user$project$SeatGeek$decodeReplyMeta)),
-	A2(
-		_user$project$SeatGeek_ops[':='],
-		'events',
-		_elm_lang$core$Json_Decode$list(_user$project$SeatGeek$decodeEvent)));
-var _user$project$SeatGeek$askQuery = function (query) {
-	var url = _user$project$SeatGeek$composeRequest(query);
-	var request = A2(_elm_lang$http$Http$get, url, _user$project$SeatGeek$decodeReply);
+var _user$project$SeatGeek_Query$askQuery = function (query) {
+	var url = _user$project$SeatGeek_Query$composeRequest(query);
+	var request = A2(_elm_lang$http$Http$get, url, _user$project$SeatGeek_Decode$decodeReply);
 	return A2(_elm_lang$http$Http$send, _user$project$Types$GetReply, request);
 };
 
-var _user$project$Events$subscriptions = function (model) {
+var _user$project$Moment$clockTime = function (x) {
+	return A3(_rluiten$elm_date_extra$Date_Extra_Format$format, _rluiten$elm_date_extra$Date_Extra_Config_Config_en_us$config, '%-I:%M %P', x);
+};
+var _user$project$Moment$fullDate = function (x) {
+	return A3(_rluiten$elm_date_extra$Date_Extra_Format$format, _rluiten$elm_date_extra$Date_Extra_Config_Config_en_us$config, '%A, %B %@e, %Y', x);
+};
+var _user$project$Moment$thisPartOfDay = function (hour) {
+	return _elm_lang$core$Native_Utils.eq(hour, 1) ? 'in an hour' : A2(
+		_elm_lang$core$Basics_ops['++'],
+		'in ',
+		A2(
+			_elm_lang$core$Basics_ops['++'],
+			_elm_lang$core$Basics$toString(hour),
+			' hours'));
+};
+var _user$project$Moment$somePartOfDay = F2(
+	function (hour, day) {
+		return _elm_lang$core$Native_Utils.eq(hour, 0) ? A2(_elm_lang$core$Basics_ops['++'], day, ' at midnight') : ((_elm_lang$core$Native_Utils.cmp(hour, 3) < 0) ? A2(_elm_lang$core$Basics_ops['++'], day, ' after midnight') : ((_elm_lang$core$Native_Utils.cmp(hour, 5) < 0) ? A2(_elm_lang$core$Basics_ops['++'], day, ' at dawn') : ((_elm_lang$core$Native_Utils.cmp(hour, 8) < 0) ? A2(
+			_elm_lang$core$Basics_ops['++'],
+			'early ',
+			A2(_elm_lang$core$Basics_ops['++'], day, ' morning')) : ((_elm_lang$core$Native_Utils.cmp(hour, 10) < 0) ? A2(_elm_lang$core$Basics_ops['++'], day, ' morning') : ((_elm_lang$core$Native_Utils.cmp(hour, 12) < 0) ? A2(
+			_elm_lang$core$Basics_ops['++'],
+			'late ',
+			A2(_elm_lang$core$Basics_ops['++'], day, ' morning')) : (_elm_lang$core$Native_Utils.eq(hour, 12) ? A2(_elm_lang$core$Basics_ops['++'], day, ' at noon') : ((_elm_lang$core$Native_Utils.cmp(hour, 15) < 0) ? A2(_elm_lang$core$Basics_ops['++'], day, ' afternoon') : ((_elm_lang$core$Native_Utils.cmp(hour, 17) < 0) ? A2(
+			_elm_lang$core$Basics_ops['++'],
+			'late ',
+			A2(_elm_lang$core$Basics_ops['++'], day, ' afternoon')) : ((_elm_lang$core$Native_Utils.cmp(hour, 20) < 0) ? A2(_elm_lang$core$Basics_ops['++'], day, ' evening') : ((_elm_lang$core$Native_Utils.cmp(hour, 23) < 0) ? A2(_elm_lang$core$Basics_ops['++'], day, ' night') : ((_elm_lang$core$Native_Utils.cmp(hour, 24) < 0) ? A2(
+			_elm_lang$core$Basics_ops['++'],
+			'late ',
+			A2(_elm_lang$core$Basics_ops['++'], day, ' night')) : 'For some reason, I think there are more than 24 hours in a day.')))))))))));
+	});
+var _user$project$Moment$simpleTime = F2(
+	function (delta, maybeEventDate) {
+		var _p0 = maybeEventDate;
+		if (_p0.ctor === 'Nothing') {
+			return 'welp, I couldn\'t determine the date of the event';
+		} else {
+			var _p1 = _p0._0;
+			return A2(
+				_elm_lang$core$String$contains,
+				'-',
+				_elm_lang$core$Basics$toString(delta)) ? 'happening now' : ((_elm_lang$core$Native_Utils.cmp(delta.year, 1) > 0) ? 'in over a year' : (_elm_lang$core$Native_Utils.eq(delta.year, 1) ? 'in a year' : ((_elm_lang$core$Native_Utils.cmp(delta.month, 1) > 0) ? A2(
+				_elm_lang$core$Basics_ops['++'],
+				'in ',
+				_rluiten$elm_date_extra$Date_Extra_I18n_I_en_us$monthName(
+					_elm_lang$core$Date$month(_p1))) : (_elm_lang$core$Native_Utils.eq(delta.month, 1) ? 'next month' : ((_elm_lang$core$Native_Utils.cmp(delta.day, 13) > 0) ? A2(
+				_elm_lang$core$Basics_ops['++'],
+				'in ',
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					_elm_lang$core$Basics$toString((delta.day / 7) | 0),
+					' weeks')) : ((_elm_lang$core$Native_Utils.cmp(delta.day, 6) > 0) ? A2(
+				_elm_lang$core$Basics_ops['++'],
+				'next ',
+				_rluiten$elm_date_extra$Date_Extra_I18n_I_en_us$dayName(
+					_elm_lang$core$Date$dayOfWeek(_p1))) : ((_elm_lang$core$Native_Utils.cmp(delta.day, 1) > 0) ? A2(
+				_user$project$Moment$somePartOfDay,
+				_elm_lang$core$Date$hour(_p1),
+				_rluiten$elm_date_extra$Date_Extra_I18n_I_en_us$dayName(
+					_elm_lang$core$Date$dayOfWeek(_p1))) : (_elm_lang$core$Native_Utils.eq(delta.day, 1) ? A2(
+				_user$project$Moment$somePartOfDay,
+				_elm_lang$core$Date$hour(_p1),
+				_rluiten$elm_date_extra$Date_Extra_I18n_I_en_us$dayName(
+					_elm_lang$core$Date$dayOfWeek(_p1))) : _user$project$Moment$thisPartOfDay(
+				_elm_lang$core$Date$hour(_p1))))))))));
+		}
+	});
+var _user$project$Moment$maybeEventDate = function (date) {
+	return _elm_lang$core$Result$toMaybe(
+		_elm_lang$core$Date$fromString(date));
+};
+var _user$project$Moment$deltaTime = F2(
+	function (now, upcoming) {
+		return A3(_elm_lang$core$Maybe$map2, _rluiten$elm_date_extra$Date_Extra_Duration$diff, upcoming, now);
+	});
+
+var _user$project$Pages_Events$subscriptions = _elm_lang$core$Platform_Sub$none;
+var _user$project$Pages_Events$maybeImage = function (performers) {
+	var _p0 = _elm_lang$core$List$head(performers);
+	if (_p0.ctor === 'Just') {
+		return _p0._0.image;
+	} else {
+		return _elm_lang$core$Maybe$Nothing;
+	}
+};
+var _user$project$Pages_Events$eventListView = F2(
+	function (maybeNow, event) {
+		var cardImage = function () {
+			var seed = _elm_lang$core$String$length(event.title) * _elm_lang$core$String$length(event.url);
+			var _p1 = _user$project$Pages_Events$maybeImage(event.performers);
+			if (_p1.ctor === 'Just') {
+				return A2(
+					_elm_lang$html$Html$div,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class(
+							A2(
+								_elm_lang$core$Basics_ops['++'],
+								'w-100 mb2 mt1 ',
+								_user$project$Assets$randomGradient(seed))),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$div,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$style(
+									{
+										ctor: '::',
+										_0: {
+											ctor: '_Tuple2',
+											_0: 'background-image',
+											_1: A2(
+												_elm_lang$core$Basics_ops['++'],
+												'url(',
+												A2(_elm_lang$core$Basics_ops['++'], _p1._0, ')'))
+										},
+										_1: {ctor: '[]'}
+									}),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$class('aspect-ratio--8x5 cover'),
+									_1: {ctor: '[]'}
+								}
+							},
+							{ctor: '[]'}),
+						_1: {ctor: '[]'}
+					});
+			} else {
+				return _elm_lang$html$Html$text('');
+			}
+		}();
+		var atIcon = A2(
+			_elm_lang$html$Html$div,
+			{
+				ctor: '::',
+				_0: _user$project$Assets$feather('at-sign'),
+				_1: {
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('contain dib bg-center mr1 mt1 pb3 pr3'),
+					_1: {ctor: '[]'}
+				}
+			},
+			{ctor: '[]'});
+		var viewTime = function () {
+			var _p2 = A2(
+				_user$project$Moment$deltaTime,
+				maybeNow,
+				_user$project$Moment$maybeEventDate(event.datetime_local));
+			if (_p2.ctor === 'Nothing') {
+				return 'whoopsie, viewTime messed up';
+			} else {
+				return A2(
+					_user$project$Moment$simpleTime,
+					_p2._0,
+					_user$project$Moment$maybeEventDate(event.datetime_local));
+			}
+		}();
+		return A2(
+			_elm_lang$html$Html$div,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('animated fadeInUp ph3 pt3 ph4-m pt4-m hover-bg-black-30'),
+				_1: {
+					ctor: '::',
+					_0: _elm_lang$html$Html_Events$onClick(
+						_user$project$Types$ViewEvent(
+							_user$project$Types$GoEvents(
+								_elm_lang$core$Maybe$Just(event)))),
+					_1: {ctor: '[]'}
+				}
+			},
+			{
+				ctor: '::',
+				_0: cardImage,
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$div,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class('pb3 pb4-m bb b--white-20'),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$div,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$class('pb1 f4 f3-m pt3-m pt2'),
+									_1: {ctor: '[]'}
+								},
+								{
+									ctor: '::',
+									_0: A2(
+										_elm_lang$html$Html$span,
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html_Attributes$class('mr2 fw5'),
+											_1: {ctor: '[]'}
+										},
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html$text(event.title),
+											_1: {ctor: '[]'}
+										}),
+									_1: {
+										ctor: '::',
+										_0: A2(
+											_elm_lang$html$Html$div,
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html_Attributes$class('fw5 o-80 dib'),
+												_1: {ctor: '[]'}
+											},
+											{
+												ctor: '::',
+												_0: atIcon,
+												_1: {
+													ctor: '::',
+													_0: _elm_lang$html$Html$text(event.venue.name),
+													_1: {ctor: '[]'}
+												}
+											}),
+										_1: {ctor: '[]'}
+									}
+								}),
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$div,
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$class('pb2 flex justify-between items-center'),
+										_1: {ctor: '[]'}
+									},
+									{
+										ctor: '::',
+										_0: A2(
+											_elm_lang$html$Html$span,
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html_Attributes$class('fw4 o-60 ma0'),
+												_1: {ctor: '[]'}
+											},
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html$text(viewTime),
+												_1: {ctor: '[]'}
+											}),
+										_1: {
+											ctor: '::',
+											_0: A2(
+												_elm_lang$html$Html$ul,
+												{
+													ctor: '::',
+													_0: _elm_lang$html$Html_Attributes$class('pa0 ma0 list dib'),
+													_1: {ctor: '[]'}
+												},
+												A2(
+													_elm_lang$core$List$map,
+													function (x) {
+														return A2(
+															_elm_lang$html$Html$li,
+															{
+																ctor: '::',
+																_0: _elm_lang$html$Html_Attributes$class('ml2 dib'),
+																_1: {ctor: '[]'}
+															},
+															{
+																ctor: '::',
+																_0: _elm_lang$html$Html$text(
+																	_user$project$Assets$stringToEmoji(x.name)),
+																_1: {ctor: '[]'}
+															});
+													},
+													event.taxonomies)),
+											_1: {ctor: '[]'}
+										}
+									}),
+								_1: {ctor: '[]'}
+							}
+						}),
+					_1: {ctor: '[]'}
+				}
+			});
+	});
+var _user$project$Pages_Events$view = function (model) {
+	var mobileHide = function () {
+		var _p3 = model.route;
+		if ((_p3.ctor === 'GoEvents') && (_p3._0.ctor === 'Just')) {
+			return ' dn db-l ';
+		} else {
+			return '';
+		}
+	}();
+	var events = model.events;
+	return A2(
+		_elm_lang$html$Html$section,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class(
+				A2(_elm_lang$core$Basics_ops['++'], 'animated fadeInUp w-100 mw6-l overflow-auto z-999 flex-grow-1 shadow-2-l', mobileHide)),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$div,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('h5 flex flex-column justify-between pa3'),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: _user$project$Assets$discoverToolsView,
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$div,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$class('f1 f2-m lh-solid fw7 ma0 pa0'),
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text('discover events'),
+								_1: {ctor: '[]'}
+							}),
+						_1: {ctor: '[]'}
+					}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('bg-black-70'),
+						_1: {ctor: '[]'}
+					},
+					A2(
+						_elm_lang$core$List$map,
+						_user$project$Pages_Events$eventListView(events.currentDatetime),
+						events.seatgeek.events)),
+				_1: {ctor: '[]'}
+			}
+		});
+};
+var _user$project$Pages_Events$askQuery = function (query) {
+	var url = _user$project$SeatGeek_Query$composeRequest(query);
+	var request = A2(_elm_lang$http$Http$get, url, _user$project$SeatGeek_Decode$decodeReply);
+	return A2(_elm_lang$http$Http$send, _user$project$Types$GetReply, request);
+};
+
+var _user$project$Pages_Event$subscriptions = function (model) {
 	return _elm_lang$core$Platform_Sub$none;
 };
-var _user$project$Events$stringToEmoji = function (string) {
+var _user$project$Pages_Event$stringToEmoji = function (string) {
 	var _p0 = string;
 	switch (_p0) {
 		case 'concert':
@@ -13726,7 +14248,7 @@ var _user$project$Events$stringToEmoji = function (string) {
 			return '🤷';
 	}
 };
-var _user$project$Events$maybeImage = function (performers) {
+var _user$project$Pages_Event$maybeImage = function (performers) {
 	var _p1 = _elm_lang$core$List$head(performers);
 	if (_p1.ctor === 'Just') {
 		return _p1._0.image;
@@ -13734,22 +14256,93 @@ var _user$project$Events$maybeImage = function (performers) {
 		return _elm_lang$core$Maybe$Nothing;
 	}
 };
-var _user$project$Events$randomGradient = function (event) {
-	var randomSeed = _elm_lang$core$String$length(event.title) * _elm_lang$core$String$length(event.url);
-	var randomIndex = A2(
-		_elm_lang$core$Basics_ops['%'],
-		randomSeed,
-		_elm_lang$core$List$length(_user$project$Assets$gradients));
-	var selectedGradient = _elm_lang$core$List$head(
-		A2(_elm_lang$core$List$drop, randomIndex, _user$project$Assets$gradients));
-	var _p2 = selectedGradient;
-	if (_p2.ctor === 'Nothing') {
-		return '';
-	} else {
-		return A2(_elm_lang$core$Basics_ops['++'], _p2._0, '');
-	}
+var _user$project$Pages_Event$eventBanner = function (event) {
+	var heroImg = function () {
+		var _p2 = _user$project$Pages_Event$maybeImage(event.performers);
+		if (_p2.ctor === 'Nothing') {
+			var seed = _elm_lang$core$String$length(event.title) * _elm_lang$core$String$length(event.url);
+			return _elm_lang$html$Html_Attributes$class(
+				_user$project$Assets$randomGradient(seed));
+		} else {
+			return _elm_lang$html$Html_Attributes$style(
+				{
+					ctor: '::',
+					_0: {
+						ctor: '_Tuple2',
+						_0: 'background-image',
+						_1: A2(
+							_elm_lang$core$Basics_ops['++'],
+							'url(',
+							A2(_elm_lang$core$Basics_ops['++'], _p2._0, ')'))
+					},
+					_1: {ctor: '[]'}
+				});
+		}
+	}();
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: heroImg,
+			_1: {
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('bg-center cover aspect-ratio aspect-ratio--16x9 bb b--white-20'),
+				_1: {ctor: '[]'}
+			}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$div,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$style(
+						{
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: 'background-image', _1: 'linear-gradient( rgba(0,0,0,0.3), transparent)'},
+							_1: {ctor: '[]'}
+						}),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('aspect-ratio--object cover bg-center flex flex-column items-end justify-between pa4 pb0'),
+						_1: {ctor: '[]'}
+					}
+				},
+				{
+					ctor: '::',
+					_0: _user$project$Assets$discoverToolsView,
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$div,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$class('pa3 lg-breathe-50 br-pill relative top-2 right-1 flex grow justify-center items-center'),
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$div,
+									{
+										ctor: '::',
+										_0: _user$project$Assets$feather('life-buoy'),
+										_1: {
+											ctor: '::',
+											_0: _elm_lang$html$Html_Attributes$class('h3 w3 contain'),
+											_1: {ctor: '[]'}
+										}
+									},
+									{ctor: '[]'}),
+								_1: {ctor: '[]'}
+							}),
+						_1: {ctor: '[]'}
+					}
+				}),
+			_1: {ctor: '[]'}
+		});
 };
-var _user$project$Events$eventIcons = function (event) {
+var _user$project$Pages_Event$eventEmojis = function (event) {
 	var toIcon = function (x) {
 		return A2(
 			_elm_lang$html$Html$li,
@@ -13770,7 +14363,7 @@ var _user$project$Events$eventIcons = function (event) {
 					{
 						ctor: '::',
 						_0: _elm_lang$html$Html$text(
-							_user$project$Events$stringToEmoji(x.name)),
+							_user$project$Pages_Event$stringToEmoji(x.name)),
 						_1: {ctor: '[]'}
 					}),
 				_1: {
@@ -13805,7 +14398,7 @@ var _user$project$Events$eventIcons = function (event) {
 		},
 		A2(_elm_lang$core$List$map, toIcon, event.taxonomies));
 };
-var _user$project$Events$progressBar = function (num) {
+var _user$project$Pages_Event$progressBar = function (num) {
 	var percent = num * 100;
 	var _p3 = percent;
 	if (_p3 === 0.0) {
@@ -13848,7 +14441,7 @@ var _user$project$Events$progressBar = function (num) {
 			});
 	}
 };
-var _user$project$Events$eventPool = A2(
+var _user$project$Pages_Event$eventPool = A2(
 	_elm_lang$html$Html$div,
 	{
 		ctor: '::',
@@ -13946,7 +14539,7 @@ var _user$project$Events$eventPool = A2(
 			}
 		}
 	});
-var _user$project$Events$yetToBeAdded = A2(
+var _user$project$Pages_Event$yetToBeAdded = A2(
 	_elm_lang$html$Html$div,
 	{
 		ctor: '::',
@@ -13958,7 +14551,7 @@ var _user$project$Events$yetToBeAdded = A2(
 		_0: _elm_lang$html$Html$text('I still need to add genres in the emojis.\n                I need to have photo galleries for extra photos,\n                other events at the venue, other venues the artist will be at,\n                spotify, Last.fm, and google maps integration. I also need to make\n                events that do not have defined times do not display a time.\n\n                Sed ut perspiciatis, unde omnis iste natus error sit voluptatem\n                accusantium doloremque laudantium, totam rem aperiam eaque ipsa,\n                quae ab illo inventore veritatis et quasi architecto beatae vitae\n                dicta sunt, explicabo. Nemo enim ipsam voluptatem, quia voluptas sit,\n                aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos,\n                qui ratione voluptatem sequi nesciunt, neque porro quisquam est.\n                qui dolorem ipsum, quia dolor sit amet consectetur adipisci.\n                velit, sed quia non numquam [do] eius modi tempora inci[di]dunt,\n                ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima\n                veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam,\n                nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure\n                reprehenderit, qui in ea voluptate velit esse, quam nihil molestiae\n                consequatur, vel illum, qui dolorem eum fugiat, quo voluptas nulla pariatur?\n                '),
 		_1: {ctor: '[]'}
 	});
-var _user$project$Events$eventPopularity = function (event) {
+var _user$project$Pages_Event$eventPopularity = function (event) {
 	var _p4 = event.popularity;
 	if (_p4 === 0.0) {
 		return _elm_lang$html$Html$text('');
@@ -13995,10 +14588,10 @@ var _user$project$Events$eventPopularity = function (event) {
 						},
 						{
 							ctor: '::',
-							_0: _user$project$Events$progressBar(event.popularity),
+							_0: _user$project$Pages_Event$progressBar(event.popularity),
 							_1: {
 								ctor: '::',
-								_0: _user$project$Events$progressBar(event.score),
+								_0: _user$project$Pages_Event$progressBar(event.score),
 								_1: {ctor: '[]'}
 							}
 						}),
@@ -14007,7 +14600,7 @@ var _user$project$Events$eventPopularity = function (event) {
 			});
 	}
 };
-var _user$project$Events$eventTickets = function (event) {
+var _user$project$Pages_Event$eventTickets = function (event) {
 	var emptyTickets = A2(
 		_elm_lang$core$List$all,
 		function (x) {
@@ -14094,89 +14687,18 @@ var _user$project$Events$eventTickets = function (event) {
 		return _elm_lang$html$Html$text('');
 	}
 };
-var _user$project$Events$thisPartOfDay = function (hour) {
-	return _elm_lang$core$Native_Utils.eq(hour, 1) ? 'in an hour' : A2(
-		_elm_lang$core$Basics_ops['++'],
-		'in ',
-		A2(
-			_elm_lang$core$Basics_ops['++'],
-			_elm_lang$core$Basics$toString(hour),
-			' hours'));
-};
-var _user$project$Events$somePartOfDay = F2(
-	function (hour, day) {
-		return _elm_lang$core$Native_Utils.eq(hour, 0) ? A2(_elm_lang$core$Basics_ops['++'], day, ' at midnight') : ((_elm_lang$core$Native_Utils.cmp(hour, 3) < 0) ? A2(_elm_lang$core$Basics_ops['++'], day, ' after midnight') : ((_elm_lang$core$Native_Utils.cmp(hour, 5) < 0) ? A2(_elm_lang$core$Basics_ops['++'], day, ' at dawn') : ((_elm_lang$core$Native_Utils.cmp(hour, 8) < 0) ? A2(
-			_elm_lang$core$Basics_ops['++'],
-			'early ',
-			A2(_elm_lang$core$Basics_ops['++'], day, ' morning')) : ((_elm_lang$core$Native_Utils.cmp(hour, 10) < 0) ? A2(_elm_lang$core$Basics_ops['++'], day, ' morning') : ((_elm_lang$core$Native_Utils.cmp(hour, 12) < 0) ? A2(
-			_elm_lang$core$Basics_ops['++'],
-			'late ',
-			A2(_elm_lang$core$Basics_ops['++'], day, ' morning')) : (_elm_lang$core$Native_Utils.eq(hour, 12) ? A2(_elm_lang$core$Basics_ops['++'], day, ' at noon') : ((_elm_lang$core$Native_Utils.cmp(hour, 15) < 0) ? A2(_elm_lang$core$Basics_ops['++'], day, ' afternoon') : ((_elm_lang$core$Native_Utils.cmp(hour, 17) < 0) ? A2(
-			_elm_lang$core$Basics_ops['++'],
-			'late ',
-			A2(_elm_lang$core$Basics_ops['++'], day, ' afternoon')) : ((_elm_lang$core$Native_Utils.cmp(hour, 20) < 0) ? A2(_elm_lang$core$Basics_ops['++'], day, ' evening') : ((_elm_lang$core$Native_Utils.cmp(hour, 23) < 0) ? A2(_elm_lang$core$Basics_ops['++'], day, ' night') : ((_elm_lang$core$Native_Utils.cmp(hour, 24) < 0) ? A2(
-			_elm_lang$core$Basics_ops['++'],
-			'late ',
-			A2(_elm_lang$core$Basics_ops['++'], day, ' night')) : 'For some reason, I think there are more than 24 hours in a day.')))))))))));
-	});
-var _user$project$Events$simpleTime = F2(
-	function (delta, maybeEventDate) {
-		var _p6 = maybeEventDate;
-		if (_p6.ctor === 'Nothing') {
-			return 'welp, I couldn\'t determine the date of the event';
-		} else {
-			var _p7 = _p6._0;
-			return A2(
-				_elm_lang$core$String$contains,
-				'-',
-				_elm_lang$core$Basics$toString(delta)) ? 'happening now' : ((_elm_lang$core$Native_Utils.cmp(delta.year, 1) > 0) ? 'in over a year' : (_elm_lang$core$Native_Utils.eq(delta.year, 1) ? 'in a year' : ((_elm_lang$core$Native_Utils.cmp(delta.month, 1) > 0) ? A2(
-				_elm_lang$core$Basics_ops['++'],
-				'in ',
-				_rluiten$elm_date_extra$Date_Extra_I18n_I_en_us$monthName(
-					_elm_lang$core$Date$month(_p7))) : (_elm_lang$core$Native_Utils.eq(delta.month, 1) ? 'next month' : ((_elm_lang$core$Native_Utils.cmp(delta.day, 13) > 0) ? A2(
-				_elm_lang$core$Basics_ops['++'],
-				'in ',
-				A2(
-					_elm_lang$core$Basics_ops['++'],
-					_elm_lang$core$Basics$toString((delta.day / 7) | 0),
-					' weeks')) : ((_elm_lang$core$Native_Utils.cmp(delta.day, 6) > 0) ? A2(
-				_elm_lang$core$Basics_ops['++'],
-				'next ',
-				_rluiten$elm_date_extra$Date_Extra_I18n_I_en_us$dayName(
-					_elm_lang$core$Date$dayOfWeek(_p7))) : ((_elm_lang$core$Native_Utils.cmp(delta.day, 1) > 0) ? A2(
-				_user$project$Events$somePartOfDay,
-				_elm_lang$core$Date$hour(_p7),
-				_rluiten$elm_date_extra$Date_Extra_I18n_I_en_us$dayName(
-					_elm_lang$core$Date$dayOfWeek(_p7))) : (_elm_lang$core$Native_Utils.eq(delta.day, 1) ? A2(
-				_user$project$Events$somePartOfDay,
-				_elm_lang$core$Date$hour(_p7),
-				_rluiten$elm_date_extra$Date_Extra_I18n_I_en_us$dayName(
-					_elm_lang$core$Date$dayOfWeek(_p7))) : _user$project$Events$thisPartOfDay(
-				_elm_lang$core$Date$hour(_p7))))))))));
-		}
-	});
-var _user$project$Events$maybeEventDate = function (date) {
-	return _elm_lang$core$Result$toMaybe(
-		_elm_lang$core$Date$fromString(date));
-};
-var _user$project$Events$eventTime = F2(
+var _user$project$Pages_Event$eventTime = F2(
 	function (event, maybeNow) {
-		var clockTime = function (x) {
-			return A3(_rluiten$elm_date_extra$Date_Extra_Format$format, _rluiten$elm_date_extra$Date_Extra_Config_Config_en_us$config, '%-I:%M %P', x);
-		};
-		var fullDate = function (x) {
-			return A3(_rluiten$elm_date_extra$Date_Extra_Format$format, _rluiten$elm_date_extra$Date_Extra_Config_Config_en_us$config, '%A, %B %@e, %Y', x);
-		};
 		var eventDateView = function () {
-			var _p8 = _user$project$Events$maybeEventDate(event.datetime_local);
-			if (_p8.ctor === 'Nothing') {
+			var _p6 = _user$project$Moment$maybeEventDate(event.datetime_local);
+			if (_p6.ctor === 'Nothing') {
 				return {
 					ctor: '::',
 					_0: _elm_lang$html$Html$text('not sure what time this event is'),
 					_1: {ctor: '[]'}
 				};
 			} else {
-				var _p9 = _p8._0;
+				var _p7 = _p6._0;
 				return {
 					ctor: '::',
 					_0: A2(
@@ -14189,7 +14711,7 @@ var _user$project$Events$eventTime = F2(
 						{
 							ctor: '::',
 							_0: _elm_lang$html$Html$text(
-								clockTime(_p9)),
+								_user$project$Moment$clockTime(_p7)),
 							_1: {ctor: '[]'}
 						}),
 					_1: {
@@ -14204,7 +14726,7 @@ var _user$project$Events$eventTime = F2(
 							{
 								ctor: '::',
 								_0: _elm_lang$html$Html$text(
-									fullDate(_p9)),
+									_user$project$Moment$fullDate(_p7)),
 								_1: {ctor: '[]'}
 							}),
 						_1: {ctor: '[]'}
@@ -14231,223 +14753,16 @@ var _user$project$Events$eventTime = F2(
 					eventDateView),
 				_1: {
 					ctor: '::',
-					_0: _user$project$Events$eventTickets(event),
+					_0: _user$project$Pages_Event$eventTickets(event),
 					_1: {ctor: '[]'}
 				}
 			});
 	});
-var _user$project$Events$deltaTime = F2(
-	function (now, upcoming) {
-		return A3(_elm_lang$core$Maybe$map2, _rluiten$elm_date_extra$Date_Extra_Duration$diff, upcoming, now);
-	});
-var _user$project$Events$eventListView = F2(
-	function (maybeNow, event) {
-		var cardImage = function () {
-			var _p10 = _user$project$Events$maybeImage(event.performers);
-			if (_p10.ctor === 'Just') {
-				return A2(
-					_elm_lang$html$Html$div,
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class(
-							A2(
-								_elm_lang$core$Basics_ops['++'],
-								'w-100 mb2 mt1 ',
-								_user$project$Events$randomGradient(event))),
-						_1: {ctor: '[]'}
-					},
-					{
-						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$div,
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$style(
-									{
-										ctor: '::',
-										_0: {
-											ctor: '_Tuple2',
-											_0: 'background-image',
-											_1: A2(
-												_elm_lang$core$Basics_ops['++'],
-												'url(',
-												A2(_elm_lang$core$Basics_ops['++'], _p10._0, ')'))
-										},
-										_1: {ctor: '[]'}
-									}),
-								_1: {
-									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$class('aspect-ratio--8x5 cover'),
-									_1: {ctor: '[]'}
-								}
-							},
-							{ctor: '[]'}),
-						_1: {ctor: '[]'}
-					});
-			} else {
-				return _elm_lang$html$Html$text('');
-			}
-		}();
-		var atIcon = A2(
-			_elm_lang$html$Html$div,
-			{
-				ctor: '::',
-				_0: _user$project$Assets$feather('at-sign'),
-				_1: {
-					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class('contain dib bg-center mr1 mt1 pb3 pr3'),
-					_1: {ctor: '[]'}
-				}
-			},
-			{ctor: '[]'});
-		var viewTime = function () {
-			var _p11 = A2(
-				_user$project$Events$deltaTime,
-				maybeNow,
-				_user$project$Events$maybeEventDate(event.datetime_local));
-			if (_p11.ctor === 'Nothing') {
-				return 'whoopsie, viewTime messed up';
-			} else {
-				return A2(
-					_user$project$Events$simpleTime,
-					_p11._0,
-					_user$project$Events$maybeEventDate(event.datetime_local));
-			}
-		}();
-		return A2(
-			_elm_lang$html$Html$div,
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class('animated fadeInUp ph3 pt3 hover-bg-black-30'),
-				_1: {
-					ctor: '::',
-					_0: _elm_lang$html$Html_Events$onClick(
-						_user$project$Types$ViewEvent(
-							_elm_lang$core$Maybe$Just(event.id))),
-					_1: {ctor: '[]'}
-				}
-			},
-			{
-				ctor: '::',
-				_0: cardImage,
-				_1: {
-					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html$div,
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('pb3 bb b--white-20'),
-							_1: {ctor: '[]'}
-						},
-						{
-							ctor: '::',
-							_0: A2(
-								_elm_lang$html$Html$div,
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$class('pb1 f4 pv2'),
-									_1: {ctor: '[]'}
-								},
-								{
-									ctor: '::',
-									_0: A2(
-										_elm_lang$html$Html$span,
-										{
-											ctor: '::',
-											_0: _elm_lang$html$Html_Attributes$class('mr2 fw5'),
-											_1: {ctor: '[]'}
-										},
-										{
-											ctor: '::',
-											_0: _elm_lang$html$Html$text(event.title),
-											_1: {ctor: '[]'}
-										}),
-									_1: {
-										ctor: '::',
-										_0: A2(
-											_elm_lang$html$Html$div,
-											{
-												ctor: '::',
-												_0: _elm_lang$html$Html_Attributes$class('fw5 o-80 dib'),
-												_1: {ctor: '[]'}
-											},
-											{
-												ctor: '::',
-												_0: atIcon,
-												_1: {
-													ctor: '::',
-													_0: _elm_lang$html$Html$text(event.venue.name),
-													_1: {ctor: '[]'}
-												}
-											}),
-										_1: {ctor: '[]'}
-									}
-								}),
-							_1: {
-								ctor: '::',
-								_0: A2(
-									_elm_lang$html$Html$div,
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$class('pb2 flex justify-between items-center'),
-										_1: {ctor: '[]'}
-									},
-									{
-										ctor: '::',
-										_0: A2(
-											_elm_lang$html$Html$span,
-											{
-												ctor: '::',
-												_0: _elm_lang$html$Html_Attributes$class('fw4 o-60 ma0'),
-												_1: {ctor: '[]'}
-											},
-											{
-												ctor: '::',
-												_0: _elm_lang$html$Html$text(viewTime),
-												_1: {ctor: '[]'}
-											}),
-										_1: {
-											ctor: '::',
-											_0: A2(
-												_elm_lang$html$Html$ul,
-												{
-													ctor: '::',
-													_0: _elm_lang$html$Html_Attributes$class('pa0 ma0 list dib'),
-													_1: {ctor: '[]'}
-												},
-												A2(
-													_elm_lang$core$List$map,
-													function (x) {
-														return A2(
-															_elm_lang$html$Html$li,
-															{
-																ctor: '::',
-																_0: _elm_lang$html$Html_Attributes$class('ml2 dib'),
-																_1: {ctor: '[]'}
-															},
-															{
-																ctor: '::',
-																_0: _elm_lang$html$Html$text(
-																	_user$project$Events$stringToEmoji(x.name)),
-																_1: {ctor: '[]'}
-															});
-													},
-													event.taxonomies)),
-											_1: {ctor: '[]'}
-										}
-									}),
-								_1: {ctor: '[]'}
-							}
-						}),
-					_1: {ctor: '[]'}
-				}
-			});
-	});
-var _user$project$Events$eventTitle = function (event) {
+var _user$project$Pages_Event$eventTitle = function (event) {
 	var textSize = F2(
 		function (x, y) {
-			var _p12 = (_elm_lang$core$String$length(x) / y) | 0;
-			switch (_p12) {
+			var _p8 = (_elm_lang$core$String$length(x) / y) | 0;
+			switch (_p8) {
 				case 0:
 					return ' f-subheadline';
 				case 1:
@@ -14517,196 +14832,36 @@ var _user$project$Events$eventTitle = function (event) {
 			}
 		});
 };
-var _user$project$Events$selectedEvent = function (model) {
-	return _elm_lang$core$List$head(
-		A2(
-			_elm_lang$core$List$filter,
-			function (x) {
-				return _elm_lang$core$Native_Utils.eq(
-					model.selectedEvent,
-					_elm_lang$core$Maybe$Just(x.id));
-			},
-			model.seatgeek.events));
-};
-var _user$project$Events$discoverToolsView = function () {
-	var icon = function (x) {
-		return A2(
-			_elm_lang$html$Html$div,
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class('animated bounceIn pointer hover-bg-black-50 br-pill pa2'),
-				_1: {ctor: '[]'}
-			},
-			{
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$div,
-					{
-						ctor: '::',
-						_0: _user$project$Assets$feather(x),
-						_1: {
-							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('contain bg-center grow pt3 pb2 pl3 pr2'),
-							_1: {ctor: '[]'}
-						}
-					},
-					{ctor: '[]'}),
-				_1: {ctor: '[]'}
-			});
-	};
-	return A2(
-		_elm_lang$html$Html$div,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('flex justify-end'),
-			_1: {ctor: '[]'}
-		},
-		A2(
-			_elm_lang$core$List$map,
-			icon,
-			{
-				ctor: '::',
-				_0: 'search',
-				_1: {
-					ctor: '::',
-					_0: 'map-pin',
-					_1: {
-						ctor: '::',
-						_0: 'thumbs-up',
-						_1: {
-							ctor: '::',
-							_0: 'tag',
-							_1: {
-								ctor: '::',
-								_0: 'at-sign',
-								_1: {ctor: '[]'}
-							}
-						}
-					}
-				}
-			}));
-}();
-var _user$project$Events$eventBanner = function (event) {
-	var heroImg = function () {
-		var _p13 = _user$project$Events$maybeImage(event.performers);
-		if (_p13.ctor === 'Nothing') {
-			return _elm_lang$html$Html_Attributes$class(
-				_user$project$Events$randomGradient(event));
-		} else {
-			return _elm_lang$html$Html_Attributes$style(
-				{
-					ctor: '::',
-					_0: {
-						ctor: '_Tuple2',
-						_0: 'background-image',
-						_1: A2(
-							_elm_lang$core$Basics_ops['++'],
-							'url(',
-							A2(_elm_lang$core$Basics_ops['++'], _p13._0, ')'))
-					},
-					_1: {ctor: '[]'}
-				});
-		}
-	}();
-	return A2(
-		_elm_lang$html$Html$div,
-		{
-			ctor: '::',
-			_0: heroImg,
-			_1: {
-				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class('bg-center cover aspect-ratio aspect-ratio--16x9 bb b--white-20'),
-				_1: {ctor: '[]'}
-			}
-		},
-		{
-			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$div,
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$style(
-						{
-							ctor: '::',
-							_0: {ctor: '_Tuple2', _0: 'background-image', _1: 'linear-gradient( rgba(0,0,0,0.3), transparent)'},
-							_1: {ctor: '[]'}
-						}),
-					_1: {
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class('aspect-ratio--object cover bg-center flex flex-column items-end justify-between pa4 pb0'),
-						_1: {ctor: '[]'}
-					}
-				},
-				{
-					ctor: '::',
-					_0: _user$project$Events$discoverToolsView,
-					_1: {
-						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$div,
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$class('pa3 lg-breathe-50 br-pill relative top-2 right-1 flex grow justify-center items-center'),
-								_1: {ctor: '[]'}
-							},
-							{
-								ctor: '::',
-								_0: A2(
-									_elm_lang$html$Html$div,
-									{
-										ctor: '::',
-										_0: _user$project$Assets$feather('life-buoy'),
-										_1: {
-											ctor: '::',
-											_0: _elm_lang$html$Html_Attributes$class('h3 w3 contain'),
-											_1: {ctor: '[]'}
-										}
-									},
-									{ctor: '[]'}),
-								_1: {ctor: '[]'}
-							}),
-						_1: {ctor: '[]'}
-					}
-				}),
-			_1: {ctor: '[]'}
-		});
-};
-var _user$project$Events$eventView = function (model) {
-	var now = model.currentDatetime;
-	var event = _user$project$Events$selectedEvent(model);
-	var _p14 = event;
-	if (_p14.ctor === 'Nothing') {
-		return _elm_lang$html$Html$text('');
-	} else {
-		var _p15 = _p14._0;
+var _user$project$Pages_Event$view = F2(
+	function (event, now) {
 		return A2(
 			_elm_lang$html$Html$section,
 			{
 				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class('dn db-ns vh-100 animated overflow-auto fadeInLeft mw7-ns flex-grow-1 bg-black-80 shadow-2-l'),
+				_0: _elm_lang$html$Html_Attributes$class('overflow-auto w-100 w-auto-ns flex-auto animated fadeInLeft mw7-ns flex-shrink-0 bg-black-70 shadow-2-l'),
 				_1: {ctor: '[]'}
 			},
 			{
 				ctor: '::',
-				_0: _user$project$Events$eventBanner(_p15),
+				_0: _user$project$Pages_Event$eventBanner(event),
 				_1: {
 					ctor: '::',
-					_0: _user$project$Events$eventTitle(_p15),
+					_0: _user$project$Pages_Event$eventTitle(event),
 					_1: {
 						ctor: '::',
-						_0: _user$project$Events$eventIcons(_p15),
+						_0: _user$project$Pages_Event$eventEmojis(event),
 						_1: {
 							ctor: '::',
-							_0: A2(_user$project$Events$eventTime, _p15, now),
+							_0: A2(_user$project$Pages_Event$eventTime, event, now),
 							_1: {
 								ctor: '::',
-								_0: _user$project$Events$eventPool,
+								_0: _user$project$Pages_Event$eventPool,
 								_1: {
 									ctor: '::',
-									_0: _user$project$Events$eventPopularity(_p15),
+									_0: _user$project$Pages_Event$eventPopularity(event),
 									_1: {
 										ctor: '::',
-										_0: _user$project$Events$yetToBeAdded,
+										_0: _user$project$Pages_Event$yetToBeAdded,
 										_1: {ctor: '[]'}
 									}
 								}
@@ -14715,98 +14870,10 @@ var _user$project$Events$eventView = function (model) {
 					}
 				}
 			});
-	}
-};
-var _user$project$Events$eventsView = function (model) {
-	return A2(
-		_elm_lang$html$Html$section,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('animated fadeInUp mw6-ns overflow-auto z-999 mr3-l mr2-m flex-grow-1 shadow-2-l'),
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$div,
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class('h5 flex flex-column justify-between pa3'),
-					_1: {ctor: '[]'}
-				},
-				{
-					ctor: '::',
-					_0: _user$project$Events$discoverToolsView,
-					_1: {
-						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$div,
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$class('f1 f2-m lh-solid fw7 ma0 pa0'),
-								_1: {ctor: '[]'}
-							},
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html$text('discover events'),
-								_1: {ctor: '[]'}
-							}),
-						_1: {ctor: '[]'}
-					}
-				}),
-			_1: {
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$div,
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class('bg-black-70'),
-						_1: {ctor: '[]'}
-					},
-					A2(
-						_elm_lang$core$List$map,
-						_user$project$Events$eventListView(model.currentDatetime),
-						model.seatgeek.events)),
-				_1: {ctor: '[]'}
-			}
-		});
-};
-var _user$project$Events$view = function (model) {
-	return A2(
-		_elm_lang$html$Html$div,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('overflow-hidden animated fadeIn ttl white flex fw4 vh-100 bg-black-60'),
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
-			_0: _user$project$Nav$bar,
-			_1: {
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$main_,
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class('flex-auto pt5-m pb5 pb0-ns flex justify-stretch'),
-						_1: {ctor: '[]'}
-					},
-					{
-						ctor: '::',
-						_0: _user$project$Events$eventsView(model),
-						_1: {
-							ctor: '::',
-							_0: _user$project$Events$eventView(model),
-							_1: {ctor: '[]'}
-						}
-					}),
-				_1: {ctor: '[]'}
-			}
-		});
-};
-var _user$project$Events$askQuery = function (query) {
-	var url = _user$project$SeatGeek$composeRequest(query);
-	var request = A2(_elm_lang$http$Http$get, url, _user$project$SeatGeek$decodeReply);
+	});
+var _user$project$Pages_Event$askQuery = function (query) {
+	var url = _user$project$SeatGeek_Query$composeRequest(query);
+	var request = A2(_elm_lang$http$Http$get, url, _user$project$SeatGeek_Decode$decodeReply);
 	return A2(_elm_lang$http$Http$send, _user$project$Types$GetReply, request);
 };
 
@@ -14854,13 +14921,36 @@ var _user$project$View$page = function (model) {
 	var _p0 = model.route;
 	switch (_p0.ctor) {
 		case 'GoChat':
-			return _user$project$Chat$view(model);
+			return {
+				ctor: '::',
+				_0: _user$project$Pages_Chat$view(model),
+				_1: {ctor: '[]'}
+			};
 		case 'GoProfile':
-			return _user$project$Profile$view(model);
-		case 'GoEvent':
-			return _user$project$Chat$view(model);
+			return {
+				ctor: '::',
+				_0: _user$project$Pages_Profile$view(model),
+				_1: {ctor: '[]'}
+			};
 		default:
-			return _user$project$Events$eventsView(model.events);
+			var _p1 = _p0._0;
+			if (_p1.ctor === 'Nothing') {
+				return {
+					ctor: '::',
+					_0: _user$project$Pages_Events$view(model),
+					_1: {ctor: '[]'}
+				};
+			} else {
+				return {
+					ctor: '::',
+					_0: _user$project$Pages_Events$view(model),
+					_1: {
+						ctor: '::',
+						_0: A2(_user$project$Pages_Event$view, _p1._0, model.events.currentDatetime),
+						_1: {ctor: '[]'}
+					}
+				};
+			}
 	}
 };
 var _user$project$View$render = function (model) {
@@ -14889,11 +14979,7 @@ var _user$project$View$render = function (model) {
 									_0: _elm_lang$html$Html_Attributes$class('flex-auto pt5-m pb5 pb0-ns flex justify-stretch'),
 									_1: {ctor: '[]'}
 								},
-								{
-									ctor: '::',
-									_0: _user$project$View$page(model),
-									_1: {ctor: '[]'}
-								}),
+								_user$project$View$page(model)),
 							_1: {ctor: '[]'}
 						}
 					})),
@@ -14925,33 +15011,13 @@ var _user$project$Main$update = F2(
 			case 'NewMessage':
 				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 			case 'ViewEvent':
-				if (_p0._0.ctor === 'Just') {
-					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Native_Utils.update(
-							model,
-							{
-								events: _elm_lang$core$Native_Utils.update(
-									events,
-									{
-										selectedEvent: _elm_lang$core$Maybe$Just(_p0._0._0)
-									})
-							}),
-						_1: _elm_lang$core$Platform_Cmd$none
-					};
-				} else {
-					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Native_Utils.update(
-							model,
-							{
-								events: _elm_lang$core$Native_Utils.update(
-									events,
-									{selectedEvent: _elm_lang$core$Maybe$Nothing})
-							}),
-						_1: _elm_lang$core$Platform_Cmd$none
-					};
-				}
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{route: _p0._0}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
 			case 'OnDatetime':
 				return {
 					ctor: '_Tuple2',
@@ -14990,7 +15056,7 @@ var _user$project$Main$update = F2(
 									events,
 									{
 										seatgeek: A2(
-											_user$project$SeatGeekTypes$Reply,
+											_user$project$SeatGeek_Types$Reply,
 											_p1.meta,
 											A2(_elm_lang$core$Basics_ops['++'], events.seatgeek.events, _p1.events))
 									})
@@ -15010,7 +15076,7 @@ var _user$project$Main$getDatetime = A2(_elm_lang$core$Task$perform, _user$proje
 var _user$project$Main$initCmd = _elm_lang$core$Platform_Cmd$batch(
 	{
 		ctor: '::',
-		_0: _user$project$SeatGeek$askQuery(_user$project$SeatGeekTypes$initQuery),
+		_0: _user$project$SeatGeek_Query$askQuery(_user$project$SeatGeek_Types$initQuery),
 		_1: {
 			ctor: '::',
 			_0: _user$project$Main$getDatetime,
