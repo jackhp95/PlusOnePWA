@@ -67,7 +67,7 @@ pastEvents model =
             td [ class "pr3 pl0 pt0 pb4 bb b--white-20" ]
                 [ div [ class "w5 aspect-ratio--16x9 lg-breathe-50" ] []
                 , div [ class "f4 fw6 pt2" ] [ text performer ]
-                , div [ class "f6 fw4 pt1" ] [ text venue ]
+                , div [ class "fw4 pt1" ] [ text venue ]
                 ]
     in
         div [ class "ma0 pt4" ]
@@ -99,7 +99,7 @@ traitsIcons traits =
     let
         toIcon x =
             li [ class "flex w4 flex-column items-center overflow-hidden pointer animated zoomIn" ]
-                [ div [ class "f-subheadline-l f1 grow" ] [ text (stringToEmoji (x.name)) ]
+                [ div [ class "f1-l f2 grow" ] [ text (stringToEmoji (x.name)) ]
                 , div [ class "pv2 o-80" ] [ text (Maybe.withDefault x.name (List.head (String.split "_" x.name))) ]
                 ]
     in

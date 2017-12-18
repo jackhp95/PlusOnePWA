@@ -53,20 +53,9 @@ eventTitle event =
     let
         icon x =
             div [ Assets.feather x, class "contain dib bg-center grow ml1 mr2 pt1 pb3 pl1 pr3" ] []
-
-        textSize x y =
-            case ((String.length x) // y) of
-                0 ->
-                    " f-subheadline"
-
-                1 ->
-                    " f1"
-
-                _ ->
-                    " f2"
     in
         div [ class "pt4 pb3 mh4 bb b--white-20" ]
-            [ div [ class ("fw6 pv1 lh-solid ttn" ++ textSize event.title 30) ]
+            [ div [ class "fw6 pv1 lh-solid ttn f2" ]
                 [ text event.title
                 ]
             , div [ class "fw5 pv1 f4 flex items-center o-80 ttn" ]
@@ -109,8 +98,8 @@ eventTime event maybeNow =
                     [ text "not sure what time this event is" ]
 
                 Just x ->
-                    [ div [ class "fw7 f3 lh-solid pb2" ] [ text (clockTime x) ]
-                    , div [ class "fw4 f5 lh-solid" ] [ text (fullDate x) ]
+                    [ div [ class "fw7 f4 lh-solid pb2" ] [ text (clockTime x) ]
+                    , div [ class "fw4 lh-solid" ] [ text (fullDate x) ]
                     ]
     in
         div [ class "pv4 mh4 bb b--white-20 flex justify-between" ]
@@ -203,7 +192,7 @@ eventEmojis event =
     let
         toIcon x =
             li [ class "flex w4 flex-column items-center overflow-hidden pointer animated zoomIn" ]
-                [ div [ class "f-subheadline f1-m grow" ] [ text (stringToEmoji (x.name)) ]
+                [ div [ class "f1 grow" ] [ text (stringToEmoji (x.name)) ]
                 , div [ class "pv2 o-80" ] [ text (Maybe.withDefault x.name (List.head (String.split "_" x.name))) ]
                 ]
     in

@@ -16,6 +16,7 @@ import Window exposing (Size)
 type alias Model =
     { route : Route
     , chat : Chat
+    , chats : List Chat
     , profile : Profile
     , events : Events
     , pool : Pool
@@ -26,8 +27,20 @@ type alias Model =
 initModel : Model
 initModel =
     Model
-        (GoEvents Nothing)
+        -- (GoEvents Nothing)
+        GoChats
         initChat
+        [ initChat
+        , initChat
+        , initChat
+        , initChat
+        , initChat
+        , initChat
+        , initChat
+        , initChat
+        , initChat
+        , initChat
+        ]
         initProfile
         initEvents
         initPool
@@ -43,6 +56,7 @@ type alias Page =
 
 type Route
     = GoChat
+    | GoChats
     | GoProfile
     | GoEvents (Maybe SG.Event)
     | GoPool
@@ -67,7 +81,11 @@ initChat : Chat
 initChat =
     { uid = "string"
     , input = ""
-    , messages = []
+    , messages =
+        [ "hello, this is a really long message to test text-overflow: elipse. Does it work? Does it look okay?"
+        , "what's up?"
+        , "not much"
+        ]
     , userAvi =
         "https://images.unsplash.com/photo-1496361001419-80f0d1be777a?dpr=1&auto=format&fit=crop&w=1000&q=80&cs=tinysrgb&ixid=dW5zcGxhc2guY29tOzs7Ozs%3D"
     }

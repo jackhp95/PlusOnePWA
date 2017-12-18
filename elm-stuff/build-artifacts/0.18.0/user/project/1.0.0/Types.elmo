@@ -34,12 +34,24 @@ var _user$project$Types$initProfile = {
 var _user$project$Types$initChat = {
 	uid: 'string',
 	input: '',
-	messages: {ctor: '[]'},
+	messages: {
+		ctor: '::',
+		_0: 'hello, this is a really long message to test text-overflow: elipse. Does it work? Does it look okay?',
+		_1: {
+			ctor: '::',
+			_0: 'what\'s up?',
+			_1: {
+				ctor: '::',
+				_0: 'not much',
+				_1: {ctor: '[]'}
+			}
+		}
+	},
 	userAvi: 'https://images.unsplash.com/photo-1496361001419-80f0d1be777a?dpr=1&auto=format&fit=crop&w=1000&q=80&cs=tinysrgb&ixid=dW5zcGxhc2guY29tOzs7Ozs%3D'
 };
-var _user$project$Types$Model = F6(
-	function (a, b, c, d, e, f) {
-		return {route: a, chat: b, profile: c, events: d, pool: e, client: f};
+var _user$project$Types$Model = F7(
+	function (a, b, c, d, e, f, g) {
+		return {route: a, chat: b, chats: c, profile: d, events: e, pool: f, client: g};
 	});
 var _user$project$Types$Page = F3(
 	function (a, b, c) {
@@ -132,15 +144,57 @@ var _user$project$Types$GoPool = {ctor: 'GoPool'};
 var _user$project$Types$GoEvents = function (a) {
 	return {ctor: 'GoEvents', _0: a};
 };
-var _user$project$Types$initModel = A6(
+var _user$project$Types$GoProfile = {ctor: 'GoProfile'};
+var _user$project$Types$GoChats = {ctor: 'GoChats'};
+var _user$project$Types$initModel = A7(
 	_user$project$Types$Model,
-	_user$project$Types$GoEvents(_elm_lang$core$Maybe$Nothing),
+	_user$project$Types$GoChats,
 	_user$project$Types$initChat,
+	{
+		ctor: '::',
+		_0: _user$project$Types$initChat,
+		_1: {
+			ctor: '::',
+			_0: _user$project$Types$initChat,
+			_1: {
+				ctor: '::',
+				_0: _user$project$Types$initChat,
+				_1: {
+					ctor: '::',
+					_0: _user$project$Types$initChat,
+					_1: {
+						ctor: '::',
+						_0: _user$project$Types$initChat,
+						_1: {
+							ctor: '::',
+							_0: _user$project$Types$initChat,
+							_1: {
+								ctor: '::',
+								_0: _user$project$Types$initChat,
+								_1: {
+									ctor: '::',
+									_0: _user$project$Types$initChat,
+									_1: {
+										ctor: '::',
+										_0: _user$project$Types$initChat,
+										_1: {
+											ctor: '::',
+											_0: _user$project$Types$initChat,
+											_1: {ctor: '[]'}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
 	_user$project$Types$initProfile,
 	_user$project$Types$initEvents,
 	_user$project$Types$initPool,
 	_user$project$Types$initClient);
-var _user$project$Types$GoProfile = {ctor: 'GoProfile'};
 var _user$project$Types$GoChat = {ctor: 'GoChat'};
 var _user$project$Types$InitialWindow = function (a) {
 	return {ctor: 'InitialWindow', _0: a};

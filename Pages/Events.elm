@@ -55,7 +55,7 @@ view model =
         section [ class ("animated fadeInUp w-100 mw6-l overflow-auto z-999 flex-grow-1 shadow-2-l" ++ mobileHide) ]
             [ div [ class "h5 flex flex-column justify-between pa3" ]
                 [ Assets.discoverToolsView
-                , div [ class "f1 f2-m lh-solid fw7 ma0 pa0" ]
+                , div [ class "f2 lh-solid fw7 ma0 pa0" ]
                     [ text "discover events" ]
                 ]
             , div

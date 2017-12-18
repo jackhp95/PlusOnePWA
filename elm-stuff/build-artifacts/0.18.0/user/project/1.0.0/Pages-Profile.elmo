@@ -28,7 +28,7 @@ var _user$project$Pages_Profile$traitsIcons = function (traits) {
 					_elm_lang$html$Html$div,
 					{
 						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class('f-subheadline-l f1 grow'),
+						_0: _elm_lang$html$Html_Attributes$class('f1-l f2 grow'),
 						_1: {ctor: '[]'}
 					},
 					{
@@ -170,7 +170,7 @@ var _user$project$Pages_Profile$pastEvents = function (model) {
 							_elm_lang$html$Html$div,
 							{
 								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$class('f6 fw4 pt1'),
+								_0: _elm_lang$html$Html_Attributes$class('fw4 pt1'),
 								_1: {ctor: '[]'}
 							},
 							{

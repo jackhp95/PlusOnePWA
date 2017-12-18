@@ -2,15 +2,31 @@
 -- https://guide.elm-lang.org/architecture/effects/web_sockets.html
 
 
-module Proto exposing (importLinks, bg)
+module Proto exposing (plusOne, bg)
 
 import Html exposing (node, Html, div)
 import Html.Attributes exposing (rel, href, class)
 
 
+plusOne : List (Html msg)
+plusOne =
+    responsive :: importLinks
+
+
+responsive : Html msg
+responsive =
+    node "meta"
+        [ Html.Attributes.name "viewport"
+        , Html.Attributes.content "width=device-width, initial-scale=1, maximum-scale=1"
+        ]
+        []
+
+
 linkURLs : List String
 linkURLs =
-    [ "Admin/tachyons.css"
+    [ "https://unpkg.com/tachyons@4.9.0/css/tachyons.min.css"
+
+    -- , "Admin/tachyons.css"
     , "Admin/plusOne.css"
     , "https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css"
     ]

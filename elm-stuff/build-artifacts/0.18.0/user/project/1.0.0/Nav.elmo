@@ -126,7 +126,7 @@ var _user$project$Nav$selections = function () {
 					_0: {ctor: '_Tuple3', _0: 'share', _1: 'share-2', _2: _user$project$Types$GoChat},
 					_1: {
 						ctor: '::',
-						_0: {ctor: '_Tuple3', _0: 'chats', _1: 'message-square', _2: _user$project$Types$GoChat},
+						_0: {ctor: '_Tuple3', _0: 'chats', _1: 'message-square', _2: _user$project$Types$GoChats},
 						_1: {
 							ctor: '::',
 							_0: {ctor: '_Tuple3', _0: 'profile', _1: 'user', _2: _user$project$Types$GoProfile},
@@ -153,7 +153,7 @@ var _user$project$Nav$bar = A2(
 				_elm_lang$html$Html$ul,
 				{
 					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class('list ma0 pa0 flex flex-column-l items-start-l justify-around flex-auto items-start-l items-stretch h3 h-auto-l pr3-l f6 o-90-ns bg-0-ns'),
+					_0: _elm_lang$html$Html_Attributes$class('list ma0 pa0 flex flex-column-l items-start-l justify-around flex-auto items-start-l items-stretch h3 h-auto-l pr3-l o-90-ns bg-0-ns'),
 					_1: {ctor: '[]'}
 				},
 				A2(_elm_lang$core$List$map, _user$project$Nav$tab, _user$project$Nav$selections)),

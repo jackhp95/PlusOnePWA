@@ -25,7 +25,7 @@ var _user$project$Proto$toStylesheet = function (x) {
 };
 var _user$project$Proto$linkURLs = {
 	ctor: '::',
-	_0: 'Admin/tachyons.css',
+	_0: 'https://unpkg.com/tachyons@4.9.0/css/tachyons.min.css',
 	_1: {
 		ctor: '::',
 		_0: 'Admin/plusOne.css',
@@ -37,3 +37,17 @@ var _user$project$Proto$linkURLs = {
 	}
 };
 var _user$project$Proto$importLinks = A2(_elm_lang$core$List$map, _user$project$Proto$toStylesheet, _user$project$Proto$linkURLs);
+var _user$project$Proto$responsive = A3(
+	_elm_lang$html$Html$node,
+	'meta',
+	{
+		ctor: '::',
+		_0: _elm_lang$html$Html_Attributes$name('viewport'),
+		_1: {
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$content('width=device-width, initial-scale=1, maximum-scale=1'),
+			_1: {ctor: '[]'}
+		}
+	},
+	{ctor: '[]'});
+var _user$project$Proto$plusOne = {ctor: '::', _0: _user$project$Proto$responsive, _1: _user$project$Proto$importLinks};

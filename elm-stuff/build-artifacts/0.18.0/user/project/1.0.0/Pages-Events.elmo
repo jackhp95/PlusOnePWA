@@ -248,7 +248,7 @@ var _user$project$Pages_Events$view = function (model) {
 							_elm_lang$html$Html$div,
 							{
 								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$class('f1 f2-m lh-solid fw7 ma0 pa0'),
+								_0: _elm_lang$html$Html_Attributes$class('f2 lh-solid fw7 ma0 pa0'),
 								_1: {ctor: '[]'}
 							},
 							{

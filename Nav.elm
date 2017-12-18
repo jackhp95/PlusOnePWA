@@ -22,7 +22,7 @@ selections =
             [ ( "discover", "compass", GoEvents Nothing )
             , ( "add", "plus-square", GoEvents Nothing )
             , ( "share", "share-2", GoChat )
-            , ( "chats", "message-square", GoChat )
+            , ( "chats", "message-square", GoChats )
             , ( "profile", "user", GoProfile )
             ]
 
@@ -31,7 +31,7 @@ bar : Html Msg
 bar =
     nav [ class "z-9999 w-100 w-auto-l h3 vh-100-l tc-l fixed flex-m flex-row-m items-center-m self-start-m absolute static-l top-0-m bottom-0 bg-black-60-ns " ]
         [ home
-        , ul [ class "list ma0 pa0 flex flex-column-l items-start-l justify-around flex-auto items-start-l items-stretch h3 h-auto-l pr3-l f6 o-90-ns bg-0-ns" ]
+        , ul [ class "list ma0 pa0 flex flex-column-l items-start-l justify-around flex-auto items-start-l items-stretch h3 h-auto-l pr3-l o-90-ns bg-0-ns" ]
             (List.map tab selections)
         ]
 

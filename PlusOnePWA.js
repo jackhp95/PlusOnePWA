@@ -13135,12 +13135,24 @@ var _user$project$Types$initProfile = {
 var _user$project$Types$initChat = {
 	uid: 'string',
 	input: '',
-	messages: {ctor: '[]'},
+	messages: {
+		ctor: '::',
+		_0: 'hello, this is a really long message to test text-overflow: elipse. Does it work? Does it look okay?',
+		_1: {
+			ctor: '::',
+			_0: 'what\'s up?',
+			_1: {
+				ctor: '::',
+				_0: 'not much',
+				_1: {ctor: '[]'}
+			}
+		}
+	},
 	userAvi: 'https://images.unsplash.com/photo-1496361001419-80f0d1be777a?dpr=1&auto=format&fit=crop&w=1000&q=80&cs=tinysrgb&ixid=dW5zcGxhc2guY29tOzs7Ozs%3D'
 };
-var _user$project$Types$Model = F6(
-	function (a, b, c, d, e, f) {
-		return {route: a, chat: b, profile: c, events: d, pool: e, client: f};
+var _user$project$Types$Model = F7(
+	function (a, b, c, d, e, f, g) {
+		return {route: a, chat: b, chats: c, profile: d, events: e, pool: f, client: g};
 	});
 var _user$project$Types$Page = F3(
 	function (a, b, c) {
@@ -13233,15 +13245,57 @@ var _user$project$Types$GoPool = {ctor: 'GoPool'};
 var _user$project$Types$GoEvents = function (a) {
 	return {ctor: 'GoEvents', _0: a};
 };
-var _user$project$Types$initModel = A6(
+var _user$project$Types$GoProfile = {ctor: 'GoProfile'};
+var _user$project$Types$GoChats = {ctor: 'GoChats'};
+var _user$project$Types$initModel = A7(
 	_user$project$Types$Model,
-	_user$project$Types$GoEvents(_elm_lang$core$Maybe$Nothing),
+	_user$project$Types$GoChats,
 	_user$project$Types$initChat,
+	{
+		ctor: '::',
+		_0: _user$project$Types$initChat,
+		_1: {
+			ctor: '::',
+			_0: _user$project$Types$initChat,
+			_1: {
+				ctor: '::',
+				_0: _user$project$Types$initChat,
+				_1: {
+					ctor: '::',
+					_0: _user$project$Types$initChat,
+					_1: {
+						ctor: '::',
+						_0: _user$project$Types$initChat,
+						_1: {
+							ctor: '::',
+							_0: _user$project$Types$initChat,
+							_1: {
+								ctor: '::',
+								_0: _user$project$Types$initChat,
+								_1: {
+									ctor: '::',
+									_0: _user$project$Types$initChat,
+									_1: {
+										ctor: '::',
+										_0: _user$project$Types$initChat,
+										_1: {
+											ctor: '::',
+											_0: _user$project$Types$initChat,
+											_1: {ctor: '[]'}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
 	_user$project$Types$initProfile,
 	_user$project$Types$initEvents,
 	_user$project$Types$initPool,
 	_user$project$Types$initClient);
-var _user$project$Types$GoProfile = {ctor: 'GoProfile'};
 var _user$project$Types$GoChat = {ctor: 'GoChat'};
 var _user$project$Types$InitialWindow = function (a) {
 	return {ctor: 'InitialWindow', _0: a};
@@ -13409,7 +13463,7 @@ var _user$project$Nav$selections = function () {
 					_0: {ctor: '_Tuple3', _0: 'share', _1: 'share-2', _2: _user$project$Types$GoChat},
 					_1: {
 						ctor: '::',
-						_0: {ctor: '_Tuple3', _0: 'chats', _1: 'message-square', _2: _user$project$Types$GoChat},
+						_0: {ctor: '_Tuple3', _0: 'chats', _1: 'message-square', _2: _user$project$Types$GoChats},
 						_1: {
 							ctor: '::',
 							_0: {ctor: '_Tuple3', _0: 'profile', _1: 'user', _2: _user$project$Types$GoProfile},
@@ -13436,7 +13490,7 @@ var _user$project$Nav$bar = A2(
 				_elm_lang$html$Html$ul,
 				{
 					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class('list ma0 pa0 flex flex-column-l items-start-l justify-around flex-auto items-start-l items-stretch h3 h-auto-l pr3-l f6 o-90-ns bg-0-ns'),
+					_0: _elm_lang$html$Html_Attributes$class('list ma0 pa0 flex flex-column-l items-start-l justify-around flex-auto items-start-l items-stretch h3 h-auto-l pr3-l o-90-ns bg-0-ns'),
 					_1: {ctor: '[]'}
 				},
 				A2(_elm_lang$core$List$map, _user$project$Nav$tab, _user$project$Nav$selections)),
@@ -13474,7 +13528,7 @@ var _user$project$Pages_Profile$traitsIcons = function (traits) {
 					_elm_lang$html$Html$div,
 					{
 						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class('f-subheadline-l f1 grow'),
+						_0: _elm_lang$html$Html_Attributes$class('f1-l f2 grow'),
 						_1: {ctor: '[]'}
 					},
 					{
@@ -13616,7 +13670,7 @@ var _user$project$Pages_Profile$pastEvents = function (model) {
 							_elm_lang$html$Html$div,
 							{
 								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$class('f6 fw4 pt1'),
+								_0: _elm_lang$html$Html_Attributes$class('fw4 pt1'),
 								_1: {ctor: '[]'}
 							},
 							{
@@ -14274,6 +14328,190 @@ var _user$project$Pages_Chat$view = function (x) {
 					_0: A2(_user$project$Pages_Chat$messageBar, chat, client),
 					_1: {ctor: '[]'}
 				}
+			}
+		});
+};
+
+var _user$project$Pages_Chats$banner = A2(
+	_elm_lang$html$Html$div,
+	{
+		ctor: '::',
+		_0: _elm_lang$html$Html_Attributes$class('w-100 pa3 flex flex-grow-1 flex-shrink-0 justify-between'),
+		_1: {ctor: '[]'}
+	},
+	{
+		ctor: '::',
+		_0: A2(
+			_elm_lang$html$Html$div,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('self-end f2 lh-solid fw7'),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html$text('chats'),
+				_1: {ctor: '[]'}
+			}),
+		_1: {
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$div,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('self-start'),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: _user$project$Assets$discoverToolsView,
+					_1: {ctor: '[]'}
+				}),
+			_1: {ctor: '[]'}
+		}
+	});
+var _user$project$Pages_Chats$nameBar = function (chat) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('flex items-center z-2 fadeIn animated pa3 grow hover-bg-black-20 lh-title'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$div,
+				{
+					ctor: '::',
+					_0: _user$project$Assets$bgImg(chat.userAvi),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('pa4 mh2 bg-white br-pill shadow-2 ba cover br-pill'),
+						_1: {ctor: '[]'}
+					}
+				},
+				{ctor: '[]'}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('flex-auto mh2'),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$div,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$class('f5 fw6'),
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text('Hannah'),
+								_1: {ctor: '[]'}
+							}),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$div,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$class('f5 fw4 o-60'),
+									_1: {ctor: '[]'}
+								},
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html$text('Chance the Rapper'),
+									_1: {ctor: '[]'}
+								}),
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$div,
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$class('f6 truncate pt2'),
+										_1: {ctor: '[]'}
+									},
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html$text(
+											A2(
+												_elm_lang$core$Maybe$withDefault,
+												'',
+												_elm_lang$core$List$head(chat.messages))),
+										_1: {ctor: '[]'}
+									}),
+								_1: {ctor: '[]'}
+							}
+						}
+					}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$div,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class('mh2 self-start f7 tr o-80'),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$div,
+								{ctor: '[]'},
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html$text('4:39pm'),
+									_1: {ctor: '[]'}
+								}),
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$div,
+									{ctor: '[]'},
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html$text('unconfirmed'),
+										_1: {ctor: '[]'}
+									}),
+								_1: {ctor: '[]'}
+							}
+						}),
+					_1: {ctor: '[]'}
+				}
+			}
+		});
+};
+var _user$project$Pages_Chats$view = function (x) {
+	var client = x.client;
+	var chats = x.chats;
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('flex flex-column items-stretch flex-auto measure pa0 ma0 shadow-2-l'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _user$project$Pages_Chats$banner,
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('flex-shrink-1 flex-grow-0 bg-black-70 overflow-auto'),
+						_1: {ctor: '[]'}
+					},
+					A2(_elm_lang$core$List$map, _user$project$Pages_Chats$nameBar, chats)),
+				_1: {ctor: '[]'}
 			}
 		});
 };
@@ -15104,7 +15342,7 @@ var _user$project$Pages_Events$view = function (model) {
 							_elm_lang$html$Html$div,
 							{
 								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$class('f1 f2-m lh-solid fw7 ma0 pa0'),
+								_0: _elm_lang$html$Html_Attributes$class('f2 lh-solid fw7 ma0 pa0'),
 								_1: {ctor: '[]'}
 							},
 							{
@@ -15318,7 +15556,7 @@ var _user$project$Pages_Event$eventEmojis = function (event) {
 					_elm_lang$html$Html$div,
 					{
 						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class('f-subheadline f1-m grow'),
+						_0: _elm_lang$html$Html_Attributes$class('f1 grow'),
 						_1: {ctor: '[]'}
 					},
 					{
@@ -15672,7 +15910,7 @@ var _user$project$Pages_Event$eventTime = F2(
 						_elm_lang$html$Html$div,
 						{
 							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('fw7 f3 lh-solid pb2'),
+							_0: _elm_lang$html$Html_Attributes$class('fw7 f4 lh-solid pb2'),
 							_1: {ctor: '[]'}
 						},
 						{
@@ -15687,7 +15925,7 @@ var _user$project$Pages_Event$eventTime = F2(
 							_elm_lang$html$Html$div,
 							{
 								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$class('fw4 f5 lh-solid'),
+								_0: _elm_lang$html$Html_Attributes$class('fw4 lh-solid'),
 								_1: {ctor: '[]'}
 							},
 							{
@@ -15726,18 +15964,6 @@ var _user$project$Pages_Event$eventTime = F2(
 			});
 	});
 var _user$project$Pages_Event$eventTitle = function (event) {
-	var textSize = F2(
-		function (x, y) {
-			var _p8 = (_elm_lang$core$String$length(x) / y) | 0;
-			switch (_p8) {
-				case 0:
-					return ' f-subheadline';
-				case 1:
-					return ' f1';
-				default:
-					return ' f2';
-			}
-		});
 	var icon = function (x) {
 		return A2(
 			_elm_lang$html$Html$div,
@@ -15765,11 +15991,7 @@ var _user$project$Pages_Event$eventTitle = function (event) {
 				_elm_lang$html$Html$div,
 				{
 					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class(
-						A2(
-							_elm_lang$core$Basics_ops['++'],
-							'fw6 pv1 lh-solid ttn',
-							A2(textSize, event.title, 30))),
+					_0: _elm_lang$html$Html_Attributes$class('fw6 pv1 lh-solid ttn f2'),
 					_1: {ctor: '[]'}
 				},
 				{
@@ -16176,7 +16398,7 @@ var _user$project$Proto$toStylesheet = function (x) {
 };
 var _user$project$Proto$linkURLs = {
 	ctor: '::',
-	_0: 'Admin/tachyons.css',
+	_0: 'https://unpkg.com/tachyons@4.9.0/css/tachyons.min.css',
 	_1: {
 		ctor: '::',
 		_0: 'Admin/plusOne.css',
@@ -16188,6 +16410,20 @@ var _user$project$Proto$linkURLs = {
 	}
 };
 var _user$project$Proto$importLinks = A2(_elm_lang$core$List$map, _user$project$Proto$toStylesheet, _user$project$Proto$linkURLs);
+var _user$project$Proto$responsive = A3(
+	_elm_lang$html$Html$node,
+	'meta',
+	{
+		ctor: '::',
+		_0: _elm_lang$html$Html_Attributes$name('viewport'),
+		_1: {
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$content('width=device-width, initial-scale=1, maximum-scale=1'),
+			_1: {ctor: '[]'}
+		}
+	},
+	{ctor: '[]'});
+var _user$project$Proto$plusOne = {ctor: '::', _0: _user$project$Proto$responsive, _1: _user$project$Proto$importLinks};
 
 var _user$project$View$page = function (model) {
 	var _p0 = model.route;
@@ -16196,6 +16432,12 @@ var _user$project$View$page = function (model) {
 			return {
 				ctor: '::',
 				_0: _user$project$Pages_Chat$view(model),
+				_1: {ctor: '[]'}
+			};
+		case 'GoChats':
+			return {
+				ctor: '::',
+				_0: _user$project$Pages_Chats$view(model),
 				_1: {ctor: '[]'}
 			};
 		case 'GoProfile':
@@ -16232,36 +16474,28 @@ var _user$project$View$page = function (model) {
 	}
 };
 var _user$project$View$render = function (model) {
-	return _user$project$Proto$bg(
+	return A2(
+		_elm_lang$html$Html$div,
 		{
 			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$div,
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class('overflow-hidden animated fadeIn ttl white flex fw4 vh-100'),
-					_1: {ctor: '[]'}
-				},
-				A2(
-					_elm_lang$core$Basics_ops['++'],
-					_user$project$Proto$importLinks,
+			_0: _elm_lang$html$Html_Attributes$class('overflow-hidden animated fadeIn white flex fw4 vh-100'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _user$project$Nav$bar,
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$main_,
 					{
 						ctor: '::',
-						_0: _user$project$Nav$bar,
-						_1: {
-							ctor: '::',
-							_0: A2(
-								_elm_lang$html$Html$main_,
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$class('flex-auto pt5-m pb5 pb0-ns flex justify-stretch'),
-									_1: {ctor: '[]'}
-								},
-								_user$project$View$page(model)),
-							_1: {ctor: '[]'}
-						}
-					})),
-			_1: {ctor: '[]'}
+						_0: _elm_lang$html$Html_Attributes$class('flex-auto pt5-m pb5 pb0-ns flex justify-stretch'),
+						_1: {ctor: '[]'}
+					},
+					_user$project$View$page(model)),
+				_1: {ctor: '[]'}
+			}
 		});
 };
 

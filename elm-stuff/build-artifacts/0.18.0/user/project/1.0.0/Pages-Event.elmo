@@ -178,7 +178,7 @@ var _user$project$Pages_Event$eventEmojis = function (event) {
 					_elm_lang$html$Html$div,
 					{
 						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class('f-subheadline f1-m grow'),
+						_0: _elm_lang$html$Html_Attributes$class('f1 grow'),
 						_1: {ctor: '[]'}
 					},
 					{
@@ -532,7 +532,7 @@ var _user$project$Pages_Event$eventTime = F2(
 						_elm_lang$html$Html$div,
 						{
 							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('fw7 f3 lh-solid pb2'),
+							_0: _elm_lang$html$Html_Attributes$class('fw7 f4 lh-solid pb2'),
 							_1: {ctor: '[]'}
 						},
 						{
@@ -547,7 +547,7 @@ var _user$project$Pages_Event$eventTime = F2(
 							_elm_lang$html$Html$div,
 							{
 								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$class('fw4 f5 lh-solid'),
+								_0: _elm_lang$html$Html_Attributes$class('fw4 lh-solid'),
 								_1: {ctor: '[]'}
 							},
 							{
@@ -586,18 +586,6 @@ var _user$project$Pages_Event$eventTime = F2(
 			});
 	});
 var _user$project$Pages_Event$eventTitle = function (event) {
-	var textSize = F2(
-		function (x, y) {
-			var _p8 = (_elm_lang$core$String$length(x) / y) | 0;
-			switch (_p8) {
-				case 0:
-					return ' f-subheadline';
-				case 1:
-					return ' f1';
-				default:
-					return ' f2';
-			}
-		});
 	var icon = function (x) {
 		return A2(
 			_elm_lang$html$Html$div,
@@ -625,11 +613,7 @@ var _user$project$Pages_Event$eventTitle = function (event) {
 				_elm_lang$html$Html$div,
 				{
 					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class(
-						A2(
-							_elm_lang$core$Basics_ops['++'],
-							'fw6 pv1 lh-solid ttn',
-							A2(textSize, event.title, 30))),
+					_0: _elm_lang$html$Html_Attributes$class('fw6 pv1 lh-solid ttn f2'),
 					_1: {ctor: '[]'}
 				},
 				{
