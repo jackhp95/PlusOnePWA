@@ -1,7 +1,7 @@
-var _user$project$Pages_Event$subscriptions = function (model) {
+var _user$project$Pages_CreateEvent$subscriptions = function (model) {
 	return _elm_lang$core$Platform_Sub$none;
 };
-var _user$project$Pages_Event$stringToEmoji = function (string) {
+var _user$project$Pages_CreateEvent$stringToEmoji = function (string) {
 	var _p0 = string;
 	switch (_p0) {
 		case 'concert':
@@ -64,7 +64,7 @@ var _user$project$Pages_Event$stringToEmoji = function (string) {
 			return '🤷';
 	}
 };
-var _user$project$Pages_Event$maybeImage = function (performers) {
+var _user$project$Pages_CreateEvent$maybeImage = function (performers) {
 	var _p1 = _elm_lang$core$List$head(performers);
 	if (_p1.ctor === 'Just') {
 		return _p1._0.image;
@@ -72,9 +72,9 @@ var _user$project$Pages_Event$maybeImage = function (performers) {
 		return _elm_lang$core$Maybe$Nothing;
 	}
 };
-var _user$project$Pages_Event$eventBanner = function (event) {
+var _user$project$Pages_CreateEvent$eventBanner = function (event) {
 	var heroImg = function () {
-		var _p2 = _user$project$Pages_Event$maybeImage(event.performers);
+		var _p2 = _user$project$Pages_CreateEvent$maybeImage(event.performers);
 		if (_p2.ctor === 'Nothing') {
 			var seed = _elm_lang$core$String$length(event.title) * _elm_lang$core$String$length(event.url);
 			return _elm_lang$html$Html_Attributes$class(
@@ -163,7 +163,7 @@ var _user$project$Pages_Event$eventBanner = function (event) {
 			_1: {ctor: '[]'}
 		});
 };
-var _user$project$Pages_Event$eventEmojis = function (event) {
+var _user$project$Pages_CreateEvent$eventEmojis = function (event) {
 	var toIcon = function (x) {
 		return A2(
 			_elm_lang$html$Html$li,
@@ -184,7 +184,7 @@ var _user$project$Pages_Event$eventEmojis = function (event) {
 					{
 						ctor: '::',
 						_0: _elm_lang$html$Html$text(
-							_user$project$Pages_Event$stringToEmoji(x.name)),
+							_user$project$Pages_CreateEvent$stringToEmoji(x.name)),
 						_1: {ctor: '[]'}
 					}),
 				_1: {
@@ -219,7 +219,7 @@ var _user$project$Pages_Event$eventEmojis = function (event) {
 		},
 		A2(_elm_lang$core$List$map, toIcon, event.taxonomies));
 };
-var _user$project$Pages_Event$progressBar = function (num) {
+var _user$project$Pages_CreateEvent$progressBar = function (num) {
 	var percent = num * 100;
 	var _p3 = percent;
 	if (_p3 === 0.0) {
@@ -262,7 +262,7 @@ var _user$project$Pages_Event$progressBar = function (num) {
 			});
 	}
 };
-var _user$project$Pages_Event$eventPool = A2(
+var _user$project$Pages_CreateEvent$eventPool = A2(
 	_elm_lang$html$Html$div,
 	{
 		ctor: '::',
@@ -366,7 +366,7 @@ var _user$project$Pages_Event$eventPool = A2(
 			}
 		}
 	});
-var _user$project$Pages_Event$yetToBeAdded = A2(
+var _user$project$Pages_CreateEvent$yetToBeAdded = A2(
 	_elm_lang$html$Html$div,
 	{
 		ctor: '::',
@@ -378,7 +378,7 @@ var _user$project$Pages_Event$yetToBeAdded = A2(
 		_0: _elm_lang$html$Html$text('I still need to add genres in the emojis.\n                I need to have photo galleries for extra photos,\n                other events at the venue, other venues the artist will be at,\n                spotify, Last.fm, and google maps integration. I also need to make\n                events that do not have defined times do not display a time.\n\n                Sed ut perspiciatis, unde omnis iste natus error sit voluptatem\n                accusantium doloremque laudantium, totam rem aperiam eaque ipsa,\n                quae ab illo inventore veritatis et quasi architecto beatae vitae\n                dicta sunt, explicabo. Nemo enim ipsam voluptatem, quia voluptas sit,\n                aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos,\n                qui ratione voluptatem sequi nesciunt, neque porro quisquam est.\n                qui dolorem ipsum, quia dolor sit amet consectetur adipisci.\n                velit, sed quia non numquam [do] eius modi tempora inci[di]dunt,\n                ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima\n                veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam,\n                nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure\n                reprehenderit, qui in ea voluptate velit esse, quam nihil molestiae\n                consequatur, vel illum, qui dolorem eum fugiat, quo voluptas nulla pariatur?\n                '),
 		_1: {ctor: '[]'}
 	});
-var _user$project$Pages_Event$eventPopularity = function (event) {
+var _user$project$Pages_CreateEvent$eventPopularity = function (event) {
 	var _p4 = event.popularity;
 	if (_p4 === 0.0) {
 		return _elm_lang$html$Html$text('');
@@ -415,10 +415,10 @@ var _user$project$Pages_Event$eventPopularity = function (event) {
 						},
 						{
 							ctor: '::',
-							_0: _user$project$Pages_Event$progressBar(event.popularity),
+							_0: _user$project$Pages_CreateEvent$progressBar(event.popularity),
 							_1: {
 								ctor: '::',
-								_0: _user$project$Pages_Event$progressBar(event.score),
+								_0: _user$project$Pages_CreateEvent$progressBar(event.score),
 								_1: {ctor: '[]'}
 							}
 						}),
@@ -427,7 +427,7 @@ var _user$project$Pages_Event$eventPopularity = function (event) {
 			});
 	}
 };
-var _user$project$Pages_Event$eventTickets = function (event) {
+var _user$project$Pages_CreateEvent$eventTickets = function (event) {
 	var emptyTickets = A2(
 		_elm_lang$core$List$all,
 		function (x) {
@@ -514,7 +514,7 @@ var _user$project$Pages_Event$eventTickets = function (event) {
 		return _elm_lang$html$Html$text('');
 	}
 };
-var _user$project$Pages_Event$eventTime = F2(
+var _user$project$Pages_CreateEvent$eventTime = F2(
 	function (event, maybeNow) {
 		var eventDateView = function () {
 			var _p6 = _user$project$Moment$maybeEventDate(event.datetime_local);
@@ -580,12 +580,12 @@ var _user$project$Pages_Event$eventTime = F2(
 					eventDateView),
 				_1: {
 					ctor: '::',
-					_0: _user$project$Pages_Event$eventTickets(event),
+					_0: _user$project$Pages_CreateEvent$eventTickets(event),
 					_1: {ctor: '[]'}
 				}
 			});
 	});
-var _user$project$Pages_Event$eventTitle = function (event) {
+var _user$project$Pages_CreateEvent$eventTitle = function (event) {
 	var icon = function (x) {
 		return A2(
 			_elm_lang$html$Html$div,
@@ -643,46 +643,58 @@ var _user$project$Pages_Event$eventTitle = function (event) {
 			}
 		});
 };
-var _user$project$Pages_Event$view = F2(
-	function (event, now) {
+var _user$project$Pages_CreateEvent$view = function (event) {
+	var _p8 = event;
+	if (_p8.ctor === 'Nothing') {
 		return A2(
 			_elm_lang$html$Html$section,
 			{
 				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class('overflow-auto w-100 flex-grow-1 animated fadeInLeft mw6-l flex-shrink-0 bg-black-70 shadow-2-l'),
+				_0: _elm_lang$html$Html_Attributes$class('overflow-auto w-100 w-auto-ns flex-grow-1 animated fadeInLeft mw7-ns flex-shrink-0 bg-black-70 shadow-2-l'),
 				_1: {ctor: '[]'}
 			},
 			{
 				ctor: '::',
-				_0: _user$project$Pages_Event$eventBanner(event),
+				_0: _elm_lang$html$Html$text('welp'),
+				_1: {ctor: '[]'}
+			});
+	} else {
+		var _p9 = _p8._0;
+		return A2(
+			_elm_lang$html$Html$section,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('overflow-auto w-100 w-auto-ns flex-grow-1 animated fadeInLeft mw7-ns flex-shrink-0 bg-black-70 shadow-2-l'),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: _user$project$Pages_CreateEvent$eventBanner(_p9),
 				_1: {
 					ctor: '::',
-					_0: _user$project$Pages_Event$eventTitle(event),
+					_0: _user$project$Pages_CreateEvent$eventTitle(_p9),
 					_1: {
 						ctor: '::',
-						_0: _user$project$Pages_Event$eventEmojis(event),
+						_0: _user$project$Pages_CreateEvent$eventEmojis(_p9),
 						_1: {
 							ctor: '::',
-							_0: A2(_user$project$Pages_Event$eventTime, event, now),
+							_0: _user$project$Pages_CreateEvent$eventPool,
 							_1: {
 								ctor: '::',
-								_0: _user$project$Pages_Event$eventPool,
+								_0: _user$project$Pages_CreateEvent$eventPopularity(_p9),
 								_1: {
 									ctor: '::',
-									_0: _user$project$Pages_Event$eventPopularity(event),
-									_1: {
-										ctor: '::',
-										_0: _user$project$Pages_Event$yetToBeAdded,
-										_1: {ctor: '[]'}
-									}
+									_0: _user$project$Pages_CreateEvent$yetToBeAdded,
+									_1: {ctor: '[]'}
 								}
 							}
 						}
 					}
 				}
 			});
-	});
-var _user$project$Pages_Event$askQuery = function (query) {
+	}
+};
+var _user$project$Pages_CreateEvent$askQuery = function (query) {
 	var url = _user$project$SeatGeek_Query$composeRequest(query);
 	var request = A2(_elm_lang$http$Http$get, url, _user$project$SeatGeek_Decode$decodeReply);
 	return A2(_elm_lang$http$Http$send, _user$project$Types$GetReply, request);

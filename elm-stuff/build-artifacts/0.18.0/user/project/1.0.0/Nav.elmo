@@ -123,10 +123,20 @@ var _user$project$Nav$selections = function () {
 				},
 				_1: {
 					ctor: '::',
-					_0: {ctor: '_Tuple3', _0: 'share', _1: 'share-2', _2: _user$project$Types$GoChat},
+					_0: {
+						ctor: '_Tuple3',
+						_0: 'share',
+						_1: 'share-2',
+						_2: _user$project$Types$GoChats(_elm_lang$core$Maybe$Nothing)
+					},
 					_1: {
 						ctor: '::',
-						_0: {ctor: '_Tuple3', _0: 'chats', _1: 'message-square', _2: _user$project$Types$GoChats},
+						_0: {
+							ctor: '_Tuple3',
+							_0: 'chats',
+							_1: 'message-square',
+							_2: _user$project$Types$GoChats(_elm_lang$core$Maybe$Nothing)
+						},
 						_1: {
 							ctor: '::',
 							_0: {ctor: '_Tuple3', _0: 'profile', _1: 'user', _2: _user$project$Types$GoProfile},

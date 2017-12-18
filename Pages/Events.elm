@@ -52,7 +52,7 @@ view model =
                 _ ->
                     ""
     in
-        section [ class ("animated fadeInUp w-100 mw6-l overflow-auto z-999 flex-grow-1 shadow-2-l" ++ mobileHide) ]
+        section [ class ("animated fadeInUp w-100 w-auto-ns mw6-l overflow-auto z-999 flex-grow-1 shadow-2-l" ++ mobileHide) ]
             [ div [ class "h5 flex flex-column justify-between pa3" ]
                 [ Assets.discoverToolsView
                 , div [ class "f2 lh-solid fw7 ma0 pa0" ]
@@ -103,7 +103,7 @@ eventListView maybeNow event =
             ]
             [ cardImage
             , div [ class "pb3 pb4-m bb b--white-20" ]
-                [ div [ class "pb1 f4 f3-m pt3-m pt2" ]
+                [ div [ class "pb1 f5 f4-m pt3-m pt2" ]
                     [ span [ class "mr2 fw5" ] [ text event.title ]
                     , div [ class "fw5 o-80 dib" ]
                         [ atIcon, text event.venue.name ]

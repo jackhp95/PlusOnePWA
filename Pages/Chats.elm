@@ -12,6 +12,7 @@
 
 module Pages.Chats exposing (..)
 
+import Pages.Chat exposing (..)
 import Assets exposing (..)
 import Pages.Profile exposing (profileAvi)
 import Html exposing (..)
@@ -26,15 +27,23 @@ import Assets exposing (..)
 
 
 view : Types.Model -> Html Types.Msg
-view x =
+view model =
     let
         chats =
-            x.chats
+            model.chats
 
         client =
-            x.client
+            model.client
+
+        mobileHide =
+            case model.route of
+                Types.GoChats (Just _) ->
+                    " dn flex-l"
+
+                _ ->
+                    " flex "
     in
-        div [ class "flex flex-column items-stretch flex-auto measure pa0 ma0 shadow-2-l" ]
+        section [ class ("flex-column items-stretch flex-auto pa0 ma0 measure-ns shadow-2-ns" ++ mobileHide) ]
             [ banner
             , div [ class "flex-shrink-1 flex-grow-0 bg-black-70 overflow-auto" ] (List.map nameBar chats)
             ]
@@ -42,16 +51,23 @@ view x =
 
 nameBar : Types.Chat -> Html Types.Msg
 nameBar chat =
-    div [ class "flex items-center z-2 fadeIn animated pa3 grow hover-bg-black-20 lh-title" ]
+    div
+        [ class "flex items-center z-2 fadeIn animated pa3 grow hover-bg-black-20 lh-title"
+        , onClick (Types.ViewChat (Types.GoChats (Just chat)))
+        ]
         [ div [ bgImg chat.userAvi, class "pa4 mh2 bg-white br-pill shadow-2 ba cover br-pill" ] []
         , div [ class "flex-auto mh2" ]
-            [ div [ class "f5 fw6" ] [ text "Hannah" ]
-            , div [ class "f5 fw4 o-60" ] [ text "Chance the Rapper" ]
+            [ div [ class "flex justify-between" ]
+                [ div [ class "nowrap" ]
+                    [ div [ class "f5 fw6" ] [ text "Hannah" ]
+                    , div [ class "f5 fw4 o-60" ] [ text "Chance the Rapper" ]
+                    ]
+                , div [ class "mh2 self-start f7 tr o-80 flex-shrink-0" ]
+                    [ div [] [ text "4:39pm" ]
+                    , div [] [ text "unconfirmed" ]
+                    ]
+                ]
             , div [ class "f6 truncate pt2" ] [ text (Maybe.withDefault "" (List.head chat.messages)) ]
-            ]
-        , div [ class "mh2 self-start f7 tr o-80" ]
-            [ div [] [ text "4:39pm" ]
-            , div [] [ text "unconfirmed" ]
             ]
         ]
 
@@ -61,7 +77,7 @@ banner =
     div
         [ class "w-100 pa3 flex flex-grow-1 flex-shrink-0 justify-between" ]
         [ div
-            [ class "self-end f2 lh-solid fw7" ]
+            [ class "self-end f2 lh-solid fw7 flex-shrink-1" ]
             [ text "chats" ]
-        , div [ class "self-start" ] [ Assets.discoverToolsView ]
+        , div [ class "self-start flex-shrink-0" ] [ Assets.discoverToolsView ]
         ]

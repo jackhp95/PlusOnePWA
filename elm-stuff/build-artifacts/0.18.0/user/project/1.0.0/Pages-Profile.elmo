@@ -156,7 +156,7 @@ var _user$project$Pages_Profile$pastEvents = function (model) {
 						_elm_lang$html$Html$div,
 						{
 							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('f4 fw6 pt2'),
+							_0: _elm_lang$html$Html_Attributes$class('f5 fw6 pt2'),
 							_1: {ctor: '[]'}
 						},
 						{

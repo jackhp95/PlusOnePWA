@@ -1,8 +1,7 @@
 {
     "name": "PlusOne Dating",
     "short_name": "PlusOne",
-    "icons": [
-        {
+    "icons": [{
             "src": "/android-chrome-192x192.png",
             "sizes": "192x192",
             "type": "image/png"
@@ -16,5 +15,8 @@
     "theme_color": "#330064",
     "background_color": "#330064",
     "start_url": "https://jackhp95.github.io/PlusOnePWA/",
-    "display": "standalone"
+    "display": "standalone",
+
+    // For Firebase Notifications
+    "gcm_sender_id": "103953800507"
 }

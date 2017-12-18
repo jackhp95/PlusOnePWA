@@ -38,31 +38,29 @@ view x =
         client =
             x.client
     in
-        div [ class "bg-black-70 flex flex-column flex-auto measure-wide pa0 ma0 shadow-2-l" ]
+        div [ class "bg-black-70 flex flex-column flex-auto measure-wide-l pa0 ma0 shadow-2-l" ]
             [ nameBar chat
             , section [ class "flex-auto lh-copy overflow-auto ph3 pt5 z-1 inner-shadow-1" ]
-                ([ toast
-                 , sent
-                 , recieved
-                 , sent
-                 , recieved
-                 , sent
-                 , recieved
-                 , sent
-                 , recieved
-                 , sent
-                 , recieved
-                 , sent
-                 , recieved
-                 , sent
-                 , recieved
-                 , sent
-                 , recieved
-                 , sent
-                 , recieved
-                 ]
-                    ++ (List.map viewMessage (List.reverse chat.messages))
-                )
+                [ toast
+                , sent
+                , recieved
+                , sent
+                , recieved
+                , sent
+                , recieved
+                , sent
+                , recieved
+                , sent
+                , recieved
+                , sent
+                , recieved
+                , sent
+                , recieved
+                , sent
+                , recieved
+                , sent
+                , recieved
+                ]
             , messageBar chat client
             ]
 
@@ -110,7 +108,7 @@ messageBar chat client =
 
 nameBar : Types.Chat -> Html Types.Msg
 nameBar chat =
-    div [ class "bg-black-90 flex items-stretch absolute w-100 measure-wide z-2 h3 fadeIn animated" ]
+    div [ class "bg-black-90 flex items-stretch absolute w-100 measure-wide-l z-2 h3 fadeIn animated" ]
         [ div [ class "flex items-center grow", onClick (Types.ChangeTo Types.GoProfile) ]
             [ div [ class "bounceIn animated h3 ph3 pt3 overflow-visible" ]
                 [ div [ class "w3" ]

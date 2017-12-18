@@ -66,7 +66,7 @@ pastEvents model =
         eventCard ( performer, venue ) =
             td [ class "pr3 pl0 pt0 pb4 bb b--white-20" ]
                 [ div [ class "w5 aspect-ratio--16x9 lg-breathe-50" ] []
-                , div [ class "f4 fw6 pt2" ] [ text performer ]
+                , div [ class "f5 fw6 pt2" ] [ text performer ]
                 , div [ class "fw4 pt1" ] [ text venue ]
                 ]
     in
@@ -125,14 +125,3 @@ stringToEmoji string =
         _ ->
             "\x1F937"
 
-
-
--- tachyonsCSS : String
--- tachyonsCSS =
---     "Admin/tachyons.css"
--- plusOneCSS : String
--- plusOneCSS =
---     "Admin/plusOne.css"
--- animateCSS : String
--- animateCSS =
---     "https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css"

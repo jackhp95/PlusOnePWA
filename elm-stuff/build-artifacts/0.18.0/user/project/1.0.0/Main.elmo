@@ -48,6 +48,14 @@ var _user$project$Main$update = F2(
 				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 			case 'NewMessage':
 				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+			case 'ViewChat':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{route: _p1._0}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
 			case 'ViewEvent':
 				return {
 					ctor: '_Tuple2',

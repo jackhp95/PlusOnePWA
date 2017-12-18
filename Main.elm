@@ -92,6 +92,13 @@ update msg model =
             NewMessage str ->
                 ( model, Cmd.none )
 
+            ViewChat chat ->
+                ( { model
+                    | route = chat
+                  }
+                , Cmd.none
+                )
+
             -- EVENTS
             ViewEvent event ->
                 ( { model

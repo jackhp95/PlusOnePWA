@@ -21,6 +21,7 @@ type alias Model =
     , events : Events
     , pool : Pool
     , client : Client
+    , createEvent : Maybe SG.Event
     }
 
 
@@ -28,12 +29,9 @@ initModel : Model
 initModel =
     Model
         -- (GoEvents Nothing)
-        GoChats
+        (GoChats Nothing)
         initChat
         [ initChat
-        , initChat
-        , initChat
-        , initChat
         , initChat
         , initChat
         , initChat
@@ -45,6 +43,7 @@ initModel =
         initEvents
         initPool
         initClient
+        Nothing
 
 
 type alias Page =
@@ -55,10 +54,10 @@ type alias Page =
 
 
 type Route
-    = GoChat
-    | GoChats
+    = GoChats (Maybe Chat)
     | GoProfile
     | GoEvents (Maybe SG.Event)
+    | GoCreateEvent
     | GoPool
 
 
@@ -276,6 +275,7 @@ type
     | Input String
     | SendChatMessage
     | NewMessage String
+    | ViewChat Route
       -- Events
     | ViewEvent Route
     | OnDatetime Date

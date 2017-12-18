@@ -21,8 +21,8 @@ selections =
         List.map makePage
             [ ( "discover", "compass", GoEvents Nothing )
             , ( "add", "plus-square", GoEvents Nothing )
-            , ( "share", "share-2", GoChat )
-            , ( "chats", "message-square", GoChats )
+            , ( "share", "share-2", GoChats Nothing )
+            , ( "chats", "message-square", GoChats Nothing)
             , ( "profile", "user", GoProfile )
             ]
 

@@ -11,7 +11,7 @@ var _user$project$Pages_Chats$banner = A2(
 			_elm_lang$html$Html$div,
 			{
 				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class('self-end f2 lh-solid fw7'),
+				_0: _elm_lang$html$Html_Attributes$class('self-end f2 lh-solid fw7 flex-shrink-1'),
 				_1: {ctor: '[]'}
 			},
 			{
@@ -25,7 +25,7 @@ var _user$project$Pages_Chats$banner = A2(
 				_elm_lang$html$Html$div,
 				{
 					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class('self-start'),
+					_0: _elm_lang$html$Html_Attributes$class('self-start flex-shrink-0'),
 					_1: {ctor: '[]'}
 				},
 				{
@@ -42,7 +42,14 @@ var _user$project$Pages_Chats$nameBar = function (chat) {
 		{
 			ctor: '::',
 			_0: _elm_lang$html$Html_Attributes$class('flex items-center z-2 fadeIn animated pa3 grow hover-bg-black-20 lh-title'),
-			_1: {ctor: '[]'}
+			_1: {
+				ctor: '::',
+				_0: _elm_lang$html$Html_Events$onClick(
+					_user$project$Types$ViewChat(
+						_user$project$Types$GoChats(
+							_elm_lang$core$Maybe$Just(chat)))),
+				_1: {ctor: '[]'}
+			}
 		},
 		{
 			ctor: '::',
@@ -73,13 +80,83 @@ var _user$project$Pages_Chats$nameBar = function (chat) {
 							_elm_lang$html$Html$div,
 							{
 								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$class('f5 fw6'),
+								_0: _elm_lang$html$Html_Attributes$class('flex justify-between'),
 								_1: {ctor: '[]'}
 							},
 							{
 								ctor: '::',
-								_0: _elm_lang$html$Html$text('Hannah'),
-								_1: {ctor: '[]'}
+								_0: A2(
+									_elm_lang$html$Html$div,
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$class('nowrap'),
+										_1: {ctor: '[]'}
+									},
+									{
+										ctor: '::',
+										_0: A2(
+											_elm_lang$html$Html$div,
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html_Attributes$class('f5 fw6'),
+												_1: {ctor: '[]'}
+											},
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html$text('Hannah'),
+												_1: {ctor: '[]'}
+											}),
+										_1: {
+											ctor: '::',
+											_0: A2(
+												_elm_lang$html$Html$div,
+												{
+													ctor: '::',
+													_0: _elm_lang$html$Html_Attributes$class('f5 fw4 o-60'),
+													_1: {ctor: '[]'}
+												},
+												{
+													ctor: '::',
+													_0: _elm_lang$html$Html$text('Chance the Rapper'),
+													_1: {ctor: '[]'}
+												}),
+											_1: {ctor: '[]'}
+										}
+									}),
+								_1: {
+									ctor: '::',
+									_0: A2(
+										_elm_lang$html$Html$div,
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html_Attributes$class('mh2 self-start f7 tr o-80 flex-shrink-0'),
+											_1: {ctor: '[]'}
+										},
+										{
+											ctor: '::',
+											_0: A2(
+												_elm_lang$html$Html$div,
+												{ctor: '[]'},
+												{
+													ctor: '::',
+													_0: _elm_lang$html$Html$text('4:39pm'),
+													_1: {ctor: '[]'}
+												}),
+											_1: {
+												ctor: '::',
+												_0: A2(
+													_elm_lang$html$Html$div,
+													{ctor: '[]'},
+													{
+														ctor: '::',
+														_0: _elm_lang$html$Html$text('unconfirmed'),
+														_1: {ctor: '[]'}
+													}),
+												_1: {ctor: '[]'}
+											}
+										}),
+									_1: {ctor: '[]'}
+								}
 							}),
 						_1: {
 							ctor: '::',
@@ -87,81 +164,42 @@ var _user$project$Pages_Chats$nameBar = function (chat) {
 								_elm_lang$html$Html$div,
 								{
 									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$class('f5 fw4 o-60'),
+									_0: _elm_lang$html$Html_Attributes$class('f6 truncate pt2'),
 									_1: {ctor: '[]'}
 								},
 								{
 									ctor: '::',
-									_0: _elm_lang$html$Html$text('Chance the Rapper'),
+									_0: _elm_lang$html$Html$text(
+										A2(
+											_elm_lang$core$Maybe$withDefault,
+											'',
+											_elm_lang$core$List$head(chat.messages))),
 									_1: {ctor: '[]'}
 								}),
-							_1: {
-								ctor: '::',
-								_0: A2(
-									_elm_lang$html$Html$div,
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$class('f6 truncate pt2'),
-										_1: {ctor: '[]'}
-									},
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html$text(
-											A2(
-												_elm_lang$core$Maybe$withDefault,
-												'',
-												_elm_lang$core$List$head(chat.messages))),
-										_1: {ctor: '[]'}
-									}),
-								_1: {ctor: '[]'}
-							}
+							_1: {ctor: '[]'}
 						}
 					}),
-				_1: {
-					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html$div,
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('mh2 self-start f7 tr o-80'),
-							_1: {ctor: '[]'}
-						},
-						{
-							ctor: '::',
-							_0: A2(
-								_elm_lang$html$Html$div,
-								{ctor: '[]'},
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html$text('4:39pm'),
-									_1: {ctor: '[]'}
-								}),
-							_1: {
-								ctor: '::',
-								_0: A2(
-									_elm_lang$html$Html$div,
-									{ctor: '[]'},
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html$text('unconfirmed'),
-										_1: {ctor: '[]'}
-									}),
-								_1: {ctor: '[]'}
-							}
-						}),
-					_1: {ctor: '[]'}
-				}
+				_1: {ctor: '[]'}
 			}
 		});
 };
-var _user$project$Pages_Chats$view = function (x) {
-	var client = x.client;
-	var chats = x.chats;
+var _user$project$Pages_Chats$view = function (model) {
+	var mobileHide = function () {
+		var _p0 = model.route;
+		if ((_p0.ctor === 'GoChats') && (_p0._0.ctor === 'Just')) {
+			return ' dn flex-l';
+		} else {
+			return ' flex ';
+		}
+	}();
+	var client = model.client;
+	var chats = model.chats;
 	return A2(
-		_elm_lang$html$Html$div,
+		_elm_lang$html$Html$section,
 		{
 			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('flex flex-column items-stretch flex-auto measure pa0 ma0 shadow-2-l'),
+			_0: _elm_lang$html$Html_Attributes$class(
+				A2(_elm_lang$core$Basics_ops['++'], 'flex-column items-stretch flex-auto pa0 ma0 measure-ns shadow-2-ns', mobileHide)),
 			_1: {ctor: '[]'}
 		},
 		{

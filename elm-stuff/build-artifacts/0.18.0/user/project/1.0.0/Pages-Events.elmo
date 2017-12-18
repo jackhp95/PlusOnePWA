@@ -114,7 +114,7 @@ var _user$project$Pages_Events$eventListView = F2(
 								_elm_lang$html$Html$div,
 								{
 									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$class('pb1 f4 f3-m pt3-m pt2'),
+									_0: _elm_lang$html$Html_Attributes$class('pb1 f5 f4-m pt3-m pt2'),
 									_1: {ctor: '[]'}
 								},
 								{
@@ -227,7 +227,7 @@ var _user$project$Pages_Events$view = function (model) {
 		{
 			ctor: '::',
 			_0: _elm_lang$html$Html_Attributes$class(
-				A2(_elm_lang$core$Basics_ops['++'], 'animated fadeInUp w-100 mw6-l overflow-auto z-999 flex-grow-1 shadow-2-l', mobileHide)),
+				A2(_elm_lang$core$Basics_ops['++'], 'animated fadeInUp w-100 w-auto-ns mw6-l overflow-auto z-999 flex-grow-1 shadow-2-l', mobileHide)),
 			_1: {ctor: '[]'}
 		},
 		{

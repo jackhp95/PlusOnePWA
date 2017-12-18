@@ -2,7 +2,7 @@
 -- https://guide.elm-lang.org/architecture/effects/http.html
 
 
-module Pages.Event exposing (..)
+module Pages.CreateEvent exposing (..)
 
 import Types exposing (Msg, Events)
 import SeatGeek.Query exposing (composeRequest)
@@ -35,17 +35,22 @@ askQuery query =
 -- VIEW
 
 
-view : SG.Event -> Maybe Date -> Html Msg
-view event now =
-    section [ class "overflow-auto w-100 flex-grow-1 animated fadeInLeft mw6-l flex-shrink-0 bg-black-70 shadow-2-l" ]
-        [ eventBanner event
-        , eventTitle event
-        , eventEmojis event
-        , eventTime event now
-        , eventPool
-        , eventPopularity event
-        , yetToBeAdded
-        ]
+view : Maybe SG.Event -> Html Msg
+view event =
+    case event of
+        Nothing ->
+            section [ class "overflow-auto w-100 w-auto-ns flex-grow-1 animated fadeInLeft mw7-ns flex-shrink-0 bg-black-70 shadow-2-l" ]
+                [ text "welp" ]
+
+        Just event ->
+            section [ class "overflow-auto w-100 w-auto-ns flex-grow-1 animated fadeInLeft mw7-ns flex-shrink-0 bg-black-70 shadow-2-l" ]
+                [ eventBanner event
+                , eventTitle event
+                , eventEmojis event
+                , eventPool
+                , eventPopularity event
+                , yetToBeAdded
+                ]
 
 
 eventTitle : SG.Event -> Html msg
