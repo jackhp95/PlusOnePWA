@@ -38,7 +38,7 @@ view x =
         client =
             x.client
     in
-        div [ class "bg-black-70 flex flex-column flex-auto measure-wide-l pa0 ma0 shadow-2-l" ]
+        div [ class "animated fadeInLeft bg-black-70 flex flex-column flex-auto measure-wide-l pa0 ma0 shadow-2-l" ]
             [ nameBar chat
             , section [ class "flex-auto lh-copy overflow-auto ph3 pt5 z-1 inner-shadow-1" ]
                 [ toast
@@ -94,7 +94,7 @@ messageBar chat client =
     div [ class "bg-black-40 flex flex-none z-2 items-stretch overflow-hidden pl2 slideInUp animated" ]
         [ textarea
             ((TextArea.auto client)
-                ++ [ class "white bg-transparent overflow-visible pa3 items-center self-center flex-auto bn outline-0"
+                ++ [ class "white bg-transparent overflow-visible pa3 self-center flex-auto bn outline-0"
                    , placeholder "strike up a convo"
                    , autofocus True
                    ]

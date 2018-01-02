@@ -1,41 +1,3 @@
-var _user$project$Pages_Chats$banner = A2(
-	_elm_lang$html$Html$div,
-	{
-		ctor: '::',
-		_0: _elm_lang$html$Html_Attributes$class('w-100 pa3 flex flex-grow-1 flex-shrink-0 justify-between'),
-		_1: {ctor: '[]'}
-	},
-	{
-		ctor: '::',
-		_0: A2(
-			_elm_lang$html$Html$div,
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class('self-end f2 lh-solid fw7 flex-shrink-1'),
-				_1: {ctor: '[]'}
-			},
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html$text('chats'),
-				_1: {ctor: '[]'}
-			}),
-		_1: {
-			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$div,
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class('self-start flex-shrink-0'),
-					_1: {ctor: '[]'}
-				},
-				{
-					ctor: '::',
-					_0: _user$project$Assets$discoverToolsView,
-					_1: {ctor: '[]'}
-				}),
-			_1: {ctor: '[]'}
-		}
-	});
 var _user$project$Pages_Chats$nameBar = function (chat) {
 	return A2(
 		_elm_lang$html$Html$div,
@@ -199,12 +161,12 @@ var _user$project$Pages_Chats$view = function (model) {
 		{
 			ctor: '::',
 			_0: _elm_lang$html$Html_Attributes$class(
-				A2(_elm_lang$core$Basics_ops['++'], 'flex-column items-stretch flex-auto pa0 ma0 measure-ns shadow-2-ns', mobileHide)),
+				A2(_elm_lang$core$Basics_ops['++'], 'animated fadeInUp flex-column items-stretch flex-auto pa0 ma0 measure-ns shadow-2-ns', mobileHide)),
 			_1: {ctor: '[]'}
 		},
 		{
 			ctor: '::',
-			_0: _user$project$Pages_Chats$banner,
+			_0: _user$project$Assets$banner('chats'),
 			_1: {
 				ctor: '::',
 				_0: A2(

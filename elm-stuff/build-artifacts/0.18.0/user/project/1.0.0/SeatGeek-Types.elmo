@@ -1,14 +1,4 @@
 var _user$project$SeatGeek_Types$initArguments = {performers: '', venues: '', datetime: '', query: '', id: '', taxonomies: '', slug: '', genres: '', city: '', state: '', country: '', postal_code: ''};
-var _user$project$SeatGeek_Types$emptyReply = {
-	meta: {
-		per_page: 0,
-		took: 0,
-		geolocation: {state: '', postal_code: '', lat: 0.0, range: '', display_name: '', city: '', country: '', lon: 0.0},
-		total: 0,
-		page: 0
-	},
-	events: {ctor: '[]'}
-};
 var _user$project$SeatGeek_Types$SeatGeek = F2(
 	function (a, b) {
 		return {reply: a, query: b};

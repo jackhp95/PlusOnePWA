@@ -17,28 +17,6 @@ type alias Reply =
     }
 
 
-emptyReply : Reply
-emptyReply =
-    { meta =
-        { per_page = 0
-        , took = 0
-        , geolocation =
-            { state = ""
-            , postal_code = ""
-            , lat = 0.0
-            , range = ""
-            , display_name = ""
-            , city = ""
-            , country = ""
-            , lon = 0.0
-            }
-        , total = 0
-        , page = 0
-        }
-    , events = []
-    }
-
-
 type alias MetaGeolocation =
     { state : String
     , postal_code : String

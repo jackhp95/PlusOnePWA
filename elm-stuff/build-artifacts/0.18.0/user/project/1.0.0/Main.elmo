@@ -184,10 +184,8 @@ var _user$project$Main$update = F2(
 								events: _elm_lang$core$Native_Utils.update(
 									events,
 									{
-										seatgeek: A2(
-											_user$project$SeatGeek_Types$Reply,
-											_p2.meta,
-											A2(_elm_lang$core$Basics_ops['++'], events.seatgeek.events, _p2.events))
+										seatgeek: _elm_lang$core$Maybe$Just(
+											A2(_user$project$SeatGeek_Types$Reply, _p2.meta, _p2.events))
 									})
 							}),
 						_1: _elm_lang$core$Platform_Cmd$none

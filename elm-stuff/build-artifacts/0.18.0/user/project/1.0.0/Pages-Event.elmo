@@ -532,7 +532,7 @@ var _user$project$Pages_Event$eventTime = F2(
 						_elm_lang$html$Html$div,
 						{
 							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('fw7 f4 lh-solid pb2'),
+							_0: _elm_lang$html$Html_Attributes$class('fw7 f4 lh-solid pb1'),
 							_1: {ctor: '[]'}
 						},
 						{
@@ -574,7 +574,7 @@ var _user$project$Pages_Event$eventTime = F2(
 					_elm_lang$html$Html$div,
 					{
 						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class('mh1'),
+						_0: _elm_lang$html$Html_Attributes$class('mh1 flex flex-column justify-center'),
 						_1: {ctor: '[]'}
 					},
 					eventDateView),

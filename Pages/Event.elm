@@ -98,12 +98,12 @@ eventTime event maybeNow =
                     [ text "not sure what time this event is" ]
 
                 Just x ->
-                    [ div [ class "fw7 f4 lh-solid pb2" ] [ text (clockTime x) ]
+                    [ div [ class "fw7 f4 lh-solid pb1" ] [ text (clockTime x) ]
                     , div [ class "fw4 lh-solid" ] [ text (fullDate x) ]
                     ]
     in
         div [ class "pv4 mh4 bb b--white-20 flex justify-between" ]
-            [ div [ class "mh1" ] (eventDateView)
+            [ div [ class "mh1 flex flex-column justify-center" ] (eventDateView)
             , eventTickets event
             ]
 

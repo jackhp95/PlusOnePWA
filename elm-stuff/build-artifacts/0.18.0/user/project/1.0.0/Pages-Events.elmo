@@ -222,6 +222,61 @@ var _user$project$Pages_Events$view = function (model) {
 		}
 	}();
 	var events = model.events;
+	var eventsUnlessError = function () {
+		var _p4 = events.seatgeek;
+		if (_p4.ctor === 'Nothing') {
+			return A2(
+				_elm_lang$html$Html$div,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('ma3 bg-black-40 br3 shadow-2 ph3-ns ph2 pv4 grow'),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$div,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class('pa2 f2-ns f3 fw6 lh-solid'),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text('What we\'ve got here is a failure to communicate.'),
+							_1: {ctor: '[]'}
+						}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$div,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$class('pa2 lh-copy'),
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text('Sometimes, we just can\'t reach SeatGeek. So you get what we had here last time you looked on this app, which is the way you\'d likely want it. Well, we get it. We don\'t like this error message any more than you.'),
+								_1: {ctor: '[]'}
+							}),
+						_1: {ctor: '[]'}
+					}
+				});
+		} else {
+			return A2(
+				_elm_lang$html$Html$div,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('bg-black-70'),
+					_1: {ctor: '[]'}
+				},
+				A2(
+					_elm_lang$core$List$map,
+					_user$project$Pages_Events$eventListView(events.currentDatetime),
+					_p4._0.events));
+		}
+	}();
 	return A2(
 		_elm_lang$html$Html$section,
 		{
@@ -261,17 +316,7 @@ var _user$project$Pages_Events$view = function (model) {
 				}),
 			_1: {
 				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$div,
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class('bg-black-70'),
-						_1: {ctor: '[]'}
-					},
-					A2(
-						_elm_lang$core$List$map,
-						_user$project$Pages_Events$eventListView(events.currentDatetime),
-						events.seatgeek.events)),
+				_0: eventsUnlessError,
 				_1: {ctor: '[]'}
 			}
 		});

@@ -115,12 +115,7 @@ var _user$project$Nav$selections = function () {
 			},
 			_1: {
 				ctor: '::',
-				_0: {
-					ctor: '_Tuple3',
-					_0: 'add',
-					_1: 'plus-square',
-					_2: _user$project$Types$GoEvents(_elm_lang$core$Maybe$Nothing)
-				},
+				_0: {ctor: '_Tuple3', _0: 'add', _1: 'plus-square', _2: _user$project$Types$GoCreateEvent},
 				_1: {
 					ctor: '::',
 					_0: {

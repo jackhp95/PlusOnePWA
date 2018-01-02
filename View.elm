@@ -29,21 +29,21 @@ import Nav exposing (..)
 
 render : Types.Model -> Html Types.Msg
 render model =
-    Proto.bg
-        [ div [ class "overflow-hidden animated fadeIn white flex fw4 f6 vh-100" ]
-            (Proto.plusOne
-                ++ [ Nav.bar
-                   , main_ [ class "flex-auto pt5-m pb5 pb0-ns flex justify-stretch" ]
-                        (page model)
-                   ]
-            )
-        ]
-    -- div
-    --     [ class "overflow-hidden animated fadeIn white flex fw4 f6 vh-100" ]
-    --     [ Nav.bar
-    --     , main_ [ class "flex-auto pt5-m pb5 pb0-ns flex justify-stretch" ]
-    --         (page model)
+    -- Proto.bg
+    --     [ div [ class "overflow-hidden animated fadeIn white flex fw4 f6 vh-100" ]
+    --         (Proto.plusOne
+    --             ++ [ Nav.bar
+    --                , main_ [ class "flex-auto pt5-m pb5 pb0-ns flex justify-stretch" ]
+    --                     (page model)
+    --                ]
+    --         )
     --     ]
+    div
+        [ class "overflow-hidden animated fadeIn white flex fw4 f6 vh-100" ]
+        [ Nav.bar
+        , main_ [ class "flex-auto pt5-m pb5 pb0-ns flex justify-stretch" ]
+            (page model)
+        ]
 
 
 page : Types.Model -> List (Html Types.Msg)
@@ -66,7 +66,7 @@ page model =
             [ Pool.view model.pool ]
 
         Types.GoCreateEvent ->
-            [ CreateEvent.view model.createEvent ]
+            [ CreateEvent.view model ]
 
         Types.GoEvents event ->
             case event of

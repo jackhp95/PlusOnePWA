@@ -4,7 +4,7 @@ var _user$project$Types$initTube = {diameter: 100, ring: _user$project$Types$ini
 var _user$project$Types$initMove = _elm_lang$core$Maybe$Nothing;
 var _user$project$Types$initPosition = {x: 0, y: 0};
 var _user$project$Types$initClient = {textAreaHeight: 10};
-var _user$project$Types$initEvents = {seatgeek: _user$project$SeatGeek_Types$emptyReply, currentDatetime: _elm_lang$core$Maybe$Nothing};
+var _user$project$Types$initEvents = {seatgeek: _elm_lang$core$Maybe$Nothing, currentDatetime: _elm_lang$core$Maybe$Nothing};
 var _user$project$Types$initTrait = {
 	ctor: '::',
 	_0: {name: 'night owl', from: 'tommy', datetime: ''},

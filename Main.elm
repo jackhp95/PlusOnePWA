@@ -122,7 +122,7 @@ update msg model =
                 ( { model
                     | events =
                         { events
-                            | seatgeek = (SG.Reply recieved.meta (events.seatgeek.events ++ recieved.events))
+                            | seatgeek = Just (SG.Reply recieved.meta recieved.events)
                         }
                   }
                 , Cmd.none

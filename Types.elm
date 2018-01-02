@@ -122,14 +122,14 @@ initTrait =
 
 
 type alias Events =
-    { seatgeek : SG.Reply
+    { seatgeek : Maybe SG.Reply
     , currentDatetime : Maybe Date
     }
 
 
 initEvents : Events
 initEvents =
-    { seatgeek = SG.emptyReply
+    { seatgeek = Nothing
     , currentDatetime = Nothing
     }
 

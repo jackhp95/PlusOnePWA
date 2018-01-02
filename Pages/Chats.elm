@@ -43,8 +43,8 @@ view model =
                 _ ->
                     " flex "
     in
-        section [ class ("flex-column items-stretch flex-auto pa0 ma0 measure-ns shadow-2-ns" ++ mobileHide) ]
-            [ banner
+        section [ class ("animated fadeInUp flex-column items-stretch flex-auto pa0 ma0 measure-ns shadow-2-ns" ++ mobileHide) ]
+            [ Assets.banner "chats"
             , div [ class "flex-shrink-1 flex-grow-0 bg-black-70 overflow-auto" ] (List.map nameBar chats)
             ]
 
@@ -72,12 +72,4 @@ nameBar chat =
         ]
 
 
-banner : Html Types.Msg
-banner =
-    div
-        [ class "w-100 pa3 flex flex-grow-1 flex-shrink-0 justify-between" ]
-        [ div
-            [ class "self-end f2 lh-solid fw7 flex-shrink-1" ]
-            [ text "chats" ]
-        , div [ class "self-start flex-shrink-0" ] [ Assets.discoverToolsView ]
-        ]
+

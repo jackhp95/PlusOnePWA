@@ -51,6 +51,22 @@ view model =
 
                 _ ->
                     ""
+
+        eventsUnlessError =
+            case events.seatgeek of
+                Nothing ->
+                    div [ class "ma3 bg-black-40 br3 shadow-2 ph3-ns ph2 pv4 grow" ]
+                        [ div [ class "pa2 f2-ns f3 fw6 lh-solid" ]
+                            [ text "What we've got here is a failure to communicate."
+                            ]
+                        , div
+                            [ class "pa2 lh-copy" ]
+                            [ text "Sometimes, we just can't reach SeatGeek. So you get what we had here last time you looked on this app, which is the way you'd likely want it. Well, we get it. We don't like this error message any more than you." ]
+                        ]
+
+                Just x ->
+                    div [ class "bg-black-70" ]
+                        (List.map (eventListView events.currentDatetime) x.events)
     in
         section [ class ("animated fadeInUp w-100 w-auto-ns mw6-l overflow-auto z-999 flex-grow-1 shadow-2-l" ++ mobileHide) ]
             [ div [ class "h5 flex flex-column justify-between pa3" ]
@@ -58,9 +74,7 @@ view model =
                 , div [ class "f2 lh-solid fw7 ma0 pa0" ]
                     [ text "discover events" ]
                 ]
-            , div
-                [ class "bg-black-70" ]
-                (List.map (eventListView events.currentDatetime) events.seatgeek.events)
+            , eventsUnlessError
             ]
 
 

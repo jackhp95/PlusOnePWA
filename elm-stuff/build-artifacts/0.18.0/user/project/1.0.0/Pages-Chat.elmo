@@ -120,7 +120,7 @@ var _user$project$Pages_Chat$messageBar = F2(
 						_user$project$TextArea$auto(client),
 						{
 							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('white bg-transparent overflow-visible pa3 items-center self-center flex-auto bn outline-0'),
+							_0: _elm_lang$html$Html_Attributes$class('white bg-transparent overflow-visible pa3 self-center flex-auto bn outline-0'),
 							_1: {
 								ctor: '::',
 								_0: _elm_lang$html$Html_Attributes$placeholder('strike up a convo'),
@@ -237,7 +237,7 @@ var _user$project$Pages_Chat$view = function (x) {
 		_elm_lang$html$Html$div,
 		{
 			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('bg-black-70 flex flex-column flex-auto measure-wide-l pa0 ma0 shadow-2-l'),
+			_0: _elm_lang$html$Html_Attributes$class('animated fadeInLeft bg-black-70 flex flex-column flex-auto measure-wide-l pa0 ma0 shadow-2-l'),
 			_1: {ctor: '[]'}
 		},
 		{

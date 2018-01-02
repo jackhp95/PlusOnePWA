@@ -210,3 +210,14 @@ randomGradient seed =
 
             Just result ->
                 result ++ ""
+
+
+banner : String -> Html msg
+banner title =
+    div
+        [ class "w-100 pa3 flex flex-grow-1 flex-shrink-0 justify-between" ]
+        [ div
+            [ class "self-end f2 lh-solid fw7 flex-shrink-1" ]
+            [ text title ]
+        , div [ class "self-start flex-shrink-0" ] [ discoverToolsView ]
+        ]
