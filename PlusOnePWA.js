@@ -16507,7 +16507,7 @@ var _user$project$Pages_CreateEvent$view = function (event) {
 		_elm_lang$html$Html$section,
 		{
 			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('overflow-auto w-100 w-auto-ns flex flex-column flex-auto animated fadeInLeft mw7-ns shadow-2'),
+			_0: _elm_lang$html$Html_Attributes$class('animated fadeInUp flex flex-column items-stretch flex-auto pa0 ma0 measure-ns shadow-2-ns'),
 			_1: {ctor: '[]'}
 		},
 		{
@@ -16519,7 +16519,7 @@ var _user$project$Pages_CreateEvent$view = function (event) {
 					_elm_lang$html$Html$div,
 					{
 						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class('flex-auto bg-black-70 pa3'),
+						_0: _elm_lang$html$Html_Attributes$class('flex-shrink-1 flex-grow-0 bg-black-70 overflow-auto'),
 						_1: {ctor: '[]'}
 					},
 					{

@@ -29,10 +29,9 @@ view event =
                     ]
                 ]
     in
-        section [ class "overflow-auto w-100 w-auto-ns flex flex-column flex-auto animated fadeInLeft mw7-ns shadow-2" ]
-            [ banner "create event"
-            , div
-                [ class "flex-auto bg-black-70 pa3" ]
+        section [ class "animated fadeInUp flex flex-column items-stretch flex-auto pa0 ma0 measure-ns shadow-2-ns" ]
+            [ Assets.banner "create event"
+            , div [ class "flex-shrink-1 flex-grow-0 bg-black-70 overflow-auto" ]
                 [ sec "Title" "📛"
                 , sec "Description" "📢"
                 , sec "Location" "⚓"
