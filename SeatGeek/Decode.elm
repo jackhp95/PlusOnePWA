@@ -201,7 +201,7 @@ decodeReplyMeta =
     Json.Decode.succeed SG.ReplyMeta
         |: ("per_page" := Json.Decode.int)
         |: ("took" := Json.Decode.int)
-        |: ("geolocation" := decodeMetaGeolocation)
+        -- |: ("geolocation" := decodeMetaGeolocation)
         |: ("total" := Json.Decode.int)
         |: ("page" := Json.Decode.int)
 

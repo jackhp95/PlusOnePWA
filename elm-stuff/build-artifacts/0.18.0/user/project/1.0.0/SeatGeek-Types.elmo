@@ -11,9 +11,9 @@ var _user$project$SeatGeek_Types$MetaGeolocation = F8(
 	function (a, b, c, d, e, f, g, h) {
 		return {state: a, postal_code: b, lat: c, range: d, display_name: e, city: f, country: g, lon: h};
 	});
-var _user$project$SeatGeek_Types$ReplyMeta = F5(
-	function (a, b, c, d, e) {
-		return {per_page: a, took: b, geolocation: c, total: d, page: e};
+var _user$project$SeatGeek_Types$ReplyMeta = F4(
+	function (a, b, c, d) {
+		return {per_page: a, took: b, total: c, page: d};
 	});
 var _user$project$SeatGeek_Types$Event = function (a) {
 	return function (b) {

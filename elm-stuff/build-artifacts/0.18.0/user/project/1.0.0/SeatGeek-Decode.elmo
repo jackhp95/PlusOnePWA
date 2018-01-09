@@ -379,12 +379,9 @@ var _user$project$SeatGeek_Decode$decodeReplyMeta = A2(
 			_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
 			A2(
 				_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-				A2(
-					_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-					_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeek_Types$ReplyMeta),
-					A2(_user$project$SeatGeek_Decode_ops[':='], 'per_page', _elm_lang$core$Json_Decode$int)),
-				A2(_user$project$SeatGeek_Decode_ops[':='], 'took', _elm_lang$core$Json_Decode$int)),
-			A2(_user$project$SeatGeek_Decode_ops[':='], 'geolocation', _user$project$SeatGeek_Decode$decodeMetaGeolocation)),
+				_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeek_Types$ReplyMeta),
+				A2(_user$project$SeatGeek_Decode_ops[':='], 'per_page', _elm_lang$core$Json_Decode$int)),
+			A2(_user$project$SeatGeek_Decode_ops[':='], 'took', _elm_lang$core$Json_Decode$int)),
 		A2(_user$project$SeatGeek_Decode_ops[':='], 'total', _elm_lang$core$Json_Decode$int)),
 	A2(_user$project$SeatGeek_Decode_ops[':='], 'page', _elm_lang$core$Json_Decode$int));
 var _user$project$SeatGeek_Decode$decodeReply = A2(
