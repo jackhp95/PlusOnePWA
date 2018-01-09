@@ -12895,9 +12895,9 @@ var _user$project$SeatGeek_Types$MetaGeolocation = F8(
 	function (a, b, c, d, e, f, g, h) {
 		return {state: a, postal_code: b, lat: c, range: d, display_name: e, city: f, country: g, lon: h};
 	});
-var _user$project$SeatGeek_Types$ReplyMeta = F5(
-	function (a, b, c, d, e) {
-		return {per_page: a, took: b, geolocation: c, total: d, page: e};
+var _user$project$SeatGeek_Types$ReplyMeta = F4(
+	function (a, b, c, d) {
+		return {per_page: a, took: b, total: c, page: d};
 	});
 var _user$project$SeatGeek_Types$Event = function (a) {
 	return function (b) {
@@ -14920,12 +14920,9 @@ var _user$project$SeatGeek_Decode$decodeReplyMeta = A2(
 			_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
 			A2(
 				_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-				A2(
-					_elm_community$json_extra$Json_Decode_Extra_ops['|:'],
-					_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeek_Types$ReplyMeta),
-					A2(_user$project$SeatGeek_Decode_ops[':='], 'per_page', _elm_lang$core$Json_Decode$int)),
-				A2(_user$project$SeatGeek_Decode_ops[':='], 'took', _elm_lang$core$Json_Decode$int)),
-			A2(_user$project$SeatGeek_Decode_ops[':='], 'geolocation', _user$project$SeatGeek_Decode$decodeMetaGeolocation)),
+				_elm_lang$core$Json_Decode$succeed(_user$project$SeatGeek_Types$ReplyMeta),
+				A2(_user$project$SeatGeek_Decode_ops[':='], 'per_page', _elm_lang$core$Json_Decode$int)),
+			A2(_user$project$SeatGeek_Decode_ops[':='], 'took', _elm_lang$core$Json_Decode$int)),
 		A2(_user$project$SeatGeek_Decode_ops[':='], 'total', _elm_lang$core$Json_Decode$int)),
 	A2(_user$project$SeatGeek_Decode_ops[':='], 'page', _elm_lang$core$Json_Decode$int));
 var _user$project$SeatGeek_Decode$decodeReply = A2(
@@ -16672,28 +16669,36 @@ var _user$project$View$page = function (model) {
 	}
 };
 var _user$project$View$render = function (model) {
-	return A2(
-		_elm_lang$html$Html$div,
+	return _user$project$Proto$bg(
 		{
 			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('overflow-hidden animated fadeIn white flex fw4 f6 vh-100'),
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
-			_0: _user$project$Nav$bar,
-			_1: {
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$main_,
+			_0: A2(
+				_elm_lang$html$Html$div,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('overflow-hidden animated fadeIn white flex fw4 f6 vh-100'),
+					_1: {ctor: '[]'}
+				},
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					_user$project$Proto$plusOne,
 					{
 						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class('flex-auto pt5-m pb5 pb0-ns flex justify-stretch'),
-						_1: {ctor: '[]'}
-					},
-					_user$project$View$page(model)),
-				_1: {ctor: '[]'}
-			}
+						_0: _user$project$Nav$bar,
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$main_,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$class('flex-auto pt5-m pb5 pb0-ns flex justify-stretch'),
+									_1: {ctor: '[]'}
+								},
+								_user$project$View$page(model)),
+							_1: {ctor: '[]'}
+						}
+					})),
+			_1: {ctor: '[]'}
 		});
 };
 
