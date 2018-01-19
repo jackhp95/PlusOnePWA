@@ -22,26 +22,31 @@ selections =
             [ ( "discover", "compass", GoEvents Nothing )
             , ( "add", "plus-square", GoCreateEvent )
             , ( "share", "share-2", GoChats Nothing )
-            , ( "chats", "message-square", GoChats Nothing)
+            , ( "chats", "message-square", GoChats Nothing )
             , ( "profile", "user", GoProfile )
             ]
 
 
 bar : Html Msg
 bar =
-    nav [ class "z-9999 w-100 w-auto-l h3 vh-100-l tc-l fixed flex-m flex-row-m items-center-m self-start-m absolute static-l top-0-m bottom-0 bg-black-60-ns " ]
-        [ home
-        , ul [ class "list ma0 pa0 flex flex-column-l items-start-l justify-around flex-auto items-start-l items-stretch h3 h-auto-l pr3-l o-90-ns bg-0-ns" ]
-            (List.map tab selections)
+    nav [ class "f5-ns f7 fw4 flex-shrink-0 flex-grow-0 pv3-m ph4-l pa0 z-max flex flex-column-l bg-black-40" ]
+        [ ul [ class "flex flex-column-m list ma0 pa0 overflow-visible-ns overflow-hidden w-100 w-auto-ns" ]
+            (home
+                :: (List.map tab selections)
+            )
         ]
 
 
 home : Html Msg
 home =
-    div [ class "grow-large ph4-l pv4-l ph3 flex-ns flex-column-l items-center dn" ]
-        [ div [ bgImg "Assets/WhitePlusOneLogo.svg", class "animated bounceIn contain bg-center h3-l w3-l h2 w2" ] []
+    div [ class "grow-large dn flex-auto-l flex-ns flex-column-m items-center ph4-l pa3-m" ]
+        [ div
+            [ bgImg "Assets/WhitePlusOneLogo.svg"
+            , class "animated bounceIn pb4-m pr4-m pl3 pt3 pr2 pb2 contain bg-center"
+            ]
+            []
         , div
-            [ class "animated bounceInLeft fw7 pa3-m f4 dib-l dn ttn" ]
+            [ class "animated bounceInLeft fw6 f4 pv2-m ph3-l" ]
             [ text "PlusOne" ]
         ]
 
@@ -59,14 +64,12 @@ tab x =
             x.route
 
         iconClasses =
-            (class "w2 h2 w1-m h1-m contain")
-
-        captionClasses =
-            (class "pa3 pa2-m dn dib-ns")
+            (class "mr3-ns mr0 mb1 mb0-ns pa2-ns pl3 pt3 pr2 pb2 cover")
     in
-        div [ class "white link flex flex-auto", onClick (ChangeTo route) ]
-            [ li [ class "animated zoomInLeft grow pr3-l pl4-l pv2-l mv2-l ph2 pointer hover-bg-black-50 z-999 flex flex-auto justify-center items-center br--right-l br-pill-l " ]
+        li [ class "flex flex-column-l flex-row-m flex-column-reverse items-stretch hide-child ph3-l glow w-20 w-auto-ns", onClick (ChangeTo route) ]
+            [ span [ class "grow flex-auto flex flex-column flex-row-ns items-center pv3-ns pv2 pv4-l ph2-l mv1-m pl3-m pr4-m w-auto-ns" ]
                 [ div [ iconClasses, (Assets.feather icon) ] []
-                , div [ captionClasses ] [ text name ]
+                , text name
                 ]
+            , div [ class "b--white ba child" ] []
             ]

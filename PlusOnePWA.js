@@ -13360,16 +13360,15 @@ var _user$project$Types$ChangeTo = function (a) {
 };
 
 var _user$project$Nav$tab = function (x) {
-	var captionClasses = _elm_lang$html$Html_Attributes$class('pa3 pa2-m dn dib-ns');
-	var iconClasses = _elm_lang$html$Html_Attributes$class('w2 h2 w1-m h1-m contain');
+	var iconClasses = _elm_lang$html$Html_Attributes$class('mr3-ns mr0 mb1 mb0-ns pa2-ns pl3 pt3 pr2 pb2 cover');
 	var route = x.route;
 	var name = x.name;
 	var icon = x.icon;
 	return A2(
-		_elm_lang$html$Html$div,
+		_elm_lang$html$Html$li,
 		{
 			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('white link flex flex-auto'),
+			_0: _elm_lang$html$Html_Attributes$class('flex flex-column-l flex-row-m flex-column-reverse items-stretch hide-child ph3-l glow w-20 w-auto-ns'),
 			_1: {
 				ctor: '::',
 				_0: _elm_lang$html$Html_Events$onClick(
@@ -13380,10 +13379,10 @@ var _user$project$Nav$tab = function (x) {
 		{
 			ctor: '::',
 			_0: A2(
-				_elm_lang$html$Html$li,
+				_elm_lang$html$Html$span,
 				{
 					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class('animated zoomInLeft grow pr3-l pl4-l pv2-l mv2-l ph2 pointer hover-bg-black-50 z-999 flex flex-auto justify-center items-center br--right-l br-pill-l '),
+					_0: _elm_lang$html$Html_Attributes$class('grow flex-auto flex flex-column flex-row-ns items-center pv3-ns pv2 pv4-l ph2-l mv1-m pl3-m pr4-m w-auto-ns'),
 					_1: {ctor: '[]'}
 				},
 				{
@@ -13402,29 +13401,29 @@ var _user$project$Nav$tab = function (x) {
 						{ctor: '[]'}),
 					_1: {
 						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$div,
-							{
-								ctor: '::',
-								_0: captionClasses,
-								_1: {ctor: '[]'}
-							},
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html$text(name),
-								_1: {ctor: '[]'}
-							}),
+						_0: _elm_lang$html$Html$text(name),
 						_1: {ctor: '[]'}
 					}
 				}),
-			_1: {ctor: '[]'}
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('b--white ba child'),
+						_1: {ctor: '[]'}
+					},
+					{ctor: '[]'}),
+				_1: {ctor: '[]'}
+			}
 		});
 };
 var _user$project$Nav$home = A2(
 	_elm_lang$html$Html$div,
 	{
 		ctor: '::',
-		_0: _elm_lang$html$Html_Attributes$class('grow-large ph4-l pv4-l ph3 flex-ns flex-column-l items-center dn'),
+		_0: _elm_lang$html$Html_Attributes$class('grow-large dn flex-auto-l flex-ns flex-column-m items-center ph4-l pa3-m'),
 		_1: {ctor: '[]'}
 	},
 	{
@@ -13436,7 +13435,7 @@ var _user$project$Nav$home = A2(
 				_0: _user$project$Assets$bgImg('Assets/WhitePlusOneLogo.svg'),
 				_1: {
 					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class('animated bounceIn contain bg-center h3-l w3-l h2 w2'),
+					_0: _elm_lang$html$Html_Attributes$class('animated bounceIn pb4-m pr4-m pl3 pt3 pr2 pb2 contain bg-center'),
 					_1: {ctor: '[]'}
 				}
 			},
@@ -13447,7 +13446,7 @@ var _user$project$Nav$home = A2(
 				_elm_lang$html$Html$div,
 				{
 					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class('animated bounceInLeft fw7 pa3-m f4 dib-l dn ttn'),
+					_0: _elm_lang$html$Html_Attributes$class('animated bounceInLeft fw6 f4 pv2-m ph3-l'),
 					_1: {ctor: '[]'}
 				},
 				{
@@ -13507,24 +13506,24 @@ var _user$project$Nav$bar = A2(
 	_elm_lang$html$Html$nav,
 	{
 		ctor: '::',
-		_0: _elm_lang$html$Html_Attributes$class('z-9999 w-100 w-auto-l h3 vh-100-l tc-l fixed flex-m flex-row-m items-center-m self-start-m absolute static-l top-0-m bottom-0 bg-black-60-ns '),
+		_0: _elm_lang$html$Html_Attributes$class('f5-ns f7 fw4 flex-shrink-0 flex-grow-0 pv3-m ph4-l pa0 z-max flex flex-column-l bg-black-40'),
 		_1: {ctor: '[]'}
 	},
 	{
 		ctor: '::',
-		_0: _user$project$Nav$home,
-		_1: {
-			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$ul,
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class('list ma0 pa0 flex flex-column-l items-start-l justify-around flex-auto items-start-l items-stretch h3 h-auto-l pr3-l o-90-ns bg-0-ns'),
-					_1: {ctor: '[]'}
-				},
-				A2(_elm_lang$core$List$map, _user$project$Nav$tab, _user$project$Nav$selections)),
-			_1: {ctor: '[]'}
-		}
+		_0: A2(
+			_elm_lang$html$Html$ul,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('flex flex-column-m list ma0 pa0 overflow-visible-ns overflow-hidden w-100 w-auto-ns'),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: _user$project$Nav$home,
+				_1: A2(_elm_lang$core$List$map, _user$project$Nav$tab, _user$project$Nav$selections)
+			}),
+		_1: {ctor: '[]'}
 	});
 
 var _user$project$Pages_Profile$stringToEmoji = function (string) {
@@ -16669,36 +16668,28 @@ var _user$project$View$page = function (model) {
 	}
 };
 var _user$project$View$render = function (model) {
-	return _user$project$Proto$bg(
+	return A2(
+		_elm_lang$html$Html$div,
 		{
 			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$div,
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class('overflow-hidden animated fadeIn white flex fw4 f6 vh-100'),
-					_1: {ctor: '[]'}
-				},
-				A2(
-					_elm_lang$core$Basics_ops['++'],
-					_user$project$Proto$plusOne,
+			_0: _elm_lang$html$Html_Attributes$class('animated fadeIn f6 fw5 flex flex-column-l flex-row-m flex-column-reverse items-stretch vh-100 white'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _user$project$Nav$bar,
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$main_,
 					{
 						ctor: '::',
-						_0: _user$project$Nav$bar,
-						_1: {
-							ctor: '::',
-							_0: A2(
-								_elm_lang$html$Html$main_,
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$class('flex-auto pt5-m pb5 pb0-ns flex justify-stretch'),
-									_1: {ctor: '[]'}
-								},
-								_user$project$View$page(model)),
-							_1: {ctor: '[]'}
-						}
-					})),
-			_1: {ctor: '[]'}
+						_0: _elm_lang$html$Html_Attributes$class('flex-auto flex justify-stretch'),
+						_1: {ctor: '[]'}
+					},
+					_user$project$View$page(model)),
+				_1: {ctor: '[]'}
+			}
 		});
 };
 
