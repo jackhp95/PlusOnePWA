@@ -22,11 +22,7 @@ const PRECACHE_URLS = [
     'index.html',
     '/',
     'PlusOnePWA.js',
-    'https://jackhp95.github.io/PlusOnePWA/',
-    'https://cdnjs.cloudflare.com/ajax/libs/tachyons/4.9.0/tachyons.min.css',
-    'Admin/plusOne.css',
-    'https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css',
-    'https://fonts.googleapis.com/css?family=Montserrat:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i'
+    'Admin/plusOne.css'
 ];
 
 // The install handler takes care of precaching the resources we always need.
