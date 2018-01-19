@@ -184,7 +184,7 @@ Breathe BG/LG
 <!-- <script defer type="text/javascript" src="/_compile/Events.elm"></script> -->
 <script type="text/javascript" src="service-worker.js"></script>
 <script type="text/javascript" src="PlusOnePWA.js"></script>
-<script type="text/javascript">
+<script>
   // register serviceWorker
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('service-worker.js');
@@ -196,6 +196,26 @@ Breathe BG/LG
     }
   }
   var app = Elm.Main.fullscreen();
+</script>
+
+<script>
+  // Check if user saves the PWA to homescreen
+  window.addEventListener('beforeinstallprompt', function (e) {
+    // beforeinstallprompt Event fired
+
+    // e.userChoice will return a Promise.
+    // For more details read: https://developers.google.com/web/fundamentals/getting-started/primers/promises
+    e.userChoice.then(function (choiceResult) {
+
+      console.log(choiceResult.outcome);
+
+      if (choiceResult.outcome == 'dismissed') {
+        console.log('User cancelled home screen install');
+      } else {
+        console.log('User added to home screen');
+      }
+    });
+  });
 </script>
 
 </html>

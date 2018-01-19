@@ -14,9 +14,6 @@
     ],
     "theme_color": "#330064",
     "background_color": "#330064",
-    "start_url": "https://jackhp95.github.io/PlusOnePWA/",
-    "display": "standalone",
-
-    // For Firebase Notifications
-    "gcm_sender_id": "103953800507"
+    "start_url": "/",
+    "display": "standalone"
 }
