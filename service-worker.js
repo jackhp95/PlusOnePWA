@@ -20,6 +20,8 @@ const RUNTIME = 'runtime';
 // A list of local resources we always want to be cached.
 const PRECACHE_URLS = [
     'index.html',
+    '/',
+    'https://jackhp95.github.io/PlusOnePWA/',
     'https://cdnjs.cloudflare.com/ajax/libs/tachyons/4.9.0/tachyons.min.css',
     'Admin/plusOne.css',
     'https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css',
