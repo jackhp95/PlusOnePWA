@@ -14,13 +14,14 @@
 // Names of the two caches used in this version of the service worker.
 // Change to v2, etc. when you update any of the local resources, which will
 // in turn trigger the install event again.
-const PRECACHE = 'precache-v69';
+const PRECACHE = 'precache-v420';
 const RUNTIME = 'runtime';
 
 // A list of local resources we always want to be cached.
 const PRECACHE_URLS = [
     'index.html',
     '/',
+    'PlusOnePWA.js',
     'https://jackhp95.github.io/PlusOnePWA/',
     'https://cdnjs.cloudflare.com/ajax/libs/tachyons/4.9.0/tachyons.min.css',
     'Admin/plusOne.css',
