@@ -179,14 +179,11 @@ Breathe BG/LG
   </noscript>
 </body>
 
-<!-- <script type="text/javascript" src="sw.js"></script> -->
-
 <!-- <script defer type="text/javascript" src="/_compile/Events.elm"></script> -->
-<script type="text/javascript" src="service-worker.js"></script>
 <script type="text/javascript" src="PlusOnePWA.js"></script>
 <script>
   // register serviceWorker
-  navigator.serviceWorker.register('/service-worker.js').then(function (reg) {
+  navigator.serviceWorker.register('service-worker.js').then(function (reg) {
     console.log('◕‿◕', reg);
   }, function (err) {
     console.log('ಠ_ಠ', err);
