@@ -19,10 +19,7 @@ const RUNTIME = 'runtime';
 
 // A list of local resources we always want to be cached.
 const PRECACHE_URLS = [
-    '/index.html',
-    '/',
-    '/PlusOnePWA.js',
-    '/Admin/plusOne.css'
+    '/'
 ];
 
 // The install handler takes care of precaching the resources we always need.
