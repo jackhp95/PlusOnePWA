@@ -19,17 +19,23 @@ const RUNTIME = 'runtime';
 
 // A list of local resources we always want to be cached.
 const PRECACHE_URLS = [
-    '/'
+    '/index.html',
+    '/',
+    '/PlusOnePWA.js',
+    '/Admin/plusOne.css'
 ];
 
 // The install handler takes care of precaching the resources we always need.
-self.addEventListener('install', event => {
+self.addEventListener('install', function(event) {
+    // Perform install steps
     event.waitUntil(
-        caches.open(PRECACHE)
-        .then(cache => cache.addAll(PRECACHE_URLS))
-        .then(self.skipWaiting())
+      caches.open(PRECACHE)
+        .then(function(cache) {
+          console.log('Opened cache');
+          return cache.addAll(PRECACHE_URLS);
+        })
     );
-});
+  });
 
 // The activate handler takes care of cleaning up old caches.
 self.addEventListener('activate', event => {
