@@ -25,6 +25,15 @@ self.addEventListener('activate', function (event) {
 
 });
 
+// self.addEventListener('fetch', function (event) {
+//   console.log("Caught a fetch!");
+// });
+
 self.addEventListener('fetch', function (event) {
-  console.log("Caught a fetch!");
+  console.log(event.request.url);
+  event.respondWith(
+    caches.match(event.request).then(function (response) {
+      return response || fetch(event.request);
+    })
+  );
 });
