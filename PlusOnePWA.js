@@ -13423,7 +13423,7 @@ var _user$project$Nav$home = A2(
 	_elm_lang$html$Html$div,
 	{
 		ctor: '::',
-		_0: _elm_lang$html$Html_Attributes$class('grow-large dn flex-auto-l flex-ns flex-column-m items-center ph4-l pa3-m'),
+		_0: _elm_lang$html$Html_Attributes$class('dn flex-auto-l flex-ns flex-column-m items-center ph4-l pa3-m'),
 		_1: {ctor: '[]'}
 	},
 	{
@@ -13432,30 +13432,41 @@ var _user$project$Nav$home = A2(
 			_elm_lang$html$Html$div,
 			{
 				ctor: '::',
-				_0: _user$project$Assets$bgImg('Assets/WhitePlusOneLogo.svg'),
+				_0: _elm_lang$html$Html_Attributes$class('grow-large'),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{
+						ctor: '::',
+						_0: _user$project$Assets$bgImg('Assets/WhitePlusOneLogo.svg'),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class('animated bounceIn pb4-m pr4-m pl3 pt3 pr2 pb2 contain bg-center'),
+							_1: {ctor: '[]'}
+						}
+					},
+					{ctor: '[]'}),
 				_1: {
 					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class('animated bounceIn pb4-m pr4-m pl3 pt3 pr2 pb2 contain bg-center'),
+					_0: A2(
+						_elm_lang$html$Html$div,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class('animated bounceInLeft fw6 f4 pv2-m ph3-l'),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text('PlusOne'),
+							_1: {ctor: '[]'}
+						}),
 					_1: {ctor: '[]'}
 				}
-			},
-			{ctor: '[]'}),
-		_1: {
-			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$div,
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class('animated bounceInLeft fw6 f4 pv2-m ph3-l'),
-					_1: {ctor: '[]'}
-				},
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html$text('PlusOne'),
-					_1: {ctor: '[]'}
-				}),
-			_1: {ctor: '[]'}
-		}
+			}),
+		_1: {ctor: '[]'}
 	});
 var _user$project$Nav$selections = function () {
 	var makePage = function (_p0) {
@@ -16582,7 +16593,7 @@ var _user$project$Proto$linkURLs = {
 	_0: 'https://unpkg.com/tachyons@4.9.0/css/tachyons.min.css',
 	_1: {
 		ctor: '::',
-		_0: 'Admin/plusOne.css',
+		_0: 'Styles/plusOne.css',
 		_1: {
 			ctor: '::',
 			_0: 'https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css',

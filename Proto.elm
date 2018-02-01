@@ -26,8 +26,8 @@ linkURLs : List String
 linkURLs =
     [ "https://unpkg.com/tachyons@4.9.0/css/tachyons.min.css"
 
-    -- , "Admin/tachyons.css"
-    , "Admin/plusOne.css"
+    -- , "Styles/tachyons.css"
+    , "Styles/plusOne.css"
     , "https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css"
     ]
 

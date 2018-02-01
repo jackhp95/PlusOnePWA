@@ -28,7 +28,7 @@ var _user$project$Proto$linkURLs = {
 	_0: 'https://unpkg.com/tachyons@4.9.0/css/tachyons.min.css',
 	_1: {
 		ctor: '::',
-		_0: 'Admin/plusOne.css',
+		_0: 'Styles/plusOne.css',
 		_1: {
 			ctor: '::',
 			_0: 'https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css',
