@@ -11,13 +11,13 @@ self.addEventListener('activate', function (event) {
 
   // START CACHE CODE
   event.waitUntil(
-    caches.open('airhorner').then(function (cache) {
+    caches.open('PlusOne').then(function (cache) {
       return cache.addAll([
-        '/index.html',
-        '/Styles/plusOne.css',
-        '/Styles/tachyons.css',
-        '/PlusOnePWA.js',
-        '/Assets/WhitePlusOneLogo.svg'
+        'index.html',
+        'Styles/plusOne.css',
+        'Styles/tachyons.css',
+        'PlusOnePWA.js',
+        'Assets/WhitePlusOneLogo.svg'
       ]);
     })
   );
