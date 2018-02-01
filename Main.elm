@@ -18,11 +18,6 @@ import Date exposing (..)
 import Task exposing (..)
 
 
-echoServer : String
-echoServer =
-    "wss://echo.websocket.org"
-
-
 initCmd : Cmd Msg
 initCmd =
     Cmd.batch

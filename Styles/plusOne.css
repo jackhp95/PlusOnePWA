@@ -16,7 +16,6 @@ textarea {
   background-attachment: scroll, scroll;
 }
 
-
 /* I think this adds smoothscrolling on iOS */
 
 * {
@@ -98,8 +97,9 @@ SHAME CSS
   display: none;
 }
 
-.placeholder-white-50::-webkit-input-placeholder {
-  color: rgba(255, 255, 255, 0.836);
+input::-webkit-input-placeholder {
+  color: inherit;
+  opacity: .75;
 }
 
 .focus-underline:focus,

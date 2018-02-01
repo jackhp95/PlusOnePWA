@@ -39,8 +39,8 @@ bar =
 
 home : Html Msg
 home =
-    div [ class "dn flex-auto-l flex-ns flex-column-m items-center ph4-l pa3-m" ]
-        [ div [ class "grow-large"]
+    div [ class "dn flex-auto-l flex-ns" ]
+        [ div [ class "grow-large flex-auto flex flex-column-m items-center ph4-l pa3-m"]
             [ div
                 [ bgImg "Assets/WhitePlusOneLogo.svg"
                 , class "animated bounceIn pb4-m pr4-m pl3 pt3 pr2 pb2 contain bg-center"

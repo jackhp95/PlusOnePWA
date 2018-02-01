@@ -62,7 +62,7 @@ var _user$project$Nav$home = A2(
 	_elm_lang$html$Html$div,
 	{
 		ctor: '::',
-		_0: _elm_lang$html$Html_Attributes$class('dn flex-auto-l flex-ns flex-column-m items-center ph4-l pa3-m'),
+		_0: _elm_lang$html$Html_Attributes$class('dn flex-auto-l flex-ns'),
 		_1: {ctor: '[]'}
 	},
 	{
@@ -71,7 +71,7 @@ var _user$project$Nav$home = A2(
 			_elm_lang$html$Html$div,
 			{
 				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class('grow-large'),
+				_0: _elm_lang$html$Html_Attributes$class('grow-large flex-auto flex flex-column-m items-center ph4-l pa3-m'),
 				_1: {ctor: '[]'}
 			},
 			{

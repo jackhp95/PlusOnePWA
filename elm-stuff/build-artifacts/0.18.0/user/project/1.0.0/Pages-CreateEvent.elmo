@@ -5,7 +5,7 @@ var _user$project$Pages_CreateEvent$view = function (event) {
 				_elm_lang$html$Html$div,
 				{
 					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class('flex items-center'),
+					_0: _elm_lang$html$Html_Attributes$class('flex items-center mt3 grow'),
 					_1: {ctor: '[]'}
 				},
 				{
@@ -14,7 +14,7 @@ var _user$project$Pages_CreateEvent$view = function (event) {
 						_elm_lang$html$Html$div,
 						{
 							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('mr3 tc f2 w3'),
+							_0: _elm_lang$html$Html_Attributes$class('f2 w3'),
 							_1: {ctor: '[]'}
 						},
 						{
@@ -28,14 +28,18 @@ var _user$project$Pages_CreateEvent$view = function (event) {
 							_elm_lang$html$Html$fieldset,
 							{
 								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$class('flex flex-column flex-auto outline-0 bn pt3 ph0 ma0'),
+								_0: _elm_lang$html$Html_Attributes$class('flex flex-column flex-auto outline-0 bn pa0 ma0 hide-child'),
 								_1: {ctor: '[]'}
 							},
 							{
 								ctor: '::',
 								_0: A2(
 									_elm_lang$html$Html$label,
-									{ctor: '[]'},
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$class('h1 child'),
+										_1: {ctor: '[]'}
+									},
 									{
 										ctor: '::',
 										_0: _elm_lang$html$Html$text(title),
@@ -47,7 +51,7 @@ var _user$project$Pages_CreateEvent$view = function (event) {
 										_elm_lang$html$Html$input,
 										{
 											ctor: '::',
-											_0: _elm_lang$html$Html_Attributes$class('underline-hover f4 fw6 pv3 white bg-transparent bb bn outline-0 w-100'),
+											_0: _elm_lang$html$Html_Attributes$class('f4 fw6 ma0 pv2 ph0 white bg-transparent bb bn outline-0 w-100'),
 											_1: {
 												ctor: '::',
 												_0: _elm_lang$html$Html_Attributes$placeholder(title),
@@ -55,7 +59,18 @@ var _user$project$Pages_CreateEvent$view = function (event) {
 											}
 										},
 										{ctor: '[]'}),
-									_1: {ctor: '[]'}
+									_1: {
+										ctor: '::',
+										_0: A2(
+											_elm_lang$html$Html$div,
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html_Attributes$class('h1 bt b--white child'),
+												_1: {ctor: '[]'}
+											},
+											{ctor: '[]'}),
+										_1: {ctor: '[]'}
+									}
 								}
 							}),
 						_1: {ctor: '[]'}
@@ -78,7 +93,7 @@ var _user$project$Pages_CreateEvent$view = function (event) {
 					_elm_lang$html$Html$div,
 					{
 						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class('flex-shrink-1 flex-grow-0 bg-black-70 overflow-auto'),
+						_0: _elm_lang$html$Html_Attributes$class('flex-shrink-1 flex-grow-0 bg-black-70 overflow-auto ph4'),
 						_1: {ctor: '[]'}
 					},
 					{
