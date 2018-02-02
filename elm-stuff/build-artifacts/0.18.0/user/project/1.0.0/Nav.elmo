@@ -1,5 +1,4 @@
 var _user$project$Nav$tab = function (x) {
-	var iconClasses = _elm_lang$html$Html_Attributes$class('mr3-ns mr0 mb1 mb0-ns pa2-ns pl3 pt3 pr2 pb2 cover');
 	var route = x.route;
 	var name = x.name;
 	var icon = x.icon;
@@ -30,7 +29,7 @@ var _user$project$Nav$tab = function (x) {
 						_elm_lang$html$Html$div,
 						{
 							ctor: '::',
-							_0: iconClasses,
+							_0: _elm_lang$html$Html_Attributes$class('mr3-ns mr0 mb1 mb0-ns pa2-ns pl3 pt3 pr2 pb2 contain'),
 							_1: {
 								ctor: '::',
 								_0: _user$project$Assets$feather(icon),
@@ -62,7 +61,7 @@ var _user$project$Nav$home = A2(
 	_elm_lang$html$Html$div,
 	{
 		ctor: '::',
-		_0: _elm_lang$html$Html_Attributes$class('dn flex-auto-l flex-ns'),
+		_0: _elm_lang$html$Html_Attributes$class('dn flex-auto-l flex-ns items-center justify-center-m'),
 		_1: {ctor: '[]'}
 	},
 	{
@@ -71,7 +70,7 @@ var _user$project$Nav$home = A2(
 			_elm_lang$html$Html$div,
 			{
 				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class('grow-large flex-auto flex flex-column-m items-center ph4-l pa3-m'),
+				_0: _elm_lang$html$Html_Attributes$class('grow-large flex flex-column-m ph4-l pa3-m'),
 				_1: {ctor: '[]'}
 			},
 			{
@@ -130,48 +129,94 @@ var _user$project$Nav$selections = function () {
 					ctor: '::',
 					_0: {
 						ctor: '_Tuple3',
-						_0: 'share',
-						_1: 'share-2',
+						_0: 'chats',
+						_1: 'message-square',
 						_2: _user$project$Types$GoChats(_elm_lang$core$Maybe$Nothing)
 					},
 					_1: {
 						ctor: '::',
-						_0: {
-							ctor: '_Tuple3',
-							_0: 'chats',
-							_1: 'message-square',
-							_2: _user$project$Types$GoChats(_elm_lang$core$Maybe$Nothing)
-						},
-						_1: {
-							ctor: '::',
-							_0: {ctor: '_Tuple3', _0: 'profile', _1: 'user', _2: _user$project$Types$GoProfile},
-							_1: {ctor: '[]'}
-						}
+						_0: {ctor: '_Tuple3', _0: 'profile', _1: 'user', _2: _user$project$Types$GoProfile},
+						_1: {ctor: '[]'}
 					}
 				}
 			}
 		});
 }();
-var _user$project$Nav$bar = A2(
-	_elm_lang$html$Html$nav,
-	{
-		ctor: '::',
-		_0: _elm_lang$html$Html_Attributes$class('f5-ns f7 fw4 flex-shrink-0 flex-grow-0 pv3-m ph4-l pa0 z-max flex flex-column-l bg-black-40'),
-		_1: {ctor: '[]'}
-	},
-	{
-		ctor: '::',
-		_0: A2(
-			_elm_lang$html$Html$ul,
-			{
+var _user$project$Nav$bar = function () {
+	var mobileBack = A2(
+		_elm_lang$html$Html$li,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('flex dn-ns flex-column-reverse items-stretch hide-child glow w-20'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$span,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('grow flex-auto flex flex-column items-center pv2'),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$div,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class('mr3-ns mr0 mb1 mb0-ns pa2-ns pl3 pt3 pr2 pb2 contain'),
+							_1: {
+								ctor: '::',
+								_0: _user$project$Assets$feather('chevron-left'),
+								_1: {ctor: '[]'}
+							}
+						},
+						{ctor: '[]'}),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html$text('back'),
+						_1: {ctor: '[]'}
+					}
+				}),
+			_1: {
 				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class('flex flex-column-m list ma0 pa0 overflow-visible-ns overflow-hidden w-100 w-auto-ns'),
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('b--white ba child'),
+						_1: {ctor: '[]'}
+					},
+					{ctor: '[]'}),
 				_1: {ctor: '[]'}
-			},
-			{
-				ctor: '::',
-				_0: _user$project$Nav$home,
-				_1: A2(_elm_lang$core$List$map, _user$project$Nav$tab, _user$project$Nav$selections)
-			}),
-		_1: {ctor: '[]'}
-	});
+			}
+		});
+	return A2(
+		_elm_lang$html$Html$nav,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('f5-ns f7 fw4 flex-none pv3-m ph4-l pa0 z-max flex flex-column-l bg-black-40'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$ul,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('flex flex-column-m list ma0 pa0 overflow-visible-ns overflow-hidden w-100 w-auto-ns'),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: _user$project$Nav$home,
+					_1: {
+						ctor: '::',
+						_0: mobileBack,
+						_1: A2(_elm_lang$core$List$map, _user$project$Nav$tab, _user$project$Nav$selections)
+					}
+				}),
+			_1: {ctor: '[]'}
+		});
+}();

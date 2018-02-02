@@ -69,7 +69,7 @@ view model =
                         (List.map (eventListView events.currentDatetime) x.events)
     in
         section [ class ("animated fadeInUp w-100 w-auto-ns mw6-l overflow-auto z-999 flex-grow-1 shadow-2-l" ++ mobileHide) ]
-            [ div [ class "h5 flex flex-column justify-between pa3" ]
+            [ Html.header [ class "h5 flex flex-column justify-between pa3" ]
                 [ Assets.discoverToolsView
                 , div [ class "f2 lh-solid fw7 ma0 pa0" ]
                     [ text "discover events" ]
@@ -82,12 +82,12 @@ eventListView : Maybe Date -> SG.Event -> Html Msg
 eventListView maybeNow event =
     let
         viewTime =
-            case (deltaTime maybeNow (maybeEventDate event.datetime_local)) of
+            case (maybeEventDate event.datetime_local) of
                 Nothing ->
-                    "whoopsie, viewTime messed up"
+                    "not sure what time this event is"
 
                 Just x ->
-                    simpleTime x (maybeEventDate event.datetime_local)
+                    ((shortDate x) ++ " • " ++ (clockTime x))
 
         atIcon =
             div

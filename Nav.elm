@@ -21,7 +21,6 @@ selections =
         List.map makePage
             [ ( "discover", "compass", GoEvents Nothing )
             , ( "add", "plus-square", GoCreateEvent )
-            , ( "share", "share-2", GoChats Nothing )
             , ( "chats", "message-square", GoChats Nothing )
             , ( "profile", "user", GoProfile )
             ]
@@ -29,18 +28,29 @@ selections =
 
 bar : Html Msg
 bar =
-    nav [ class "f5-ns f7 fw4 flex-shrink-0 flex-grow-0 pv3-m ph4-l pa0 z-max flex flex-column-l bg-black-40" ]
-        [ ul [ class "flex flex-column-m list ma0 pa0 overflow-visible-ns overflow-hidden w-100 w-auto-ns" ]
-            (home
-                :: (List.map tab selections)
-            )
-        ]
+    let
+        mobileBack =
+            li [ class "flex dn-ns flex-column-reverse items-stretch hide-child glow w-20"]
+                [ span [ class "grow flex-auto flex flex-column items-center pv2" ]
+                    [ div [ class "mr3-ns mr0 mb1 mb0-ns pa2-ns pl3 pt3 pr2 pb2 contain", (Assets.feather "chevron-left") ] []
+                    , text "back"
+                    ]
+                , div [ class "b--white ba child" ] []
+                ]
+    in
+        nav [ class "f5-ns f7 fw4 flex-none pv3-m ph4-l pa0 z-max flex flex-column-l bg-black-40" ]
+            [ ul [ class "flex flex-column-m list ma0 pa0 overflow-visible-ns overflow-hidden w-100 w-auto-ns" ]
+                (home
+                    :: mobileBack
+                    :: (List.map tab selections)
+                )
+            ]
 
 
 home : Html Msg
 home =
-    div [ class "dn flex-auto-l flex-ns" ]
-        [ div [ class "grow-large flex-auto flex flex-column-m items-center ph4-l pa3-m"]
+    div [ class "dn flex-auto-l flex-ns items-center justify-center-m" ]
+        [ div [ class "grow-large flex flex-column-m ph4-l pa3-m" ]
             [ div
                 [ bgImg "Assets/WhitePlusOneLogo.svg"
                 , class "animated bounceIn pb4-m pr4-m pl3 pt3 pr2 pb2 contain bg-center"
@@ -51,7 +61,6 @@ home =
                 [ text "PlusOne" ]
             ]
         ]
-
 
 tab : Page -> Html Msg
 tab x =
@@ -64,13 +73,10 @@ tab x =
 
         route =
             x.route
-
-        iconClasses =
-            (class "mr3-ns mr0 mb1 mb0-ns pa2-ns pl3 pt3 pr2 pb2 cover")
     in
         li [ class "flex flex-column-l flex-row-m flex-column-reverse items-stretch hide-child ph3-l glow w-20 w-auto-ns", onClick (ChangeTo route) ]
             [ span [ class "grow flex-auto flex flex-column flex-row-ns items-center pv3-ns pv2 pv4-l ph2-l mv1-m pl3-m pr4-m w-auto-ns" ]
-                [ div [ iconClasses, (Assets.feather icon) ] []
+                [ div [ class "mr3-ns mr0 mb1 mb0-ns pa2-ns pl3 pt3 pr2 pb2 contain", (Assets.feather icon) ] []
                 , text name
                 ]
             , div [ class "b--white ba child" ] []

@@ -69,17 +69,18 @@ var _user$project$Pages_Events$eventListView = F2(
 			},
 			{ctor: '[]'});
 		var viewTime = function () {
-			var _p2 = A2(
-				_user$project$Moment$deltaTime,
-				maybeNow,
-				_user$project$Moment$maybeEventDate(event.datetime_local));
+			var _p2 = _user$project$Moment$maybeEventDate(event.datetime_local);
 			if (_p2.ctor === 'Nothing') {
-				return 'whoopsie, viewTime messed up';
+				return 'not sure what time this event is';
 			} else {
+				var _p3 = _p2._0;
 				return A2(
-					_user$project$Moment$simpleTime,
-					_p2._0,
-					_user$project$Moment$maybeEventDate(event.datetime_local));
+					_elm_lang$core$Basics_ops['++'],
+					_user$project$Moment$shortDate(_p3),
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						' • ',
+						_user$project$Moment$clockTime(_p3)));
 			}
 		}();
 		return A2(
@@ -214,8 +215,8 @@ var _user$project$Pages_Events$eventListView = F2(
 	});
 var _user$project$Pages_Events$view = function (model) {
 	var mobileHide = function () {
-		var _p3 = model.route;
-		if ((_p3.ctor === 'GoEvents') && (_p3._0.ctor === 'Just')) {
+		var _p4 = model.route;
+		if ((_p4.ctor === 'GoEvents') && (_p4._0.ctor === 'Just')) {
 			return ' dn db-l ';
 		} else {
 			return '';
@@ -223,8 +224,8 @@ var _user$project$Pages_Events$view = function (model) {
 	}();
 	var events = model.events;
 	var eventsUnlessError = function () {
-		var _p4 = events.seatgeek;
-		if (_p4.ctor === 'Nothing') {
+		var _p5 = events.seatgeek;
+		if (_p5.ctor === 'Nothing') {
 			return A2(
 				_elm_lang$html$Html$div,
 				{
@@ -274,7 +275,7 @@ var _user$project$Pages_Events$view = function (model) {
 				A2(
 					_elm_lang$core$List$map,
 					_user$project$Pages_Events$eventListView(events.currentDatetime),
-					_p4._0.events));
+					_p5._0.events));
 		}
 	}();
 	return A2(
@@ -288,7 +289,7 @@ var _user$project$Pages_Events$view = function (model) {
 		{
 			ctor: '::',
 			_0: A2(
-				_elm_lang$html$Html$div,
+				_elm_lang$html$Html$header,
 				{
 					ctor: '::',
 					_0: _elm_lang$html$Html_Attributes$class('h5 flex flex-column justify-between pa3'),

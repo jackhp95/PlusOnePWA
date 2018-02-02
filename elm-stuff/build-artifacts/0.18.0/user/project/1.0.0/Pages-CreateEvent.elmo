@@ -37,7 +37,7 @@ var _user$project$Pages_CreateEvent$view = function (event) {
 									_elm_lang$html$Html$label,
 									{
 										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$class('h1 child'),
+										_0: _elm_lang$html$Html_Attributes$class('h1 child pb1'),
 										_1: {ctor: '[]'}
 									},
 									{
@@ -51,7 +51,7 @@ var _user$project$Pages_CreateEvent$view = function (event) {
 										_elm_lang$html$Html$input,
 										{
 											ctor: '::',
-											_0: _elm_lang$html$Html_Attributes$class('f4 fw6 ma0 pv2 ph0 white bg-transparent bb bn outline-0 w-100'),
+											_0: _elm_lang$html$Html_Attributes$class('f4 fw6 ma0 pv1 ph0 white bg-transparent bb bn outline-0 w-100'),
 											_1: {
 												ctor: '::',
 												_0: _elm_lang$html$Html_Attributes$placeholder(title),

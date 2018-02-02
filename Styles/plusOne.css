@@ -7,6 +7,11 @@ textarea {
   resize: none;
 }
 
+.sticky {
+  position: -webkit-sticky;
+  position: sticky;
+}
+
 .shadow-hi {
   background-image: -webkit-linear-gradient(left, rgba(0, 0, 0, .25), rgba(0, 0, 0, 0)), -webkit-linear-gradient(right, rgba(0, 0, 0, .25), rgba(0, 0, 0, 0));
   background-position: 0 0, 100% 0;
@@ -21,7 +26,6 @@ textarea {
 * {
   -webkit-overflow-scrolling: touch;
 }
-
 
 /*
 #############
@@ -86,14 +90,13 @@ Breathe BG/LG
   }
 }
 
-
 /*
 #############
 SHAME CSS
 #############
 */
 
- ::-webkit-scrollbar {
+::-webkit-scrollbar {
   display: none;
 }
 
@@ -101,12 +104,6 @@ input::-webkit-input-placeholder {
   color: inherit;
   opacity: .75;
 }
-
-.focus-underline:focus,
-.hover-underline:hover {
-  border-bottom: 1px solid rgba( 255, 255, 255, .3);
-}
-
 
 /*
 #############
@@ -195,7 +192,6 @@ input::-webkit-input-placeholder {
   color: #cccccc !important;
 }
 
-
 /*
 #############
 50% INTENSITY
@@ -282,7 +278,6 @@ input::-webkit-input-placeholder {
 .tone-50 {
   color: #808080 !important;
 }
-
 
 /*
 #############
@@ -371,7 +366,6 @@ input::-webkit-input-placeholder {
   color: #333333 !important;
 }
 
-
 /*
 ######################
 SOLID Linear Gradients
@@ -414,7 +408,6 @@ SOLID Linear Gradients
   background: linear-gradient(150deg, #cccccc, #333333) !important;
 }
 
-
 /*
 ######################
 +1 Linear Gradients
@@ -452,7 +445,6 @@ SOLID Linear Gradients
 .lg-red-yellow {
   background: linear-gradient(150deg, #FFB5B5, #463400) !important;
 }
-
 
 /*
 ######################
@@ -492,7 +484,6 @@ SOLID Linear Gradients
   background: linear-gradient(150deg, #FFB5B5, #234600) !important;
 }
 
-
 /*
 ######################
 +3 Linear Gradients
@@ -530,7 +521,6 @@ SOLID Linear Gradients
 .lg-red-mint {
   background: linear-gradient(150deg, #FFB5B5, #005415) !important;
 }
-
 
 /*
 ######################
@@ -570,7 +560,6 @@ SOLID Linear Gradients
   background: linear-gradient(150deg, #FFB5B5, #004A4A) !important;
 }
 
-
 /*
 ######################
 +5 Linear Gradients
@@ -608,7 +597,6 @@ SOLID Linear Gradients
 .lg-red-blue {
   background: linear-gradient(150deg, #FFB5B5, #0033C8) !important;
 }
-
 
 /*
 ######################
@@ -648,7 +636,6 @@ SOLID Linear Gradients
   background: linear-gradient(150deg, #FFB5B5, #6400C6) !important;
 }
 
-
 /*
 ######################
 +7 Linear Gradients
@@ -686,7 +673,6 @@ SOLID Linear Gradients
 .lg-red-magenta {
   background: linear-gradient(150deg, #FFB5B5, #860065) !important;
 }
-
 
 /*
 ######################
@@ -726,7 +712,6 @@ SOLID Linear Gradients
   background: linear-gradient(150deg, #FFB5B5, #FFCE38) !important;
 }
 
-
 /*
 ######################
 +2 Linear Gradients-30
@@ -764,7 +749,6 @@ SOLID Linear Gradients
 .lg-red-green-30 {
   background: linear-gradient(150deg, #FFB5B5, #9DFF3B) !important;
 }
-
 
 /*
 ######################
@@ -804,7 +788,6 @@ SOLID Linear Gradients
   background: linear-gradient(150deg, #FFB5B5, #79FF9A) !important;
 }
 
-
 /*
 ######################
 +4 Linear Gradients-30
@@ -842,7 +825,6 @@ SOLID Linear Gradients
 .lg-red-teal-30 {
   background: linear-gradient(150deg, #FFB5B5, #55FFFF) !important;
 }
-
 
 /*
 ######################
@@ -882,7 +864,6 @@ SOLID Linear Gradients
   background: linear-gradient(150deg, #FFB5B5, #B9CBFF) !important;
 }
 
-
 /*
 ######################
 +6 Linear Gradients-30
@@ -920,7 +901,6 @@ SOLID Linear Gradients
 .lg-red-purple-30 {
   background: linear-gradient(150deg, #FFB5B5, #DBBCFF) !important;
 }
-
 
 /*
 ######################
@@ -960,7 +940,6 @@ SOLID Linear Gradients
   background: linear-gradient(150deg, #FFB5B5, #FFADEE) !important;
 }
 
-
 /*
 ######################
 +1 Linear Gradients-80
@@ -998,7 +977,6 @@ SOLID Linear Gradients
 .lg-red-yellow-80 {
   background: linear-gradient(150deg, #AD0000, #463400) !important;
 }
-
 
 /*
 ######################
@@ -1038,7 +1016,6 @@ SOLID Linear Gradients
   background: linear-gradient(150deg, #AD0000, #234600) !important;
 }
 
-
 /*
 ######################
 +3 Linear Gradients-80
@@ -1076,7 +1053,6 @@ SOLID Linear Gradients
 .lg-red-mint-80 {
   background: linear-gradient(150deg, #AD0000, #005415) !important;
 }
-
 
 /*
 ######################
@@ -1116,7 +1092,6 @@ SOLID Linear Gradients
   background: linear-gradient(150deg, #AD0000, #004A4A) !important;
 }
 
-
 /*
 ######################
 +5 Linear Gradients-80
@@ -1154,7 +1129,6 @@ SOLID Linear Gradients
 .lg-red-blue-80 {
   background: linear-gradient(150deg, #AD0000, #0033C8) !important;
 }
-
 
 /*
 ######################
@@ -1194,7 +1168,6 @@ SOLID Linear Gradients
   background: linear-gradient(150deg, #AD0000, #6400C6) !important;
 }
 
-
 /*
 ######################
 +7 Linear Gradients-80
@@ -1232,7 +1205,6 @@ SOLID Linear Gradients
 .lg-red-magenta-80 {
   background: linear-gradient(150deg, #AD0000, #860065) !important;
 }
-
 
 /*
 #####################
@@ -1280,7 +1252,6 @@ Blending Mode Classes
   background-blend-mode: luminosity !important;
 }
 
-
 /*
 #####################
 Parallax
@@ -1290,7 +1261,6 @@ Parallax
 .parallax {
   background-attachment: fixed !important;
 }
-
 
 /*
 #####################
@@ -1329,7 +1299,6 @@ Blur
 .blur7 {
   filter: blur(16rem);
 }
-
 
 /*
 #############

@@ -13360,7 +13360,6 @@ var _user$project$Types$ChangeTo = function (a) {
 };
 
 var _user$project$Nav$tab = function (x) {
-	var iconClasses = _elm_lang$html$Html_Attributes$class('mr3-ns mr0 mb1 mb0-ns pa2-ns pl3 pt3 pr2 pb2 cover');
 	var route = x.route;
 	var name = x.name;
 	var icon = x.icon;
@@ -13391,7 +13390,7 @@ var _user$project$Nav$tab = function (x) {
 						_elm_lang$html$Html$div,
 						{
 							ctor: '::',
-							_0: iconClasses,
+							_0: _elm_lang$html$Html_Attributes$class('mr3-ns mr0 mb1 mb0-ns pa2-ns pl3 pt3 pr2 pb2 contain'),
 							_1: {
 								ctor: '::',
 								_0: _user$project$Assets$feather(icon),
@@ -13423,7 +13422,7 @@ var _user$project$Nav$home = A2(
 	_elm_lang$html$Html$div,
 	{
 		ctor: '::',
-		_0: _elm_lang$html$Html_Attributes$class('dn flex-auto-l flex-ns flex-column-m items-center ph4-l pa3-m'),
+		_0: _elm_lang$html$Html_Attributes$class('dn flex-auto-l flex-ns items-center justify-center-m'),
 		_1: {ctor: '[]'}
 	},
 	{
@@ -13432,7 +13431,7 @@ var _user$project$Nav$home = A2(
 			_elm_lang$html$Html$div,
 			{
 				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class('grow-large'),
+				_0: _elm_lang$html$Html_Attributes$class('grow-large flex flex-column-m ph4-l pa3-m'),
 				_1: {ctor: '[]'}
 			},
 			{
@@ -13491,51 +13490,97 @@ var _user$project$Nav$selections = function () {
 					ctor: '::',
 					_0: {
 						ctor: '_Tuple3',
-						_0: 'share',
-						_1: 'share-2',
+						_0: 'chats',
+						_1: 'message-square',
 						_2: _user$project$Types$GoChats(_elm_lang$core$Maybe$Nothing)
 					},
 					_1: {
 						ctor: '::',
-						_0: {
-							ctor: '_Tuple3',
-							_0: 'chats',
-							_1: 'message-square',
-							_2: _user$project$Types$GoChats(_elm_lang$core$Maybe$Nothing)
-						},
-						_1: {
-							ctor: '::',
-							_0: {ctor: '_Tuple3', _0: 'profile', _1: 'user', _2: _user$project$Types$GoProfile},
-							_1: {ctor: '[]'}
-						}
+						_0: {ctor: '_Tuple3', _0: 'profile', _1: 'user', _2: _user$project$Types$GoProfile},
+						_1: {ctor: '[]'}
 					}
 				}
 			}
 		});
 }();
-var _user$project$Nav$bar = A2(
-	_elm_lang$html$Html$nav,
-	{
-		ctor: '::',
-		_0: _elm_lang$html$Html_Attributes$class('f5-ns f7 fw4 flex-shrink-0 flex-grow-0 pv3-m ph4-l pa0 z-max flex flex-column-l bg-black-40'),
-		_1: {ctor: '[]'}
-	},
-	{
-		ctor: '::',
-		_0: A2(
-			_elm_lang$html$Html$ul,
-			{
+var _user$project$Nav$bar = function () {
+	var mobileBack = A2(
+		_elm_lang$html$Html$li,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('flex dn-ns flex-column-reverse items-stretch hide-child glow w-20'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$span,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('grow flex-auto flex flex-column items-center pv2'),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$div,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class('mr3-ns mr0 mb1 mb0-ns pa2-ns pl3 pt3 pr2 pb2 contain'),
+							_1: {
+								ctor: '::',
+								_0: _user$project$Assets$feather('chevron-left'),
+								_1: {ctor: '[]'}
+							}
+						},
+						{ctor: '[]'}),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html$text('back'),
+						_1: {ctor: '[]'}
+					}
+				}),
+			_1: {
 				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class('flex flex-column-m list ma0 pa0 overflow-visible-ns overflow-hidden w-100 w-auto-ns'),
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('b--white ba child'),
+						_1: {ctor: '[]'}
+					},
+					{ctor: '[]'}),
 				_1: {ctor: '[]'}
-			},
-			{
-				ctor: '::',
-				_0: _user$project$Nav$home,
-				_1: A2(_elm_lang$core$List$map, _user$project$Nav$tab, _user$project$Nav$selections)
-			}),
-		_1: {ctor: '[]'}
-	});
+			}
+		});
+	return A2(
+		_elm_lang$html$Html$nav,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('f5-ns f7 fw4 flex-none pv3-m ph4-l pa0 z-max flex flex-column-l bg-black-40'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$ul,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('flex flex-column-m list ma0 pa0 overflow-visible-ns overflow-hidden w-100 w-auto-ns'),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: _user$project$Nav$home,
+					_1: {
+						ctor: '::',
+						_0: mobileBack,
+						_1: A2(_elm_lang$core$List$map, _user$project$Nav$tab, _user$project$Nav$selections)
+					}
+				}),
+			_1: {ctor: '[]'}
+		});
+}();
 
 var _user$project$Pages_Profile$stringToEmoji = function (string) {
 	var _p0 = string;
@@ -15049,70 +15094,12 @@ var _user$project$SeatGeek_Query$askQuery = function (query) {
 var _user$project$Moment$clockTime = function (x) {
 	return A3(_rluiten$elm_date_extra$Date_Extra_Format$format, _rluiten$elm_date_extra$Date_Extra_Config_Config_en_us$config, '%-I:%M %P', x);
 };
+var _user$project$Moment$shortDate = function (x) {
+	return A3(_rluiten$elm_date_extra$Date_Extra_Format$format, _rluiten$elm_date_extra$Date_Extra_Config_Config_en_us$config, '%a, %b %@e', x);
+};
 var _user$project$Moment$fullDate = function (x) {
 	return A3(_rluiten$elm_date_extra$Date_Extra_Format$format, _rluiten$elm_date_extra$Date_Extra_Config_Config_en_us$config, '%A, %B %@e, %Y', x);
 };
-var _user$project$Moment$thisPartOfDay = function (hour) {
-	return _elm_lang$core$Native_Utils.eq(hour, 1) ? 'in an hour' : A2(
-		_elm_lang$core$Basics_ops['++'],
-		'in ',
-		A2(
-			_elm_lang$core$Basics_ops['++'],
-			_elm_lang$core$Basics$toString(hour),
-			' hours'));
-};
-var _user$project$Moment$somePartOfDay = F2(
-	function (hour, day) {
-		return _elm_lang$core$Native_Utils.eq(hour, 0) ? A2(_elm_lang$core$Basics_ops['++'], day, ' at midnight') : ((_elm_lang$core$Native_Utils.cmp(hour, 3) < 0) ? A2(_elm_lang$core$Basics_ops['++'], day, ' after midnight') : ((_elm_lang$core$Native_Utils.cmp(hour, 5) < 0) ? A2(_elm_lang$core$Basics_ops['++'], day, ' at dawn') : ((_elm_lang$core$Native_Utils.cmp(hour, 8) < 0) ? A2(
-			_elm_lang$core$Basics_ops['++'],
-			'early ',
-			A2(_elm_lang$core$Basics_ops['++'], day, ' morning')) : ((_elm_lang$core$Native_Utils.cmp(hour, 10) < 0) ? A2(_elm_lang$core$Basics_ops['++'], day, ' morning') : ((_elm_lang$core$Native_Utils.cmp(hour, 12) < 0) ? A2(
-			_elm_lang$core$Basics_ops['++'],
-			'late ',
-			A2(_elm_lang$core$Basics_ops['++'], day, ' morning')) : (_elm_lang$core$Native_Utils.eq(hour, 12) ? A2(_elm_lang$core$Basics_ops['++'], day, ' at noon') : ((_elm_lang$core$Native_Utils.cmp(hour, 15) < 0) ? A2(_elm_lang$core$Basics_ops['++'], day, ' afternoon') : ((_elm_lang$core$Native_Utils.cmp(hour, 17) < 0) ? A2(
-			_elm_lang$core$Basics_ops['++'],
-			'late ',
-			A2(_elm_lang$core$Basics_ops['++'], day, ' afternoon')) : ((_elm_lang$core$Native_Utils.cmp(hour, 20) < 0) ? A2(_elm_lang$core$Basics_ops['++'], day, ' evening') : ((_elm_lang$core$Native_Utils.cmp(hour, 23) < 0) ? A2(_elm_lang$core$Basics_ops['++'], day, ' night') : ((_elm_lang$core$Native_Utils.cmp(hour, 24) < 0) ? A2(
-			_elm_lang$core$Basics_ops['++'],
-			'late ',
-			A2(_elm_lang$core$Basics_ops['++'], day, ' night')) : 'For some reason, I think there are more than 24 hours in a day.')))))))))));
-	});
-var _user$project$Moment$simpleTime = F2(
-	function (delta, maybeEventDate) {
-		var _p0 = maybeEventDate;
-		if (_p0.ctor === 'Nothing') {
-			return 'welp, I couldn\'t determine the date of the event';
-		} else {
-			var _p1 = _p0._0;
-			return A2(
-				_elm_lang$core$String$contains,
-				'-',
-				_elm_lang$core$Basics$toString(delta)) ? 'happening now' : ((_elm_lang$core$Native_Utils.cmp(delta.year, 1) > 0) ? 'in over a year' : (_elm_lang$core$Native_Utils.eq(delta.year, 1) ? 'in a year' : ((_elm_lang$core$Native_Utils.cmp(delta.month, 1) > 0) ? A2(
-				_elm_lang$core$Basics_ops['++'],
-				'in ',
-				_rluiten$elm_date_extra$Date_Extra_I18n_I_en_us$monthName(
-					_elm_lang$core$Date$month(_p1))) : (_elm_lang$core$Native_Utils.eq(delta.month, 1) ? 'next month' : ((_elm_lang$core$Native_Utils.cmp(delta.day, 13) > 0) ? A2(
-				_elm_lang$core$Basics_ops['++'],
-				'in ',
-				A2(
-					_elm_lang$core$Basics_ops['++'],
-					_elm_lang$core$Basics$toString((delta.day / 7) | 0),
-					' weeks')) : ((_elm_lang$core$Native_Utils.cmp(delta.day, 6) > 0) ? A2(
-				_elm_lang$core$Basics_ops['++'],
-				'next ',
-				_rluiten$elm_date_extra$Date_Extra_I18n_I_en_us$dayName(
-					_elm_lang$core$Date$dayOfWeek(_p1))) : ((_elm_lang$core$Native_Utils.cmp(delta.day, 1) > 0) ? A2(
-				_user$project$Moment$somePartOfDay,
-				_elm_lang$core$Date$hour(_p1),
-				_rluiten$elm_date_extra$Date_Extra_I18n_I_en_us$dayName(
-					_elm_lang$core$Date$dayOfWeek(_p1))) : (_elm_lang$core$Native_Utils.eq(delta.day, 1) ? A2(
-				_user$project$Moment$somePartOfDay,
-				_elm_lang$core$Date$hour(_p1),
-				_rluiten$elm_date_extra$Date_Extra_I18n_I_en_us$dayName(
-					_elm_lang$core$Date$dayOfWeek(_p1))) : _user$project$Moment$thisPartOfDay(
-				_elm_lang$core$Date$hour(_p1))))))))));
-		}
-	});
 var _user$project$Moment$maybeEventDate = function (date) {
 	return _elm_lang$core$Result$toMaybe(
 		_elm_lang$core$Date$fromString(date));
@@ -15193,17 +15180,18 @@ var _user$project$Pages_Events$eventListView = F2(
 			},
 			{ctor: '[]'});
 		var viewTime = function () {
-			var _p2 = A2(
-				_user$project$Moment$deltaTime,
-				maybeNow,
-				_user$project$Moment$maybeEventDate(event.datetime_local));
+			var _p2 = _user$project$Moment$maybeEventDate(event.datetime_local);
 			if (_p2.ctor === 'Nothing') {
-				return 'whoopsie, viewTime messed up';
+				return 'not sure what time this event is';
 			} else {
+				var _p3 = _p2._0;
 				return A2(
-					_user$project$Moment$simpleTime,
-					_p2._0,
-					_user$project$Moment$maybeEventDate(event.datetime_local));
+					_elm_lang$core$Basics_ops['++'],
+					_user$project$Moment$shortDate(_p3),
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						' • ',
+						_user$project$Moment$clockTime(_p3)));
 			}
 		}();
 		return A2(
@@ -15338,8 +15326,8 @@ var _user$project$Pages_Events$eventListView = F2(
 	});
 var _user$project$Pages_Events$view = function (model) {
 	var mobileHide = function () {
-		var _p3 = model.route;
-		if ((_p3.ctor === 'GoEvents') && (_p3._0.ctor === 'Just')) {
+		var _p4 = model.route;
+		if ((_p4.ctor === 'GoEvents') && (_p4._0.ctor === 'Just')) {
 			return ' dn db-l ';
 		} else {
 			return '';
@@ -15347,8 +15335,8 @@ var _user$project$Pages_Events$view = function (model) {
 	}();
 	var events = model.events;
 	var eventsUnlessError = function () {
-		var _p4 = events.seatgeek;
-		if (_p4.ctor === 'Nothing') {
+		var _p5 = events.seatgeek;
+		if (_p5.ctor === 'Nothing') {
 			return A2(
 				_elm_lang$html$Html$div,
 				{
@@ -15398,7 +15386,7 @@ var _user$project$Pages_Events$view = function (model) {
 				A2(
 					_elm_lang$core$List$map,
 					_user$project$Pages_Events$eventListView(events.currentDatetime),
-					_p4._0.events));
+					_p5._0.events));
 		}
 	}();
 	return A2(
@@ -15412,7 +15400,7 @@ var _user$project$Pages_Events$view = function (model) {
 		{
 			ctor: '::',
 			_0: A2(
-				_elm_lang$html$Html$div,
+				_elm_lang$html$Html$header,
 				{
 					ctor: '::',
 					_0: _elm_lang$html$Html_Attributes$class('h5 flex flex-column justify-between pa3'),
@@ -15573,7 +15561,7 @@ var _user$project$Pages_Event$eventBanner = function (event) {
 						}),
 					_1: {
 						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class('aspect-ratio--object cover bg-center flex flex-column items-end justify-between pa4 pb0'),
+						_0: _elm_lang$html$Html_Attributes$class('aspect-ratio--object cover bg-center flex flex-column items-end justify-between pa3'),
 						_1: {ctor: '[]'}
 					}
 				},
@@ -16453,7 +16441,7 @@ var _user$project$Pages_CreateEvent$view = function (event) {
 				_elm_lang$html$Html$div,
 				{
 					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class('flex items-center'),
+					_0: _elm_lang$html$Html_Attributes$class('flex items-center mt3 grow'),
 					_1: {ctor: '[]'}
 				},
 				{
@@ -16462,7 +16450,7 @@ var _user$project$Pages_CreateEvent$view = function (event) {
 						_elm_lang$html$Html$div,
 						{
 							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('mr3 tc f2 w3'),
+							_0: _elm_lang$html$Html_Attributes$class('f2 w3'),
 							_1: {ctor: '[]'}
 						},
 						{
@@ -16476,14 +16464,18 @@ var _user$project$Pages_CreateEvent$view = function (event) {
 							_elm_lang$html$Html$fieldset,
 							{
 								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$class('flex flex-column flex-auto outline-0 bn pt3 ph0 ma0'),
+								_0: _elm_lang$html$Html_Attributes$class('flex flex-column flex-auto outline-0 bn pa0 ma0 hide-child'),
 								_1: {ctor: '[]'}
 							},
 							{
 								ctor: '::',
 								_0: A2(
 									_elm_lang$html$Html$label,
-									{ctor: '[]'},
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$class('h1 child pb1'),
+										_1: {ctor: '[]'}
+									},
 									{
 										ctor: '::',
 										_0: _elm_lang$html$Html$text(title),
@@ -16495,7 +16487,7 @@ var _user$project$Pages_CreateEvent$view = function (event) {
 										_elm_lang$html$Html$input,
 										{
 											ctor: '::',
-											_0: _elm_lang$html$Html_Attributes$class('underline-hover f4 fw6 pv3 white bg-transparent bb bn outline-0 w-100'),
+											_0: _elm_lang$html$Html_Attributes$class('f4 fw6 ma0 pv1 ph0 white bg-transparent bb bn outline-0 w-100'),
 											_1: {
 												ctor: '::',
 												_0: _elm_lang$html$Html_Attributes$placeholder(title),
@@ -16503,7 +16495,18 @@ var _user$project$Pages_CreateEvent$view = function (event) {
 											}
 										},
 										{ctor: '[]'}),
-									_1: {ctor: '[]'}
+									_1: {
+										ctor: '::',
+										_0: A2(
+											_elm_lang$html$Html$div,
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html_Attributes$class('h1 bt b--white child'),
+												_1: {ctor: '[]'}
+											},
+											{ctor: '[]'}),
+										_1: {ctor: '[]'}
+									}
 								}
 							}),
 						_1: {ctor: '[]'}
@@ -16526,7 +16529,7 @@ var _user$project$Pages_CreateEvent$view = function (event) {
 					_elm_lang$html$Html$div,
 					{
 						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class('flex-shrink-1 flex-grow-0 bg-black-70 overflow-auto'),
+						_0: _elm_lang$html$Html_Attributes$class('flex-shrink-1 flex-grow-0 bg-black-70 overflow-auto ph4'),
 						_1: {ctor: '[]'}
 					},
 					{
@@ -16683,7 +16686,7 @@ var _user$project$View$render = function (model) {
 		_elm_lang$html$Html$div,
 		{
 			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('animated fadeIn f6 fw5 flex flex-column-l flex-row-m flex-column-reverse items-stretch vh-100 white'),
+			_0: _elm_lang$html$Html_Attributes$class('animated fadeIn f6 fw3 flex flex-column-l flex-row-m flex-column-reverse items-stretch vh-100 white'),
 			_1: {ctor: '[]'}
 		},
 		{
@@ -16924,7 +16927,6 @@ var _user$project$Main$initCmd = _elm_lang$core$Platform_Cmd$batch(
 var _user$project$Main$init = {ctor: '_Tuple2', _0: _user$project$Types$initModel, _1: _user$project$Main$initCmd};
 var _user$project$Main$main = _elm_lang$html$Html$program(
 	{init: _user$project$Main$init, view: _user$project$Main$view, update: _user$project$Main$update, subscriptions: _user$project$Main$subscriptions})();
-var _user$project$Main$echoServer = 'wss://echo.websocket.org';
 
 var Elm = {};
 Elm['Main'] = Elm['Main'] || {};

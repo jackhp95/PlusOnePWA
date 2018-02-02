@@ -120,7 +120,7 @@ var _user$project$Pages_Event$eventBanner = function (event) {
 						}),
 					_1: {
 						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class('aspect-ratio--object cover bg-center flex flex-column items-end justify-between pa4 pb0'),
+						_0: _elm_lang$html$Html_Attributes$class('aspect-ratio--object cover bg-center flex flex-column items-end justify-between pa3'),
 						_1: {ctor: '[]'}
 					}
 				},

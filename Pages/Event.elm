@@ -219,7 +219,7 @@ eventBanner event =
             [ heroImg, class ("bg-center cover aspect-ratio aspect-ratio--16x9 bb b--white-20") ]
             [ div
                 [ style [ ( "background-image", "linear-gradient( rgba(0,0,0,0.3), transparent)" ) ]
-                , class "aspect-ratio--object cover bg-center flex flex-column items-end justify-between pa4 pb0"
+                , class "aspect-ratio--object cover bg-center flex flex-column items-end justify-between pa3"
                 ]
                 [ Assets.discoverToolsView
                 , div [ class "pa3 lg-breathe-50 br-pill relative top-2 right-1 flex grow justify-center items-center" ]
