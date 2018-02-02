@@ -15104,10 +15104,6 @@ var _user$project$Moment$maybeEventDate = function (date) {
 	return _elm_lang$core$Result$toMaybe(
 		_elm_lang$core$Date$fromString(date));
 };
-var _user$project$Moment$deltaTime = F2(
-	function (now, upcoming) {
-		return A3(_elm_lang$core$Maybe$map2, _rluiten$elm_date_extra$Date_Extra_Duration$diff, upcoming, now);
-	});
 
 var _user$project$Pages_Events$subscriptions = _elm_lang$core$Platform_Sub$none;
 var _user$project$Pages_Events$maybeImage = function (performers) {
@@ -16435,81 +16431,179 @@ var _user$project$Pages_Pool$view = function (pool) {
 };
 
 var _user$project$Pages_CreateEvent$view = function (event) {
-	var sec = F2(
-		function (title, emoji) {
+	var dateInput = F3(
+		function (title, emoji, desc) {
 			return A2(
-				_elm_lang$html$Html$div,
+				_elm_lang$html$Html$fieldset,
 				{
 					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class('flex items-center mt3 grow'),
+					_0: _elm_lang$html$Html_Attributes$class('flex flex-column flex-auto outline-0 bn pa3 ma0 hide-child'),
 					_1: {ctor: '[]'}
 				},
 				{
 					ctor: '::',
 					_0: A2(
-						_elm_lang$html$Html$div,
+						_elm_lang$html$Html$label,
 						{
 							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('f2 w3'),
+							_0: _elm_lang$html$Html_Attributes$class('pb1'),
 							_1: {ctor: '[]'}
 						},
 						{
 							ctor: '::',
-							_0: _elm_lang$html$Html$text(emoji),
+							_0: _elm_lang$html$Html$text(
+								A2(
+									_elm_lang$core$Basics_ops['++'],
+									emoji,
+									A2(_elm_lang$core$Basics_ops['++'], ' ', title))),
 							_1: {ctor: '[]'}
 						}),
 					_1: {
 						ctor: '::',
 						_0: A2(
-							_elm_lang$html$Html$fieldset,
+							_elm_lang$html$Html$input,
 							{
 								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$class('flex flex-column flex-auto outline-0 bn pa0 ma0 hide-child'),
-								_1: {ctor: '[]'}
-							},
-							{
-								ctor: '::',
-								_0: A2(
-									_elm_lang$html$Html$label,
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$class('h1 child pb1'),
-										_1: {ctor: '[]'}
-									},
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html$text(title),
-										_1: {ctor: '[]'}
-									}),
+								_0: _elm_lang$html$Html_Attributes$type_('date'),
 								_1: {
 									ctor: '::',
-									_0: A2(
-										_elm_lang$html$Html$input,
-										{
-											ctor: '::',
-											_0: _elm_lang$html$Html_Attributes$class('f4 fw6 ma0 pv1 ph0 white bg-transparent bb bn outline-0 w-100'),
-											_1: {
-												ctor: '::',
-												_0: _elm_lang$html$Html_Attributes$placeholder(title),
-												_1: {ctor: '[]'}
-											}
-										},
-										{ctor: '[]'}),
+									_0: _elm_lang$html$Html_Attributes$class('f4 fw3 ma0 pv1 ph0 white bg-transparent bn outline-0'),
 									_1: {
 										ctor: '::',
-										_0: A2(
-											_elm_lang$html$Html$div,
-											{
-												ctor: '::',
-												_0: _elm_lang$html$Html_Attributes$class('h1 bt b--white child'),
-												_1: {ctor: '[]'}
-											},
-											{ctor: '[]'}),
+										_0: _elm_lang$html$Html_Attributes$value('2017-06-01'),
 										_1: {ctor: '[]'}
 									}
 								}
-							}),
-						_1: {ctor: '[]'}
+							},
+							{ctor: '[]'}),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$div,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$class('pt1 bt b--white child'),
+									_1: {ctor: '[]'}
+								},
+								{ctor: '[]'}),
+							_1: {ctor: '[]'}
+						}
+					}
+				});
+		});
+	var timeInput = F3(
+		function (title, emoji, desc) {
+			return A2(
+				_elm_lang$html$Html$fieldset,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('flex flex-column flex-auto outline-0 bn pa3 ma0 hide-child'),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$label,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class('pb1'),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text(
+								A2(
+									_elm_lang$core$Basics_ops['++'],
+									emoji,
+									A2(_elm_lang$core$Basics_ops['++'], ' ', title))),
+							_1: {ctor: '[]'}
+						}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$input,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$type_('time'),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$class('f4 fw3 ma0 pv1 ph0 white bg-transparent bn outline-0'),
+									_1: {
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$value('08:30'),
+										_1: {ctor: '[]'}
+									}
+								}
+							},
+							{ctor: '[]'}),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$div,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$class('pt1 bt b--white child'),
+									_1: {ctor: '[]'}
+								},
+								{ctor: '[]'}),
+							_1: {ctor: '[]'}
+						}
+					}
+				});
+		});
+	var textInput = F3(
+		function (title, emoji, desc) {
+			return A2(
+				_elm_lang$html$Html$fieldset,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('flex flex-column flex-auto outline-0 bn pa3 ma0 hide-child'),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$label,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class('pb1'),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text(
+								A2(
+									_elm_lang$core$Basics_ops['++'],
+									emoji,
+									A2(_elm_lang$core$Basics_ops['++'], ' ', title))),
+							_1: {ctor: '[]'}
+						}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$input,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$class('f4 fw3 ma0 pv1 ph0 white bg-transparent bb bn outline-0 w-100'),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$placeholder(desc),
+									_1: {ctor: '[]'}
+								}
+							},
+							{ctor: '[]'}),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$div,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$class('pt1 bt b--white child'),
+									_1: {ctor: '[]'}
+								},
+								{ctor: '[]'}),
+							_1: {ctor: '[]'}
+						}
 					}
 				});
 		});
@@ -16529,30 +16623,30 @@ var _user$project$Pages_CreateEvent$view = function (event) {
 					_elm_lang$html$Html$div,
 					{
 						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class('flex-shrink-1 flex-grow-0 bg-black-70 overflow-auto ph4'),
+						_0: _elm_lang$html$Html_Attributes$class('flex-shrink-1 flex-grow-0 bg-black-70 overflow-auto pa3 white'),
 						_1: {ctor: '[]'}
 					},
 					{
 						ctor: '::',
-						_0: A2(sec, 'Title', '📛'),
+						_0: A3(textInput, 'title', '📛', 'what\'s it called?'),
 						_1: {
 							ctor: '::',
-							_0: A2(sec, 'Description', '📢'),
+							_0: A3(textInput, 'description', '📢', 'what\'s it for?'),
 							_1: {
 								ctor: '::',
-								_0: A2(sec, 'Location', '⚓'),
+								_0: A3(textInput, 'location', '⚓', 'where\'s it at?'),
 								_1: {
 									ctor: '::',
-									_0: A2(sec, 'Date', '📆'),
+									_0: A3(dateInput, 'date', '📆', 'what day is it?'),
 									_1: {
 										ctor: '::',
-										_0: A2(sec, 'Time', '🕗'),
+										_0: A3(timeInput, 'time', '🕒', 'what time is it?'),
 										_1: {
 											ctor: '::',
-											_0: A2(sec, 'Privacy', '🔒'),
+											_0: A3(textInput, 'privacy', '🔒', 'who\'s invited'),
 											_1: {
 												ctor: '::',
-												_0: A2(sec, 'Taxonomy', '🏷️'),
+												_0: A3(textInput, 'taxonomy', '🏷️', 'what is it?'),
 												_1: {ctor: '[]'}
 											}
 										}

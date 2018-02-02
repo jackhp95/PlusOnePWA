@@ -11,7 +11,3 @@ var _user$project$Moment$maybeEventDate = function (date) {
 	return _elm_lang$core$Result$toMaybe(
 		_elm_lang$core$Date$fromString(date));
 };
-var _user$project$Moment$deltaTime = F2(
-	function (now, upcoming) {
-		return A3(_elm_lang$core$Maybe$map2, _rluiten$elm_date_extra$Date_Extra_Duration$diff, upcoming, now);
-	});

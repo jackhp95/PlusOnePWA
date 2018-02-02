@@ -7,11 +7,6 @@ import Date.Extra.Config.Config_en_us exposing (..)
 import Date.Extra.I18n.I_en_us exposing (..)
 
 
-deltaTime : Maybe Date -> Maybe Date -> Maybe DeltaRecord
-deltaTime now upcoming =
-    Maybe.map2 Date.Extra.Duration.diff upcoming now
-
-
 maybeEventDate : String -> Maybe Date
 maybeEventDate date =
     (Result.toMaybe (Date.fromString date))
