@@ -20,7 +20,12 @@ var _rluiten$elm_date_extra$Date_Extra_Duration$diffDays = F2(
 	});
 var _rluiten$elm_date_extra$Date_Extra_Duration$positiveDiff = F3(
 	function (date1, date2, multiplier) {
-		var accDiff = F4(
+		var propogateCarry = F3(
+			function (current, carry, maxVal) {
+				var adjusted = current + carry;
+				return (_elm_lang$core$Native_Utils.cmp(adjusted, 0) < 0) ? {ctor: '_Tuple2', _0: maxVal + adjusted, _1: -1} : {ctor: '_Tuple2', _0: adjusted, _1: 0};
+			});
+		var accumulatedDiff = F4(
 			function (acc, v1, v2, maxV2) {
 				return (_elm_lang$core$Native_Utils.cmp(v1, v2) < 0) ? {ctor: '_Tuple2', _0: acc - 1, _1: (maxV2 + v1) - v2} : {ctor: '_Tuple2', _0: acc, _1: v1 - v2};
 			});
@@ -41,25 +46,46 @@ var _rluiten$elm_date_extra$Date_Extra_Duration$positiveDiff = F3(
 		var year2 = _elm_lang$core$Date$year(date2);
 		var daysInDate2Month = A2(_rluiten$elm_date_extra$Date_Extra_Core$daysInMonth, year2, month2Mon);
 		var year1 = _elm_lang$core$Date$year(date1);
-		var _p0 = A4(accDiff, year1 - year2, month1, month2, 12);
+		var daysInDate1Month = A2(_rluiten$elm_date_extra$Date_Extra_Core$daysInMonth, year1, month1Mon);
+		var _p0 = A4(accumulatedDiff, year1 - year2, month1, month2, 12);
 		var yearDiff = _p0._0;
 		var monthDiffA = _p0._1;
-		var _p1 = A4(accDiff, monthDiffA, day1, day2, daysInDate2Month);
+		var _p1 = A4(accumulatedDiff, monthDiffA, day1, day2, daysInDate2Month);
 		var monthDiff = _p1._0;
 		var dayDiffA = _p1._1;
-		var _p2 = A4(accDiff, dayDiffA, hour1, hour2, 24);
+		var _p2 = A4(accumulatedDiff, dayDiffA, hour1, hour2, 24);
 		var dayDiff = _p2._0;
 		var hourDiffA = _p2._1;
-		var _p3 = A4(accDiff, hourDiffA, minute1, minute2, 60);
+		var _p3 = A4(accumulatedDiff, hourDiffA, minute1, minute2, 60);
 		var hourDiff = _p3._0;
 		var minuteDiffA = _p3._1;
-		var _p4 = A4(accDiff, minuteDiffA, second1, second2, 60);
+		var _p4 = A4(accumulatedDiff, minuteDiffA, second1, second2, 60);
 		var minuteDiff = _p4._0;
 		var secondDiffA = _p4._1;
-		var _p5 = A4(accDiff, secondDiffA, msec1, msec2, 1000);
+		var _p5 = A4(accumulatedDiff, secondDiffA, msec1, msec2, 1000);
 		var secondDiff = _p5._0;
 		var msecDiff = _p5._1;
-		return {year: yearDiff * multiplier, month: monthDiff * multiplier, day: dayDiff * multiplier, hour: hourDiff * multiplier, minute: minuteDiff * multiplier, second: secondDiff * multiplier, millisecond: msecDiff * multiplier};
+		var _p6 = A3(propogateCarry, msecDiff, 0, 1000);
+		var msecX = _p6._0;
+		var secondCarry = _p6._1;
+		var _p7 = A3(propogateCarry, secondDiff, secondCarry, 60);
+		var secondX = _p7._0;
+		var minuteCarry = _p7._1;
+		var _p8 = A3(propogateCarry, minuteDiff, minuteCarry, 60);
+		var minuteX = _p8._0;
+		var hourCarry = _p8._1;
+		var _p9 = A3(propogateCarry, hourDiff, hourCarry, 60);
+		var hourX = _p9._0;
+		var dayCarry = _p9._1;
+		var _p10 = A3(propogateCarry, dayDiff, dayCarry, daysInDate1Month);
+		var dayX = _p10._0;
+		var monthCarry = _p10._1;
+		var _p11 = A3(propogateCarry, monthDiff, monthCarry, 12);
+		var monthX = _p11._0;
+		var yearCarry = _p11._1;
+		var _p12 = A3(propogateCarry, yearDiff, yearCarry, 0);
+		var yearX = _p12._0;
+		return {year: yearX * multiplier, month: monthX * multiplier, day: dayX * multiplier, hour: hourX * multiplier, minute: minuteX * multiplier, second: secondX * multiplier, millisecond: msecX * multiplier};
 	});
 var _rluiten$elm_date_extra$Date_Extra_Duration$diff = F2(
 	function (date1, date2) {
@@ -104,8 +130,8 @@ var _rluiten$elm_date_extra$Date_Extra_Duration$daylightOffsetCompensate = F2(
 		}
 	});
 var _rluiten$elm_date_extra$Date_Extra_Duration$requireDaylightCompensateInAdd = function (duration) {
-	var _p6 = duration;
-	switch (_p6.ctor) {
+	var _p13 = duration;
+	switch (_p13.ctor) {
 		case 'Millisecond':
 			return false;
 		case 'Second':
@@ -123,8 +149,8 @@ var _rluiten$elm_date_extra$Date_Extra_Duration$requireDaylightCompensateInAdd =
 		case 'Year':
 			return true;
 		default:
-			var _p7 = _p6._0;
-			return (!_elm_lang$core$Native_Utils.eq(_p7.day, 0)) || ((!_elm_lang$core$Native_Utils.eq(_p7.month, 0)) || (!_elm_lang$core$Native_Utils.eq(_p7.year, 0)));
+			var _p14 = _p13._0;
+			return (!_elm_lang$core$Native_Utils.eq(_p14.day, 0)) || ((!_elm_lang$core$Native_Utils.eq(_p14.month, 0)) || (!_elm_lang$core$Native_Utils.eq(_p14.year, 0)));
 	}
 };
 var _rluiten$elm_date_extra$Date_Extra_Duration$zeroDelta = {year: 0, month: 0, day: 0, hour: 0, minute: 0, second: 0, millisecond: 0};
@@ -139,8 +165,8 @@ var _rluiten$elm_date_extra$Date_Extra_Duration$Year = {ctor: 'Year'};
 var _rluiten$elm_date_extra$Date_Extra_Duration$Month = {ctor: 'Month'};
 var _rluiten$elm_date_extra$Date_Extra_Duration$doAdd = F3(
 	function (duration, addend, date) {
-		var _p8 = duration;
-		switch (_p8.ctor) {
+		var _p15 = duration;
+		switch (_p15.ctor) {
 			case 'Millisecond':
 				return A3(_rluiten$elm_date_extra$Date_Extra_Period$add, _rluiten$elm_date_extra$Date_Extra_Period$Millisecond, addend, date);
 			case 'Second':
@@ -158,17 +184,17 @@ var _rluiten$elm_date_extra$Date_Extra_Duration$doAdd = F3(
 			case 'Year':
 				return A2(_rluiten$elm_date_extra$Date_Extra_Duration$addYear, addend, date);
 			default:
-				var _p9 = _p8._0;
+				var _p16 = _p15._0;
 				return A3(
 					_rluiten$elm_date_extra$Date_Extra_Period$add,
 					_rluiten$elm_date_extra$Date_Extra_Period$Delta(
-						{week: 0, day: _p9.day, hour: _p9.hour, minute: _p9.minute, second: _p9.second, millisecond: _p9.millisecond}),
+						{week: 0, day: _p16.day, hour: _p16.hour, minute: _p16.minute, second: _p16.second, millisecond: _p16.millisecond}),
 					addend,
 					A3(
 						_rluiten$elm_date_extra$Date_Extra_Duration$doAdd,
 						_rluiten$elm_date_extra$Date_Extra_Duration$Month,
-						_p9.month,
-						A3(_rluiten$elm_date_extra$Date_Extra_Duration$doAdd, _rluiten$elm_date_extra$Date_Extra_Duration$Year, _p9.year, date)));
+						_p16.month,
+						A3(_rluiten$elm_date_extra$Date_Extra_Duration$doAdd, _rluiten$elm_date_extra$Date_Extra_Duration$Year, _p16.year, date)));
 		}
 	});
 var _rluiten$elm_date_extra$Date_Extra_Duration$add = F3(

@@ -35,7 +35,7 @@ var _user$project$Pages_CreateEvent$view = function (event) {
 								_0: _elm_lang$html$Html_Attributes$type_('date'),
 								_1: {
 									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$class('f4 fw3 ma0 pv1 ph0 white bg-transparent bn outline-0'),
+									_0: _elm_lang$html$Html_Attributes$class('f4 fw3 ma0 pa1 white bg-transparent bn outline-0'),
 									_1: {
 										ctor: '::',
 										_0: _elm_lang$html$Html_Attributes$value('2017-06-01'),
@@ -95,7 +95,7 @@ var _user$project$Pages_CreateEvent$view = function (event) {
 								_0: _elm_lang$html$Html_Attributes$type_('time'),
 								_1: {
 									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$class('f4 fw3 ma0 pv1 ph0 white bg-transparent bn outline-0'),
+									_0: _elm_lang$html$Html_Attributes$class('f4 fw3 ma0 pa1 white bg-transparent bn outline-0'),
 									_1: {
 										ctor: '::',
 										_0: _elm_lang$html$Html_Attributes$value('08:30'),
@@ -152,7 +152,7 @@ var _user$project$Pages_CreateEvent$view = function (event) {
 							_elm_lang$html$Html$input,
 							{
 								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$class('f4 fw3 ma0 pv1 ph0 white bg-transparent bb bn outline-0 w-100'),
+								_0: _elm_lang$html$Html_Attributes$class('f4 fw3 ma0 pa1 white bg-transparent bb bn outline-0 w-100'),
 								_1: {
 									ctor: '::',
 									_0: _elm_lang$html$Html_Attributes$placeholder(desc),

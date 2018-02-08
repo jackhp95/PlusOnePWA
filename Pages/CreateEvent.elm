@@ -21,21 +21,21 @@ view event =
         textInput title emoji desc =
             fieldset [ class "flex flex-column flex-auto outline-0 bn pa3 ma0 hide-child" ]
                 [ label [ class "pb1" ] [ text (emoji ++ " " ++ title) ]
-                , input [ class "f4 fw3 ma0 pv1 ph0 white bg-transparent bb bn outline-0 w-100", placeholder desc ] []
+                , input [ class "f4 fw3 ma0 pa1 white bg-transparent bb bn outline-0 w-100", placeholder desc ] []
                 , div [ class "pt1 bt b--white child" ] []
                 ]
 
         timeInput title emoji desc =
             fieldset [ class "flex flex-column flex-auto outline-0 bn pa3 ma0 hide-child" ]
                 [ label [ class "pb1" ] [ text (emoji ++ " " ++ title) ]
-                , input [ type_ "time", class "f4 fw3 ma0 pv1 ph0 white bg-transparent bn outline-0", value "08:30" ] []
+                , input [ type_ "time", class "f4 fw3 ma0 pa1 white bg-transparent bn outline-0", value "08:30" ] []
                 , div [ class "pt1 bt b--white child" ] []
                 ]
 
         dateInput title emoji desc =
             fieldset [ class "flex flex-column flex-auto outline-0 bn pa3 ma0 hide-child" ]
                 [ label [ class "pb1" ] [ text (emoji ++ " " ++ title) ]
-                , input [ type_ "date", class "f4 fw3 ma0 pv1 ph0 white bg-transparent bn outline-0", value "2017-06-01" ] []
+                , input [ type_ "date", class "f4 fw3 ma0 pa1 white bg-transparent bn outline-0", value "2017-06-01" ] []
                 , div [ class "pt1 bt b--white child" ] []
                 ]
     in
