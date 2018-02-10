@@ -1,3 +1,7 @@
+# Manually Added
+elm-stuff/
+
+# Standard Ignore
 # Windows image file caches
 Thumbs.db
 ehthumbs.db
