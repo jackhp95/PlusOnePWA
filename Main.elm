@@ -11,6 +11,9 @@ import Mouse
 import Window exposing (size)
 import Pages.Pool exposing (getPosition, determineTubers)
 
+import Pages.CreateEvent.Update exposing (update)
+import Pages.CreateEvent.Model as CreateEvent
+
 
 -- Try to reomve these?
 
@@ -60,7 +63,7 @@ view model =
 -- UPDATE --
 
 
-update : Msg -> Model -> ( Model, Cmd msg )
+update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     let
         events =
@@ -75,7 +78,14 @@ update msg model =
         case msg of
             ChangeTo newRoute ->
                 ( { model | route = newRoute }, Cmd.none )
-
+            CreateEventMsg createEventMsg ->
+                let
+                    ( createEventModel, createEventCmd ) =
+                        Pages.CreateEvent.Update.update createEventMsg model.createEvent
+                in
+                    ( { model | createEvent = createEventModel }
+                    , Cmd.map CreateEventMsg createEventCmd
+                    )
             Input newInput ->
                 ( model, Cmd.none )
 

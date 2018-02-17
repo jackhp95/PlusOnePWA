@@ -9,6 +9,9 @@ import SeatGeek.Types as SG
 import Mouse exposing (Position)
 import Window exposing (Size)
 
+import Pages.CreateEvent.Messages as CreateEventMsg
+import Pages.CreateEvent.Model as CreateEventModel
+
 
 -- MODEL --
 
@@ -21,7 +24,7 @@ type alias Model =
     , events : Events
     , pool : Pool
     , client : Client
-    , createEvent : Maybe SG.Event
+    , createEvent : CreateEventModel.CreateEvent
     }
 
 
@@ -43,7 +46,7 @@ initModel =
         initEvents
         initPool
         initClient
-        Nothing
+        CreateEventModel.initModel
 
 
 type alias Page =
@@ -271,6 +274,8 @@ type
     Msg
     -- Route
     = ChangeTo Route
+    --Temp
+    | CreateEventMsg CreateEventMsg.Msg
       -- Chat
     | Input String
     | SendChatMessage
