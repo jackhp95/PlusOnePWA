@@ -12,12 +12,12 @@ import Html.Events exposing (..)
 
 -- PAGES --
 
-import Pages.Chat as Chat
-import Pages.Chats as Chats
-import Pages.Profile as Profile
-import Pages.Events as Events
-import Pages.Event as Event
-import Pages.Pool as Pool
+import Pages.Chat.View as Chat
+import Pages.Chats.View as Chats
+import Pages.Profile.View as Profile
+import Pages.Events.View as Events
+import Pages.Event.View as Event
+import Pages.Pool.View as Pool
 import Pages.CreateEvent.View as CreateEvent
 
 

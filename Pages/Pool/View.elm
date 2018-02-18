@@ -2,7 +2,7 @@
 -- http://package.elm-lang.org/packages/mpizenberg/elm-touch-events/latest
 
 
-module Pages.Pool exposing (..)
+module Pages.Pool.View exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -14,6 +14,8 @@ import Task exposing (..)
 import Random exposing (..)
 import Types exposing (..)
 
+import Pages.Pool.Model as PoolModel
+
 
 -- VIEW
 
@@ -22,7 +24,7 @@ import Types exposing (..)
     (,)
 
 
-view : Pool -> Html Msg
+view : PoolModel.Pool -> Html Msg
 view pool =
     div [ class "overflow-hidden bg-black-80 flex-auto" ]
         [ div
@@ -34,7 +36,7 @@ view pool =
         ]
 
 
-poolSize : Pool -> Size -> Size
+poolSize : PoolModel.Pool -> Size -> Size
 poolSize model windowSize =
     let
         spacingX =
@@ -60,7 +62,7 @@ spaceY spacing =
     round (((*) (sin (degrees 30)) (toFloat spacing)) / 2)
 
 
-determineTubers : Pool -> Size -> List Tuber
+determineTubers : PoolModel.Pool -> Size -> List PoolModel.Tuber
 determineTubers model windowSize =
     let
         poolRows =
@@ -79,7 +81,7 @@ determineTubers model windowSize =
                     // (spaceY model.tube.spacing)
                 )
     in
-        List.indexedMap Tuber
+        List.indexedMap PoolModel.Tuber
             (List.concatMap
                 (\x ->
                     List.map (\y -> (staggerTubes x y model.tube.spacing))
@@ -103,17 +105,17 @@ staggerTubes x y spacing =
                 Position x y
 
 
-tubePop : Tube -> Tube
+tubePop : PoolModel.Tube -> PoolModel.Tube
 tubePop tube =
-    Tube tube.pop tube.ring tube.spacing tube.diameter
+    PoolModel.Tube tube.pop tube.ring tube.spacing tube.diameter
 
 
-populateTubes : Pool -> List (Html Msg)
+populateTubes : PoolModel.Pool -> List (Html Msg)
 populateTubes model =
     List.map (modelTube model) model.tubers
 
 
-modelTube : Pool -> Tuber -> Html Msg
+modelTube : PoolModel.Pool -> PoolModel.Tuber -> Html Msg
 modelTube model tuber =
     let
         x =
@@ -159,7 +161,7 @@ modelTube model tuber =
             ]
 
 
-tubeUser : Maybe User -> Html Msg
+tubeUser : Maybe PoolModel.User -> Html Msg
 tubeUser user =
     div
         [ style
@@ -177,7 +179,7 @@ px number =
     toString number ++ "px"
 
 
-getPosition : Pool -> Position
+getPosition : PoolModel.Pool -> Position
 getPosition model =
     case model.move of
         Nothing ->

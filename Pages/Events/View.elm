@@ -2,9 +2,10 @@
 -- https://guide.elm-lang.org/architecture/effects/http.html
 
 
-module Pages.Events exposing (..)
+module Pages.Events.View exposing (..)
 
-import Types exposing (Msg, Events)
+import Types exposing (Msg)
+import Pages.Events.Model exposing (Events)
 import SeatGeek.Query exposing (composeRequest)
 import SeatGeek.Decode exposing (decodeReply)
 import SeatGeek.Types as SG

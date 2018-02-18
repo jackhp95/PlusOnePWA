@@ -10,17 +10,18 @@
 -- @Jack H. Peterson You could also make your views message type agnostic. https://medium.com/@matthew.buscemi/high-level-dependency-strategies-in-elm-1135ec877d49
 
 
-module Pages.Chats exposing (..)
+module Pages.Chats.View exposing (..)
 
-import Pages.Chat exposing (..)
+import Pages.Chat.View exposing (..)
 import Assets exposing (..)
-import Pages.Profile exposing (profileAvi)
+import Pages.Profile.View exposing (profileAvi)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Types
 import TextArea exposing (auto)
 import Assets exposing (..)
+import Pages.Chat.Model as ChatModel
 
 
 -- VIEW
@@ -49,7 +50,7 @@ view model =
             ]
 
 
-nameBar : Types.Chat -> Html Types.Msg
+nameBar : ChatModel.Chat -> Html Types.Msg
 nameBar chat =
     div
         [ class "flex items-center z-2 fadeIn animated pa3 grow hover-bg-black-20 lh-title"
@@ -70,6 +71,3 @@ nameBar chat =
             , div [ class "f6 truncate pt2" ] [ text (Maybe.withDefault "" (List.head chat.messages)) ]
             ]
         ]
-
-
-

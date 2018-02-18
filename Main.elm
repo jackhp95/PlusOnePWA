@@ -9,10 +9,11 @@ import SeatGeek.Decode
 import SeatGeek.Types as SG
 import Mouse
 import Window exposing (size)
-import Pages.Pool exposing (getPosition, determineTubers)
+import Pages.Pool.View exposing (getPosition, determineTubers)
 
 import Pages.CreateEvent.Update exposing (update)
 import Pages.CreateEvent.Model as CreateEvent
+import Pages.Pool.Model as PoolModel
 
 
 -- Try to reomve these?
@@ -149,7 +150,7 @@ update msg model =
                 ( { model
                     | pool =
                         { pool
-                            | move = (Just (Move xy xy))
+                            | move = (Just (PoolModel.Move xy xy))
                         }
                   }
                 , Cmd.none
@@ -159,7 +160,7 @@ update msg model =
                 ( { model
                     | pool =
                         { pool
-                            | move = (Maybe.map (\{ start } -> Move start xy) pool.move)
+                            | move = (Maybe.map (\{ start } -> PoolModel.Move start xy) pool.move)
                         }
                   }
                 , Cmd.none

@@ -10,15 +10,16 @@
 -- @Jack H. Peterson You could also make your views message type agnostic. https://medium.com/@matthew.buscemi/high-level-dependency-strategies-in-elm-1135ec877d49
 
 
-module Pages.Chat exposing (..)
+module Pages.Chat.View exposing (..)
 
 import Assets exposing (..)
-import Pages.Profile exposing (profileAvi)
+import Pages.Profile.View exposing (profileAvi)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Types
 import TextArea exposing (auto)
+import Pages.Chat.Model as ChatModel
 
 
 -- VIEW
@@ -89,7 +90,7 @@ toast =
         ]
 
 
-messageBar : Types.Chat -> Types.Client -> Html Types.Msg
+messageBar : ChatModel.Chat -> Types.Client -> Html Types.Msg
 messageBar chat client =
     div [ class "bg-black-40 flex flex-none z-2 items-stretch overflow-hidden pl2 slideInUp animated" ]
         [ textarea
@@ -106,7 +107,7 @@ messageBar chat client =
         ]
 
 
-nameBar : Types.Chat -> Html Types.Msg
+nameBar : ChatModel.Chat -> Html Types.Msg
 nameBar chat =
     div [ class "bg-black-90 flex items-stretch absolute w-100 measure-wide-l z-2 h3 fadeIn animated" ]
         [ div [ class "flex items-center grow", onClick (Types.ChangeTo Types.GoProfile) ]

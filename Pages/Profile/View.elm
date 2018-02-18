@@ -1,4 +1,4 @@
-module Pages.Profile exposing (..)
+module Pages.Profile.View exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -6,6 +6,7 @@ import Html.Events exposing (..)
 import Nav exposing (bar)
 import Assets exposing (feather, bgImg)
 import Types
+import Pages.Profile.Model as ProfileModel
 
 
 view : Types.Model -> Html msg
@@ -42,7 +43,7 @@ profileAvi avis =
         ]
 
 
-profileBio : Types.Profile -> Html msg
+profileBio : ProfileModel.Profile -> Html msg
 profileBio model =
     div [ class "mv0 mh4 ph2 pv4 bb b--white-20" ]
         [ div [ class "fw7 pv2 f4" ] [ text "bio" ]
@@ -52,7 +53,7 @@ profileBio model =
         ]
 
 
-pastEvents : Types.Profile -> Html msg
+pastEvents : ProfileModel.Profile -> Html msg
 pastEvents model =
     let
         prevEvents =
@@ -94,7 +95,7 @@ profileToolsView =
             (List.map icon [ "settings", "edit" ])
 
 
-traitsIcons : List Types.Trait -> Html msg
+traitsIcons : List ProfileModel.Trait -> Html msg
 traitsIcons traits =
     let
         toIcon x =
@@ -124,4 +125,3 @@ stringToEmoji string =
 
         _ ->
             "\x1F937"
-

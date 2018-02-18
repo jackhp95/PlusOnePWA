@@ -2,9 +2,10 @@
 -- https://guide.elm-lang.org/architecture/effects/http.html
 
 
-module Pages.Event exposing (..)
+module Pages.Event.View exposing (..)
 
-import Types exposing (Msg, Events)
+import Types exposing (Msg)
+import Pages.Events.Model exposing (Events)
 import SeatGeek.Query exposing (composeRequest)
 import SeatGeek.Decode exposing (decodeReply)
 import SeatGeek.Types as SG
@@ -339,7 +340,7 @@ stringToEmoji string =
 -- SUBSCRIPTIONS
 
 
-subscriptions : Types.Events -> Sub Msg
+subscriptions : Events -> Sub Msg
 subscriptions model =
     Sub.none
 

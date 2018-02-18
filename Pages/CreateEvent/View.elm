@@ -1,6 +1,7 @@
 module Pages.CreateEvent.View exposing (..)
 
-import Types exposing (Msg, Events)
+import Types exposing (Msg)
+import Pages.Events.Model exposing (Events)
 import Nav exposing (bar)
 import Assets exposing (feather, banner)
 import Html exposing (..)
