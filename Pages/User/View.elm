@@ -1,4 +1,4 @@
-module Pages.Profile.View exposing (..)
+module Pages.User.View exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -6,25 +6,25 @@ import Html.Events exposing (..)
 import Nav exposing (bar)
 import Assets exposing (feather, bgImg)
 import Types
-import Pages.Profile.Model as ProfileModel
+import Pages.User.Model as UserModel
 
 
 view : Types.Model -> Html msg
 view x =
     let
         model =
-            x.profile
+            x.user
     in
         section [ class "w-100 mw7-l overflow-auto shadow-2-l" ]
             [ div [ class "flex h5 ph3 ph4-m ph5-l pt6 items-center" ]
-                [ profileAvi model.avi
+                [ userAvi model.avi
                 , div [ class "f2 fw7 ml3 fadeInUp animated" ] [ text model.name ]
                 ]
             , div
                 [ class "bg-black-70" ]
                 [ div [ class "ph3 bg-black-30 w-100" ]
-                    [ profileToolsView ]
-                , profileBio model
+                    [ userToolsView ]
+                , userBio model
                 , traitsIcons model.traits
                 , pastEvents model
                 , traitsIcons model.traits
@@ -32,8 +32,8 @@ view x =
             ]
 
 
-profileAvi : List String -> Html msg
-profileAvi avis =
+userAvi : List String -> Html msg
+userAvi avis =
     div [ class "w5 bounceIn animated z-9" ]
         [ div
             [ bgImg (Maybe.withDefault "" (List.head avis))
@@ -43,8 +43,8 @@ profileAvi avis =
         ]
 
 
-profileBio : ProfileModel.Profile -> Html msg
-profileBio model =
+userBio : UserModel.User -> Html msg
+userBio model =
     div [ class "mv0 mh4 ph2 pv4 bb b--white-20" ]
         [ div [ class "fw7 pv2 f4" ] [ text "bio" ]
         , div [ class "pv2 lh-copy measure" ] [ text """
@@ -53,7 +53,7 @@ profileBio model =
         ]
 
 
-pastEvents : ProfileModel.Profile -> Html msg
+pastEvents : UserModel.User -> Html msg
 pastEvents model =
     let
         prevEvents =
@@ -82,8 +82,8 @@ pastEvents model =
             ]
 
 
-profileToolsView : Html msg
-profileToolsView =
+userToolsView : Html msg
+userToolsView =
     let
         icon x =
             div [ class "animated bounceIn pointer hover-bg-black-50 br-2 pa3 flex items-center" ]
@@ -95,7 +95,7 @@ profileToolsView =
             (List.map icon [ "settings", "edit" ])
 
 
-traitsIcons : List ProfileModel.Trait -> Html msg
+traitsIcons : List UserModel.Trait -> Html msg
 traitsIcons traits =
     let
         toIcon x =

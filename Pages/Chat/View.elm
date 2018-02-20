@@ -13,7 +13,7 @@
 module Pages.Chat.View exposing (..)
 
 import Assets exposing (..)
-import Pages.Profile.View exposing (profileAvi)
+import Pages.User.View exposing (userAvi)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
@@ -110,7 +110,7 @@ messageBar chat client =
 nameBar : ChatModel.Chat -> Html Types.Msg
 nameBar chat =
     div [ class "bg-black-90 flex items-stretch absolute w-100 measure-wide-l z-2 h3 fadeIn animated" ]
-        [ div [ class "flex items-center grow", onClick (Types.ChangeTo Types.GoProfile) ]
+        [ div [ class "flex items-center grow", onClick (Types.ChangeTo Types.GoUser) ]
             [ div [ class "bounceIn animated h3 ph3 pt3 overflow-visible" ]
                 [ div [ class "w3" ]
                     [ div [ bgImg chat.userAvi, class "aspect-ratio--1x1 bg-white br-pill shadow-2 ba bw1 cover br-pill" ] []

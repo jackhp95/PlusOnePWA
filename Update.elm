@@ -2,6 +2,8 @@ module Update exposing (..)
 
 import Pages.CreateEvent.Messages as CreateEventMessages
 import Pages.CreateEvent.Update exposing (..)
+import Pages.User.Update exposing (..)
+import Pages.Chat.Update exposing (..)
 import Types
 import SeatGeek.Types as SG
 import Pages.Pool.View exposing (getPosition, determineTubers)
@@ -30,6 +32,22 @@ update msg model =
                 in
                     ( { model | createEvent = createEventModel }
                     , Cmd.map Types.CreateEventMsg createEventCmd
+                    )
+            Types.UserMsg userMsg ->
+                let
+                    ( userModel, userCmd ) =
+                        Pages.User.Update.update userMsg model.user
+                in
+                    ( { model | user = userModel }
+                    , Cmd.map Types.UserMsg userCmd
+                    )
+            Types.ChatMsg chatMsg ->
+                let
+                    ( chatModel, chatCmd ) =
+                        Pages.Chat.Update.update chatMsg model.chat
+                in
+                    ( { model | chat = chatModel }
+                    , Cmd.map Types.ChatMsg chatCmd
                     )
             Types.Input newInput ->
                 ( model, Cmd.none )

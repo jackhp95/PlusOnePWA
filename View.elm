@@ -14,7 +14,7 @@ import Html.Events exposing (..)
 
 import Pages.Chat.View as Chat
 import Pages.Chats.View as Chats
-import Pages.Profile.View as Profile
+import Pages.User.View as User
 import Pages.Events.View as Events
 import Pages.Event.View as Event
 import Pages.Pool.View as Pool
@@ -60,8 +60,8 @@ page model =
                     , Chat.view model
                     ]
 
-        Types.GoProfile ->
-            [ Profile.view model ]
+        Types.GoUser ->
+            [ User.view model ]
 
         Types.GoPool ->
             [ Pool.view model.pool ]

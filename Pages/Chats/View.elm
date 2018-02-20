@@ -14,7 +14,7 @@ module Pages.Chats.View exposing (..)
 
 import Pages.Chat.View exposing (..)
 import Assets exposing (..)
-import Pages.Profile.View exposing (profileAvi)
+import Pages.User.View exposing (userAvi)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)

@@ -1,7 +1,7 @@
-module Pages.Profile.Model exposing (..)
-import Pages.Profile.Messages exposing (..)
+module Pages.User.Model exposing (..)
+import Pages.User.Messages exposing (..)
 
-type alias Profile =
+type alias User =
     { avi : List String
     , name : String
     , traits : List Trait
@@ -14,7 +14,7 @@ type alias Trait =
     , datetime : String
     }
 
-init : ( Profile, Cmd Msg )
+init : ( User, Cmd Msg )
 init =
     ( initModel, initCmd )
 
@@ -23,7 +23,7 @@ initCmd =
     Cmd.none
 
 
-initModel : Profile
+initModel : User
 initModel =
     { avi = [ "https://images.unsplash.com/photo-1496361001419-80f0d1be777a?dpr=1&auto=format&fit=crop&w=1000&q=80&cs=tinysrgb&ixid=dW5zcGxhc2guY29tOzs7Ozs%3D" ]
     , name = "Hannah Hazeldine"

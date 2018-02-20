@@ -10,8 +10,11 @@ import Mouse exposing (Position)
 import Window exposing (Size)
 
 import Pages.CreateEvent.Messages as CreateEventMsg
+import Pages.User.Messages as UserMsg
+import Pages.Chat.Messages as ChatMsg
+import Pages.Chats.Messages as ChatsMsg
 import Pages.CreateEvent.Model as CreateEventModel
-import Pages.Profile.Model as ProfileModel
+import Pages.User.Model as UserModel
 import Pages.Chat.Model as ChatModel
 import Pages.Events.Model as EventsModel
 import Pages.Pool.Model as PoolModel
@@ -24,7 +27,7 @@ type alias Model =
     { route : Route
     , chat : ChatModel.Chat
     , chats : List ChatModel.Chat
-    , profile : ProfileModel.Profile
+    , user : UserModel.User
     , events : EventsModel.Events
     , pool : PoolModel.Pool
     , client : Client
@@ -46,7 +49,7 @@ initModel =
         , ChatModel.initModel
         , ChatModel.initModel
         ]
-        ProfileModel.initModel
+        UserModel.initModel
         EventsModel.initModel
         PoolModel.initModel
         initClient
@@ -62,7 +65,7 @@ type alias Page =
 
 type Route
     = GoChats (Maybe ChatModel.Chat)
-    | GoProfile
+    | GoUser
     | GoEvents (Maybe SG.Event)
     | GoCreateEvent
     | GoPool
@@ -95,6 +98,8 @@ type
     = ChangeTo Route
     --Temp
     | CreateEventMsg CreateEventMsg.Msg
+    | UserMsg UserMsg.Msg
+    | ChatMsg ChatMsg.Msg
       -- Chat
     | Input String
     | NewMessage String
