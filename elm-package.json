@@ -1,28 +1,14 @@
 {
-    "version": "10.0.0",
-    "summary": "Type-safe GraphQL queries in Elm.",
-    "repository": "https://github.com/dillonkearns/graphqelm.git",
+    "version": "1.0.0",
+    "summary": "helpful summary of your project, less than 80 characters",
+    "repository": "https://github.com/user/project.git",
     "license": "BSD3",
     "source-directories": [
-        "src"
+        "."
     ],
-    "exposed-modules": [
-        "Graphqelm.Operation",
-        "Graphqelm.Http",
-        "Graphqelm.SelectionSet",
-        "Graphqelm.Internal.Encode",
-        "Graphqelm.Document",
-        "Graphqelm.Field",
-        "Graphqelm.Internal.Builder.Argument",
-        "Graphqelm.Internal.Builder.Object",
-        "Graphqelm.OptionalArgument",
-        "Graphqelm.Http.GraphqlError",
-        "Graphqelm.Subscription",
-        "Graphqelm.Subscription.Protocol"
-    ],
+    "exposed-modules": [],
     "dependencies": {
         "NoRedInk/elm-decode-pipeline": "3.0.0 <= v < 4.0.0",
-        "dillonkearns/graphqelm": "10.0.0 <= v < 11.0.0",
         "elm-community/json-extra": "2.5.0 <= v < 3.0.0",
         "elm-lang/core": "5.1.1 <= v < 6.0.0",
         "elm-lang/geolocation": "1.0.2 <= v < 2.0.0",
