@@ -25,9 +25,7 @@ view x =
                 [ div [ class "ph3 bg-black-30 w-100" ]
                     [ userToolsView ]
                 , userBio model
-                , traitsIcons model.traits
                 , pastEvents model
-                , traitsIcons model.traits
                 ]
             ]
 
@@ -93,19 +91,6 @@ userToolsView =
     in
         div [ class "flex justify-end" ]
             (List.map icon [ "settings", "edit" ])
-
-
-traitsIcons : List UserModel.Trait -> Html msg
-traitsIcons traits =
-    let
-        toIcon x =
-            li [ class "flex w4 flex-column items-center overflow-hidden pointer animated zoomIn" ]
-                [ div [ class "f1-l f2 grow" ] [ text (stringToEmoji (x.name)) ]
-                , div [ class "pv2 o-80" ] [ text (Maybe.withDefault x.name (List.head (String.split "_" x.name))) ]
-                ]
-    in
-        ul [ class "list mv0 mh4 ph0 pt4 pb3 flex justify-around items-center bb b--white-20" ]
-            (List.map toIcon traits)
 
 
 stringToEmoji : String -> String

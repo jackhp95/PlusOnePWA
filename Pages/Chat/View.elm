@@ -20,6 +20,7 @@ import Html.Events exposing (..)
 import Types
 import TextArea exposing (auto)
 import Pages.Chat.Model as ChatModel
+import Pages.Message.View exposing (..)
 
 
 -- VIEW
@@ -42,52 +43,28 @@ view x =
         div [ class "animated fadeInLeft bg-black-70 flex flex-column flex-auto measure-wide-l pa0 ma0 shadow-2-l" ]
             [ nameBar chat
             , section [ class "flex-auto lh-copy overflow-auto ph3 pt5 z-1 inner-shadow-1" ]
-                [ toast
-                , sent
-                , recieved
-                , sent
-                , recieved
-                , sent
-                , recieved
-                , sent
-                , recieved
-                , sent
-                , recieved
-                , sent
-                , recieved
-                , sent
-                , recieved
-                , sent
-                , recieved
-                , sent
-                , recieved
+                [ toast "conversation initiated by hannah"
+                , sent "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
+                , recieved "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
+                , sent "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
+                , recieved "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
+                , sent "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
+                , recieved "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
+                , sent "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
+                , recieved "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
+                , sent "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
+                , recieved "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
+                , sent "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
+                , recieved "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
+                , sent "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
+                , recieved "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
+                , sent "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
+                , recieved "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
+                , sent "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
+                , recieved "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
                 ]
             , messageBar chat client
             ]
-
-
-recieved : Html msg
-recieved =
-    div [ class "flex flex-auto pb3 pr5 slideInLeft animated" ]
-        [ div [ class "measure-narrow bg-blue-50 br2 ph3 pv2" ]
-            [ text "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?" ]
-        ]
-
-
-sent : Html msg
-sent =
-    div [ class "flex justify-end flex-auto pb3 pl5 slideInRight animated" ]
-        [ div [ class "measure-narrow bg-black-50 br2 ph3 pv2" ]
-            [ text "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?" ]
-        ]
-
-
-toast : Html msg
-toast =
-    div [ class "flex justify-center flex-auto pa4 fadeInUp animated" ]
-        [ div [ class "measure-narrow tc" ]
-            [ text "conversation initiated by hannah" ]
-        ]
 
 
 messageBar : ChatModel.Chat -> Types.Client -> Html Types.Msg
