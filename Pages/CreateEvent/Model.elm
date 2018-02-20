@@ -1,9 +1,16 @@
 module Pages.CreateEvent.Model exposing (..)
 import Pages.CreateEvent.Messages exposing (..)
+import Date exposing (Date)
+import Time exposing (Time)
 
 type alias CreateEvent =
-    { name : String
-    , other : String
+    { title : String
+    , description : String
+    , location : String
+    , date : String
+    , time : String
+    , privacy : String
+    , taxonomy : String
     }
 
 
@@ -20,4 +27,10 @@ initModel = (
     CreateEvent
         ""
         ""
+        ""
+        ""
+        ""
+        ""
+        ""
+
     )

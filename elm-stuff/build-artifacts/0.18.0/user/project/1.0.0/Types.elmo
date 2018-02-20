@@ -1,54 +1,4 @@
-var _user$project$Types$initWindow = A2(_elm_lang$window$Window$Size, 1440, 1440);
-var _user$project$Types$initRing = {width: 2, padding: 3};
-var _user$project$Types$initTube = {diameter: 100, ring: _user$project$Types$initRing, spacing: 300, pop: 110};
-var _user$project$Types$initMove = _elm_lang$core$Maybe$Nothing;
-var _user$project$Types$initPosition = {x: 0, y: 0};
 var _user$project$Types$initClient = {textAreaHeight: 10};
-var _user$project$Types$initEvents = {seatgeek: _elm_lang$core$Maybe$Nothing, currentDatetime: _elm_lang$core$Maybe$Nothing};
-var _user$project$Types$initTrait = {
-	ctor: '::',
-	_0: {name: 'night owl', from: 'tommy', datetime: ''},
-	_1: {
-		ctor: '::',
-		_0: {name: 'flirty', from: 'tommy', datetime: ''},
-		_1: {
-			ctor: '::',
-			_0: {name: 'talkative', from: 'tommy', datetime: ''},
-			_1: {
-				ctor: '::',
-				_0: {name: 'funny', from: 'tommy', datetime: ''},
-				_1: {ctor: '[]'}
-			}
-		}
-	}
-};
-var _user$project$Types$initProfile = {
-	avi: {
-		ctor: '::',
-		_0: 'https://images.unsplash.com/photo-1496361001419-80f0d1be777a?dpr=1&auto=format&fit=crop&w=1000&q=80&cs=tinysrgb&ixid=dW5zcGxhc2guY29tOzs7Ozs%3D',
-		_1: {ctor: '[]'}
-	},
-	name: 'Hannah Hazeldine',
-	traits: _user$project$Types$initTrait
-};
-var _user$project$Types$initChat = {
-	uid: 'string',
-	input: '',
-	messages: {
-		ctor: '::',
-		_0: 'hello, this is a really long message to test text-overflow: elipse. Does it work? Does it look okay?',
-		_1: {
-			ctor: '::',
-			_0: 'what\'s up?',
-			_1: {
-				ctor: '::',
-				_0: 'not much',
-				_1: {ctor: '[]'}
-			}
-		}
-	},
-	userAvi: 'https://images.unsplash.com/photo-1496361001419-80f0d1be777a?dpr=1&auto=format&fit=crop&w=1000&q=80&cs=tinysrgb&ixid=dW5zcGxhc2guY29tOzs7Ozs%3D'
-};
 var _user$project$Types$Model = F8(
 	function (a, b, c, d, e, f, g, h) {
 		return {route: a, chat: b, chats: c, profile: d, events: e, pool: f, client: g, createEvent: h};
@@ -57,89 +7,9 @@ var _user$project$Types$Page = F3(
 	function (a, b, c) {
 		return {name: a, icon: b, route: c};
 	});
-var _user$project$Types$Chat = F4(
-	function (a, b, c, d) {
-		return {uid: a, input: b, messages: c, userAvi: d};
-	});
-var _user$project$Types$Profile = F3(
-	function (a, b, c) {
-		return {avi: a, name: b, traits: c};
-	});
-var _user$project$Types$Trait = F3(
-	function (a, b, c) {
-		return {name: a, from: b, datetime: c};
-	});
-var _user$project$Types$Events = F2(
-	function (a, b) {
-		return {seatgeek: a, currentDatetime: b};
-	});
 var _user$project$Types$Client = function (a) {
 	return {textAreaHeight: a};
 };
-var _user$project$Types$Pool = F6(
-	function (a, b, c, d, e, f) {
-		return {position: a, move: b, tube: c, windowSize: d, tubers: e, users: f};
-	});
-var _user$project$Types$Move = F2(
-	function (a, b) {
-		return {start: a, current: b};
-	});
-var _user$project$Types$Tube = F4(
-	function (a, b, c, d) {
-		return {diameter: a, ring: b, spacing: c, pop: d};
-	});
-var _user$project$Types$Ring = F2(
-	function (a, b) {
-		return {width: a, padding: b};
-	});
-var _user$project$Types$Tuber = F2(
-	function (a, b) {
-		return {uniqueID: a, offset: b};
-	});
-var _user$project$Types$loremTubers = {
-	ctor: '::',
-	_0: A2(
-		_user$project$Types$Tuber,
-		1,
-		A2(_elm_lang$mouse$Mouse$Position, 0, 0)),
-	_1: {
-		ctor: '::',
-		_0: A2(
-			_user$project$Types$Tuber,
-			2,
-			A2(_elm_lang$mouse$Mouse$Position, 300, 300)),
-		_1: {
-			ctor: '::',
-			_0: A2(
-				_user$project$Types$Tuber,
-				3,
-				A2(_elm_lang$mouse$Mouse$Position, 600, 600)),
-			_1: {ctor: '[]'}
-		}
-	}
-};
-var _user$project$Types$User = F6(
-	function (a, b, c, d, e, f) {
-		return {uniqueID: a, name: b, pic: c, online: d, chattor: e, chattee: f};
-	});
-var _user$project$Types$loremUsers = {
-	ctor: '::',
-	_0: A6(_user$project$Types$User, 1, 'doug', 'https://randomuser.me/api/portraits/men/1.jpg', true, true, true),
-	_1: {
-		ctor: '::',
-		_0: A6(_user$project$Types$User, 2, 'lillith', 'https://randomuser.me/api/portraits/men/2.jpg', true, true, true),
-		_1: {
-			ctor: '::',
-			_0: A6(_user$project$Types$User, 3, 'kyle', 'https://randomuser.me/api/portraits/men/3.jpg', true, true, true),
-			_1: {
-				ctor: '::',
-				_0: A6(_user$project$Types$User, 4, 'borf', 'https://randomuser.me/api/portraits/men/4.jpg', true, true, true),
-				_1: {ctor: '[]'}
-			}
-		}
-	}
-};
-var _user$project$Types$initPool = {position: _user$project$Types$initPosition, move: _elm_lang$core$Maybe$Nothing, tube: _user$project$Types$initTube, windowSize: _user$project$Types$initWindow, tubers: _user$project$Types$loremTubers, users: _user$project$Types$loremUsers};
 var _user$project$Types$GoPool = {ctor: 'GoPool'};
 var _user$project$Types$GoCreateEvent = {ctor: 'GoCreateEvent'};
 var _user$project$Types$GoEvents = function (a) {
@@ -152,28 +22,28 @@ var _user$project$Types$GoChats = function (a) {
 var _user$project$Types$initModel = A8(
 	_user$project$Types$Model,
 	_user$project$Types$GoChats(_elm_lang$core$Maybe$Nothing),
-	_user$project$Types$initChat,
+	_user$project$Pages_Chat_Model$initModel,
 	{
 		ctor: '::',
-		_0: _user$project$Types$initChat,
+		_0: _user$project$Pages_Chat_Model$initModel,
 		_1: {
 			ctor: '::',
-			_0: _user$project$Types$initChat,
+			_0: _user$project$Pages_Chat_Model$initModel,
 			_1: {
 				ctor: '::',
-				_0: _user$project$Types$initChat,
+				_0: _user$project$Pages_Chat_Model$initModel,
 				_1: {
 					ctor: '::',
-					_0: _user$project$Types$initChat,
+					_0: _user$project$Pages_Chat_Model$initModel,
 					_1: {
 						ctor: '::',
-						_0: _user$project$Types$initChat,
+						_0: _user$project$Pages_Chat_Model$initModel,
 						_1: {
 							ctor: '::',
-							_0: _user$project$Types$initChat,
+							_0: _user$project$Pages_Chat_Model$initModel,
 							_1: {
 								ctor: '::',
-								_0: _user$project$Types$initChat,
+								_0: _user$project$Pages_Chat_Model$initModel,
 								_1: {ctor: '[]'}
 							}
 						}
@@ -182,11 +52,11 @@ var _user$project$Types$initModel = A8(
 			}
 		}
 	},
-	_user$project$Types$initProfile,
-	_user$project$Types$initEvents,
-	_user$project$Types$initPool,
+	_user$project$Pages_Profile_Model$initModel,
+	_user$project$Pages_Events_Model$initModel,
+	_user$project$Pages_Pool_Model$initModel,
 	_user$project$Types$initClient,
-	_elm_lang$core$Maybe$Nothing);
+	_user$project$Pages_CreateEvent_Model$initModel);
 var _user$project$Types$InitialWindow = function (a) {
 	return {ctor: 'InitialWindow', _0: a};
 };
@@ -220,9 +90,11 @@ var _user$project$Types$ViewChat = function (a) {
 var _user$project$Types$NewMessage = function (a) {
 	return {ctor: 'NewMessage', _0: a};
 };
-var _user$project$Types$SendChatMessage = {ctor: 'SendChatMessage'};
 var _user$project$Types$Input = function (a) {
 	return {ctor: 'Input', _0: a};
+};
+var _user$project$Types$CreateEventMsg = function (a) {
+	return {ctor: 'CreateEventMsg', _0: a};
 };
 var _user$project$Types$ChangeTo = function (a) {
 	return {ctor: 'ChangeTo', _0: a};

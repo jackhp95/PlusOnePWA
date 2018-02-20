@@ -97,7 +97,6 @@ type
     | CreateEventMsg CreateEventMsg.Msg
       -- Chat
     | Input String
-    | SendChatMessage
     | NewMessage String
     | ViewChat Route
       -- Events

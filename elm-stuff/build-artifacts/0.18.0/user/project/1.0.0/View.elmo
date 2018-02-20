@@ -6,16 +6,16 @@ var _user$project$View$page = function (model) {
 			if (_p1.ctor === 'Nothing') {
 				return {
 					ctor: '::',
-					_0: _user$project$Pages_Chats$view(model),
+					_0: _user$project$Pages_Chats_View$view(model),
 					_1: {ctor: '[]'}
 				};
 			} else {
 				return {
 					ctor: '::',
-					_0: _user$project$Pages_Chats$view(model),
+					_0: _user$project$Pages_Chats_View$view(model),
 					_1: {
 						ctor: '::',
-						_0: _user$project$Pages_Chat$view(model),
+						_0: _user$project$Pages_Chat_View$view(model),
 						_1: {ctor: '[]'}
 					}
 				};
@@ -23,19 +23,22 @@ var _user$project$View$page = function (model) {
 		case 'GoProfile':
 			return {
 				ctor: '::',
-				_0: _user$project$Pages_Profile$view(model),
+				_0: _user$project$Pages_Profile_View$view(model),
 				_1: {ctor: '[]'}
 			};
 		case 'GoPool':
 			return {
 				ctor: '::',
-				_0: _user$project$Pages_Pool$view(model.pool),
+				_0: _user$project$Pages_Pool_View$view(model.pool),
 				_1: {ctor: '[]'}
 			};
 		case 'GoCreateEvent':
 			return {
 				ctor: '::',
-				_0: _user$project$Pages_CreateEvent$view(model),
+				_0: A2(
+					_elm_lang$html$Html$map,
+					_user$project$Types$CreateEventMsg,
+					_user$project$Pages_CreateEvent_View$view(model.createEvent)),
 				_1: {ctor: '[]'}
 			};
 		default:
@@ -43,16 +46,16 @@ var _user$project$View$page = function (model) {
 			if (_p2.ctor === 'Nothing') {
 				return {
 					ctor: '::',
-					_0: _user$project$Pages_Events$view(model),
+					_0: _user$project$Pages_Events_View$view(model),
 					_1: {ctor: '[]'}
 				};
 			} else {
 				return {
 					ctor: '::',
-					_0: _user$project$Pages_Events$view(model),
+					_0: _user$project$Pages_Events_View$view(model),
 					_1: {
 						ctor: '::',
-						_0: A2(_user$project$Pages_Event$view, _p2._0, model.events.currentDatetime),
+						_0: A2(_user$project$Pages_Event_View$view, _p2._0, model.events.currentDatetime),
 						_1: {ctor: '[]'}
 					}
 				};
@@ -60,27 +63,35 @@ var _user$project$View$page = function (model) {
 	}
 };
 var _user$project$View$render = function (model) {
-	return A2(
-		_elm_lang$html$Html$div,
+	return _user$project$Proto$bg(
 		{
 			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('animated fadeIn f6 fw3 flex flex-column-l flex-row-m flex-column-reverse items-stretch vh-100 white'),
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
-			_0: _user$project$Nav$bar,
-			_1: {
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$main_,
+			_0: A2(
+				_elm_lang$html$Html$div,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('animated fadeIn f6 fw3 flex flex-column-l flex-row-m flex-column-reverse items-stretch vh-100 white'),
+					_1: {ctor: '[]'}
+				},
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					_user$project$Proto$plusOne,
 					{
 						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class('flex-auto flex justify-stretch'),
-						_1: {ctor: '[]'}
-					},
-					_user$project$View$page(model)),
-				_1: {ctor: '[]'}
-			}
+						_0: _user$project$Nav$bar,
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$main_,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$class('flex-auto flex justify-stretch'),
+									_1: {ctor: '[]'}
+								},
+								_user$project$View$page(model)),
+							_1: {ctor: '[]'}
+						}
+					})),
+			_1: {ctor: '[]'}
 		});
 };

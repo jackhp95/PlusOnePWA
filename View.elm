@@ -19,6 +19,7 @@ import Pages.Events.View as Events
 import Pages.Event.View as Event
 import Pages.Pool.View as Pool
 import Pages.CreateEvent.View as CreateEvent
+import Update exposing (..)
 
 
 -- SUBVIEWS --
@@ -66,7 +67,7 @@ page model =
             [ Pool.view model.pool ]
 
         Types.GoCreateEvent ->
-            [ CreateEvent.view model ]
+            [ Html.map Types.CreateEventMsg (CreateEvent.view model.createEvent) ]
 
         Types.GoEvents event ->
             case event of
