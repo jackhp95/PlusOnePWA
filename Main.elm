@@ -3,13 +3,18 @@ module Main exposing (main)
 import View exposing (render)
 import Types exposing (..)
 import Html exposing (..)
+import Update exposing (..)
 import WebSocket
 import SeatGeek.Query
 import SeatGeek.Decode
 import SeatGeek.Types as SG
 import Mouse
 import Window exposing (size)
-import Pages.Pool exposing (getPosition, determineTubers)
+import Pages.Pool.View exposing (getPosition, determineTubers)
+
+import Pages.CreateEvent.Update exposing (update)
+import Pages.CreateEvent.Model as CreateEvent
+import Pages.Pool.Model as PoolModel
 
 
 -- Try to reomve these?
@@ -56,149 +61,6 @@ view model =
     View.render model
 
 
-
--- UPDATE --
-
-
-update : Msg -> Model -> ( Model, Cmd msg )
-update msg model =
-    let
-        events =
-            model.events
-
-        client =
-            model.client
-
-        pool =
-            model.pool
-    in
-        case msg of
-            ChangeTo newRoute ->
-                ( { model | route = newRoute }, Cmd.none )
-
-            Input newInput ->
-                ( model, Cmd.none )
-
-            -- ( { model | input = newInput }, Cmd.none )
-            SendChatMessage ->
-                ( model, Cmd.none )
-
-            -- ( { model | input = "" }, WebSocket.send echoServer model.input )
-            NewMessage str ->
-                ( model, Cmd.none )
-
-            ViewChat chat ->
-                ( { model
-                    | route = chat
-                  }
-                , Cmd.none
-                )
-
-            -- EVENTS
-            ViewEvent event ->
-                ( { model
-                    | route = event
-                  }
-                , Cmd.none
-                )
-
-            OnDatetime now ->
-                ( { model
-                    | events =
-                        { events
-                            | currentDatetime = Just now
-                        }
-                  }
-                , Cmd.none
-                )
-
-            -- SeatGeek
-            GetReply (Ok recieved) ->
-                ( { model
-                    | events =
-                        { events
-                            | seatgeek = Just (SG.Reply recieved.meta recieved.events)
-                        }
-                  }
-                , Cmd.none
-                )
-
-            -- ChatBox Updates
-            TextAreaResizer height ->
-                ( { model
-                    | client =
-                        { client
-                            | textAreaHeight = height
-                        }
-                  }
-                , Cmd.none
-                )
-
-            -- POOL
-            MouseStart xy ->
-                ( { model
-                    | pool =
-                        { pool
-                            | move = (Just (Move xy xy))
-                        }
-                  }
-                , Cmd.none
-                )
-
-            MouseMove xy ->
-                ( { model
-                    | pool =
-                        { pool
-                            | move = (Maybe.map (\{ start } -> Move start xy) pool.move)
-                        }
-                  }
-                , Cmd.none
-                )
-
-            MouseEnd _ ->
-                ( { model
-                    | pool =
-                        { pool
-                            | position = (getPosition pool)
-                            , move = Nothing
-                        }
-                  }
-                , Cmd.none
-                )
-
-            ResizePool windowSize ->
-                ( { model
-                    | pool =
-                        { pool
-                            | windowSize = windowSize
-                            , tubers = (determineTubers pool windowSize)
-                        }
-                  }
-                , Cmd.none
-                )
-
-            InitialWindow windowSize ->
-                ( { model
-                    | pool =
-                        { pool
-                            | windowSize = windowSize
-                            , tubers = (determineTubers pool windowSize)
-                        }
-                  }
-                , Cmd.none
-                )
-
-            -- Discover ->
-            --     ( model, SeatGeek.askQuery SG.initQuery )
-            GetReply (Err e) ->
-                let
-                    _ =
-                        Debug.log "err" e
-                in
-                    ( model, Cmd.none )
-
-
-
 -- SUBSCRIPTIONS
 
 
@@ -225,6 +87,6 @@ main =
     Html.program
         { init = init
         , view = view
-        , update = update
+        , update = Update.update
         , subscriptions = subscriptions
         }

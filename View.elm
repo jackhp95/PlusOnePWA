@@ -12,13 +12,14 @@ import Html.Events exposing (..)
 
 -- PAGES --
 
-import Pages.Chat as Chat
-import Pages.Chats as Chats
-import Pages.Profile as Profile
-import Pages.Events as Events
-import Pages.Event as Event
-import Pages.Pool as Pool
-import Pages.CreateEvent as CreateEvent
+import Pages.Chat.View as Chat
+import Pages.Chats.View as Chats
+import Pages.User.View as User
+import Pages.Events.View as Events
+import Pages.Event.View as Event
+import Pages.Pool.View as Pool
+import Pages.CreateEvent.View as CreateEvent
+import Update exposing (..)
 
 
 -- SUBVIEWS --
@@ -59,14 +60,14 @@ page model =
                     , Chat.view model
                     ]
 
-        Types.GoProfile ->
-            [ Profile.view model ]
+        Types.GoUser ->
+            [ User.view model ]
 
         Types.GoPool ->
             [ Pool.view model.pool ]
 
         Types.GoCreateEvent ->
-            [ CreateEvent.view model ]
+            [ Html.map Types.CreateEventMsg (CreateEvent.view model.createEvent) ]
 
         Types.GoEvents event ->
             case event of

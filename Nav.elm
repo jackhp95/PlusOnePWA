@@ -22,7 +22,7 @@ selections =
             [ ( "discover", "compass", GoEvents Nothing )
             , ( "add", "plus-square", GoCreateEvent )
             , ( "chats", "message-square", GoChats Nothing )
-            , ( "profile", "user", GoProfile )
+            , ( "user", "user", GoUser )
             ]
 
 

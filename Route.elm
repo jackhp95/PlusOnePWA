@@ -18,7 +18,7 @@ type Route
     | Register
     | Settings
     | Article Article.Slug
-    | Profile Username
+    | User Username
     | NewArticle
     | EditArticle Article.Slug
 
@@ -30,7 +30,7 @@ route =
         , Url.map Login (s "login")
         , Url.map Logout (s "logout")
         , Url.map Settings (s "settings")
-        , Url.map Profile (s "profile" </> User.usernameParser)
+        , Url.map User (s "user" </> User.usernameParser)
         , Url.map Register (s "register")
         , Url.map Article (s "article" </> Article.slugParser)
         , Url.map NewArticle (s "editor")
@@ -65,8 +65,8 @@ routeToString page =
                 Article slug ->
                     [ "article", Article.slugToString slug ]
 
-                Profile username ->
-                    [ "profile", User.usernameToString username ]
+                User username ->
+                    [ "user", User.usernameToString username ]
 
                 NewArticle ->
                     [ "editor" ]

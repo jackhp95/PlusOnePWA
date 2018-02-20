@@ -13153,7 +13153,7 @@ var _user$project$Types$initTrait = {
 		}
 	}
 };
-var _user$project$Types$initProfile = {
+var _user$project$Types$initUser = {
 	avi: {
 		ctor: '::',
 		_0: 'https://images.unsplash.com/photo-1496361001419-80f0d1be777a?dpr=1&auto=format&fit=crop&w=1000&q=80&cs=tinysrgb&ixid=dW5zcGxhc2guY29tOzs7Ozs%3D',
@@ -13182,7 +13182,7 @@ var _user$project$Types$initChat = {
 };
 var _user$project$Types$Model = F8(
 	function (a, b, c, d, e, f, g, h) {
-		return {route: a, chat: b, chats: c, profile: d, events: e, pool: f, client: g, createEvent: h};
+		return {route: a, chat: b, chats: c, user: d, events: e, pool: f, client: g, createEvent: h};
 	});
 var _user$project$Types$Page = F3(
 	function (a, b, c) {
@@ -13192,7 +13192,7 @@ var _user$project$Types$Chat = F4(
 	function (a, b, c, d) {
 		return {uid: a, input: b, messages: c, userAvi: d};
 	});
-var _user$project$Types$Profile = F3(
+var _user$project$Types$User = F3(
 	function (a, b, c) {
 		return {avi: a, name: b, traits: c};
 	});
@@ -13276,7 +13276,7 @@ var _user$project$Types$GoCreateEvent = {ctor: 'GoCreateEvent'};
 var _user$project$Types$GoEvents = function (a) {
 	return {ctor: 'GoEvents', _0: a};
 };
-var _user$project$Types$GoProfile = {ctor: 'GoProfile'};
+var _user$project$Types$GoUser = {ctor: 'GoUser'};
 var _user$project$Types$GoChats = function (a) {
 	return {ctor: 'GoChats', _0: a};
 };
@@ -13313,7 +13313,7 @@ var _user$project$Types$initModel = A8(
 			}
 		}
 	},
-	_user$project$Types$initProfile,
+	_user$project$Types$initUser,
 	_user$project$Types$initEvents,
 	_user$project$Types$initPool,
 	_user$project$Types$initClient,
@@ -13496,7 +13496,7 @@ var _user$project$Nav$selections = function () {
 					},
 					_1: {
 						ctor: '::',
-						_0: {ctor: '_Tuple3', _0: 'profile', _1: 'user', _2: _user$project$Types$GoProfile},
+						_0: {ctor: '_Tuple3', _0: 'user', _1: 'user', _2: _user$project$Types$GoUser},
 						_1: {ctor: '[]'}
 					}
 				}
@@ -13582,7 +13582,7 @@ var _user$project$Nav$bar = function () {
 		});
 }();
 
-var _user$project$Pages_Profile$stringToEmoji = function (string) {
+var _user$project$Pages_User$stringToEmoji = function (string) {
 	var _p0 = string;
 	switch (_p0) {
 		case 'night owl':
@@ -13597,7 +13597,7 @@ var _user$project$Pages_Profile$stringToEmoji = function (string) {
 			return '🤷';
 	}
 };
-var _user$project$Pages_Profile$traitsIcons = function (traits) {
+var _user$project$Pages_User$traitsIcons = function (traits) {
 	var toIcon = function (x) {
 		return A2(
 			_elm_lang$html$Html$li,
@@ -13618,7 +13618,7 @@ var _user$project$Pages_Profile$traitsIcons = function (traits) {
 					{
 						ctor: '::',
 						_0: _elm_lang$html$Html$text(
-							_user$project$Pages_Profile$stringToEmoji(x.name)),
+							_user$project$Pages_User$stringToEmoji(x.name)),
 						_1: {ctor: '[]'}
 					}),
 				_1: {
@@ -13653,7 +13653,7 @@ var _user$project$Pages_Profile$traitsIcons = function (traits) {
 		},
 		A2(_elm_lang$core$List$map, toIcon, traits));
 };
-var _user$project$Pages_Profile$profileToolsView = function () {
+var _user$project$Pages_User$userToolsView = function () {
 	var icon = function (x) {
 		return A2(
 			_elm_lang$html$Html$div,
@@ -13714,7 +13714,7 @@ var _user$project$Pages_Profile$profileToolsView = function () {
 				}
 			}));
 }();
-var _user$project$Pages_Profile$pastEvents = function (model) {
+var _user$project$Pages_User$pastEvents = function (model) {
 	var eventCard = function (_p1) {
 		var _p2 = _p1;
 		return A2(
@@ -13855,7 +13855,7 @@ var _user$project$Pages_Profile$pastEvents = function (model) {
 			}
 		});
 };
-var _user$project$Pages_Profile$profileBio = function (model) {
+var _user$project$Pages_User$userBio = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
 		{
@@ -13895,7 +13895,7 @@ var _user$project$Pages_Profile$profileBio = function (model) {
 			}
 		});
 };
-var _user$project$Pages_Profile$profileAvi = function (avis) {
+var _user$project$Pages_User$userAvi = function (avis) {
 	return A2(
 		_elm_lang$html$Html$div,
 		{
@@ -13924,8 +13924,8 @@ var _user$project$Pages_Profile$profileAvi = function (avis) {
 			_1: {ctor: '[]'}
 		});
 };
-var _user$project$Pages_Profile$view = function (x) {
-	var model = x.profile;
+var _user$project$Pages_User$view = function (x) {
+	var model = x.user;
 	return A2(
 		_elm_lang$html$Html$section,
 		{
@@ -13944,7 +13944,7 @@ var _user$project$Pages_Profile$view = function (x) {
 				},
 				{
 					ctor: '::',
-					_0: _user$project$Pages_Profile$profileAvi(model.avi),
+					_0: _user$project$Pages_User$userAvi(model.avi),
 					_1: {
 						ctor: '::',
 						_0: A2(
@@ -13982,21 +13982,21 @@ var _user$project$Pages_Profile$view = function (x) {
 							},
 							{
 								ctor: '::',
-								_0: _user$project$Pages_Profile$profileToolsView,
+								_0: _user$project$Pages_User$userToolsView,
 								_1: {ctor: '[]'}
 							}),
 						_1: {
 							ctor: '::',
-							_0: _user$project$Pages_Profile$profileBio(model),
+							_0: _user$project$Pages_User$userBio(model),
 							_1: {
 								ctor: '::',
-								_0: _user$project$Pages_Profile$traitsIcons(model.traits),
+								_0: _user$project$Pages_User$traitsIcons(model.traits),
 								_1: {
 									ctor: '::',
-									_0: _user$project$Pages_Profile$pastEvents(model),
+									_0: _user$project$Pages_User$pastEvents(model),
 									_1: {
 										ctor: '::',
-										_0: _user$project$Pages_Profile$traitsIcons(model.traits),
+										_0: _user$project$Pages_User$traitsIcons(model.traits),
 										_1: {ctor: '[]'}
 									}
 								}
@@ -14074,7 +14074,7 @@ var _user$project$Pages_Chat$nameBar = function (chat) {
 					_1: {
 						ctor: '::',
 						_0: _elm_lang$html$Html_Events$onClick(
-							_user$project$Types$ChangeTo(_user$project$Types$GoProfile)),
+							_user$project$Types$ChangeTo(_user$project$Types$GoUser)),
 						_1: {ctor: '[]'}
 					}
 				},
@@ -16736,10 +16736,10 @@ var _user$project$View$page = function (model) {
 					}
 				};
 			}
-		case 'GoProfile':
+		case 'GoUser':
 			return {
 				ctor: '::',
-				_0: _user$project$Pages_Profile$view(model),
+				_0: _user$project$Pages_User$view(model),
 				_1: {ctor: '[]'}
 			};
 		case 'GoPool':
