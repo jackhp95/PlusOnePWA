@@ -1,24 +1,17 @@
 module TestGraphCool exposing (main)
 
 import Graphqelm.Document as Document
-import Graphqelm.Field as Field
 import Graphqelm.Http exposing (..)
 import Graphqelm.Operation exposing (RootQuery)
 import Graphqelm.SelectionSet exposing (SelectionSet, with)
 import Html exposing (..)
 import RemoteData exposing (..)
 import Html.Attributes exposing (..)
-import GraphCool.Interface
-import GraphCool.Interface.Node as Node exposing (..)
 import GraphCool.Object
-import GraphCool.InputObject
 import GraphCool.Object.User as User
 import GraphCool.Object.Event as Event
 import GraphCool.Query as Query
 import GraphCool.Scalar
-import Graphqelm.OptionalArgument as OA 
-import GraphCool.Enum.UserOrderBy exposing (..)
-
 
 type alias Response =
     { users : List User
