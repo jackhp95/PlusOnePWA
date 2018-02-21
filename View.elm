@@ -7,7 +7,6 @@ import Types
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Html.Events exposing (..)
 
 
 -- PAGES --
@@ -19,7 +18,6 @@ import Pages.Events.View as Events
 import Pages.Event.View as Event
 import Pages.Pool.View as Pool
 import Pages.CreateEvent.View as CreateEvent
-import Update exposing (..)
 
 
 -- SUBVIEWS --

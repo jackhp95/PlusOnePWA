@@ -11705,7 +11705,12 @@ var _rluiten$elm_date_extra$Date_Extra_Duration$diffDays = F2(
 	});
 var _rluiten$elm_date_extra$Date_Extra_Duration$positiveDiff = F3(
 	function (date1, date2, multiplier) {
-		var accDiff = F4(
+		var propogateCarry = F3(
+			function (current, carry, maxVal) {
+				var adjusted = current + carry;
+				return (_elm_lang$core$Native_Utils.cmp(adjusted, 0) < 0) ? {ctor: '_Tuple2', _0: maxVal + adjusted, _1: -1} : {ctor: '_Tuple2', _0: adjusted, _1: 0};
+			});
+		var accumulatedDiff = F4(
 			function (acc, v1, v2, maxV2) {
 				return (_elm_lang$core$Native_Utils.cmp(v1, v2) < 0) ? {ctor: '_Tuple2', _0: acc - 1, _1: (maxV2 + v1) - v2} : {ctor: '_Tuple2', _0: acc, _1: v1 - v2};
 			});
@@ -11726,25 +11731,46 @@ var _rluiten$elm_date_extra$Date_Extra_Duration$positiveDiff = F3(
 		var year2 = _elm_lang$core$Date$year(date2);
 		var daysInDate2Month = A2(_rluiten$elm_date_extra$Date_Extra_Core$daysInMonth, year2, month2Mon);
 		var year1 = _elm_lang$core$Date$year(date1);
-		var _p0 = A4(accDiff, year1 - year2, month1, month2, 12);
+		var daysInDate1Month = A2(_rluiten$elm_date_extra$Date_Extra_Core$daysInMonth, year1, month1Mon);
+		var _p0 = A4(accumulatedDiff, year1 - year2, month1, month2, 12);
 		var yearDiff = _p0._0;
 		var monthDiffA = _p0._1;
-		var _p1 = A4(accDiff, monthDiffA, day1, day2, daysInDate2Month);
+		var _p1 = A4(accumulatedDiff, monthDiffA, day1, day2, daysInDate2Month);
 		var monthDiff = _p1._0;
 		var dayDiffA = _p1._1;
-		var _p2 = A4(accDiff, dayDiffA, hour1, hour2, 24);
+		var _p2 = A4(accumulatedDiff, dayDiffA, hour1, hour2, 24);
 		var dayDiff = _p2._0;
 		var hourDiffA = _p2._1;
-		var _p3 = A4(accDiff, hourDiffA, minute1, minute2, 60);
+		var _p3 = A4(accumulatedDiff, hourDiffA, minute1, minute2, 60);
 		var hourDiff = _p3._0;
 		var minuteDiffA = _p3._1;
-		var _p4 = A4(accDiff, minuteDiffA, second1, second2, 60);
+		var _p4 = A4(accumulatedDiff, minuteDiffA, second1, second2, 60);
 		var minuteDiff = _p4._0;
 		var secondDiffA = _p4._1;
-		var _p5 = A4(accDiff, secondDiffA, msec1, msec2, 1000);
+		var _p5 = A4(accumulatedDiff, secondDiffA, msec1, msec2, 1000);
 		var secondDiff = _p5._0;
 		var msecDiff = _p5._1;
-		return {year: yearDiff * multiplier, month: monthDiff * multiplier, day: dayDiff * multiplier, hour: hourDiff * multiplier, minute: minuteDiff * multiplier, second: secondDiff * multiplier, millisecond: msecDiff * multiplier};
+		var _p6 = A3(propogateCarry, msecDiff, 0, 1000);
+		var msecX = _p6._0;
+		var secondCarry = _p6._1;
+		var _p7 = A3(propogateCarry, secondDiff, secondCarry, 60);
+		var secondX = _p7._0;
+		var minuteCarry = _p7._1;
+		var _p8 = A3(propogateCarry, minuteDiff, minuteCarry, 60);
+		var minuteX = _p8._0;
+		var hourCarry = _p8._1;
+		var _p9 = A3(propogateCarry, hourDiff, hourCarry, 60);
+		var hourX = _p9._0;
+		var dayCarry = _p9._1;
+		var _p10 = A3(propogateCarry, dayDiff, dayCarry, daysInDate1Month);
+		var dayX = _p10._0;
+		var monthCarry = _p10._1;
+		var _p11 = A3(propogateCarry, monthDiff, monthCarry, 12);
+		var monthX = _p11._0;
+		var yearCarry = _p11._1;
+		var _p12 = A3(propogateCarry, yearDiff, yearCarry, 0);
+		var yearX = _p12._0;
+		return {year: yearX * multiplier, month: monthX * multiplier, day: dayX * multiplier, hour: hourX * multiplier, minute: minuteX * multiplier, second: secondX * multiplier, millisecond: msecX * multiplier};
 	});
 var _rluiten$elm_date_extra$Date_Extra_Duration$diff = F2(
 	function (date1, date2) {
@@ -11789,8 +11815,8 @@ var _rluiten$elm_date_extra$Date_Extra_Duration$daylightOffsetCompensate = F2(
 		}
 	});
 var _rluiten$elm_date_extra$Date_Extra_Duration$requireDaylightCompensateInAdd = function (duration) {
-	var _p6 = duration;
-	switch (_p6.ctor) {
+	var _p13 = duration;
+	switch (_p13.ctor) {
 		case 'Millisecond':
 			return false;
 		case 'Second':
@@ -11808,8 +11834,8 @@ var _rluiten$elm_date_extra$Date_Extra_Duration$requireDaylightCompensateInAdd =
 		case 'Year':
 			return true;
 		default:
-			var _p7 = _p6._0;
-			return (!_elm_lang$core$Native_Utils.eq(_p7.day, 0)) || ((!_elm_lang$core$Native_Utils.eq(_p7.month, 0)) || (!_elm_lang$core$Native_Utils.eq(_p7.year, 0)));
+			var _p14 = _p13._0;
+			return (!_elm_lang$core$Native_Utils.eq(_p14.day, 0)) || ((!_elm_lang$core$Native_Utils.eq(_p14.month, 0)) || (!_elm_lang$core$Native_Utils.eq(_p14.year, 0)));
 	}
 };
 var _rluiten$elm_date_extra$Date_Extra_Duration$zeroDelta = {year: 0, month: 0, day: 0, hour: 0, minute: 0, second: 0, millisecond: 0};
@@ -11824,8 +11850,8 @@ var _rluiten$elm_date_extra$Date_Extra_Duration$Year = {ctor: 'Year'};
 var _rluiten$elm_date_extra$Date_Extra_Duration$Month = {ctor: 'Month'};
 var _rluiten$elm_date_extra$Date_Extra_Duration$doAdd = F3(
 	function (duration, addend, date) {
-		var _p8 = duration;
-		switch (_p8.ctor) {
+		var _p15 = duration;
+		switch (_p15.ctor) {
 			case 'Millisecond':
 				return A3(_rluiten$elm_date_extra$Date_Extra_Period$add, _rluiten$elm_date_extra$Date_Extra_Period$Millisecond, addend, date);
 			case 'Second':
@@ -11843,17 +11869,17 @@ var _rluiten$elm_date_extra$Date_Extra_Duration$doAdd = F3(
 			case 'Year':
 				return A2(_rluiten$elm_date_extra$Date_Extra_Duration$addYear, addend, date);
 			default:
-				var _p9 = _p8._0;
+				var _p16 = _p15._0;
 				return A3(
 					_rluiten$elm_date_extra$Date_Extra_Period$add,
 					_rluiten$elm_date_extra$Date_Extra_Period$Delta(
-						{week: 0, day: _p9.day, hour: _p9.hour, minute: _p9.minute, second: _p9.second, millisecond: _p9.millisecond}),
+						{week: 0, day: _p16.day, hour: _p16.hour, minute: _p16.minute, second: _p16.second, millisecond: _p16.millisecond}),
 					addend,
 					A3(
 						_rluiten$elm_date_extra$Date_Extra_Duration$doAdd,
 						_rluiten$elm_date_extra$Date_Extra_Duration$Month,
-						_p9.month,
-						A3(_rluiten$elm_date_extra$Date_Extra_Duration$doAdd, _rluiten$elm_date_extra$Date_Extra_Duration$Year, _p9.year, date)));
+						_p16.month,
+						A3(_rluiten$elm_date_extra$Date_Extra_Duration$doAdd, _rluiten$elm_date_extra$Date_Extra_Duration$Year, _p16.year, date)));
 		}
 	});
 var _rluiten$elm_date_extra$Date_Extra_Duration$add = F3(
@@ -13129,14 +13155,46 @@ var _user$project$SeatGeek_Types$initQuery = {
 	client_id: 'MzUwNDE1NnwxNDgxNjA1ODM2'
 };
 
-var _user$project$Types$initWindow = A2(_elm_lang$window$Window$Size, 1440, 1440);
-var _user$project$Types$initRing = {width: 2, padding: 3};
-var _user$project$Types$initTube = {diameter: 100, ring: _user$project$Types$initRing, spacing: 300, pop: 110};
-var _user$project$Types$initMove = _elm_lang$core$Maybe$Nothing;
-var _user$project$Types$initPosition = {x: 0, y: 0};
-var _user$project$Types$initClient = {textAreaHeight: 10};
-var _user$project$Types$initEvents = {seatgeek: _elm_lang$core$Maybe$Nothing, currentDatetime: _elm_lang$core$Maybe$Nothing};
-var _user$project$Types$initTrait = {
+var _user$project$Pages_CreateEvent_Messages$ChangeTaxonomy = function (a) {
+	return {ctor: 'ChangeTaxonomy', _0: a};
+};
+var _user$project$Pages_CreateEvent_Messages$ChangePrivacy = function (a) {
+	return {ctor: 'ChangePrivacy', _0: a};
+};
+var _user$project$Pages_CreateEvent_Messages$ChangeTime = function (a) {
+	return {ctor: 'ChangeTime', _0: a};
+};
+var _user$project$Pages_CreateEvent_Messages$ChangeDate = function (a) {
+	return {ctor: 'ChangeDate', _0: a};
+};
+var _user$project$Pages_CreateEvent_Messages$ChangeLocation = function (a) {
+	return {ctor: 'ChangeLocation', _0: a};
+};
+var _user$project$Pages_CreateEvent_Messages$ChangeDescription = function (a) {
+	return {ctor: 'ChangeDescription', _0: a};
+};
+var _user$project$Pages_CreateEvent_Messages$ChangeTitle = function (a) {
+	return {ctor: 'ChangeTitle', _0: a};
+};
+var _user$project$Pages_CreateEvent_Messages$SubmitEvent = function (a) {
+	return {ctor: 'SubmitEvent', _0: a};
+};
+
+var _user$project$Pages_User_Messages$Temp = {ctor: 'Temp'};
+
+var _user$project$Pages_Chat_Messages$SendChatMessage = {ctor: 'SendChatMessage'};
+
+var _user$project$Pages_Chats_Messages$Temp = {ctor: 'Temp'};
+
+var _user$project$Pages_CreateEvent_Model$initCmd = _elm_lang$core$Platform_Cmd$none;
+var _user$project$Pages_CreateEvent_Model$CreateEvent = F7(
+	function (a, b, c, d, e, f, g) {
+		return {title: a, description: b, location: c, date: d, time: e, privacy: f, taxonomy: g};
+	});
+var _user$project$Pages_CreateEvent_Model$initModel = A7(_user$project$Pages_CreateEvent_Model$CreateEvent, '', '', '', '', '', '', '');
+var _user$project$Pages_CreateEvent_Model$init = {ctor: '_Tuple2', _0: _user$project$Pages_CreateEvent_Model$initModel, _1: _user$project$Pages_CreateEvent_Model$initCmd};
+
+var _user$project$Pages_User_Model$initTrait = {
 	ctor: '::',
 	_0: {name: 'night owl', from: 'tommy', datetime: ''},
 	_1: {
@@ -13153,16 +13211,27 @@ var _user$project$Types$initTrait = {
 		}
 	}
 };
-var _user$project$Types$initUser = {
+var _user$project$Pages_User_Model$initModel = {
 	avi: {
 		ctor: '::',
 		_0: 'https://images.unsplash.com/photo-1496361001419-80f0d1be777a?dpr=1&auto=format&fit=crop&w=1000&q=80&cs=tinysrgb&ixid=dW5zcGxhc2guY29tOzs7Ozs%3D',
 		_1: {ctor: '[]'}
 	},
 	name: 'Hannah Hazeldine',
-	traits: _user$project$Types$initTrait
+	traits: _user$project$Pages_User_Model$initTrait
 };
-var _user$project$Types$initChat = {
+var _user$project$Pages_User_Model$initCmd = _elm_lang$core$Platform_Cmd$none;
+var _user$project$Pages_User_Model$init = {ctor: '_Tuple2', _0: _user$project$Pages_User_Model$initModel, _1: _user$project$Pages_User_Model$initCmd};
+var _user$project$Pages_User_Model$User = F3(
+	function (a, b, c) {
+		return {avi: a, name: b, traits: c};
+	});
+var _user$project$Pages_User_Model$Trait = F3(
+	function (a, b, c) {
+		return {name: a, from: b, datetime: c};
+	});
+
+var _user$project$Pages_Chat_Model$initModel = {
 	uid: 'string',
 	input: '',
 	messages: {
@@ -13180,6 +13249,98 @@ var _user$project$Types$initChat = {
 	},
 	userAvi: 'https://images.unsplash.com/photo-1496361001419-80f0d1be777a?dpr=1&auto=format&fit=crop&w=1000&q=80&cs=tinysrgb&ixid=dW5zcGxhc2guY29tOzs7Ozs%3D'
 };
+var _user$project$Pages_Chat_Model$initCmd = _elm_lang$core$Platform_Cmd$none;
+var _user$project$Pages_Chat_Model$init = {ctor: '_Tuple2', _0: _user$project$Pages_Chat_Model$initModel, _1: _user$project$Pages_Chat_Model$initCmd};
+var _user$project$Pages_Chat_Model$Chat = F4(
+	function (a, b, c, d) {
+		return {uid: a, input: b, messages: c, userAvi: d};
+	});
+
+var _user$project$Pages_Events_Messages$Temp = {ctor: 'Temp'};
+
+var _user$project$Pages_Events_Model$initModel = {seatgeek: _elm_lang$core$Maybe$Nothing, currentDatetime: _elm_lang$core$Maybe$Nothing};
+var _user$project$Pages_Events_Model$initCmd = _elm_lang$core$Platform_Cmd$none;
+var _user$project$Pages_Events_Model$init = {ctor: '_Tuple2', _0: _user$project$Pages_Events_Model$initModel, _1: _user$project$Pages_Events_Model$initCmd};
+var _user$project$Pages_Events_Model$Events = F2(
+	function (a, b) {
+		return {seatgeek: a, currentDatetime: b};
+	});
+
+var _user$project$Pages_Pool_Messages$Temp = {ctor: 'Temp'};
+
+var _user$project$Pages_Pool_Model$initWindow = A2(_elm_lang$window$Window$Size, 1440, 1440);
+var _user$project$Pages_Pool_Model$initRing = {width: 2, padding: 3};
+var _user$project$Pages_Pool_Model$initTube = {diameter: 100, ring: _user$project$Pages_Pool_Model$initRing, spacing: 300, pop: 110};
+var _user$project$Pages_Pool_Model$initMove = _elm_lang$core$Maybe$Nothing;
+var _user$project$Pages_Pool_Model$initPosition = {x: 0, y: 0};
+var _user$project$Pages_Pool_Model$initCmd = _elm_lang$core$Platform_Cmd$none;
+var _user$project$Pages_Pool_Model$Pool = F6(
+	function (a, b, c, d, e, f) {
+		return {position: a, move: b, tube: c, windowSize: d, tubers: e, users: f};
+	});
+var _user$project$Pages_Pool_Model$Move = F2(
+	function (a, b) {
+		return {start: a, current: b};
+	});
+var _user$project$Pages_Pool_Model$Tube = F4(
+	function (a, b, c, d) {
+		return {diameter: a, ring: b, spacing: c, pop: d};
+	});
+var _user$project$Pages_Pool_Model$Ring = F2(
+	function (a, b) {
+		return {width: a, padding: b};
+	});
+var _user$project$Pages_Pool_Model$Tuber = F2(
+	function (a, b) {
+		return {uniqueID: a, offset: b};
+	});
+var _user$project$Pages_Pool_Model$loremTubers = {
+	ctor: '::',
+	_0: A2(
+		_user$project$Pages_Pool_Model$Tuber,
+		1,
+		A2(_elm_lang$mouse$Mouse$Position, 0, 0)),
+	_1: {
+		ctor: '::',
+		_0: A2(
+			_user$project$Pages_Pool_Model$Tuber,
+			2,
+			A2(_elm_lang$mouse$Mouse$Position, 300, 300)),
+		_1: {
+			ctor: '::',
+			_0: A2(
+				_user$project$Pages_Pool_Model$Tuber,
+				3,
+				A2(_elm_lang$mouse$Mouse$Position, 600, 600)),
+			_1: {ctor: '[]'}
+		}
+	}
+};
+var _user$project$Pages_Pool_Model$User = F6(
+	function (a, b, c, d, e, f) {
+		return {uniqueID: a, name: b, pic: c, online: d, chattor: e, chattee: f};
+	});
+var _user$project$Pages_Pool_Model$loremUsers = {
+	ctor: '::',
+	_0: A6(_user$project$Pages_Pool_Model$User, 1, 'doug', 'https://randomuser.me/api/portraits/men/1.jpg', true, true, true),
+	_1: {
+		ctor: '::',
+		_0: A6(_user$project$Pages_Pool_Model$User, 2, 'lillith', 'https://randomuser.me/api/portraits/men/2.jpg', true, true, true),
+		_1: {
+			ctor: '::',
+			_0: A6(_user$project$Pages_Pool_Model$User, 3, 'kyle', 'https://randomuser.me/api/portraits/men/3.jpg', true, true, true),
+			_1: {
+				ctor: '::',
+				_0: A6(_user$project$Pages_Pool_Model$User, 4, 'borf', 'https://randomuser.me/api/portraits/men/4.jpg', true, true, true),
+				_1: {ctor: '[]'}
+			}
+		}
+	}
+};
+var _user$project$Pages_Pool_Model$initModel = {position: _user$project$Pages_Pool_Model$initPosition, move: _elm_lang$core$Maybe$Nothing, tube: _user$project$Pages_Pool_Model$initTube, windowSize: _user$project$Pages_Pool_Model$initWindow, tubers: _user$project$Pages_Pool_Model$loremTubers, users: _user$project$Pages_Pool_Model$loremUsers};
+var _user$project$Pages_Pool_Model$init = {ctor: '_Tuple2', _0: _user$project$Pages_Pool_Model$initModel, _1: _user$project$Pages_Pool_Model$initCmd};
+
+var _user$project$Types$initClient = {textAreaHeight: 10};
 var _user$project$Types$Model = F8(
 	function (a, b, c, d, e, f, g, h) {
 		return {route: a, chat: b, chats: c, user: d, events: e, pool: f, client: g, createEvent: h};
@@ -13188,89 +13349,9 @@ var _user$project$Types$Page = F3(
 	function (a, b, c) {
 		return {name: a, icon: b, route: c};
 	});
-var _user$project$Types$Chat = F4(
-	function (a, b, c, d) {
-		return {uid: a, input: b, messages: c, userAvi: d};
-	});
-var _user$project$Types$User = F3(
-	function (a, b, c) {
-		return {avi: a, name: b, traits: c};
-	});
-var _user$project$Types$Trait = F3(
-	function (a, b, c) {
-		return {name: a, from: b, datetime: c};
-	});
-var _user$project$Types$Events = F2(
-	function (a, b) {
-		return {seatgeek: a, currentDatetime: b};
-	});
 var _user$project$Types$Client = function (a) {
 	return {textAreaHeight: a};
 };
-var _user$project$Types$Pool = F6(
-	function (a, b, c, d, e, f) {
-		return {position: a, move: b, tube: c, windowSize: d, tubers: e, users: f};
-	});
-var _user$project$Types$Move = F2(
-	function (a, b) {
-		return {start: a, current: b};
-	});
-var _user$project$Types$Tube = F4(
-	function (a, b, c, d) {
-		return {diameter: a, ring: b, spacing: c, pop: d};
-	});
-var _user$project$Types$Ring = F2(
-	function (a, b) {
-		return {width: a, padding: b};
-	});
-var _user$project$Types$Tuber = F2(
-	function (a, b) {
-		return {uniqueID: a, offset: b};
-	});
-var _user$project$Types$loremTubers = {
-	ctor: '::',
-	_0: A2(
-		_user$project$Types$Tuber,
-		1,
-		A2(_elm_lang$mouse$Mouse$Position, 0, 0)),
-	_1: {
-		ctor: '::',
-		_0: A2(
-			_user$project$Types$Tuber,
-			2,
-			A2(_elm_lang$mouse$Mouse$Position, 300, 300)),
-		_1: {
-			ctor: '::',
-			_0: A2(
-				_user$project$Types$Tuber,
-				3,
-				A2(_elm_lang$mouse$Mouse$Position, 600, 600)),
-			_1: {ctor: '[]'}
-		}
-	}
-};
-var _user$project$Types$User = F6(
-	function (a, b, c, d, e, f) {
-		return {uniqueID: a, name: b, pic: c, online: d, chattor: e, chattee: f};
-	});
-var _user$project$Types$loremUsers = {
-	ctor: '::',
-	_0: A6(_user$project$Types$User, 1, 'doug', 'https://randomuser.me/api/portraits/men/1.jpg', true, true, true),
-	_1: {
-		ctor: '::',
-		_0: A6(_user$project$Types$User, 2, 'lillith', 'https://randomuser.me/api/portraits/men/2.jpg', true, true, true),
-		_1: {
-			ctor: '::',
-			_0: A6(_user$project$Types$User, 3, 'kyle', 'https://randomuser.me/api/portraits/men/3.jpg', true, true, true),
-			_1: {
-				ctor: '::',
-				_0: A6(_user$project$Types$User, 4, 'borf', 'https://randomuser.me/api/portraits/men/4.jpg', true, true, true),
-				_1: {ctor: '[]'}
-			}
-		}
-	}
-};
-var _user$project$Types$initPool = {position: _user$project$Types$initPosition, move: _elm_lang$core$Maybe$Nothing, tube: _user$project$Types$initTube, windowSize: _user$project$Types$initWindow, tubers: _user$project$Types$loremTubers, users: _user$project$Types$loremUsers};
 var _user$project$Types$GoPool = {ctor: 'GoPool'};
 var _user$project$Types$GoCreateEvent = {ctor: 'GoCreateEvent'};
 var _user$project$Types$GoEvents = function (a) {
@@ -13283,28 +13364,28 @@ var _user$project$Types$GoChats = function (a) {
 var _user$project$Types$initModel = A8(
 	_user$project$Types$Model,
 	_user$project$Types$GoChats(_elm_lang$core$Maybe$Nothing),
-	_user$project$Types$initChat,
+	_user$project$Pages_Chat_Model$initModel,
 	{
 		ctor: '::',
-		_0: _user$project$Types$initChat,
+		_0: _user$project$Pages_Chat_Model$initModel,
 		_1: {
 			ctor: '::',
-			_0: _user$project$Types$initChat,
+			_0: _user$project$Pages_Chat_Model$initModel,
 			_1: {
 				ctor: '::',
-				_0: _user$project$Types$initChat,
+				_0: _user$project$Pages_Chat_Model$initModel,
 				_1: {
 					ctor: '::',
-					_0: _user$project$Types$initChat,
+					_0: _user$project$Pages_Chat_Model$initModel,
 					_1: {
 						ctor: '::',
-						_0: _user$project$Types$initChat,
+						_0: _user$project$Pages_Chat_Model$initModel,
 						_1: {
 							ctor: '::',
-							_0: _user$project$Types$initChat,
+							_0: _user$project$Pages_Chat_Model$initModel,
 							_1: {
 								ctor: '::',
-								_0: _user$project$Types$initChat,
+								_0: _user$project$Pages_Chat_Model$initModel,
 								_1: {ctor: '[]'}
 							}
 						}
@@ -13313,11 +13394,11 @@ var _user$project$Types$initModel = A8(
 			}
 		}
 	},
-	_user$project$Types$initUser,
-	_user$project$Types$initEvents,
-	_user$project$Types$initPool,
+	_user$project$Pages_User_Model$initModel,
+	_user$project$Pages_Events_Model$initModel,
+	_user$project$Pages_Pool_Model$initModel,
 	_user$project$Types$initClient,
-	_elm_lang$core$Maybe$Nothing);
+	_user$project$Pages_CreateEvent_Model$initModel);
 var _user$project$Types$InitialWindow = function (a) {
 	return {ctor: 'InitialWindow', _0: a};
 };
@@ -13351,9 +13432,17 @@ var _user$project$Types$ViewChat = function (a) {
 var _user$project$Types$NewMessage = function (a) {
 	return {ctor: 'NewMessage', _0: a};
 };
-var _user$project$Types$SendChatMessage = {ctor: 'SendChatMessage'};
 var _user$project$Types$Input = function (a) {
 	return {ctor: 'Input', _0: a};
+};
+var _user$project$Types$ChatMsg = function (a) {
+	return {ctor: 'ChatMsg', _0: a};
+};
+var _user$project$Types$UserMsg = function (a) {
+	return {ctor: 'UserMsg', _0: a};
+};
+var _user$project$Types$CreateEventMsg = function (a) {
+	return {ctor: 'CreateEventMsg', _0: a};
 };
 var _user$project$Types$ChangeTo = function (a) {
 	return {ctor: 'ChangeTo', _0: a};
@@ -13582,7 +13671,7 @@ var _user$project$Nav$bar = function () {
 		});
 }();
 
-var _user$project$Pages_User$stringToEmoji = function (string) {
+var _user$project$Pages_User_View$stringToEmoji = function (string) {
 	var _p0 = string;
 	switch (_p0) {
 		case 'night owl':
@@ -13597,7 +13686,7 @@ var _user$project$Pages_User$stringToEmoji = function (string) {
 			return '🤷';
 	}
 };
-var _user$project$Pages_User$traitsIcons = function (traits) {
+var _user$project$Pages_User_View$traitsIcons = function (traits) {
 	var toIcon = function (x) {
 		return A2(
 			_elm_lang$html$Html$li,
@@ -13618,7 +13707,7 @@ var _user$project$Pages_User$traitsIcons = function (traits) {
 					{
 						ctor: '::',
 						_0: _elm_lang$html$Html$text(
-							_user$project$Pages_User$stringToEmoji(x.name)),
+							_user$project$Pages_User_View$stringToEmoji(x.name)),
 						_1: {ctor: '[]'}
 					}),
 				_1: {
@@ -13653,7 +13742,7 @@ var _user$project$Pages_User$traitsIcons = function (traits) {
 		},
 		A2(_elm_lang$core$List$map, toIcon, traits));
 };
-var _user$project$Pages_User$userToolsView = function () {
+var _user$project$Pages_User_View$userToolsView = function () {
 	var icon = function (x) {
 		return A2(
 			_elm_lang$html$Html$div,
@@ -13714,7 +13803,7 @@ var _user$project$Pages_User$userToolsView = function () {
 				}
 			}));
 }();
-var _user$project$Pages_User$pastEvents = function (model) {
+var _user$project$Pages_User_View$pastEvents = function (model) {
 	var eventCard = function (_p1) {
 		var _p2 = _p1;
 		return A2(
@@ -13855,7 +13944,7 @@ var _user$project$Pages_User$pastEvents = function (model) {
 			}
 		});
 };
-var _user$project$Pages_User$userBio = function (model) {
+var _user$project$Pages_User_View$userBio = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
 		{
@@ -13895,7 +13984,7 @@ var _user$project$Pages_User$userBio = function (model) {
 			}
 		});
 };
-var _user$project$Pages_User$userAvi = function (avis) {
+var _user$project$Pages_User_View$userAvi = function (avis) {
 	return A2(
 		_elm_lang$html$Html$div,
 		{
@@ -13924,7 +14013,7 @@ var _user$project$Pages_User$userAvi = function (avis) {
 			_1: {ctor: '[]'}
 		});
 };
-var _user$project$Pages_User$view = function (x) {
+var _user$project$Pages_User_View$view = function (x) {
 	var model = x.user;
 	return A2(
 		_elm_lang$html$Html$section,
@@ -13944,7 +14033,7 @@ var _user$project$Pages_User$view = function (x) {
 				},
 				{
 					ctor: '::',
-					_0: _user$project$Pages_User$userAvi(model.avi),
+					_0: _user$project$Pages_User_View$userAvi(model.avi),
 					_1: {
 						ctor: '::',
 						_0: A2(
@@ -13982,21 +14071,21 @@ var _user$project$Pages_User$view = function (x) {
 							},
 							{
 								ctor: '::',
-								_0: _user$project$Pages_User$userToolsView,
+								_0: _user$project$Pages_User_View$userToolsView,
 								_1: {ctor: '[]'}
 							}),
 						_1: {
 							ctor: '::',
-							_0: _user$project$Pages_User$userBio(model),
+							_0: _user$project$Pages_User_View$userBio(model),
 							_1: {
 								ctor: '::',
-								_0: _user$project$Pages_User$traitsIcons(model.traits),
+								_0: _user$project$Pages_User_View$traitsIcons(model.traits),
 								_1: {
 									ctor: '::',
-									_0: _user$project$Pages_User$pastEvents(model),
+									_0: _user$project$Pages_User_View$pastEvents(model),
 									_1: {
 										ctor: '::',
-										_0: _user$project$Pages_User$traitsIcons(model.traits),
+										_0: _user$project$Pages_User_View$traitsIcons(model.traits),
 										_1: {ctor: '[]'}
 									}
 								}
@@ -14056,7 +14145,7 @@ var _user$project$TextArea$auto = function (client) {
 	};
 };
 
-var _user$project$Pages_Chat$nameBar = function (chat) {
+var _user$project$Pages_Chat_View$nameBar = function (chat) {
 	return A2(
 		_elm_lang$html$Html$div,
 		{
@@ -14160,7 +14249,7 @@ var _user$project$Pages_Chat$nameBar = function (chat) {
 			}
 		});
 };
-var _user$project$Pages_Chat$messageBar = F2(
+var _user$project$Pages_Chat_View$messageBar = F2(
 	function (chat, client) {
 		return A2(
 			_elm_lang$html$Html$div,
@@ -14219,7 +14308,7 @@ var _user$project$Pages_Chat$messageBar = F2(
 				}
 			});
 	});
-var _user$project$Pages_Chat$toast = A2(
+var _user$project$Pages_Chat_View$toast = A2(
 	_elm_lang$html$Html$div,
 	{
 		ctor: '::',
@@ -14242,7 +14331,7 @@ var _user$project$Pages_Chat$toast = A2(
 			}),
 		_1: {ctor: '[]'}
 	});
-var _user$project$Pages_Chat$sent = A2(
+var _user$project$Pages_Chat_View$sent = A2(
 	_elm_lang$html$Html$div,
 	{
 		ctor: '::',
@@ -14265,7 +14354,7 @@ var _user$project$Pages_Chat$sent = A2(
 			}),
 		_1: {ctor: '[]'}
 	});
-var _user$project$Pages_Chat$recieved = A2(
+var _user$project$Pages_Chat_View$recieved = A2(
 	_elm_lang$html$Html$div,
 	{
 		ctor: '::',
@@ -14288,7 +14377,7 @@ var _user$project$Pages_Chat$recieved = A2(
 			}),
 		_1: {ctor: '[]'}
 	});
-var _user$project$Pages_Chat$view = function (x) {
+var _user$project$Pages_Chat_View$view = function (x) {
 	var client = x.client;
 	var chat = x.chat;
 	return A2(
@@ -14300,7 +14389,7 @@ var _user$project$Pages_Chat$view = function (x) {
 		},
 		{
 			ctor: '::',
-			_0: _user$project$Pages_Chat$nameBar(chat),
+			_0: _user$project$Pages_Chat_View$nameBar(chat),
 			_1: {
 				ctor: '::',
 				_0: A2(
@@ -14312,61 +14401,61 @@ var _user$project$Pages_Chat$view = function (x) {
 					},
 					{
 						ctor: '::',
-						_0: _user$project$Pages_Chat$toast,
+						_0: _user$project$Pages_Chat_View$toast,
 						_1: {
 							ctor: '::',
-							_0: _user$project$Pages_Chat$sent,
+							_0: _user$project$Pages_Chat_View$sent,
 							_1: {
 								ctor: '::',
-								_0: _user$project$Pages_Chat$recieved,
+								_0: _user$project$Pages_Chat_View$recieved,
 								_1: {
 									ctor: '::',
-									_0: _user$project$Pages_Chat$sent,
+									_0: _user$project$Pages_Chat_View$sent,
 									_1: {
 										ctor: '::',
-										_0: _user$project$Pages_Chat$recieved,
+										_0: _user$project$Pages_Chat_View$recieved,
 										_1: {
 											ctor: '::',
-											_0: _user$project$Pages_Chat$sent,
+											_0: _user$project$Pages_Chat_View$sent,
 											_1: {
 												ctor: '::',
-												_0: _user$project$Pages_Chat$recieved,
+												_0: _user$project$Pages_Chat_View$recieved,
 												_1: {
 													ctor: '::',
-													_0: _user$project$Pages_Chat$sent,
+													_0: _user$project$Pages_Chat_View$sent,
 													_1: {
 														ctor: '::',
-														_0: _user$project$Pages_Chat$recieved,
+														_0: _user$project$Pages_Chat_View$recieved,
 														_1: {
 															ctor: '::',
-															_0: _user$project$Pages_Chat$sent,
+															_0: _user$project$Pages_Chat_View$sent,
 															_1: {
 																ctor: '::',
-																_0: _user$project$Pages_Chat$recieved,
+																_0: _user$project$Pages_Chat_View$recieved,
 																_1: {
 																	ctor: '::',
-																	_0: _user$project$Pages_Chat$sent,
+																	_0: _user$project$Pages_Chat_View$sent,
 																	_1: {
 																		ctor: '::',
-																		_0: _user$project$Pages_Chat$recieved,
+																		_0: _user$project$Pages_Chat_View$recieved,
 																		_1: {
 																			ctor: '::',
-																			_0: _user$project$Pages_Chat$sent,
+																			_0: _user$project$Pages_Chat_View$sent,
 																			_1: {
 																				ctor: '::',
-																				_0: _user$project$Pages_Chat$recieved,
+																				_0: _user$project$Pages_Chat_View$recieved,
 																				_1: {
 																					ctor: '::',
-																					_0: _user$project$Pages_Chat$sent,
+																					_0: _user$project$Pages_Chat_View$sent,
 																					_1: {
 																						ctor: '::',
-																						_0: _user$project$Pages_Chat$recieved,
+																						_0: _user$project$Pages_Chat_View$recieved,
 																						_1: {
 																							ctor: '::',
-																							_0: _user$project$Pages_Chat$sent,
+																							_0: _user$project$Pages_Chat_View$sent,
 																							_1: {
 																								ctor: '::',
-																								_0: _user$project$Pages_Chat$recieved,
+																								_0: _user$project$Pages_Chat_View$recieved,
 																								_1: {ctor: '[]'}
 																							}
 																						}
@@ -14389,13 +14478,13 @@ var _user$project$Pages_Chat$view = function (x) {
 					}),
 				_1: {
 					ctor: '::',
-					_0: A2(_user$project$Pages_Chat$messageBar, chat, client),
+					_0: A2(_user$project$Pages_Chat_View$messageBar, chat, client),
 					_1: {ctor: '[]'}
 				}
 			}
 		});
 };
-var _user$project$Pages_Chat$viewMessage = function (msg) {
+var _user$project$Pages_Chat_View$viewMessage = function (msg) {
 	return A2(
 		_elm_lang$html$Html$div,
 		{
@@ -14410,7 +14499,7 @@ var _user$project$Pages_Chat$viewMessage = function (msg) {
 		});
 };
 
-var _user$project$Pages_Chats$nameBar = function (chat) {
+var _user$project$Pages_Chats_View$nameBar = function (chat) {
 	return A2(
 		_elm_lang$html$Html$div,
 		{
@@ -14557,7 +14646,7 @@ var _user$project$Pages_Chats$nameBar = function (chat) {
 			}
 		});
 };
-var _user$project$Pages_Chats$view = function (model) {
+var _user$project$Pages_Chats_View$view = function (model) {
 	var mobileHide = function () {
 		var _p0 = model.route;
 		if ((_p0.ctor === 'GoChats') && (_p0._0.ctor === 'Just')) {
@@ -14588,7 +14677,7 @@ var _user$project$Pages_Chats$view = function (model) {
 						_0: _elm_lang$html$Html_Attributes$class('flex-shrink-1 flex-grow-0 bg-black-70 overflow-auto'),
 						_1: {ctor: '[]'}
 					},
-					A2(_elm_lang$core$List$map, _user$project$Pages_Chats$nameBar, chats)),
+					A2(_elm_lang$core$List$map, _user$project$Pages_Chats_View$nameBar, chats)),
 				_1: {ctor: '[]'}
 			}
 		});
@@ -15105,8 +15194,8 @@ var _user$project$Moment$maybeEventDate = function (date) {
 		_elm_lang$core$Date$fromString(date));
 };
 
-var _user$project$Pages_Events$subscriptions = _elm_lang$core$Platform_Sub$none;
-var _user$project$Pages_Events$maybeImage = function (performers) {
+var _user$project$Pages_Events_View$subscriptions = _elm_lang$core$Platform_Sub$none;
+var _user$project$Pages_Events_View$maybeImage = function (performers) {
 	var _p0 = _elm_lang$core$List$head(performers);
 	if (_p0.ctor === 'Just') {
 		return _p0._0.image;
@@ -15114,11 +15203,11 @@ var _user$project$Pages_Events$maybeImage = function (performers) {
 		return _elm_lang$core$Maybe$Nothing;
 	}
 };
-var _user$project$Pages_Events$eventListView = F2(
+var _user$project$Pages_Events_View$eventListView = F2(
 	function (maybeNow, event) {
 		var cardImage = function () {
 			var seed = _elm_lang$core$String$length(event.title) * _elm_lang$core$String$length(event.url);
-			var _p1 = _user$project$Pages_Events$maybeImage(event.performers);
+			var _p1 = _user$project$Pages_Events_View$maybeImage(event.performers);
 			if (_p1.ctor === 'Just') {
 				return A2(
 					_elm_lang$html$Html$div,
@@ -15320,7 +15409,7 @@ var _user$project$Pages_Events$eventListView = F2(
 				}
 			});
 	});
-var _user$project$Pages_Events$view = function (model) {
+var _user$project$Pages_Events_View$view = function (model) {
 	var mobileHide = function () {
 		var _p4 = model.route;
 		if ((_p4.ctor === 'GoEvents') && (_p4._0.ctor === 'Just')) {
@@ -15381,7 +15470,7 @@ var _user$project$Pages_Events$view = function (model) {
 				},
 				A2(
 					_elm_lang$core$List$map,
-					_user$project$Pages_Events$eventListView(events.currentDatetime),
+					_user$project$Pages_Events_View$eventListView(events.currentDatetime),
 					_p5._0.events));
 		}
 	}();
@@ -15429,16 +15518,16 @@ var _user$project$Pages_Events$view = function (model) {
 			}
 		});
 };
-var _user$project$Pages_Events$askQuery = function (query) {
+var _user$project$Pages_Events_View$askQuery = function (query) {
 	var url = _user$project$SeatGeek_Query$composeRequest(query);
 	var request = A2(_elm_lang$http$Http$get, url, _user$project$SeatGeek_Decode$decodeReply);
 	return A2(_elm_lang$http$Http$send, _user$project$Types$GetReply, request);
 };
 
-var _user$project$Pages_Event$subscriptions = function (model) {
+var _user$project$Pages_Event_View$subscriptions = function (model) {
 	return _elm_lang$core$Platform_Sub$none;
 };
-var _user$project$Pages_Event$stringToEmoji = function (string) {
+var _user$project$Pages_Event_View$stringToEmoji = function (string) {
 	var _p0 = string;
 	switch (_p0) {
 		case 'concert':
@@ -15501,7 +15590,7 @@ var _user$project$Pages_Event$stringToEmoji = function (string) {
 			return '🤷';
 	}
 };
-var _user$project$Pages_Event$maybeImage = function (performers) {
+var _user$project$Pages_Event_View$maybeImage = function (performers) {
 	var _p1 = _elm_lang$core$List$head(performers);
 	if (_p1.ctor === 'Just') {
 		return _p1._0.image;
@@ -15509,9 +15598,9 @@ var _user$project$Pages_Event$maybeImage = function (performers) {
 		return _elm_lang$core$Maybe$Nothing;
 	}
 };
-var _user$project$Pages_Event$eventBanner = function (event) {
+var _user$project$Pages_Event_View$eventBanner = function (event) {
 	var heroImg = function () {
-		var _p2 = _user$project$Pages_Event$maybeImage(event.performers);
+		var _p2 = _user$project$Pages_Event_View$maybeImage(event.performers);
 		if (_p2.ctor === 'Nothing') {
 			var seed = _elm_lang$core$String$length(event.title) * _elm_lang$core$String$length(event.url);
 			return _elm_lang$html$Html_Attributes$class(
@@ -15600,7 +15689,7 @@ var _user$project$Pages_Event$eventBanner = function (event) {
 			_1: {ctor: '[]'}
 		});
 };
-var _user$project$Pages_Event$eventEmojis = function (event) {
+var _user$project$Pages_Event_View$eventEmojis = function (event) {
 	var toIcon = function (x) {
 		return A2(
 			_elm_lang$html$Html$li,
@@ -15621,7 +15710,7 @@ var _user$project$Pages_Event$eventEmojis = function (event) {
 					{
 						ctor: '::',
 						_0: _elm_lang$html$Html$text(
-							_user$project$Pages_Event$stringToEmoji(x.name)),
+							_user$project$Pages_Event_View$stringToEmoji(x.name)),
 						_1: {ctor: '[]'}
 					}),
 				_1: {
@@ -15656,7 +15745,7 @@ var _user$project$Pages_Event$eventEmojis = function (event) {
 		},
 		A2(_elm_lang$core$List$map, toIcon, event.taxonomies));
 };
-var _user$project$Pages_Event$progressBar = function (num) {
+var _user$project$Pages_Event_View$progressBar = function (num) {
 	var percent = num * 100;
 	var _p3 = percent;
 	if (_p3 === 0.0) {
@@ -15699,7 +15788,7 @@ var _user$project$Pages_Event$progressBar = function (num) {
 			});
 	}
 };
-var _user$project$Pages_Event$eventPool = A2(
+var _user$project$Pages_Event_View$eventPool = A2(
 	_elm_lang$html$Html$div,
 	{
 		ctor: '::',
@@ -15803,7 +15892,7 @@ var _user$project$Pages_Event$eventPool = A2(
 			}
 		}
 	});
-var _user$project$Pages_Event$yetToBeAdded = A2(
+var _user$project$Pages_Event_View$yetToBeAdded = A2(
 	_elm_lang$html$Html$div,
 	{
 		ctor: '::',
@@ -15815,7 +15904,7 @@ var _user$project$Pages_Event$yetToBeAdded = A2(
 		_0: _elm_lang$html$Html$text('I still need to add genres in the emojis.\n                I need to have photo galleries for extra photos,\n                other events at the venue, other venues the artist will be at,\n                spotify, Last.fm, and google maps integration. I also need to make\n                events that do not have defined times do not display a time.\n\n                Sed ut perspiciatis, unde omnis iste natus error sit voluptatem\n                accusantium doloremque laudantium, totam rem aperiam eaque ipsa,\n                quae ab illo inventore veritatis et quasi architecto beatae vitae\n                dicta sunt, explicabo. Nemo enim ipsam voluptatem, quia voluptas sit,\n                aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos,\n                qui ratione voluptatem sequi nesciunt, neque porro quisquam est.\n                qui dolorem ipsum, quia dolor sit amet consectetur adipisci.\n                velit, sed quia non numquam [do] eius modi tempora inci[di]dunt,\n                ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima\n                veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam,\n                nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure\n                reprehenderit, qui in ea voluptate velit esse, quam nihil molestiae\n                consequatur, vel illum, qui dolorem eum fugiat, quo voluptas nulla pariatur?\n                '),
 		_1: {ctor: '[]'}
 	});
-var _user$project$Pages_Event$eventPopularity = function (event) {
+var _user$project$Pages_Event_View$eventPopularity = function (event) {
 	var _p4 = event.popularity;
 	if (_p4 === 0.0) {
 		return _elm_lang$html$Html$text('');
@@ -15852,10 +15941,10 @@ var _user$project$Pages_Event$eventPopularity = function (event) {
 						},
 						{
 							ctor: '::',
-							_0: _user$project$Pages_Event$progressBar(event.popularity),
+							_0: _user$project$Pages_Event_View$progressBar(event.popularity),
 							_1: {
 								ctor: '::',
-								_0: _user$project$Pages_Event$progressBar(event.score),
+								_0: _user$project$Pages_Event_View$progressBar(event.score),
 								_1: {ctor: '[]'}
 							}
 						}),
@@ -15864,7 +15953,7 @@ var _user$project$Pages_Event$eventPopularity = function (event) {
 			});
 	}
 };
-var _user$project$Pages_Event$eventTickets = function (event) {
+var _user$project$Pages_Event_View$eventTickets = function (event) {
 	var emptyTickets = A2(
 		_elm_lang$core$List$all,
 		function (x) {
@@ -15951,7 +16040,7 @@ var _user$project$Pages_Event$eventTickets = function (event) {
 		return _elm_lang$html$Html$text('');
 	}
 };
-var _user$project$Pages_Event$eventTime = F2(
+var _user$project$Pages_Event_View$eventTime = F2(
 	function (event, maybeNow) {
 		var eventDateView = function () {
 			var _p6 = _user$project$Moment$maybeEventDate(event.datetime_local);
@@ -16017,12 +16106,12 @@ var _user$project$Pages_Event$eventTime = F2(
 					eventDateView),
 				_1: {
 					ctor: '::',
-					_0: _user$project$Pages_Event$eventTickets(event),
+					_0: _user$project$Pages_Event_View$eventTickets(event),
 					_1: {ctor: '[]'}
 				}
 			});
 	});
-var _user$project$Pages_Event$eventTitle = function (event) {
+var _user$project$Pages_Event_View$eventTitle = function (event) {
 	var icon = function (x) {
 		return A2(
 			_elm_lang$html$Html$div,
@@ -16080,7 +16169,7 @@ var _user$project$Pages_Event$eventTitle = function (event) {
 			}
 		});
 };
-var _user$project$Pages_Event$view = F2(
+var _user$project$Pages_Event_View$view = F2(
 	function (event, now) {
 		return A2(
 			_elm_lang$html$Html$section,
@@ -16091,25 +16180,25 @@ var _user$project$Pages_Event$view = F2(
 			},
 			{
 				ctor: '::',
-				_0: _user$project$Pages_Event$eventBanner(event),
+				_0: _user$project$Pages_Event_View$eventBanner(event),
 				_1: {
 					ctor: '::',
-					_0: _user$project$Pages_Event$eventTitle(event),
+					_0: _user$project$Pages_Event_View$eventTitle(event),
 					_1: {
 						ctor: '::',
-						_0: _user$project$Pages_Event$eventEmojis(event),
+						_0: _user$project$Pages_Event_View$eventEmojis(event),
 						_1: {
 							ctor: '::',
-							_0: A2(_user$project$Pages_Event$eventTime, event, now),
+							_0: A2(_user$project$Pages_Event_View$eventTime, event, now),
 							_1: {
 								ctor: '::',
-								_0: _user$project$Pages_Event$eventPool,
+								_0: _user$project$Pages_Event_View$eventPool,
 								_1: {
 									ctor: '::',
-									_0: _user$project$Pages_Event$eventPopularity(event),
+									_0: _user$project$Pages_Event_View$eventPopularity(event),
 									_1: {
 										ctor: '::',
-										_0: _user$project$Pages_Event$yetToBeAdded,
+										_0: _user$project$Pages_Event_View$yetToBeAdded,
 										_1: {ctor: '[]'}
 									}
 								}
@@ -16119,17 +16208,17 @@ var _user$project$Pages_Event$view = F2(
 				}
 			});
 	});
-var _user$project$Pages_Event$askQuery = function (query) {
+var _user$project$Pages_Event_View$askQuery = function (query) {
 	var url = _user$project$SeatGeek_Query$composeRequest(query);
 	var request = A2(_elm_lang$http$Http$get, url, _user$project$SeatGeek_Decode$decodeReply);
 	return A2(_elm_lang$http$Http$send, _user$project$Types$GetReply, request);
 };
 
-var _user$project$Pages_Pool$onMouseDown = A2(
+var _user$project$Pages_Pool_View$onMouseDown = A2(
 	_elm_lang$html$Html_Events$on,
 	'mousedown',
 	A2(_elm_lang$core$Json_Decode$map, _user$project$Types$MouseStart, _elm_lang$mouse$Mouse$position));
-var _user$project$Pages_Pool$getPosition = function (model) {
+var _user$project$Pages_Pool_View$getPosition = function (model) {
 	var _p0 = model.move;
 	if (_p0.ctor === 'Nothing') {
 		return model.position;
@@ -16139,16 +16228,16 @@ var _user$project$Pages_Pool$getPosition = function (model) {
 		return A2(_elm_lang$mouse$Mouse$Position, (model.position.x + _p1.x) - _p2.x, (model.position.y + _p1.y) - _p2.y);
 	}
 };
-var _user$project$Pages_Pool$px = function (number) {
+var _user$project$Pages_Pool_View$px = function (number) {
 	return A2(
 		_elm_lang$core$Basics_ops['++'],
 		_elm_lang$core$Basics$toString(number),
 		'px');
 };
-var _user$project$Pages_Pool$tubePop = function (tube) {
-	return A4(_user$project$Types$Tube, tube.pop, tube.ring, tube.spacing, tube.diameter);
+var _user$project$Pages_Pool_View$tubePop = function (tube) {
+	return A4(_user$project$Pages_Pool_Model$Tube, tube.pop, tube.ring, tube.spacing, tube.diameter);
 };
-var _user$project$Pages_Pool$spaceY = function (spacing) {
+var _user$project$Pages_Pool_View$spaceY = function (spacing) {
 	return _elm_lang$core$Basics$round(
 		A2(
 			F2(
@@ -16159,11 +16248,11 @@ var _user$project$Pages_Pool$spaceY = function (spacing) {
 				_elm_lang$core$Basics$degrees(30)),
 			_elm_lang$core$Basics$toFloat(spacing)) / 2);
 };
-var _user$project$Pages_Pool$staggerTubes = F3(
+var _user$project$Pages_Pool_View$staggerTubes = F3(
 	function (x, y, spacing) {
 		var otherRow = A2(
 			_elm_lang$core$Basics_ops['%'],
-			(y / _user$project$Pages_Pool$spaceY(spacing)) | 0,
+			(y / _user$project$Pages_Pool_View$spaceY(spacing)) | 0,
 			2);
 		var _p3 = otherRow;
 		if (_p3 === 1) {
@@ -16172,11 +16261,11 @@ var _user$project$Pages_Pool$staggerTubes = F3(
 			return A2(_elm_lang$mouse$Mouse$Position, x, y);
 		}
 	});
-var _user$project$Pages_Pool$poolSize = F2(
+var _user$project$Pages_Pool_View$poolSize = F2(
 	function (model, windowSize) {
 		var paddedHeight = _elm_lang$core$Basics$toFloat(windowSize.height + model.tube.diameter);
 		var paddedWidth = _elm_lang$core$Basics$toFloat(windowSize.width + model.tube.diameter);
-		var spacingY = _user$project$Pages_Pool$spaceY(model.tube.spacing) * 2;
+		var spacingY = _user$project$Pages_Pool_View$spaceY(model.tube.spacing) * 2;
 		var spacingX = model.tube.spacing;
 		return A2(
 			_elm_lang$window$Window$Size,
@@ -16185,7 +16274,7 @@ var _user$project$Pages_Pool$poolSize = F2(
 			_elm_lang$core$Basics$ceiling(
 				paddedHeight / _elm_lang$core$Basics$toFloat(spacingY)) * spacingY);
 	});
-var _user$project$Pages_Pool$determineTubers = F2(
+var _user$project$Pages_Pool_View$determineTubers = F2(
 	function (model, windowSize) {
 		var poolCols = A2(
 			_elm_lang$core$List$range,
@@ -16193,24 +16282,24 @@ var _user$project$Pages_Pool$determineTubers = F2(
 			(function (_) {
 				return _.height;
 			}(
-				A2(_user$project$Pages_Pool$poolSize, model, windowSize)) / _user$project$Pages_Pool$spaceY(model.tube.spacing)) | 0);
+				A2(_user$project$Pages_Pool_View$poolSize, model, windowSize)) / _user$project$Pages_Pool_View$spaceY(model.tube.spacing)) | 0);
 		var poolRows = A2(
 			_elm_lang$core$List$range,
 			0,
 			(function (_) {
 				return _.width;
 			}(
-				A2(_user$project$Pages_Pool$poolSize, model, windowSize)) / model.tube.spacing) | 0);
+				A2(_user$project$Pages_Pool_View$poolSize, model, windowSize)) / model.tube.spacing) | 0);
 		return A2(
 			_elm_lang$core$List$indexedMap,
-			_user$project$Types$Tuber,
+			_user$project$Pages_Pool_Model$Tuber,
 			A2(
 				_elm_lang$core$List$concatMap,
 				function (x) {
 					return A2(
 						_elm_lang$core$List$map,
 						function (y) {
-							return A3(_user$project$Pages_Pool$staggerTubes, x, y, model.tube.spacing);
+							return A3(_user$project$Pages_Pool_View$staggerTubes, x, y, model.tube.spacing);
 						},
 						A2(
 							_elm_lang$core$List$map,
@@ -16218,7 +16307,7 @@ var _user$project$Pages_Pool$determineTubers = F2(
 								function (x, y) {
 									return x * y;
 								})(
-								_user$project$Pages_Pool$spaceY(model.tube.spacing)),
+								_user$project$Pages_Pool_View$spaceY(model.tube.spacing)),
 							poolCols));
 				},
 				A2(
@@ -16229,12 +16318,12 @@ var _user$project$Pages_Pool$determineTubers = F2(
 						})(model.tube.spacing),
 					poolRows)));
 	});
-var _user$project$Pages_Pool_ops = _user$project$Pages_Pool_ops || {};
-_user$project$Pages_Pool_ops['=>'] = F2(
+var _user$project$Pages_Pool_View_ops = _user$project$Pages_Pool_View_ops || {};
+_user$project$Pages_Pool_View_ops['=>'] = F2(
 	function (v0, v1) {
 		return {ctor: '_Tuple2', _0: v0, _1: v1};
 	});
-var _user$project$Pages_Pool$tubeUser = function (user) {
+var _user$project$Pages_Pool_View$tubeUser = function (user) {
 	return A2(
 		_elm_lang$html$Html$div,
 		{
@@ -16242,16 +16331,16 @@ var _user$project$Pages_Pool$tubeUser = function (user) {
 			_0: _elm_lang$html$Html_Attributes$style(
 				{
 					ctor: '::',
-					_0: A2(_user$project$Pages_Pool_ops['=>'], 'background', 'url(\'https://randomuser.me/api/portraits/men/4.jpg\')'),
+					_0: A2(_user$project$Pages_Pool_View_ops['=>'], 'background', 'url(\'https://randomuser.me/api/portraits/men/4.jpg\')'),
 					_1: {
 						ctor: '::',
-						_0: A2(_user$project$Pages_Pool_ops['=>'], 'height', '100%'),
+						_0: A2(_user$project$Pages_Pool_View_ops['=>'], 'height', '100%'),
 						_1: {
 							ctor: '::',
-							_0: A2(_user$project$Pages_Pool_ops['=>'], 'width', '100%'),
+							_0: A2(_user$project$Pages_Pool_View_ops['=>'], 'width', '100%'),
 							_1: {
 								ctor: '::',
-								_0: A2(_user$project$Pages_Pool_ops['=>'], 'background-size', 'cover'),
+								_0: A2(_user$project$Pages_Pool_View_ops['=>'], 'background-size', 'cover'),
 								_1: {ctor: '[]'}
 							}
 						}
@@ -16261,7 +16350,7 @@ var _user$project$Pages_Pool$tubeUser = function (user) {
 		},
 		{ctor: '[]'});
 };
-var _user$project$Pages_Pool$modelTube = F2(
+var _user$project$Pages_Pool_View$modelTube = F2(
 	function (model, tuber) {
 		var y = A2(
 			F2(
@@ -16271,11 +16360,11 @@ var _user$project$Pages_Pool$modelTube = F2(
 			tuber.offset.y + function (_) {
 				return _.y;
 			}(
-				_user$project$Pages_Pool$getPosition(model)),
+				_user$project$Pages_Pool_View$getPosition(model)),
 			function (_) {
 				return _.height;
 			}(
-				A2(_user$project$Pages_Pool$poolSize, model, model.windowSize))) - ((model.tube.diameter / 2) | 0);
+				A2(_user$project$Pages_Pool_View$poolSize, model, model.windowSize))) - ((model.tube.diameter / 2) | 0);
 		var x = A2(
 			F2(
 				function (x, y) {
@@ -16284,11 +16373,11 @@ var _user$project$Pages_Pool$modelTube = F2(
 			tuber.offset.x + function (_) {
 				return _.x;
 			}(
-				_user$project$Pages_Pool$getPosition(model)),
+				_user$project$Pages_Pool_View$getPosition(model)),
 			function (_) {
 				return _.width;
 			}(
-				A2(_user$project$Pages_Pool$poolSize, model, model.windowSize))) - ((model.tube.diameter / 2) | 0);
+				A2(_user$project$Pages_Pool_View$poolSize, model, model.windowSize))) - ((model.tube.diameter / 2) | 0);
 		return A2(
 			_elm_lang$html$Html$div,
 			{
@@ -16299,52 +16388,52 @@ var _user$project$Pages_Pool$modelTube = F2(
 					_0: _elm_lang$html$Html_Attributes$style(
 						{
 							ctor: '::',
-							_0: A2(_user$project$Pages_Pool_ops['=>'], 'padding', '5px'),
+							_0: A2(_user$project$Pages_Pool_View_ops['=>'], 'padding', '5px'),
 							_1: {
 								ctor: '::',
-								_0: A2(_user$project$Pages_Pool_ops['=>'], 'box-sizing', 'border-box'),
+								_0: A2(_user$project$Pages_Pool_View_ops['=>'], 'box-sizing', 'border-box'),
 								_1: {
 									ctor: '::',
-									_0: A2(_user$project$Pages_Pool_ops['=>'], 'border', '2px solid green'),
+									_0: A2(_user$project$Pages_Pool_View_ops['=>'], 'border', '2px solid green'),
 									_1: {
 										ctor: '::',
 										_0: A2(
-											_user$project$Pages_Pool_ops['=>'],
+											_user$project$Pages_Pool_View_ops['=>'],
 											'transform',
 											A2(
 												_elm_lang$core$Basics_ops['++'],
 												'translate(calc(-50% + ',
 												A2(
 													_elm_lang$core$Basics_ops['++'],
-													_user$project$Pages_Pool$px(x),
+													_user$project$Pages_Pool_View$px(x),
 													A2(
 														_elm_lang$core$Basics_ops['++'],
 														'), calc(-50% + ',
 														A2(
 															_elm_lang$core$Basics_ops['++'],
-															_user$project$Pages_Pool$px(y),
+															_user$project$Pages_Pool_View$px(y),
 															')'))))),
 										_1: {
 											ctor: '::',
-											_0: A2(_user$project$Pages_Pool_ops['=>'], 'border-radius', '50%'),
+											_0: A2(_user$project$Pages_Pool_View_ops['=>'], 'border-radius', '50%'),
 											_1: {
 												ctor: '::',
-												_0: A2(_user$project$Pages_Pool_ops['=>'], 'position', 'absolute'),
+												_0: A2(_user$project$Pages_Pool_View_ops['=>'], 'position', 'absolute'),
 												_1: {
 													ctor: '::',
-													_0: A2(_user$project$Pages_Pool_ops['=>'], 'overflow', 'hidden'),
+													_0: A2(_user$project$Pages_Pool_View_ops['=>'], 'overflow', 'hidden'),
 													_1: {
 														ctor: '::',
 														_0: A2(
-															_user$project$Pages_Pool_ops['=>'],
+															_user$project$Pages_Pool_View_ops['=>'],
 															'width',
-															_user$project$Pages_Pool$px(model.tube.diameter)),
+															_user$project$Pages_Pool_View$px(model.tube.diameter)),
 														_1: {
 															ctor: '::',
 															_0: A2(
-																_user$project$Pages_Pool_ops['=>'],
+																_user$project$Pages_Pool_View_ops['=>'],
 																'height',
-																_user$project$Pages_Pool$px(model.tube.diameter)),
+																_user$project$Pages_Pool_View$px(model.tube.diameter)),
 															_1: {ctor: '[]'}
 														}
 													}
@@ -16367,13 +16456,13 @@ var _user$project$Pages_Pool$modelTube = F2(
 						_0: _elm_lang$html$Html_Attributes$style(
 							{
 								ctor: '::',
-								_0: A2(_user$project$Pages_Pool_ops['=>'], 'height', '100%'),
+								_0: A2(_user$project$Pages_Pool_View_ops['=>'], 'height', '100%'),
 								_1: {
 									ctor: '::',
-									_0: A2(_user$project$Pages_Pool_ops['=>'], 'border-radius', '50%'),
+									_0: A2(_user$project$Pages_Pool_View_ops['=>'], 'border-radius', '50%'),
 									_1: {
 										ctor: '::',
-										_0: A2(_user$project$Pages_Pool_ops['=>'], 'overflow', 'hidden'),
+										_0: A2(_user$project$Pages_Pool_View_ops['=>'], 'overflow', 'hidden'),
 										_1: {ctor: '[]'}
 									}
 								}
@@ -16382,20 +16471,20 @@ var _user$project$Pages_Pool$modelTube = F2(
 					},
 					{
 						ctor: '::',
-						_0: _user$project$Pages_Pool$tubeUser(
+						_0: _user$project$Pages_Pool_View$tubeUser(
 							_elm_lang$core$List$head(model.users)),
 						_1: {ctor: '[]'}
 					}),
 				_1: {ctor: '[]'}
 			});
 	});
-var _user$project$Pages_Pool$populateTubes = function (model) {
+var _user$project$Pages_Pool_View$populateTubes = function (model) {
 	return A2(
 		_elm_lang$core$List$map,
-		_user$project$Pages_Pool$modelTube(model),
+		_user$project$Pages_Pool_View$modelTube(model),
 		model.tubers);
 };
-var _user$project$Pages_Pool$view = function (pool) {
+var _user$project$Pages_Pool_View$view = function (pool) {
 	return A2(
 		_elm_lang$html$Html$div,
 		{
@@ -16409,7 +16498,7 @@ var _user$project$Pages_Pool$view = function (pool) {
 				_elm_lang$html$Html$div,
 				{
 					ctor: '::',
-					_0: _user$project$Pages_Pool$onMouseDown,
+					_0: _user$project$Pages_Pool_View$onMouseDown,
 					_1: {
 						ctor: '::',
 						_0: _elm_lang$html$Html_Attributes$class('flex-auto overflow-hidden'),
@@ -16418,19 +16507,38 @@ var _user$project$Pages_Pool$view = function (pool) {
 							_0: _elm_lang$html$Html_Attributes$style(
 								{
 									ctor: '::',
-									_0: A2(_user$project$Pages_Pool_ops['=>'], 'cursor', 'move'),
+									_0: A2(_user$project$Pages_Pool_View_ops['=>'], 'cursor', 'move'),
 									_1: {ctor: '[]'}
 								}),
 							_1: {ctor: '[]'}
 						}
 					}
 				},
-				_user$project$Pages_Pool$populateTubes(pool)),
+				_user$project$Pages_Pool_View$populateTubes(pool)),
 			_1: {ctor: '[]'}
 		});
 };
 
-var _user$project$Pages_CreateEvent$view = function (event) {
+var _user$project$Pages_CreateEvent_View$view = function (event) {
+	var submitInput = A2(
+		_elm_lang$html$Html$div,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$input,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$type_('button'),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text('Submit'),
+					_1: {ctor: '[]'}
+				}),
+			_1: {ctor: '[]'}
+		});
 	var dateInput = F3(
 		function (title, emoji, desc) {
 			return A2(
@@ -16467,7 +16575,7 @@ var _user$project$Pages_CreateEvent$view = function (event) {
 								_0: _elm_lang$html$Html_Attributes$type_('date'),
 								_1: {
 									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$class('f4 fw3 ma0 pv1 ph0 white bg-transparent bn outline-0'),
+									_0: _elm_lang$html$Html_Attributes$class('f4 fw3 ma0 pa1 white bg-transparent bn outline-0'),
 									_1: {
 										ctor: '::',
 										_0: _elm_lang$html$Html_Attributes$value('2017-06-01'),
@@ -16527,7 +16635,7 @@ var _user$project$Pages_CreateEvent$view = function (event) {
 								_0: _elm_lang$html$Html_Attributes$type_('time'),
 								_1: {
 									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$class('f4 fw3 ma0 pv1 ph0 white bg-transparent bn outline-0'),
+									_0: _elm_lang$html$Html_Attributes$class('f4 fw3 ma0 pa1 white bg-transparent bn outline-0'),
 									_1: {
 										ctor: '::',
 										_0: _elm_lang$html$Html_Attributes$value('08:30'),
@@ -16551,8 +16659,8 @@ var _user$project$Pages_CreateEvent$view = function (event) {
 					}
 				});
 		});
-	var textInput = F3(
-		function (title, emoji, desc) {
+	var textInput = F4(
+		function (title, emoji, desc, onChange) {
 			return A2(
 				_elm_lang$html$Html$fieldset,
 				{
@@ -16588,7 +16696,11 @@ var _user$project$Pages_CreateEvent$view = function (event) {
 								_1: {
 									ctor: '::',
 									_0: _elm_lang$html$Html_Attributes$placeholder(desc),
-									_1: {ctor: '[]'}
+									_1: {
+										ctor: '::',
+										_0: _elm_lang$html$Html_Events$onInput(onChange),
+										_1: {ctor: '[]'}
+									}
 								}
 							},
 							{ctor: '[]'}),
@@ -16628,13 +16740,13 @@ var _user$project$Pages_CreateEvent$view = function (event) {
 					},
 					{
 						ctor: '::',
-						_0: A3(textInput, 'title', '📛', 'what\'s it called?'),
+						_0: A4(textInput, 'title', '📛', 'what\'s it called?', _user$project$Pages_CreateEvent_Messages$ChangeTitle),
 						_1: {
 							ctor: '::',
-							_0: A3(textInput, 'description', '📢', 'what\'s it for?'),
+							_0: A4(textInput, 'description', '📢', 'what\'s it for?', _user$project$Pages_CreateEvent_Messages$ChangeDescription),
 							_1: {
 								ctor: '::',
-								_0: A3(textInput, 'location', '⚓', 'where\'s it at?'),
+								_0: A4(textInput, 'location', '⚓', 'where\'s it at?', _user$project$Pages_CreateEvent_Messages$ChangeLocation),
 								_1: {
 									ctor: '::',
 									_0: A3(dateInput, 'date', '📆', 'what day is it?'),
@@ -16643,11 +16755,15 @@ var _user$project$Pages_CreateEvent$view = function (event) {
 										_0: A3(timeInput, 'time', '🕒', 'what time is it?'),
 										_1: {
 											ctor: '::',
-											_0: A3(textInput, 'privacy', '🔒', 'who\'s invited'),
+											_0: _elm_lang$html$Html$text(event.title),
 											_1: {
 												ctor: '::',
-												_0: A3(textInput, 'taxonomy', '🏷️', 'what is it?'),
-												_1: {ctor: '[]'}
+												_0: A4(textInput, 'privacy', '🔒', 'who\'s invited', _user$project$Pages_CreateEvent_Messages$ChangePrivacy),
+												_1: {
+													ctor: '::',
+													_0: A4(textInput, 'taxonomy', '🏷️', 'what is it?', _user$project$Pages_CreateEvent_Messages$ChangeTaxonomy),
+													_1: {ctor: '[]'}
+												}
 											}
 										}
 									}
@@ -16722,16 +16838,16 @@ var _user$project$View$page = function (model) {
 			if (_p1.ctor === 'Nothing') {
 				return {
 					ctor: '::',
-					_0: _user$project$Pages_Chats$view(model),
+					_0: _user$project$Pages_Chats_View$view(model),
 					_1: {ctor: '[]'}
 				};
 			} else {
 				return {
 					ctor: '::',
-					_0: _user$project$Pages_Chats$view(model),
+					_0: _user$project$Pages_Chats_View$view(model),
 					_1: {
 						ctor: '::',
-						_0: _user$project$Pages_Chat$view(model),
+						_0: _user$project$Pages_Chat_View$view(model),
 						_1: {ctor: '[]'}
 					}
 				};
@@ -16739,19 +16855,22 @@ var _user$project$View$page = function (model) {
 		case 'GoUser':
 			return {
 				ctor: '::',
-				_0: _user$project$Pages_User$view(model),
+				_0: _user$project$Pages_User_View$view(model),
 				_1: {ctor: '[]'}
 			};
 		case 'GoPool':
 			return {
 				ctor: '::',
-				_0: _user$project$Pages_Pool$view(model.pool),
+				_0: _user$project$Pages_Pool_View$view(model.pool),
 				_1: {ctor: '[]'}
 			};
 		case 'GoCreateEvent':
 			return {
 				ctor: '::',
-				_0: _user$project$Pages_CreateEvent$view(model),
+				_0: A2(
+					_elm_lang$html$Html$map,
+					_user$project$Types$CreateEventMsg,
+					_user$project$Pages_CreateEvent_View$view(model.createEvent)),
 				_1: {ctor: '[]'}
 			};
 		default:
@@ -16759,16 +16878,16 @@ var _user$project$View$page = function (model) {
 			if (_p2.ctor === 'Nothing') {
 				return {
 					ctor: '::',
-					_0: _user$project$Pages_Events$view(model),
+					_0: _user$project$Pages_Events_View$view(model),
 					_1: {ctor: '[]'}
 				};
 			} else {
 				return {
 					ctor: '::',
-					_0: _user$project$Pages_Events$view(model),
+					_0: _user$project$Pages_Events_View$view(model),
 					_1: {
 						ctor: '::',
-						_0: A2(_user$project$Pages_Event$view, _p2._0, model.events.currentDatetime),
+						_0: A2(_user$project$Pages_Event_View$view, _p2._0, model.events.currentDatetime),
 						_1: {ctor: '[]'}
 					}
 				};
@@ -16801,6 +16920,284 @@ var _user$project$View$render = function (model) {
 		});
 };
 
+var _user$project$Pages_CreateEvent_Update$update = F2(
+	function (msg, model) {
+		var _p0 = msg;
+		switch (_p0.ctor) {
+			case 'SubmitEvent':
+				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+			case 'ChangeTitle':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{title: _p0._0}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'ChangeDescription':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{description: _p0._0}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'ChangeLocation':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{location: _p0._0}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'ChangeDate':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{date: _p0._0}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'ChangeTime':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{time: _p0._0}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'ChangePrivacy':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{privacy: _p0._0}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			default:
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{taxonomy: _p0._0}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+		}
+	});
+
+var _user$project$Pages_User_Update$update = F2(
+	function (msg, model) {
+		var _p0 = msg;
+		return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+	});
+
+var _user$project$Pages_Chat_Update$update = F2(
+	function (msg, model) {
+		var _p0 = msg;
+		return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+	});
+
+var _user$project$Update$update = F2(
+	function (msg, model) {
+		var pool = model.pool;
+		var client = model.client;
+		var events = model.events;
+		var _p0 = msg;
+		switch (_p0.ctor) {
+			case 'ChangeTo':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{route: _p0._0}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'CreateEventMsg':
+				var _p1 = A2(_user$project$Pages_CreateEvent_Update$update, _p0._0, model.createEvent);
+				var createEventModel = _p1._0;
+				var createEventCmd = _p1._1;
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{createEvent: createEventModel}),
+					_1: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Types$CreateEventMsg, createEventCmd)
+				};
+			case 'UserMsg':
+				var _p2 = A2(_user$project$Pages_User_Update$update, _p0._0, model.user);
+				var userModel = _p2._0;
+				var userCmd = _p2._1;
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{user: userModel}),
+					_1: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Types$UserMsg, userCmd)
+				};
+			case 'ChatMsg':
+				var _p3 = A2(_user$project$Pages_Chat_Update$update, _p0._0, model.chat);
+				var chatModel = _p3._0;
+				var chatCmd = _p3._1;
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{chat: chatModel}),
+					_1: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Types$ChatMsg, chatCmd)
+				};
+			case 'Input':
+				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+			case 'NewMessage':
+				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+			case 'ViewChat':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{route: _p0._0}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'ViewEvent':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{route: _p0._0}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'OnDatetime':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							events: _elm_lang$core$Native_Utils.update(
+								events,
+								{
+									currentDatetime: _elm_lang$core$Maybe$Just(_p0._0)
+								})
+						}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'TextAreaResizer':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							client: _elm_lang$core$Native_Utils.update(
+								client,
+								{textAreaHeight: _p0._0})
+						}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'MouseStart':
+				var _p5 = _p0._0;
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							pool: _elm_lang$core$Native_Utils.update(
+								pool,
+								{
+									move: _elm_lang$core$Maybe$Just(
+										A2(_user$project$Pages_Pool_Model$Move, _p5, _p5))
+								})
+						}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'MouseMove':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							pool: _elm_lang$core$Native_Utils.update(
+								pool,
+								{
+									move: A2(
+										_elm_lang$core$Maybe$map,
+										function (_p6) {
+											var _p7 = _p6;
+											return A2(_user$project$Pages_Pool_Model$Move, _p7.start, _p0._0);
+										},
+										pool.move)
+								})
+						}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'MouseEnd':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							pool: _elm_lang$core$Native_Utils.update(
+								pool,
+								{
+									position: _user$project$Pages_Pool_View$getPosition(pool),
+									move: _elm_lang$core$Maybe$Nothing
+								})
+						}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'ResizePool':
+				var _p8 = _p0._0;
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							pool: _elm_lang$core$Native_Utils.update(
+								pool,
+								{
+									windowSize: _p8,
+									tubers: A2(_user$project$Pages_Pool_View$determineTubers, pool, _p8)
+								})
+						}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'InitialWindow':
+				var _p9 = _p0._0;
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							pool: _elm_lang$core$Native_Utils.update(
+								pool,
+								{
+									windowSize: _p9,
+									tubers: A2(_user$project$Pages_Pool_View$determineTubers, pool, _p9)
+								})
+						}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			default:
+				if (_p0._0.ctor === 'Ok') {
+					var _p4 = _p0._0._0;
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{
+								events: _elm_lang$core$Native_Utils.update(
+									events,
+									{
+										seatgeek: _elm_lang$core$Maybe$Just(
+											A2(_user$project$SeatGeek_Types$Reply, _p4.meta, _p4.events))
+									})
+							}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
+				} else {
+					var _p10 = A2(_elm_lang$core$Debug$log, 'err', _p0._0._0);
+					return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+				}
+		}
+	});
+
 var _user$project$Main$mouseMoveSubs = function (model) {
 	var _p0 = model.pool.move;
 	if (_p0.ctor === 'Nothing') {
@@ -16830,175 +17227,6 @@ var _user$project$Main$subscriptions = function (model) {
 			}
 		});
 };
-var _user$project$Main$update = F2(
-	function (msg, model) {
-		var pool = model.pool;
-		var client = model.client;
-		var events = model.events;
-		var _p1 = msg;
-		switch (_p1.ctor) {
-			case 'ChangeTo':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{route: _p1._0}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			case 'Input':
-				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
-			case 'SendChatMessage':
-				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
-			case 'NewMessage':
-				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
-			case 'ViewChat':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{route: _p1._0}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			case 'ViewEvent':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{route: _p1._0}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			case 'OnDatetime':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{
-							events: _elm_lang$core$Native_Utils.update(
-								events,
-								{
-									currentDatetime: _elm_lang$core$Maybe$Just(_p1._0)
-								})
-						}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			case 'TextAreaResizer':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{
-							client: _elm_lang$core$Native_Utils.update(
-								client,
-								{textAreaHeight: _p1._0})
-						}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			case 'MouseStart':
-				var _p3 = _p1._0;
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{
-							pool: _elm_lang$core$Native_Utils.update(
-								pool,
-								{
-									move: _elm_lang$core$Maybe$Just(
-										A2(_user$project$Types$Move, _p3, _p3))
-								})
-						}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			case 'MouseMove':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{
-							pool: _elm_lang$core$Native_Utils.update(
-								pool,
-								{
-									move: A2(
-										_elm_lang$core$Maybe$map,
-										function (_p4) {
-											var _p5 = _p4;
-											return A2(_user$project$Types$Move, _p5.start, _p1._0);
-										},
-										pool.move)
-								})
-						}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			case 'MouseEnd':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{
-							pool: _elm_lang$core$Native_Utils.update(
-								pool,
-								{
-									position: _user$project$Pages_Pool$getPosition(pool),
-									move: _elm_lang$core$Maybe$Nothing
-								})
-						}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			case 'ResizePool':
-				var _p6 = _p1._0;
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{
-							pool: _elm_lang$core$Native_Utils.update(
-								pool,
-								{
-									windowSize: _p6,
-									tubers: A2(_user$project$Pages_Pool$determineTubers, pool, _p6)
-								})
-						}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			case 'InitialWindow':
-				var _p7 = _p1._0;
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{
-							pool: _elm_lang$core$Native_Utils.update(
-								pool,
-								{
-									windowSize: _p7,
-									tubers: A2(_user$project$Pages_Pool$determineTubers, pool, _p7)
-								})
-						}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			default:
-				if (_p1._0.ctor === 'Ok') {
-					var _p2 = _p1._0._0;
-					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Native_Utils.update(
-							model,
-							{
-								events: _elm_lang$core$Native_Utils.update(
-									events,
-									{
-										seatgeek: _elm_lang$core$Maybe$Just(
-											A2(_user$project$SeatGeek_Types$Reply, _p2.meta, _p2.events))
-									})
-							}),
-						_1: _elm_lang$core$Platform_Cmd$none
-					};
-				} else {
-					var _p8 = A2(_elm_lang$core$Debug$log, 'err', _p1._0._0);
-					return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
-				}
-		}
-	});
 var _user$project$Main$view = function (model) {
 	return _user$project$View$render(model);
 };
@@ -17020,7 +17248,7 @@ var _user$project$Main$initCmd = _elm_lang$core$Platform_Cmd$batch(
 	});
 var _user$project$Main$init = {ctor: '_Tuple2', _0: _user$project$Types$initModel, _1: _user$project$Main$initCmd};
 var _user$project$Main$main = _elm_lang$html$Html$program(
-	{init: _user$project$Main$init, view: _user$project$Main$view, update: _user$project$Main$update, subscriptions: _user$project$Main$subscriptions})();
+	{init: _user$project$Main$init, view: _user$project$Main$view, update: _user$project$Update$update, subscriptions: _user$project$Main$subscriptions})();
 
 var Elm = {};
 Elm['Main'] = Elm['Main'] || {};
