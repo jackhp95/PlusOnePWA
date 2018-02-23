@@ -14,13 +14,8 @@ import GraphCool.Query as Query
 import GraphCool.Scalar
 
 type alias Response =
-    { users : List User
-    , events : List Event 
-    }
-
-type alias User =
-    { name : String
-    , id : GraphCool.Scalar.Id
+    {
+     events : List Event
     }
 
 type alias Event =
@@ -31,15 +26,8 @@ type alias Event =
 query : SelectionSet Response RootQuery
 query =
     Query.selection Response
-        |> with (Query.allUsers user)
         |> with (Query.allEvents event)
 
-
-user : SelectionSet User GraphCool.Object.User
-user =
-    User.selection User
-        |> with User.name
-        |> with User.id
 
 event : SelectionSet Event GraphCool.Object.Event
 event =
@@ -76,9 +64,7 @@ view model =
     let
         refineView a =
         div [] [
-        h3 [] [ text "Users" ]
-            , div [] (List.map (\ b -> ul[ style [("background", "#eeeeee")]][h4[][text b.name],p[][text (Basics.toString b.id)]]) a.users)
-            , h3 [] [ text "Events" ]
+             h3 [] [ text "Events" ]
             , div [] (List.map (\ b -> ul[ style [("background", "#eeeeee")]][h4[][text b.name],p[][text (Basics.toString b.id)]]) a.events)]
 
         response =
@@ -88,7 +74,7 @@ view model =
             Failure e -> text ("Shucks um, " ++ (Basics.toString e))
             Success a -> refineView a
     in
-    
+
     div []
         [ div []
             [ h1 [] [ text "Generated Query" ]

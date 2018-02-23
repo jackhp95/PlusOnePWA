@@ -1,18 +1,20 @@
 module Pages.Event.Model exposing (..)
 import Pages.Event.Messages exposing (..)
+import GraphCool.Scalar
+
 
 
 type alias Event =
     { chats : List String
-    , createAt : String
+    , createAt : GraphCool.Scalar.DateTime
     , createdBy : String
-    , endsAt : String
+    , endsAt : GraphCool.Scalar.DateTime
     , hosts : List String
-    , id : Int
+    , id : GraphCool.Scalar.Id 
     , name : String
-    , nameFull : String 
+    , nameFull : String
     , private : Bool
-    , startsAt : String
+    , startsAt : GraphCool.Scalar.DateTime
     , usersAttending : List String
     , usersLiked : List String
     , usersViewed : List String
@@ -31,15 +33,15 @@ initModel : Event
 initModel =
     Event
         []
-        "10/10/10"
+        (GraphCool.Scalar.DateTime "10/10/10")
         "Alex"
-        "10/12/10"
+        (GraphCool.Scalar.DateTime "10/12/10")
         []
-        12345
+        (GraphCool.Scalar.Id "12345")
         "name"
         "full Name"
         False
-        "10/11/10"
+        (GraphCool.Scalar.DateTime "10/11/10")
         []
         []
         []
