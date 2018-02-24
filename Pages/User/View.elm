@@ -5,29 +5,24 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Nav exposing (bar)
 import Assets exposing (feather, bgImg)
-import Types
 import Pages.User.Model as UserModel
 
 
-view : Types.Model -> Html msg
-view x =
-    let
-        model =
-            x.user
-    in
-        section [ class "w-100 mw7-l overflow-auto shadow-2-l" ]
-            [ div [ class "flex h5 ph3 ph4-m ph5-l pt6 items-center" ]
-                [ userAvi model.avi
-                , div [ class "f2 fw7 ml3 fadeInUp animated" ] [ text model.name ]
-                ]
-            , div
-                [ class "bg-black-70" ]
-                [ div [ class "ph3 bg-black-30 w-100" ]
-                    [ userToolsView ]
-                , userBio model
-                , pastEvents model
-                ]
+view : UserModel.User -> Html msg
+view model =
+    section [ class "w-100 mw7-l overflow-auto shadow-2-l" ]
+        [ div [ class "flex h5 ph3 ph4-m ph5-l pt6 items-center" ]
+            [ userAvi model.avi
+            , div [ class "f2 fw7 ml3 fadeInUp animated" ] [ text model.name ]
             ]
+        , div
+            [ class "bg-black-70" ]
+            [ div [ class "ph3 bg-black-30 w-100" ]
+                [ userToolsView ]
+            , userBio model
+            , pastEvents model
+            ]
+        ]
 
 
 userAvi : List String -> Html msg
@@ -45,9 +40,7 @@ userBio : UserModel.User -> Html msg
 userBio model =
     div [ class "mv0 mh4 ph2 pv4 bb b--white-20" ]
         [ div [ class "fw7 pv2 f4" ] [ text "bio" ]
-        , div [ class "pv2 lh-copy measure" ] [ text """
-                look. life is bad. everyone's sad. we're all gonna die. but I already bought this inflatable bouncy castle, so are you gonna take your shoes off or what?
-                """ ]
+        , div [ class "pv2 lh-copy measure" ] [ text model.bio]
         ]
 
 
@@ -83,10 +76,10 @@ pastEvents model =
 userToolsView : Html msg
 userToolsView =
     let
-        icon x =
+        icon newText = --onClick (Types.ChangeTo Types.GoPool)
             div [ class "animated bounceIn pointer hover-bg-black-50 br-2 pa3 flex items-center" ]
-                [ div [ Assets.feather x, class "contain bg-center grow pt3 pb2 pl3 pr2" ] []
-                , div [ class "pa2" ] [ text x ]
+                [ div [ Assets.feather newText, class "contain bg-center grow pt3 pb2 pl3 pr2" ] []
+                , div [ class "pa2" ] [ text newText ]
                 ]
     in
         div [ class "flex justify-end" ]

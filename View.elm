@@ -18,6 +18,7 @@ import Pages.Events.View as Events
 import Pages.Event.View as Event
 import Pages.Pool.View as Pool
 import Pages.CreateEvent.View as CreateEvent
+import Pages.EditUser.View as EditUser
 
 
 -- SUBVIEWS --
@@ -63,6 +64,9 @@ page model =
 
         Types.GoPool ->
             [ Pool.view model.pool ]
+        
+        Types.GoEditUser ->
+            [ EditUser.view model.user]
 
         Types.GoCreateEvent ->
             [ Html.map Types.CreateEventMsg (CreateEvent.view model.createEvent) ]

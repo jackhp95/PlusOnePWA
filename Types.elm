@@ -69,6 +69,7 @@ type Route
     | GoEvents (Maybe SG.Event)
     | GoCreateEvent
     | GoPool
+    | GoEditUser
 
 
 

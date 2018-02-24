@@ -25,6 +25,9 @@ type alias User =
     , sent : List String
     , updatedAt : String
     }
+type Gender
+    = Male
+    | Female    
 
 init : ( User, Cmd Msg )
 init =
