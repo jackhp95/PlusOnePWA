@@ -18,6 +18,7 @@ import Pages.User.Model as UserModel
 import Pages.Chat.Model as ChatModel
 import Pages.Events.Model as EventsModel
 import Pages.Pool.Model as PoolModel
+import Pages.Event.Model as EventModel
 
 
 -- MODEL --
@@ -53,7 +54,7 @@ initModel =
         EventsModel.initModel
         PoolModel.initModel
         initClient
-        CreateEventModel.initModel
+        EventModel.initModel
 
 
 type alias Page =

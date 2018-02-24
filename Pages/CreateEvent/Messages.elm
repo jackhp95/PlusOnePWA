@@ -1,21 +1,7 @@
 module Pages.CreateEvent.Messages exposing (..)
-import Pages.Event.Model exposing(Event)
-import RemoteData exposing (..)
-import Graphqelm.Http exposing (..)
-import GraphCool.Scalar exposing (..)
+import Pages.Event.Model exposing(..)
 
 
-type alias Response =
-  {
-    events: List EventQuery
-  }
-type alias EventQuery =
-    { name : String
-    , id : GraphCool.Scalar.Id
-    }
-
-type alias ResponseModel =
-     RemoteData Graphqelm.Http.Error Response
 
 type Msg
     = SubmitEvent String
@@ -28,3 +14,5 @@ type Msg
     -- | ChangeTaxonomy String
     | GotResponse ResponseModel
     | MakeRequest
+    | ChangeName String
+    | ChangeNameFull String

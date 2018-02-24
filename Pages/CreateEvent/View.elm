@@ -62,21 +62,18 @@ view event =
         section [ class "animated fadeInUp flex flex-column items-stretch flex-auto pa0 ma0 measure-ns shadow-2-ns" ]
             [ Assets.banner "create event"
             , div [ class "flex-shrink-1 flex-grow-0 bg-black-70 overflow-auto pa3 white" ]
-                [ textInput "title" "📛" "what's it called?" ChangeTitle
-                , textInput "description" "📢" "what's it for?" ChangeDescription
-                , textInput "location" "⚓" "where's it at?" ChangeLocation
-                , dateInput "date" "📆" "what day is it?"
-                , timeInput "time" "🕒" "what time is it?"
-                , text event.title
-                , textInput "privacy" "🔒" "who's invited" ChangePrivacy
-                , textInput "taxonomy" "🏷️" "what is it?" ChangeTaxonomy
+                [ textInput "name" "📛" "what's it called?" ChangeName
+                , textInput "nameFull" "📢" "what's it for?" ChangeNameFull
+                , dateInput "startsAt" "📆" "what day is it?"
+                , dateInput "endsAt" "📆" "what day is it?"
                 ]
             , button [ onClick MakeRequest  ] [ text "Show Events" ]
             , div []
-                [ h1 [] [ text "Response" ]
-                , h2 [] [ text "Raw" ]
-                , Html.text (Basics.toString event.eventResponse)
-                , h2 [] [ text "Refined" ]
-                , response
+                [
+                     h1 [] [ text "Response" ]
+                    , h2 [] [ text "Raw" ]
+                    , Html.text (Basics.toString event.eventResponse)
+                    , h2 [] [ text "Refined" ]
+                    , response
                 ]
             ]
