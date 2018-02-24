@@ -71,5 +71,12 @@ view event =
                 , textInput "privacy" "🔒" "who's invited" ChangePrivacy
                 , textInput "taxonomy" "🏷️" "what is it?" ChangeTaxonomy
                 ]
-            ,  response
+            , button [ onClick MakeRequest  ] [ text "Show Events" ]
+            , div []
+                [ h1 [] [ text "Response" ]
+                , h2 [] [ text "Raw" ]
+                , Html.text (Basics.toString event.eventResponse)
+                , h2 [] [ text "Refined" ]
+                , response
+                ]
             ]

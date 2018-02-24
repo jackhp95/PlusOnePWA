@@ -27,3 +27,4 @@ type Msg
     | ChangePrivacy String
     | ChangeTaxonomy String
     | GotResponse ResponseModel
+    | MakeRequest 

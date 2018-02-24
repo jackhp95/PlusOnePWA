@@ -3,7 +3,7 @@ module Pages.CreateEvent.Update exposing (..)
 import SeatGeek.Types as SG
 import Pages.CreateEvent.Model exposing (..)
 import Pages.CreateEvent.Messages exposing (..)
-import Pages.Event.Model exposing (Event)
+-- import Pages.Event.Model exposing (Event)
 -- import Graphqelm.Operation exposing (RootQuery)
 -- import Graphqelm.SelectionSet exposing (SelectionSet, with)
 -- import GraphCool.Object.Event as Event
@@ -62,6 +62,8 @@ import Pages.Event.Model exposing (Event)
 update : Msg -> CreateEvent -> ( CreateEvent, Cmd Msg )
 update msg model =
     case msg of
+        MakeRequest ->
+            (model, makeRequest)
         GotResponse responseModel ->
             ({ model | eventResponse = responseModel}, Cmd.none)
         SubmitEvent e ->
