@@ -15,10 +15,10 @@ import GraphCool.Scalar
 
 type alias Response =
     {
-     events : List Event
+     events : List EventQuery
     }
 
-type alias Event =
+type alias EventQuery =
     { name : String
     , id : GraphCool.Scalar.Id
     }
@@ -29,9 +29,9 @@ query =
         |> with (Query.allEvents event)
 
 
-event : SelectionSet Event GraphCool.Object.Event
+event : SelectionSet EventQuery GraphCool.Object.Event
 event =
-    Event.selection Event
+    Event.selection EventQuery
         |> with Event.name
         |> with Event.id
 

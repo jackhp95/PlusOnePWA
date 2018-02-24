@@ -7,6 +7,7 @@ import Assets exposing (feather, banner)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
+import RemoteData exposing (..)
 
 import SeatGeek.Types as SG
 import Pages.CreateEvent.Messages exposing (..)
@@ -44,6 +45,19 @@ view event =
               [ input [ type_ "button"] [ text "Submit" ]
 
               ]
+
+       -- Show the reponse of the "allEvents" query
+        refineView a =
+        div [] [
+             h3 [] [ text "Events" ]
+            , div [] (List.map (\ b -> ul[ style [("background", "#eeeeee")]][h4[][text b.name],p[][text (Basics.toString b.id)]]) a.events)]
+
+        response =
+        case event.eventResponse of
+            NotAsked -> text "Hold up, Lemme Check"
+            Loading -> text "Gimme a Sec"
+            Failure e -> text ("Shucks um, " ++ (Basics.toString e))
+            Success a -> refineView a
     in
         section [ class "animated fadeInUp flex flex-column items-stretch flex-auto pa0 ma0 measure-ns shadow-2-ns" ]
             [ Assets.banner "create event"
@@ -57,4 +71,5 @@ view event =
                 , textInput "privacy" "🔒" "who's invited" ChangePrivacy
                 , textInput "taxonomy" "🏷️" "what is it?" ChangeTaxonomy
                 ]
+            ,  response
             ]
