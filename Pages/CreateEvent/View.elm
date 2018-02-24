@@ -68,7 +68,7 @@ view event =
                 , dateInput "endsAt" "📆" "what day is it?"
                 ]
             , button [ onClick MakeRequest  ] [ text "Show Events" ]
-            , div []
+            , div [ style [("color", "#000000")]]
                 [
                      h1 [] [ text "Response" ]
                     , h2 [] [ text "Raw" ]
