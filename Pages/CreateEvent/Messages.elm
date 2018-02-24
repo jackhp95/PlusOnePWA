@@ -19,12 +19,12 @@ type alias ResponseModel =
 
 type Msg
     = SubmitEvent String
-    | ChangeTitle String
-    | ChangeDescription String
-    | ChangeLocation String
-    | ChangeDate String
-    | ChangeTime String
-    | ChangePrivacy String
-    | ChangeTaxonomy String
+    -- | ChangeTitle String
+    -- | ChangeDescription String
+    -- | ChangeLocation String
+    -- | ChangeDate String
+    -- | ChangeTime String
+    -- | ChangePrivacy String
+    -- | ChangeTaxonomy String
     | GotResponse ResponseModel
-    | MakeRequest 
+    | MakeRequest

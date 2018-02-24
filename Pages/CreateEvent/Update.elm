@@ -68,17 +68,17 @@ update msg model =
             ({ model | eventResponse = responseModel}, Cmd.none)
         SubmitEvent e ->
             ( model , Cmd.none )
-        ChangeTitle newTitle ->
-            ( { model | title = newTitle }, Cmd.none)
-        ChangeDescription newDescription ->
-            ( { model | description = newDescription}, Cmd.none)
-        ChangeLocation newLocation ->
-            ( { model | location = newLocation }, Cmd.none)
-        ChangeDate newDate ->
-            ( { model | date = newDate }, Cmd.none)
-        ChangeTime newTime ->
-            ( { model | time = newTime }, Cmd.none)
-        ChangePrivacy newPrivacy ->
-            ( { model | privacy = newPrivacy }, Cmd.none)
-        ChangeTaxonomy newTaxonomy ->
-            ( { model | taxonomy = newTaxonomy }, Cmd.none)
+        -- ChangeTitle newTitle ->
+        --     ( { model | title = newTitle }, Cmd.none)
+        -- ChangeDescription newDescription ->
+        --     ( { model | description = newDescription}, Cmd.none)
+        -- ChangeLocation newLocation ->
+        --     ( { model | location = newLocation }, Cmd.none)
+        -- ChangeDate newDate ->
+        --     ( { model | date = newDate }, Cmd.none)
+        -- ChangeTime newTime ->
+        --     ( { model | time = newTime }, Cmd.none)
+        -- ChangePrivacy newPrivacy ->
+        --     ( { model | privacy = newPrivacy }, Cmd.none)
+        -- ChangeTaxonomy newTaxonomy ->
+        --     ( { model | taxonomy = newTaxonomy }, Cmd.none)

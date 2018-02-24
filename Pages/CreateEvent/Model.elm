@@ -14,13 +14,14 @@ import Graphqelm.Http exposing (..)
 
 
 type alias CreateEvent =
-    { title : String
-    , description : String
-    , location : String
-    , date : String
-    , time : String
-    , privacy : String
-    , taxonomy : String
+    -- { title : String
+    -- , description : String
+    -- , location : String
+    -- , date : String
+    -- , time : String
+    -- , privacy : String
+    -- , taxonomy : String
+    { event: Event
     , eventResponse: ResponseModel
     }
 
@@ -80,12 +81,6 @@ init =
 initModel : CreateEvent
 initModel = (
     CreateEvent
-        ""
-        ""
-        ""
-        ""
-        ""
-        ""
-        ""
+        Pages.Event.Model.initModel
         RemoteData.Loading
     )

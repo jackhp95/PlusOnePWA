@@ -15,6 +15,7 @@ import Pages.Pool.View exposing (getPosition, determineTubers)
 import Pages.CreateEvent.Update exposing (update)
 import Pages.CreateEvent.Model as CreateEvent
 import Pages.Pool.Model as PoolModel
+import Pages.CreateEvent.Messages
 
 
 -- Try to reomve these?

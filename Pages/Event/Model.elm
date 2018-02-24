@@ -10,7 +10,7 @@ type alias Event =
     , createdBy : String
     , endsAt : GraphCool.Scalar.DateTime
     , hosts : List String
-    , id : GraphCool.Scalar.Id 
+    , id : GraphCool.Scalar.Id
     , name : String
     , nameFull : String
     , private : Bool
