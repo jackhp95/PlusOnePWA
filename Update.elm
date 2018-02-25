@@ -1,8 +1,10 @@
 module Update exposing (..)
 
 import Pages.CreateEvent.Messages as CreateEventMessages
+import Pages.EditUser.Messages as EditUserMsg
 import Pages.CreateEvent.Update exposing (..)
 import Pages.User.Update exposing (..)
+import Pages.EditUser.Update exposing (..)
 import Pages.Chat.Update exposing (..)
 import Types
 import SeatGeek.Types as SG
@@ -32,6 +34,14 @@ update msg model =
                 in
                     ( { model | createEvent = createEventModel }
                     , Cmd.map Types.CreateEventMsg createEventCmd
+                    )
+            Types.EditUserMsg userMsg ->
+                let
+                    ( userModel, userCmd ) =
+                        Pages.EditUser.Update.update userMsg model.user
+                in
+                    ( { model | user = userModel }
+                    , Cmd.map Types.EditUserMsg userCmd
                     )
             Types.UserMsg userMsg ->
                 let

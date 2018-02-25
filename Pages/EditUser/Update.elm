@@ -8,16 +8,13 @@ import String exposing (..)
 import List exposing (..)
 import Date.Extra.Format exposing (..)
 import Date.Extra.Core exposing(monthToInt)
+import GraphCool.Scalar exposing (..)
 
 update : Msg -> User -> ( User, Cmd Msg )
 update msg model =
-    let
-        user =
-            model.user
-    in
     case msg of
         ChangeName newName ->
-            ( { model | name = Just newName }
+            ( { model | name = newName }
             , Cmd.none
             )
 
@@ -32,7 +29,7 @@ update msg model =
             )
 
         ChangeBirthday newBirthday ->
-            ( { model | birthday = getUserBirthdayToDate (Just newBirthday) }
+            ( { model | birthday = (DateTime newBirthday) }
             , Cmd.none
             )
 
@@ -45,6 +42,9 @@ update msg model =
             ( { model | seekingGender = stringToGender newSeekingGender }
             , Cmd.none
             )
+        
+        SaveEdit ->
+            (model, Cmd.none)
 
 getUserBirthday : Maybe Date -> String
 getUserBirthday user =
@@ -75,12 +75,3 @@ reformatDate date =
             String.join "/" [ month, day, year ]
         _ ->
             ""
-
-getUserBirthdayToDate : Maybe String -> Maybe Date
-getUserBirthdayToDate user =
-    case user of
-        Nothing ->
-            Result.toMaybe <| Date.fromString "1/8/1998"
-
-        Just birthday ->
-            Result.toMaybe <| Date.fromString (reformatDate birthday)

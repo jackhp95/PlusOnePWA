@@ -10,6 +10,7 @@ import Mouse exposing (Position)
 import Window exposing (Size)
 
 import Pages.CreateEvent.Messages as CreateEventMsg
+import Pages.EditUser.Messages as EditUserMsg
 import Pages.User.Messages as UserMsg
 import Pages.Chat.Messages as ChatMsg
 import Pages.Chats.Messages as ChatsMsg
@@ -99,6 +100,7 @@ type
     = ChangeTo Route
     --Temp
     | CreateEventMsg CreateEventMsg.Msg
+    | EditUserMsg EditUserMsg.Msg
     | UserMsg UserMsg.Msg
     | ChatMsg ChatMsg.Msg
       -- Chat

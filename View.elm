@@ -60,13 +60,13 @@ page model =
                     ]
 
         Types.GoUser ->
-            [ User.view model ]
+            [ User.view model.user ]
 
         Types.GoPool ->
             [ Pool.view model.pool ]
         
         Types.GoEditUser ->
-            [ EditUser.view model.user]
+            [ Html.map Types.EditUserMsg (EditUser.view model.user)]
 
         Types.GoCreateEvent ->
             [ Html.map Types.CreateEventMsg (CreateEvent.view model.createEvent) ]

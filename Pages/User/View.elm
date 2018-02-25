@@ -6,9 +6,10 @@ import Html.Events exposing (..)
 import Nav exposing (bar)
 import Assets exposing (feather, bgImg)
 import Pages.User.Model as UserModel
+import Types exposing (..)
 
 
-view : UserModel.User -> Html msg
+view : UserModel.User -> Html Msg
 view model =
     section [ class "w-100 mw7-l overflow-auto shadow-2-l" ]
         [ div [ class "flex h5 ph3 ph4-m ph5-l pt6 items-center" ]
@@ -25,7 +26,7 @@ view model =
         ]
 
 
-userAvi : List String -> Html msg
+userAvi : List String -> Html Msg
 userAvi avis =
     div [ class "w5 bounceIn animated z-9" ]
         [ div
@@ -36,7 +37,7 @@ userAvi avis =
         ]
 
 
-userBio : UserModel.User -> Html msg
+userBio : UserModel.User -> Html Msg
 userBio model =
     div [ class "mv0 mh4 ph2 pv4 bb b--white-20" ]
         [ div [ class "fw7 pv2 f4" ] [ text "bio" ]
@@ -44,7 +45,7 @@ userBio model =
         ]
 
 
-pastEvents : UserModel.User -> Html msg
+pastEvents : UserModel.User -> Html Msg
 pastEvents model =
     let
         prevEvents =
@@ -73,11 +74,11 @@ pastEvents model =
             ]
 
 
-userToolsView : Html msg
+userToolsView : Html Msg
 userToolsView =
     let
-        icon newText = --onClick (Types.ChangeTo Types.GoPool)
-            div [ class "animated bounceIn pointer hover-bg-black-50 br-2 pa3 flex items-center" ]
+        icon newText = --onClick (Types.ChangeTo Types.GoUser)  // ChangeTo return UserMsg
+            div [ class "animated bounceIn pointer hover-bg-black-50 br-2 pa3 flex items-center", onClick (Types.ChangeTo Types.GoEditUser)]
                 [ div [ Assets.feather newText, class "contain bg-center grow pt3 pb2 pl3 pr2" ] []
                 , div [ class "pa2" ] [ text newText ]
                 ]

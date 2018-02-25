@@ -1,11 +1,12 @@
 module Pages.User.Model exposing (..)
 import Pages.User.Messages exposing (..)
+import GraphCool.Scalar exposing (..)
 
 type alias User =
     { auth0UserId: String
     , avi : List String
     , bio : String
-    , birthday : String
+    , birthday : DateTime
     , createdAt : String
     , createdEvents : List String
     , datesCanceled : List String
@@ -24,6 +25,8 @@ type alias User =
     , recipient : List String
     , sent : List String
     , updatedAt : String
+    , gender : Gender
+    , seekingGender : Gender
     }
 type Gender
     = Male
@@ -44,7 +47,7 @@ initModel =
         "11111"
         [ "https://images.unsplash.com/photo-1496361001419-80f0d1be777a?dpr=1&auto=format&fit=crop&w=1000&q=80&cs=tinysrgb&ixid=dW5zcGxhc2guY29tOzs7Ozs%3D" ]
         "look. life is bad. everyone's sad. we're all gonna die. but I already bought this inflatable bouncy castle, so are you gonna take your shoes off or what?"
-        "04/20/1960"
+        (DateTime "2017-01-13T09:00:00-05:00")
         "04/20/1970"
         []
         []
@@ -53,7 +56,7 @@ initModel =
         []
         []
         []
-        1234
+        121
         []
         "Hannah Hazeldine"
         "Hannah Hazeldinanationator"
@@ -63,3 +66,5 @@ initModel =
         []
         []
         "04/20/1971"
+        Male
+        Male

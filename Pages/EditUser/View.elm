@@ -6,10 +6,10 @@ import Html.Events exposing (..)
 import Nav exposing (bar)
 import Assets exposing (feather, bgImg)
 import Pages.User.Model exposing (..)
-import Pages.User.Messages exposing (..)
 
 import Pages.EditUser.Messages exposing (..)
 import Pages.EditUser.Update exposing (..)
+import GraphCool.Scalar exposing (..)
 -- VIEW --
 
 
@@ -20,24 +20,24 @@ view model =
         , text " bye"
         , br [] []
         , text "Name: "
-        , input [ placeholder "name", onInput ChangeName, value (Maybe.withDefault "" model.user.name) ] []
+        , input [ placeholder "name", onInput ChangeName, value model.name ] []
         , br [] []
         , text "Full Name: "
-        , input [ placeholder "full name", onInput ChangeFullName, value model.user.nameFull ] []
+        , input [ placeholder "full name", onInput ChangeFullName, value model.nameFull ] []
         , br [] []
         , text "Bio: "
-        , input [ placeholder "bio", onInput ChangeBio, value model.user.bio ] []
+        , input [ placeholder "bio", onInput ChangeBio, value model.bio ] []
         , br [] []
         , text "Birthday"
         , input [ type_ "date", placeholder "birthday", onInput ChangeBirthday ] []
         , br [] []
         , text "Gender "
-        , genderSelect ChangeGender model.user.gender
+        , genderSelect ChangeGender model.gender
         , br [] []
         , text ("Looking for ")
-        , genderSelect ChangeSeekingGender model.user.seekingGender
+        , genderSelect ChangeSeekingGender model.seekingGender
         , br [] []
-        , text <| reformatDate <|getUserBirthday model.user.birthday
+        , text <| toString <| model.birthday
         ]
 
 
