@@ -1,5 +1,6 @@
 module TestGraphCool exposing (main)
 import GraphCool.Enum.DateState exposing (DateState)
+import GraphCool.InputObject as IO exposing (..)
 import GraphCool.Object
 import GraphCool.Object.Chat as Chat
 import GraphCool.Object.Event as Event
@@ -9,10 +10,12 @@ import GraphCool.Object.Message as Message
 import GraphCool.Object.User as User
 import GraphCool.Object.Venue as Venue
 import GraphCool.Query as Query
+import GraphCool.Mutation as Mutation
 import GraphCool.Scalar exposing (..)
 import Graphqelm.Document as Document
 import Graphqelm.Http exposing (..)
 import Graphqelm.Operation exposing (RootQuery)
+import Graphqelm.OptionalArgument exposing (OptionalArgument(Null, Present))
 import Graphqelm.SelectionSet exposing (SelectionSet, with)
 import Html exposing (..)
 import RemoteData exposing (..)
@@ -129,17 +132,22 @@ type alias User =
     , updatedAt : DateTime
     }
 
-
-query : SelectionSet Response RootQuery
-query =
+queryEverything : SelectionSet Response RootQuery
+queryEverything =
     Query.selection Response
-        |> with (Query.allHosts host)
-        |> with (Query.allVenues venue)
-        |> with (Query.allLocations location)
-        |> with (Query.allEvents event)
-        |> with (Query.allMessages message)
-        |> with (Query.allChats chat)
-        |> with (Query.allUsers user)
+        |> with (Query.allHosts identity host)
+        |> with (Query.allVenues identity venue)
+        |> with (Query.allLocations identity location)
+        |> with (Query.allEvents identity event)
+        |> with (Query.allMessages identity message)
+        |> with (Query.allChats identity chat)
+        |> with (Query.allUsers identity user)
+
+
+mutation : SelectionSet (Maybe User) Graphqelm.Operation.RootMutation
+mutation =
+    Mutation.selection identity
+        |> with (Mutation.createUser identity { birthday = (DateTime "1969-06-09"), name = "elm", authProvider = IO.AuthProviderSignupData { auth0 = Null, email = Present (IO.AuthProviderEmail { email = "elm@elm.org", password = "elm" })}} user)
 
 
 hostId : SelectionSet Id GraphCool.Object.Host
@@ -285,25 +293,36 @@ user =
         |> with User.updatedAt
 
 
-makeRequest : Cmd Msg
-makeRequest =
-    query
+makeQueryRequest : Cmd Msg
+makeQueryRequest =
+    queryEverything
         |> Graphqelm.Http.queryRequest "https://api.graph.cool/simple/v1/PlusOne"
         |> Graphqelm.Http.send (RemoteData.fromResult >> GotResponse)
 
 
+
+makeMutationRequest : Cmd Msg
+makeMutationRequest =
+    mutation
+        |> Graphqelm.Http.mutationRequest "https://api.graph.cool/simple/v1/PlusOne"
+        |> Graphqelm.Http.send (RemoteData.fromResult >> MutateUser)
+
+
 type Msg
-    = GotResponse Model
+    = GotResponse (RemoteData Graphqelm.Http.Error Response)
+    | MutateUser (RemoteData Graphqelm.Http.Error (Maybe User))
 
 
 type alias Model =
-    RemoteData Graphqelm.Http.Error Response
+    { query : RemoteData Graphqelm.Http.Error Response
+    , mutation : RemoteData Graphqelm.Http.Error (Maybe User) 
+    }
 
 
 init : ( Model, Cmd Msg )
 init =
-    ( RemoteData.Loading
-    , makeRequest
+    ( Model RemoteData.Loading RemoteData.Loading
+    , makeQueryRequest -- change this to MakeMutationRequest if you want to test a mutation.
     )
 
 
@@ -311,7 +330,7 @@ view : Model -> Html.Html Msg
 view model =
     let
         response =
-            case model of
+            case model.query of
                 NotAsked ->
                     text "Hold up, Lemme Check"
 
@@ -356,7 +375,11 @@ view model =
     div []
         [ div []
             [ h1 [] [ text "Generated Query" ]
-            , pre [] [ text (Document.serializeQuery query) ]
+            , pre [] [ text (Document.serializeQuery queryEverything) ]
+            ]
+        , div []
+            [ h1 [] [ text "Generated Mutation" ]
+            , pre [] [ text (Document.serializeMutation mutation) ]
             ]
         , div []
             [ h1 [] [ text "Response" ]
@@ -372,7 +395,11 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         GotResponse response ->
-            ( response, Cmd.none )
+            ( { model | query = response }, Cmd.none )
+        
+        MutateUser response ->
+            ( { model | mutation = response }, Cmd.none )
+        
 
 
 main : Program Never Model Msg
