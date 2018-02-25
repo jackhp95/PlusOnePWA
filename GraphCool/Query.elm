@@ -40,11 +40,11 @@ selection constructor =
   - filter -
 
 -}
-allChats : SelectionSet decodesTo GraphCool.Object.Chat -> Field (List decodesTo) RootQuery
-allChats object =
+allChats : ({ filter : OptionalArgument GraphCool.InputObject.ChatFilter, orderBy : OptionalArgument GraphCool.Enum.ChatOrderBy.ChatOrderBy, skip : OptionalArgument Int, after : OptionalArgument String, before : OptionalArgument String, first : OptionalArgument Int, last : OptionalArgument Int } -> { filter : OptionalArgument GraphCool.InputObject.ChatFilter, orderBy : OptionalArgument GraphCool.Enum.ChatOrderBy.ChatOrderBy, skip : OptionalArgument Int, after : OptionalArgument String, before : OptionalArgument String, first : OptionalArgument Int, last : OptionalArgument Int }) -> SelectionSet decodesTo GraphCool.Object.Chat -> Field (List decodesTo) RootQuery
+allChats fillInOptionals object =
     let
         filledInOptionals =
-         { filter = Absent, orderBy = Absent, skip = Absent, after = Absent, before = Absent, first = Absent, last = Absent }
+            fillInOptionals { filter = Absent, orderBy = Absent, skip = Absent, after = Absent, before = Absent, first = Absent, last = Absent }
 
         optionalArgs =
             [ Argument.optional "filter" filledInOptionals.filter GraphCool.InputObject.encodeChatFilter, Argument.optional "orderBy" filledInOptionals.orderBy (Encode.enum GraphCool.Enum.ChatOrderBy.toString), Argument.optional "skip" filledInOptionals.skip Encode.int, Argument.optional "after" filledInOptionals.after Encode.string, Argument.optional "before" filledInOptionals.before Encode.string, Argument.optional "first" filledInOptionals.first Encode.int, Argument.optional "last" filledInOptionals.last Encode.int ]
@@ -58,11 +58,11 @@ allChats object =
   - filter -
 
 -}
-allEvents : SelectionSet decodesTo GraphCool.Object.Event -> Field (List decodesTo) RootQuery
-allEvents object =
+allEvents : ({ filter : OptionalArgument GraphCool.InputObject.EventFilter, orderBy : OptionalArgument GraphCool.Enum.EventOrderBy.EventOrderBy, skip : OptionalArgument Int, after : OptionalArgument String, before : OptionalArgument String, first : OptionalArgument Int, last : OptionalArgument Int } -> { filter : OptionalArgument GraphCool.InputObject.EventFilter, orderBy : OptionalArgument GraphCool.Enum.EventOrderBy.EventOrderBy, skip : OptionalArgument Int, after : OptionalArgument String, before : OptionalArgument String, first : OptionalArgument Int, last : OptionalArgument Int }) -> SelectionSet decodesTo GraphCool.Object.Event -> Field (List decodesTo) RootQuery
+allEvents fillInOptionals object =
     let
         filledInOptionals =
-         { filter = Absent, orderBy = Absent, skip = Absent, after = Absent, before = Absent, first = Absent, last = Absent }
+            fillInOptionals { filter = Absent, orderBy = Absent, skip = Absent, after = Absent, before = Absent, first = Absent, last = Absent }
 
         optionalArgs =
             [ Argument.optional "filter" filledInOptionals.filter GraphCool.InputObject.encodeEventFilter, Argument.optional "orderBy" filledInOptionals.orderBy (Encode.enum GraphCool.Enum.EventOrderBy.toString), Argument.optional "skip" filledInOptionals.skip Encode.int, Argument.optional "after" filledInOptionals.after Encode.string, Argument.optional "before" filledInOptionals.before Encode.string, Argument.optional "first" filledInOptionals.first Encode.int, Argument.optional "last" filledInOptionals.last Encode.int ]
@@ -76,11 +76,11 @@ allEvents object =
   - filter -
 
 -}
-allFiles : SelectionSet decodesTo GraphCool.Object.File -> Field (List decodesTo) RootQuery
-allFiles object =
+allFiles : ({ filter : OptionalArgument GraphCool.InputObject.FileFilter, orderBy : OptionalArgument GraphCool.Enum.FileOrderBy.FileOrderBy, skip : OptionalArgument Int, after : OptionalArgument String, before : OptionalArgument String, first : OptionalArgument Int, last : OptionalArgument Int } -> { filter : OptionalArgument GraphCool.InputObject.FileFilter, orderBy : OptionalArgument GraphCool.Enum.FileOrderBy.FileOrderBy, skip : OptionalArgument Int, after : OptionalArgument String, before : OptionalArgument String, first : OptionalArgument Int, last : OptionalArgument Int }) -> SelectionSet decodesTo GraphCool.Object.File -> Field (List decodesTo) RootQuery
+allFiles fillInOptionals object =
     let
         filledInOptionals =
-         { filter = Absent, orderBy = Absent, skip = Absent, after = Absent, before = Absent, first = Absent, last = Absent }
+            fillInOptionals { filter = Absent, orderBy = Absent, skip = Absent, after = Absent, before = Absent, first = Absent, last = Absent }
 
         optionalArgs =
             [ Argument.optional "filter" filledInOptionals.filter GraphCool.InputObject.encodeFileFilter, Argument.optional "orderBy" filledInOptionals.orderBy (Encode.enum GraphCool.Enum.FileOrderBy.toString), Argument.optional "skip" filledInOptionals.skip Encode.int, Argument.optional "after" filledInOptionals.after Encode.string, Argument.optional "before" filledInOptionals.before Encode.string, Argument.optional "first" filledInOptionals.first Encode.int, Argument.optional "last" filledInOptionals.last Encode.int ]
@@ -94,11 +94,11 @@ allFiles object =
   - filter -
 
 -}
-allHosts : SelectionSet decodesTo GraphCool.Object.Host -> Field (List decodesTo) RootQuery
-allHosts object =
+allHosts : ({ filter : OptionalArgument GraphCool.InputObject.HostFilter, orderBy : OptionalArgument GraphCool.Enum.HostOrderBy.HostOrderBy, skip : OptionalArgument Int, after : OptionalArgument String, before : OptionalArgument String, first : OptionalArgument Int, last : OptionalArgument Int } -> { filter : OptionalArgument GraphCool.InputObject.HostFilter, orderBy : OptionalArgument GraphCool.Enum.HostOrderBy.HostOrderBy, skip : OptionalArgument Int, after : OptionalArgument String, before : OptionalArgument String, first : OptionalArgument Int, last : OptionalArgument Int }) -> SelectionSet decodesTo GraphCool.Object.Host -> Field (List decodesTo) RootQuery
+allHosts fillInOptionals object =
     let
         filledInOptionals =
-         { filter = Absent, orderBy = Absent, skip = Absent, after = Absent, before = Absent, first = Absent, last = Absent }
+            fillInOptionals { filter = Absent, orderBy = Absent, skip = Absent, after = Absent, before = Absent, first = Absent, last = Absent }
 
         optionalArgs =
             [ Argument.optional "filter" filledInOptionals.filter GraphCool.InputObject.encodeHostFilter, Argument.optional "orderBy" filledInOptionals.orderBy (Encode.enum GraphCool.Enum.HostOrderBy.toString), Argument.optional "skip" filledInOptionals.skip Encode.int, Argument.optional "after" filledInOptionals.after Encode.string, Argument.optional "before" filledInOptionals.before Encode.string, Argument.optional "first" filledInOptionals.first Encode.int, Argument.optional "last" filledInOptionals.last Encode.int ]
@@ -112,11 +112,11 @@ allHosts object =
   - filter -
 
 -}
-allLocations : SelectionSet decodesTo GraphCool.Object.Location -> Field (List decodesTo) RootQuery
-allLocations object =
+allLocations : ({ filter : OptionalArgument GraphCool.InputObject.LocationFilter, orderBy : OptionalArgument GraphCool.Enum.LocationOrderBy.LocationOrderBy, skip : OptionalArgument Int, after : OptionalArgument String, before : OptionalArgument String, first : OptionalArgument Int, last : OptionalArgument Int } -> { filter : OptionalArgument GraphCool.InputObject.LocationFilter, orderBy : OptionalArgument GraphCool.Enum.LocationOrderBy.LocationOrderBy, skip : OptionalArgument Int, after : OptionalArgument String, before : OptionalArgument String, first : OptionalArgument Int, last : OptionalArgument Int }) -> SelectionSet decodesTo GraphCool.Object.Location -> Field (List decodesTo) RootQuery
+allLocations fillInOptionals object =
     let
         filledInOptionals =
-         { filter = Absent, orderBy = Absent, skip = Absent, after = Absent, before = Absent, first = Absent, last = Absent }
+            fillInOptionals { filter = Absent, orderBy = Absent, skip = Absent, after = Absent, before = Absent, first = Absent, last = Absent }
 
         optionalArgs =
             [ Argument.optional "filter" filledInOptionals.filter GraphCool.InputObject.encodeLocationFilter, Argument.optional "orderBy" filledInOptionals.orderBy (Encode.enum GraphCool.Enum.LocationOrderBy.toString), Argument.optional "skip" filledInOptionals.skip Encode.int, Argument.optional "after" filledInOptionals.after Encode.string, Argument.optional "before" filledInOptionals.before Encode.string, Argument.optional "first" filledInOptionals.first Encode.int, Argument.optional "last" filledInOptionals.last Encode.int ]
@@ -130,11 +130,11 @@ allLocations object =
   - filter -
 
 -}
-allMessages : SelectionSet decodesTo GraphCool.Object.Message -> Field (List decodesTo) RootQuery
-allMessages object =
+allMessages : ({ filter : OptionalArgument GraphCool.InputObject.MessageFilter, orderBy : OptionalArgument GraphCool.Enum.MessageOrderBy.MessageOrderBy, skip : OptionalArgument Int, after : OptionalArgument String, before : OptionalArgument String, first : OptionalArgument Int, last : OptionalArgument Int } -> { filter : OptionalArgument GraphCool.InputObject.MessageFilter, orderBy : OptionalArgument GraphCool.Enum.MessageOrderBy.MessageOrderBy, skip : OptionalArgument Int, after : OptionalArgument String, before : OptionalArgument String, first : OptionalArgument Int, last : OptionalArgument Int }) -> SelectionSet decodesTo GraphCool.Object.Message -> Field (List decodesTo) RootQuery
+allMessages fillInOptionals object =
     let
         filledInOptionals =
-         { filter = Absent, orderBy = Absent, skip = Absent, after = Absent, before = Absent, first = Absent, last = Absent }
+            fillInOptionals { filter = Absent, orderBy = Absent, skip = Absent, after = Absent, before = Absent, first = Absent, last = Absent }
 
         optionalArgs =
             [ Argument.optional "filter" filledInOptionals.filter GraphCool.InputObject.encodeMessageFilter, Argument.optional "orderBy" filledInOptionals.orderBy (Encode.enum GraphCool.Enum.MessageOrderBy.toString), Argument.optional "skip" filledInOptionals.skip Encode.int, Argument.optional "after" filledInOptionals.after Encode.string, Argument.optional "before" filledInOptionals.before Encode.string, Argument.optional "first" filledInOptionals.first Encode.int, Argument.optional "last" filledInOptionals.last Encode.int ]
@@ -148,11 +148,11 @@ allMessages object =
   - filter -
 
 -}
-allUsers : SelectionSet decodesTo GraphCool.Object.User -> Field (List decodesTo) RootQuery
-allUsers object =
+allUsers : ({ filter : OptionalArgument GraphCool.InputObject.UserFilter, orderBy : OptionalArgument GraphCool.Enum.UserOrderBy.UserOrderBy, skip : OptionalArgument Int, after : OptionalArgument String, before : OptionalArgument String, first : OptionalArgument Int, last : OptionalArgument Int } -> { filter : OptionalArgument GraphCool.InputObject.UserFilter, orderBy : OptionalArgument GraphCool.Enum.UserOrderBy.UserOrderBy, skip : OptionalArgument Int, after : OptionalArgument String, before : OptionalArgument String, first : OptionalArgument Int, last : OptionalArgument Int }) -> SelectionSet decodesTo GraphCool.Object.User -> Field (List decodesTo) RootQuery
+allUsers fillInOptionals object =
     let
         filledInOptionals =
-         { filter = Absent, orderBy = Absent, skip = Absent, after = Absent, before = Absent, first = Absent, last = Absent }
+            fillInOptionals { filter = Absent, orderBy = Absent, skip = Absent, after = Absent, before = Absent, first = Absent, last = Absent }
 
         optionalArgs =
             [ Argument.optional "filter" filledInOptionals.filter GraphCool.InputObject.encodeUserFilter, Argument.optional "orderBy" filledInOptionals.orderBy (Encode.enum GraphCool.Enum.UserOrderBy.toString), Argument.optional "skip" filledInOptionals.skip Encode.int, Argument.optional "after" filledInOptionals.after Encode.string, Argument.optional "before" filledInOptionals.before Encode.string, Argument.optional "first" filledInOptionals.first Encode.int, Argument.optional "last" filledInOptionals.last Encode.int ]
@@ -166,11 +166,11 @@ allUsers object =
   - filter -
 
 -}
-allVenues : SelectionSet decodesTo GraphCool.Object.Venue -> Field (List decodesTo) RootQuery
-allVenues object =
+allVenues : ({ filter : OptionalArgument GraphCool.InputObject.VenueFilter, orderBy : OptionalArgument GraphCool.Enum.VenueOrderBy.VenueOrderBy, skip : OptionalArgument Int, after : OptionalArgument String, before : OptionalArgument String, first : OptionalArgument Int, last : OptionalArgument Int } -> { filter : OptionalArgument GraphCool.InputObject.VenueFilter, orderBy : OptionalArgument GraphCool.Enum.VenueOrderBy.VenueOrderBy, skip : OptionalArgument Int, after : OptionalArgument String, before : OptionalArgument String, first : OptionalArgument Int, last : OptionalArgument Int }) -> SelectionSet decodesTo GraphCool.Object.Venue -> Field (List decodesTo) RootQuery
+allVenues fillInOptionals object =
     let
         filledInOptionals =
-         { filter = Absent, orderBy = Absent, skip = Absent, after = Absent, before = Absent, first = Absent, last = Absent }
+            fillInOptionals { filter = Absent, orderBy = Absent, skip = Absent, after = Absent, before = Absent, first = Absent, last = Absent }
 
         optionalArgs =
             [ Argument.optional "filter" filledInOptionals.filter GraphCool.InputObject.encodeVenueFilter, Argument.optional "orderBy" filledInOptionals.orderBy (Encode.enum GraphCool.Enum.VenueOrderBy.toString), Argument.optional "skip" filledInOptionals.skip Encode.int, Argument.optional "after" filledInOptionals.after Encode.string, Argument.optional "before" filledInOptionals.before Encode.string, Argument.optional "first" filledInOptionals.first Encode.int, Argument.optional "last" filledInOptionals.last Encode.int ]
@@ -184,11 +184,11 @@ allVenues object =
   - filter -
 
 -}
-allChatsMeta_ : SelectionSet decodesTo GraphCool.Object.QueryMeta_ -> Field decodesTo RootQuery
-allChatsMeta_ object =
+allChatsMeta_ : ({ filter : OptionalArgument GraphCool.InputObject.ChatFilter, orderBy : OptionalArgument GraphCool.Enum.ChatOrderBy.ChatOrderBy, skip : OptionalArgument Int, after : OptionalArgument String, before : OptionalArgument String, first : OptionalArgument Int, last : OptionalArgument Int } -> { filter : OptionalArgument GraphCool.InputObject.ChatFilter, orderBy : OptionalArgument GraphCool.Enum.ChatOrderBy.ChatOrderBy, skip : OptionalArgument Int, after : OptionalArgument String, before : OptionalArgument String, first : OptionalArgument Int, last : OptionalArgument Int }) -> SelectionSet decodesTo GraphCool.Object.QueryMeta_ -> Field decodesTo RootQuery
+allChatsMeta_ fillInOptionals object =
     let
         filledInOptionals =
-         { filter = Absent, orderBy = Absent, skip = Absent, after = Absent, before = Absent, first = Absent, last = Absent }
+            fillInOptionals { filter = Absent, orderBy = Absent, skip = Absent, after = Absent, before = Absent, first = Absent, last = Absent }
 
         optionalArgs =
             [ Argument.optional "filter" filledInOptionals.filter GraphCool.InputObject.encodeChatFilter, Argument.optional "orderBy" filledInOptionals.orderBy (Encode.enum GraphCool.Enum.ChatOrderBy.toString), Argument.optional "skip" filledInOptionals.skip Encode.int, Argument.optional "after" filledInOptionals.after Encode.string, Argument.optional "before" filledInOptionals.before Encode.string, Argument.optional "first" filledInOptionals.first Encode.int, Argument.optional "last" filledInOptionals.last Encode.int ]
@@ -202,11 +202,11 @@ allChatsMeta_ object =
   - filter -
 
 -}
-allEventsMeta_ : SelectionSet decodesTo GraphCool.Object.QueryMeta_ -> Field decodesTo RootQuery
-allEventsMeta_ object =
+allEventsMeta_ : ({ filter : OptionalArgument GraphCool.InputObject.EventFilter, orderBy : OptionalArgument GraphCool.Enum.EventOrderBy.EventOrderBy, skip : OptionalArgument Int, after : OptionalArgument String, before : OptionalArgument String, first : OptionalArgument Int, last : OptionalArgument Int } -> { filter : OptionalArgument GraphCool.InputObject.EventFilter, orderBy : OptionalArgument GraphCool.Enum.EventOrderBy.EventOrderBy, skip : OptionalArgument Int, after : OptionalArgument String, before : OptionalArgument String, first : OptionalArgument Int, last : OptionalArgument Int }) -> SelectionSet decodesTo GraphCool.Object.QueryMeta_ -> Field decodesTo RootQuery
+allEventsMeta_ fillInOptionals object =
     let
         filledInOptionals =
-         { filter = Absent, orderBy = Absent, skip = Absent, after = Absent, before = Absent, first = Absent, last = Absent }
+            fillInOptionals { filter = Absent, orderBy = Absent, skip = Absent, after = Absent, before = Absent, first = Absent, last = Absent }
 
         optionalArgs =
             [ Argument.optional "filter" filledInOptionals.filter GraphCool.InputObject.encodeEventFilter, Argument.optional "orderBy" filledInOptionals.orderBy (Encode.enum GraphCool.Enum.EventOrderBy.toString), Argument.optional "skip" filledInOptionals.skip Encode.int, Argument.optional "after" filledInOptionals.after Encode.string, Argument.optional "before" filledInOptionals.before Encode.string, Argument.optional "first" filledInOptionals.first Encode.int, Argument.optional "last" filledInOptionals.last Encode.int ]
@@ -220,11 +220,11 @@ allEventsMeta_ object =
   - filter -
 
 -}
-allFilesMeta_ : SelectionSet decodesTo GraphCool.Object.QueryMeta_ -> Field decodesTo RootQuery
-allFilesMeta_ object =
+allFilesMeta_ : ({ filter : OptionalArgument GraphCool.InputObject.FileFilter, orderBy : OptionalArgument GraphCool.Enum.FileOrderBy.FileOrderBy, skip : OptionalArgument Int, after : OptionalArgument String, before : OptionalArgument String, first : OptionalArgument Int, last : OptionalArgument Int } -> { filter : OptionalArgument GraphCool.InputObject.FileFilter, orderBy : OptionalArgument GraphCool.Enum.FileOrderBy.FileOrderBy, skip : OptionalArgument Int, after : OptionalArgument String, before : OptionalArgument String, first : OptionalArgument Int, last : OptionalArgument Int }) -> SelectionSet decodesTo GraphCool.Object.QueryMeta_ -> Field decodesTo RootQuery
+allFilesMeta_ fillInOptionals object =
     let
         filledInOptionals =
-         { filter = Absent, orderBy = Absent, skip = Absent, after = Absent, before = Absent, first = Absent, last = Absent }
+            fillInOptionals { filter = Absent, orderBy = Absent, skip = Absent, after = Absent, before = Absent, first = Absent, last = Absent }
 
         optionalArgs =
             [ Argument.optional "filter" filledInOptionals.filter GraphCool.InputObject.encodeFileFilter, Argument.optional "orderBy" filledInOptionals.orderBy (Encode.enum GraphCool.Enum.FileOrderBy.toString), Argument.optional "skip" filledInOptionals.skip Encode.int, Argument.optional "after" filledInOptionals.after Encode.string, Argument.optional "before" filledInOptionals.before Encode.string, Argument.optional "first" filledInOptionals.first Encode.int, Argument.optional "last" filledInOptionals.last Encode.int ]
@@ -238,11 +238,11 @@ allFilesMeta_ object =
   - filter -
 
 -}
-allHostsMeta_ : SelectionSet decodesTo GraphCool.Object.QueryMeta_ -> Field decodesTo RootQuery
-allHostsMeta_ object =
+allHostsMeta_ : ({ filter : OptionalArgument GraphCool.InputObject.HostFilter, orderBy : OptionalArgument GraphCool.Enum.HostOrderBy.HostOrderBy, skip : OptionalArgument Int, after : OptionalArgument String, before : OptionalArgument String, first : OptionalArgument Int, last : OptionalArgument Int } -> { filter : OptionalArgument GraphCool.InputObject.HostFilter, orderBy : OptionalArgument GraphCool.Enum.HostOrderBy.HostOrderBy, skip : OptionalArgument Int, after : OptionalArgument String, before : OptionalArgument String, first : OptionalArgument Int, last : OptionalArgument Int }) -> SelectionSet decodesTo GraphCool.Object.QueryMeta_ -> Field decodesTo RootQuery
+allHostsMeta_ fillInOptionals object =
     let
         filledInOptionals =
-         { filter = Absent, orderBy = Absent, skip = Absent, after = Absent, before = Absent, first = Absent, last = Absent }
+            fillInOptionals { filter = Absent, orderBy = Absent, skip = Absent, after = Absent, before = Absent, first = Absent, last = Absent }
 
         optionalArgs =
             [ Argument.optional "filter" filledInOptionals.filter GraphCool.InputObject.encodeHostFilter, Argument.optional "orderBy" filledInOptionals.orderBy (Encode.enum GraphCool.Enum.HostOrderBy.toString), Argument.optional "skip" filledInOptionals.skip Encode.int, Argument.optional "after" filledInOptionals.after Encode.string, Argument.optional "before" filledInOptionals.before Encode.string, Argument.optional "first" filledInOptionals.first Encode.int, Argument.optional "last" filledInOptionals.last Encode.int ]
@@ -256,11 +256,11 @@ allHostsMeta_ object =
   - filter -
 
 -}
-allLocationsMeta_ : SelectionSet decodesTo GraphCool.Object.QueryMeta_ -> Field decodesTo RootQuery
-allLocationsMeta_ object =
+allLocationsMeta_ : ({ filter : OptionalArgument GraphCool.InputObject.LocationFilter, orderBy : OptionalArgument GraphCool.Enum.LocationOrderBy.LocationOrderBy, skip : OptionalArgument Int, after : OptionalArgument String, before : OptionalArgument String, first : OptionalArgument Int, last : OptionalArgument Int } -> { filter : OptionalArgument GraphCool.InputObject.LocationFilter, orderBy : OptionalArgument GraphCool.Enum.LocationOrderBy.LocationOrderBy, skip : OptionalArgument Int, after : OptionalArgument String, before : OptionalArgument String, first : OptionalArgument Int, last : OptionalArgument Int }) -> SelectionSet decodesTo GraphCool.Object.QueryMeta_ -> Field decodesTo RootQuery
+allLocationsMeta_ fillInOptionals object =
     let
         filledInOptionals =
-         { filter = Absent, orderBy = Absent, skip = Absent, after = Absent, before = Absent, first = Absent, last = Absent }
+            fillInOptionals { filter = Absent, orderBy = Absent, skip = Absent, after = Absent, before = Absent, first = Absent, last = Absent }
 
         optionalArgs =
             [ Argument.optional "filter" filledInOptionals.filter GraphCool.InputObject.encodeLocationFilter, Argument.optional "orderBy" filledInOptionals.orderBy (Encode.enum GraphCool.Enum.LocationOrderBy.toString), Argument.optional "skip" filledInOptionals.skip Encode.int, Argument.optional "after" filledInOptionals.after Encode.string, Argument.optional "before" filledInOptionals.before Encode.string, Argument.optional "first" filledInOptionals.first Encode.int, Argument.optional "last" filledInOptionals.last Encode.int ]
@@ -274,11 +274,11 @@ allLocationsMeta_ object =
   - filter -
 
 -}
-allMessagesMeta_ : SelectionSet decodesTo GraphCool.Object.QueryMeta_ -> Field decodesTo RootQuery
-allMessagesMeta_ object =
+allMessagesMeta_ : ({ filter : OptionalArgument GraphCool.InputObject.MessageFilter, orderBy : OptionalArgument GraphCool.Enum.MessageOrderBy.MessageOrderBy, skip : OptionalArgument Int, after : OptionalArgument String, before : OptionalArgument String, first : OptionalArgument Int, last : OptionalArgument Int } -> { filter : OptionalArgument GraphCool.InputObject.MessageFilter, orderBy : OptionalArgument GraphCool.Enum.MessageOrderBy.MessageOrderBy, skip : OptionalArgument Int, after : OptionalArgument String, before : OptionalArgument String, first : OptionalArgument Int, last : OptionalArgument Int }) -> SelectionSet decodesTo GraphCool.Object.QueryMeta_ -> Field decodesTo RootQuery
+allMessagesMeta_ fillInOptionals object =
     let
         filledInOptionals =
-         { filter = Absent, orderBy = Absent, skip = Absent, after = Absent, before = Absent, first = Absent, last = Absent }
+            fillInOptionals { filter = Absent, orderBy = Absent, skip = Absent, after = Absent, before = Absent, first = Absent, last = Absent }
 
         optionalArgs =
             [ Argument.optional "filter" filledInOptionals.filter GraphCool.InputObject.encodeMessageFilter, Argument.optional "orderBy" filledInOptionals.orderBy (Encode.enum GraphCool.Enum.MessageOrderBy.toString), Argument.optional "skip" filledInOptionals.skip Encode.int, Argument.optional "after" filledInOptionals.after Encode.string, Argument.optional "before" filledInOptionals.before Encode.string, Argument.optional "first" filledInOptionals.first Encode.int, Argument.optional "last" filledInOptionals.last Encode.int ]
@@ -292,11 +292,11 @@ allMessagesMeta_ object =
   - filter -
 
 -}
-allUsersMeta_ : SelectionSet decodesTo GraphCool.Object.QueryMeta_ -> Field decodesTo RootQuery
-allUsersMeta_ object =
+allUsersMeta_ : ({ filter : OptionalArgument GraphCool.InputObject.UserFilter, orderBy : OptionalArgument GraphCool.Enum.UserOrderBy.UserOrderBy, skip : OptionalArgument Int, after : OptionalArgument String, before : OptionalArgument String, first : OptionalArgument Int, last : OptionalArgument Int } -> { filter : OptionalArgument GraphCool.InputObject.UserFilter, orderBy : OptionalArgument GraphCool.Enum.UserOrderBy.UserOrderBy, skip : OptionalArgument Int, after : OptionalArgument String, before : OptionalArgument String, first : OptionalArgument Int, last : OptionalArgument Int }) -> SelectionSet decodesTo GraphCool.Object.QueryMeta_ -> Field decodesTo RootQuery
+allUsersMeta_ fillInOptionals object =
     let
         filledInOptionals =
-         { filter = Absent, orderBy = Absent, skip = Absent, after = Absent, before = Absent, first = Absent, last = Absent }
+            fillInOptionals { filter = Absent, orderBy = Absent, skip = Absent, after = Absent, before = Absent, first = Absent, last = Absent }
 
         optionalArgs =
             [ Argument.optional "filter" filledInOptionals.filter GraphCool.InputObject.encodeUserFilter, Argument.optional "orderBy" filledInOptionals.orderBy (Encode.enum GraphCool.Enum.UserOrderBy.toString), Argument.optional "skip" filledInOptionals.skip Encode.int, Argument.optional "after" filledInOptionals.after Encode.string, Argument.optional "before" filledInOptionals.before Encode.string, Argument.optional "first" filledInOptionals.first Encode.int, Argument.optional "last" filledInOptionals.last Encode.int ]
@@ -310,11 +310,11 @@ allUsersMeta_ object =
   - filter -
 
 -}
-allVenuesMeta_ : SelectionSet decodesTo GraphCool.Object.QueryMeta_ -> Field decodesTo RootQuery
-allVenuesMeta_ object =
+allVenuesMeta_ : ({ filter : OptionalArgument GraphCool.InputObject.VenueFilter, orderBy : OptionalArgument GraphCool.Enum.VenueOrderBy.VenueOrderBy, skip : OptionalArgument Int, after : OptionalArgument String, before : OptionalArgument String, first : OptionalArgument Int, last : OptionalArgument Int } -> { filter : OptionalArgument GraphCool.InputObject.VenueFilter, orderBy : OptionalArgument GraphCool.Enum.VenueOrderBy.VenueOrderBy, skip : OptionalArgument Int, after : OptionalArgument String, before : OptionalArgument String, first : OptionalArgument Int, last : OptionalArgument Int }) -> SelectionSet decodesTo GraphCool.Object.QueryMeta_ -> Field decodesTo RootQuery
+allVenuesMeta_ fillInOptionals object =
     let
         filledInOptionals =
-         { filter = Absent, orderBy = Absent, skip = Absent, after = Absent, before = Absent, first = Absent, last = Absent }
+            fillInOptionals { filter = Absent, orderBy = Absent, skip = Absent, after = Absent, before = Absent, first = Absent, last = Absent }
 
         optionalArgs =
             [ Argument.optional "filter" filledInOptionals.filter GraphCool.InputObject.encodeVenueFilter, Argument.optional "orderBy" filledInOptionals.orderBy (Encode.enum GraphCool.Enum.VenueOrderBy.toString), Argument.optional "skip" filledInOptionals.skip Encode.int, Argument.optional "after" filledInOptionals.after Encode.string, Argument.optional "before" filledInOptionals.before Encode.string, Argument.optional "first" filledInOptionals.first Encode.int, Argument.optional "last" filledInOptionals.last Encode.int ]
@@ -328,11 +328,11 @@ allVenuesMeta_ object =
   - id -
 
 -}
-chat : SelectionSet decodesTo GraphCool.Object.Chat -> Field (Maybe decodesTo) RootQuery
-chat object =
+chat : ({ id : OptionalArgument GraphCool.Scalar.Id } -> { id : OptionalArgument GraphCool.Scalar.Id }) -> SelectionSet decodesTo GraphCool.Object.Chat -> Field (Maybe decodesTo) RootQuery
+chat fillInOptionals object =
     let
         filledInOptionals =
-         { id = Absent }
+            fillInOptionals { id = Absent }
 
         optionalArgs =
             [ Argument.optional "id" filledInOptionals.id (\(GraphCool.Scalar.Id raw) -> Encode.string raw) ]
@@ -346,11 +346,11 @@ chat object =
   - id -
 
 -}
-event : SelectionSet decodesTo GraphCool.Object.Event -> Field (Maybe decodesTo) RootQuery
-event object =
+event : ({ id : OptionalArgument GraphCool.Scalar.Id } -> { id : OptionalArgument GraphCool.Scalar.Id }) -> SelectionSet decodesTo GraphCool.Object.Event -> Field (Maybe decodesTo) RootQuery
+event fillInOptionals object =
     let
         filledInOptionals =
-         { id = Absent }
+            fillInOptionals { id = Absent }
 
         optionalArgs =
             [ Argument.optional "id" filledInOptionals.id (\(GraphCool.Scalar.Id raw) -> Encode.string raw) ]
@@ -366,11 +366,11 @@ event object =
   - url -
 
 -}
-file : SelectionSet decodesTo GraphCool.Object.File -> Field (Maybe decodesTo) RootQuery
-file object =
+file : ({ id : OptionalArgument GraphCool.Scalar.Id, secret : OptionalArgument String, url : OptionalArgument String } -> { id : OptionalArgument GraphCool.Scalar.Id, secret : OptionalArgument String, url : OptionalArgument String }) -> SelectionSet decodesTo GraphCool.Object.File -> Field (Maybe decodesTo) RootQuery
+file fillInOptionals object =
     let
         filledInOptionals =
-         { id = Absent, secret = Absent, url = Absent }
+            fillInOptionals { id = Absent, secret = Absent, url = Absent }
 
         optionalArgs =
             [ Argument.optional "id" filledInOptionals.id (\(GraphCool.Scalar.Id raw) -> Encode.string raw), Argument.optional "secret" filledInOptionals.secret Encode.string, Argument.optional "url" filledInOptionals.url Encode.string ]
@@ -384,11 +384,11 @@ file object =
   - id -
 
 -}
-host : SelectionSet decodesTo GraphCool.Object.Host -> Field (Maybe decodesTo) RootQuery
-host object =
+host : ({ id : OptionalArgument GraphCool.Scalar.Id } -> { id : OptionalArgument GraphCool.Scalar.Id }) -> SelectionSet decodesTo GraphCool.Object.Host -> Field (Maybe decodesTo) RootQuery
+host fillInOptionals object =
     let
         filledInOptionals =
-         { id = Absent }
+            fillInOptionals { id = Absent }
 
         optionalArgs =
             [ Argument.optional "id" filledInOptionals.id (\(GraphCool.Scalar.Id raw) -> Encode.string raw) ]
@@ -402,11 +402,11 @@ host object =
   - id -
 
 -}
-location : SelectionSet decodesTo GraphCool.Object.Location -> Field (Maybe decodesTo) RootQuery
-location object =
+location : ({ id : OptionalArgument GraphCool.Scalar.Id } -> { id : OptionalArgument GraphCool.Scalar.Id }) -> SelectionSet decodesTo GraphCool.Object.Location -> Field (Maybe decodesTo) RootQuery
+location fillInOptionals object =
     let
         filledInOptionals =
-         { id = Absent }
+            fillInOptionals { id = Absent }
 
         optionalArgs =
             [ Argument.optional "id" filledInOptionals.id (\(GraphCool.Scalar.Id raw) -> Encode.string raw) ]
@@ -420,11 +420,11 @@ location object =
   - id -
 
 -}
-message : SelectionSet decodesTo GraphCool.Object.Message -> Field (Maybe decodesTo) RootQuery
-message object =
+message : ({ id : OptionalArgument GraphCool.Scalar.Id } -> { id : OptionalArgument GraphCool.Scalar.Id }) -> SelectionSet decodesTo GraphCool.Object.Message -> Field (Maybe decodesTo) RootQuery
+message fillInOptionals object =
     let
         filledInOptionals =
-         { id = Absent }
+            fillInOptionals { id = Absent }
 
         optionalArgs =
             [ Argument.optional "id" filledInOptionals.id (\(GraphCool.Scalar.Id raw) -> Encode.string raw) ]
@@ -440,11 +440,11 @@ message object =
   - id -
 
 -}
-user : SelectionSet decodesTo GraphCool.Object.User -> Field (Maybe decodesTo) RootQuery
-user object =
+user : ({ auth0UserId : OptionalArgument String, email : OptionalArgument String, id : OptionalArgument GraphCool.Scalar.Id } -> { auth0UserId : OptionalArgument String, email : OptionalArgument String, id : OptionalArgument GraphCool.Scalar.Id }) -> SelectionSet decodesTo GraphCool.Object.User -> Field (Maybe decodesTo) RootQuery
+user fillInOptionals object =
     let
         filledInOptionals =
-         { auth0UserId = Absent, email = Absent, id = Absent }
+            fillInOptionals { auth0UserId = Absent, email = Absent, id = Absent }
 
         optionalArgs =
             [ Argument.optional "auth0UserId" filledInOptionals.auth0UserId Encode.string, Argument.optional "email" filledInOptionals.email Encode.string, Argument.optional "id" filledInOptionals.id (\(GraphCool.Scalar.Id raw) -> Encode.string raw) ]
@@ -458,11 +458,11 @@ user object =
   - id -
 
 -}
-venue : SelectionSet decodesTo GraphCool.Object.Venue -> Field (Maybe decodesTo) RootQuery
-venue object =
+venue : ({ id : OptionalArgument GraphCool.Scalar.Id } -> { id : OptionalArgument GraphCool.Scalar.Id }) -> SelectionSet decodesTo GraphCool.Object.Venue -> Field (Maybe decodesTo) RootQuery
+venue fillInOptionals object =
     let
         filledInOptionals =
-         { id = Absent }
+            fillInOptionals { id = Absent }
 
         optionalArgs =
             [ Argument.optional "id" filledInOptionals.id (\(GraphCool.Scalar.Id raw) -> Encode.string raw) ]
