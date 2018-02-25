@@ -54,11 +54,14 @@ type alias Event =
 type alias EventModel =
    { event: Event
    , eventResponse: ResponseModel
+   , createdEvent:  SubmitResponseModel
    }
 
 type alias ResponseModel =
      RemoteData Graphqelm.Http.Error Response
 
+type alias SubmitResponseModel =
+    RemoteData Graphqelm.Http.Error (Maybe Event)
 
 -- query : SelectionSet Response RootQuery
 -- query =
@@ -137,4 +140,5 @@ initModel : EventModel
 initModel =
     EventModel
       initEvent
+      RemoteData.Loading
       RemoteData.Loading

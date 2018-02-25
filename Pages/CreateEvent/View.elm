@@ -58,22 +58,55 @@ view event =
             Loading -> text "Gimme a Sec"
             Failure e -> text ("Shucks um, " ++ (Basics.toString e))
             Success a -> refineView a
+
+        submission =
+        case event.createdEvent of
+            NotAsked -> text "Hold up, Lemme Check"
+            Loading -> text "Gimme a Sec"
+            Failure e -> text ("Shucks um, " ++ (Basics.toString e))
+            Success a ->
+                case a of
+                  Nothing ->
+                    div [][ text "Success. But NO response. Something went wrong"]
+                  Just e ->
+                    div []
+                    [
+                     div []
+                        [ h5 [] [ text "Events" ]
+                        , div [] [ text "ID: ", text (Basics.toString e.id) ]
+                        , div [] [ text "Name: ", text (Basics.toString e.name) ]
+                        , div [] [ text "Full Name: ", text (Basics.toString e.nameFull) ]
+                        , div [] [ text "Start Date: ", text (Basics.toString e.startsAt) ]
+                        , div [] [ text "Created By: ", text (Basics.toString e.createdBy) ]
+                        ]
+                    ]
     in
+      div [] [
         section [ class "animated fadeInUp flex flex-column items-stretch flex-auto pa0 ma0 measure-ns shadow-2-ns" ]
             [ Assets.banner "create event"
-            , div [ class "flex-shrink-1 flex-grow-0 bg-black-70 overflow-auto pa3 white" ]
+            , div [ class " flex-grow-0 bg-black-70 overflow-auto pa3 white" ] -- flex-shrink-1
                 [ textInput "name" "📛" "what's it called?" ChangeName
                 , textInput "nameFull" "📢" "what's it for?" ChangeNameFull
                 , dateInput "startsAt" "📆" "what day is it?"
                 , dateInput "endsAt" "📆" "what day is it?"
                 ]
+            , button [ onClick SubmitEvent] [ text "Create An Event"]
             , button [ onClick MakeRequest  ] [ text "Show Events" ]
-            , div [ style [("color", "#000000")]]
-                [
-                     h1 [] [ text "Response" ]
-                    , h2 [] [ text "Raw" ]
-                    , Html.text (Basics.toString event.eventResponse)
-                    , h2 [] [ text "Refined" ]
-                    , response
-                ]
             ]
+        , div [ style [("color", "#000000")]]
+            [
+                 h1 [] [ text "Submission Response " ]
+                , h2 [] [ text "Raw" ]
+                , Html.text (Basics.toString event.createdEvent)
+                , h2 [] [ text "Refined" ]
+                , submission
+            ]
+        , div [ style [("color", "#000000")]]
+            [
+                 h1 [] [ text "AllEvents Query Response" ]
+                , h2 [] [ text "Raw" ]
+                , Html.text (Basics.toString event.eventResponse)
+                , h2 [] [ text "Refined" ]
+                , response
+            ]
+      ]

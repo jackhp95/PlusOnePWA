@@ -19,10 +19,6 @@ import RemoteData exposing (..)
 import GraphCool.Mutation as Mutation
 import Graphqelm.OptionalArgument exposing (OptionalArgument(Absent, Null, Present))
 
-type alias Response =
-    { event : Maybe Event }
-
-
 
 type alias Event =
     { chats : Maybe (List Id)
@@ -42,12 +38,13 @@ type alias Event =
     }
 
 
-mutation : SelectionSet Response RootMutation
+mutation : SelectionSet (Maybe Event) RootMutation
 mutation =
-    Mutation.selection Response
+    Mutation.selection identity -- (Maybe Event)
         |> with (Mutation.createEvent
-         (\optionals -> { optionals | nameFull = Present "Fun events", createdById = Present "cje07e7y7e227015745hh81m3" })
-         { name = "Mizzou BasketBall NCAA Finals", startsAt = DateTime "2018-02-25T10:00:00.000Z" } event)
+         --identity
+         (\optionals -> { optionals | createdById = Present (Id "cje07e7y7e227015745hh81m3") })
+         { name = "Ed Sheeran Perfect Concert", startsAt = DateTime "2018-03-20T10:00:00.000Z" } event)
 
 
 
@@ -95,15 +92,15 @@ makeRequest : Cmd Msg
 makeRequest =
     mutation
         |> Graphqelm.Http.mutationRequest "https://api.graph.cool/simple/v1/PlusOne"
-        |> Graphqelm.Http.send (RemoteData.fromResult >> GotResponse)
+        |> Graphqelm.Http.send (RemoteData.fromResult >> MutateEvent)
 
 
 type Msg
-    = GotResponse Model
+    = MutateEvent Model
 
 
 type alias Model =
-    RemoteData Graphqelm.Http.Error Response
+    RemoteData Graphqelm.Http.Error (Maybe Event)
 
 
 init : ( Model, Cmd Msg )
@@ -128,11 +125,19 @@ view model =
                     text ("Shucks um, " ++ Basics.toString e)
 
                 Success a ->
-                    div []
+                    case a of
+                      Nothing ->
+                        div [][ text "Success. No response"]
+                      Just e ->
+                        div []
                         [
                          div []
                             [ h5 [] [ text "Events" ]
-                            , div [] [ text (Basics.toString a.event) ]
+                            , div [] [ text "ID: ", text (Basics.toString e.id) ]
+                            , div [] [ text "Name: ", text (Basics.toString e.name) ]
+                            , div [] [ text "Full Name: ", text (Basics.toString e.nameFull) ]
+                            , div [] [ text "Start Date: ", text (Basics.toString e.startsAt) ]
+                            , div [] [ text "Created By: ", text (Basics.toString e.createdBy) ]
                             ]
                         ]
     in
@@ -154,7 +159,7 @@ view model =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        GotResponse response ->
+        MutateEvent response ->
             ( response, Cmd.none )
 
 

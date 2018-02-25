@@ -4,15 +4,9 @@ import Pages.Event.Model exposing(..)
 
 
 type Msg
-    = SubmitEvent String
-    -- | ChangeTitle String
-    -- | ChangeDescription String
-    -- | ChangeLocation String
-    -- | ChangeDate String
-    -- | ChangeTime String
-    -- | ChangePrivacy String
-    -- | ChangeTaxonomy String
+    = SubmitEvent
     | GotResponse ResponseModel
+    | GotSubmitResponse SubmitResponseModel
     | MakeRequest
     | ChangeName String
     | ChangeNameFull String

@@ -4,7 +4,7 @@ import SeatGeek.Types as SG
 import Pages.CreateEvent.Model exposing (..)
 import Pages.CreateEvent.Messages exposing (..)
 import Pages.Event.Model exposing (..)
-import Graphqelm.Operation exposing (RootQuery)
+import Graphqelm.Operation exposing (RootQuery, RootMutation)
 import Graphqelm.SelectionSet exposing (SelectionSet, with)
 import GraphCool.Object.Event as Event
 import GraphCool.Object
@@ -15,8 +15,10 @@ import GraphCool.Object.User as User
 import GraphCool.Object.Venue as Venue
 import RemoteData exposing (..)
 import GraphCool.Query as Query
+import GraphCool.Mutation as Mutation
 import Graphqelm.Http exposing (..)
 import GraphCool.Scalar exposing (..)
+import Graphqelm.OptionalArgument exposing (OptionalArgument(Absent, Null, Present))
 
 
 
@@ -26,10 +28,13 @@ query =
     Query.selection Response
         |> with (Query.allEvents event)
 
--- querySubmit : Selection SubmitResponse RootQuery
--- querySubmit =
---     Mutation.selection SubmitResponse
---         |> with (Mutation.createEvent )
+mutation : SelectionSet (Maybe Event) RootMutation
+mutation =
+    Mutation.selection identity -- (Maybe Event)
+        |> with (Mutation.createEvent
+         --identity
+         (\optionals -> { optionals | createdById = Present (Id "cje07e7y7e227015745hh81m3") })
+         { name = "Avengers: Infinity War", startsAt = DateTime "2018-04-20T10:00:00.000Z" } event)
 
 event : SelectionSet Event GraphCool.Object.Event
 event =
@@ -86,15 +91,23 @@ makeRequest =
         |> Graphqelm.Http.queryRequest "https://api.graph.cool/simple/v1/PlusOne"
         |> Graphqelm.Http.send (RemoteData.fromResult >> GotResponse)
 
+makeMutationRequest : Cmd Msg
+makeMutationRequest =
+    mutation
+        |> Graphqelm.Http.mutationRequest "https://api.graph.cool/simple/v1/PlusOne"
+        |> Graphqelm.Http.send (RemoteData.fromResult >> GotSubmitResponse)
+
 update : Msg -> CreateEvent -> ( CreateEvent, Cmd Msg )
 update msg model =
     case msg of
         MakeRequest ->
             (model, makeRequest)
+        SubmitEvent ->
+            (model, makeMutationRequest)
+        GotSubmitResponse responseModel->
+            ({ model | createdEvent = responseModel}, Cmd.none)
         GotResponse responseModel ->
             ({ model | eventResponse = responseModel}, Cmd.none)
-        SubmitEvent e ->
-            ( model , Cmd.none )
         ChangeName newName ->
             let
               oldEvent = model.event
