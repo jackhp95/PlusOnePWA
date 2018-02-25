@@ -26,18 +26,18 @@ view event =
                 , input [ class "f4 fw3 ma0 pv1 ph0 white bg-transparent bb bn outline-0 w-100", placeholder desc, onInput onChange ] []
                 , div [ class "pt1 bt b--white child" ] []
                 ]
+        --
+        -- timeInput title emoji desc =
+        --     fieldset [ class "flex flex-column flex-auto outline-0 bn pa3 ma0 hide-child" ]
+        --         [ label [ class "pb1" ] [ text (emoji ++ " " ++ title) ]
+        --         , input [ type_ "time", class "f4 fw3 ma0 pa1 white bg-transparent bn outline-0", value "08:30" ] []
+        --         , div [ class "pt1 bt b--white child" ] []
+        --         ]
 
-        timeInput title emoji desc =
+        dateInput title emoji desc onChange =
             fieldset [ class "flex flex-column flex-auto outline-0 bn pa3 ma0 hide-child" ]
                 [ label [ class "pb1" ] [ text (emoji ++ " " ++ title) ]
-                , input [ type_ "time", class "f4 fw3 ma0 pa1 white bg-transparent bn outline-0", value "08:30" ] []
-                , div [ class "pt1 bt b--white child" ] []
-                ]
-
-        dateInput title emoji desc =
-            fieldset [ class "flex flex-column flex-auto outline-0 bn pa3 ma0 hide-child" ]
-                [ label [ class "pb1" ] [ text (emoji ++ " " ++ title) ]
-                , input [ type_ "date", class "f4 fw3 ma0 pa1 white bg-transparent bn outline-0", value "2017-06-01" ] []
+                , input [ type_ "date", class "f4 fw3 ma0 pa1 white bg-transparent bn outline-0", onInput onChange ] []
                 , div [ class "pt1 bt b--white child" ] []
                 ]
         submitInput =
@@ -85,10 +85,10 @@ view event =
         section [ class "animated fadeInUp flex flex-column items-stretch flex-auto pa0 ma0 measure-ns shadow-2-ns" ]
             [ Assets.banner "create event"
             , div [ class " flex-grow-0 bg-black-70 overflow-auto pa3 white" ] -- flex-shrink-1
-                [ textInput "name" "📛" "what's it called?" ChangeName
-                , textInput "nameFull" "📢" "what's it for?" ChangeNameFull
-                , dateInput "startsAt" "📆" "what day is it?"
-                , dateInput "endsAt" "📆" "what day is it?"
+                [ textInput "Name" "📛" "what's it called?" ChangeName
+                , textInput "Full Name" "📢" "what's it for?" ChangeNameFull
+                , dateInput "Start Date" "📆" "what day is it?" ChangeStartDate
+                , dateInput "End Date" "📆" "what day is it?" ChangeEndDate
                 ]
             , button [ onClick SubmitEvent] [ text "Create An Event"]
             , button [ onClick MakeRequest  ] [ text "Show Events" ]

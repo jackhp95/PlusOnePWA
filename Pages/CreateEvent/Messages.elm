@@ -10,3 +10,5 @@ type Msg
     | MakeRequest
     | ChangeName String
     | ChangeNameFull String
+    | ChangeStartDate String
+    | ChangeEndDate String

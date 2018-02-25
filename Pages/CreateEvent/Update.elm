@@ -28,13 +28,27 @@ query =
     Query.selection Response
         |> with (Query.allEvents event)
 
-mutation : SelectionSet (Maybe Event) RootMutation
-mutation =
+mutation : Event -> SelectionSet (Maybe Event) RootMutation
+mutation model =
+  let
+    endDate =
+      case model.endsAt of
+        Nothing ->
+          Absent
+        Just date ->
+          Present date
+    fullName =
+      case model.nameFull of
+        Nothing ->
+          Absent
+        Just n ->
+          Present n
+  in
     Mutation.selection identity -- (Maybe Event)
         |> with (Mutation.createEvent
          --identity
-         (\optionals -> { optionals | createdById = Present (Id "cje07e7y7e227015745hh81m3") })
-         { name = "Avengers: Infinity War", startsAt = DateTime "2018-04-20T10:00:00.000Z" } event)
+         (\optionals -> { optionals | nameFull = fullName, endsAt = endDate, createdById = Present (Id "cje07e7y7e227015745hh81m3") })
+         { name = model.name, startsAt = model.startsAt } event)
 
 event : SelectionSet Event GraphCool.Object.Event
 event =
@@ -69,21 +83,6 @@ hostId =
 venueId : SelectionSet Id GraphCool.Object.Venue
 venueId =
   Venue.selection identity |> with Venue.id
--- { chats : List String
--- , createAt : GraphCool.Scalar.DateTime
--- , createdBy : String
--- , endsAt : GraphCool.Scalar.DateTime
--- , hosts : List String
--- , id : GraphCool.Scalar.Id
--- , name : String
--- , nameFull : String
--- , private : Bool
--- , startsAt : GraphCool.Scalar.DateTime
--- , usersAttending : List String
--- , usersLiked : List String
--- , usersViewed : List String
--- , venues : List String
--- }
 
 makeRequest : Cmd Msg
 makeRequest =
@@ -91,9 +90,9 @@ makeRequest =
         |> Graphqelm.Http.queryRequest "https://api.graph.cool/simple/v1/PlusOne"
         |> Graphqelm.Http.send (RemoteData.fromResult >> GotResponse)
 
-makeMutationRequest : Cmd Msg
-makeMutationRequest =
-    mutation
+makeMutationRequest : EventModel -> Cmd Msg
+makeMutationRequest model =
+    mutation model.event
         |> Graphqelm.Http.mutationRequest "https://api.graph.cool/simple/v1/PlusOne"
         |> Graphqelm.Http.send (RemoteData.fromResult >> GotSubmitResponse)
 
@@ -103,7 +102,7 @@ update msg model =
         MakeRequest ->
             (model, makeRequest)
         SubmitEvent ->
-            (model, makeMutationRequest)
+            (model, makeMutationRequest model)
         GotSubmitResponse responseModel->
             ({ model | createdEvent = responseModel}, Cmd.none)
         GotResponse responseModel ->
@@ -122,6 +121,20 @@ update msg model =
                 { oldEvent | nameFull = Just newNameFull }
             in
             ( { model | event = newEvent} , Cmd.none)
+        ChangeStartDate newDate ->
+           let
+             oldEvent = model.event
+             newEvent =
+               { oldEvent | startsAt = DateTime newDate }
+           in
+           ( { model | event = newEvent} , Cmd.none)
+        ChangeEndDate newDate ->
+           let
+             oldEvent = model.event
+             newEvent =
+               { oldEvent | endsAt = Just (DateTime newDate) }
+           in
+           ( { model | event = newEvent} , Cmd.none)
         -- ChangeLocation newLocation ->
         --     ( { model | location = newLocation }, Cmd.none)
         -- ChangeDate newDate ->

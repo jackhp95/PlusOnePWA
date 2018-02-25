@@ -63,51 +63,6 @@ type alias ResponseModel =
 type alias SubmitResponseModel =
     RemoteData Graphqelm.Http.Error (Maybe Event)
 
--- query : SelectionSet Response RootQuery
--- query =
---     Query.selection Response
---         |> with (Query.allEvents event)
---
--- event : SelectionSet EventQuery GraphCool.Object.Event
--- event =
---     Event.selection EventQuery
---         -- |> with Event.chats
---         -- |> with Event.createdAt
---         -- |> with Event.createdBy
---         -- |> with Event.endsAt
---         -- |> with Event.hosts
---         |> with Event.name
---         |> with Event.id
---         -- |> with Event.nameFull
---         -- |> with Event.private
---         -- |> with Event.startsAt
---         -- |> with Event.usersAttending
---         -- |> with Event.usersLiked
---         -- |> with Event.usersViewed
---         -- |> with Event.venues
---
--- -- { chats : List String
--- -- , createAt : GraphCool.Scalar.DateTime
--- -- , createdBy : String
--- -- , endsAt : GraphCool.Scalar.DateTime
--- -- , hosts : List String
--- -- , id : GraphCool.Scalar.Id
--- -- , name : String
--- -- , nameFull : String
--- -- , private : Bool
--- -- , startsAt : GraphCool.Scalar.DateTime
--- -- , usersAttending : List String
--- -- , usersLiked : List String
--- -- , usersViewed : List String
--- -- , venues : List String
--- -- }
---
--- makeRequest : Cmd Msg
--- makeRequest =
---     query
---         |> Graphqelm.Http.queryRequest "https://api.graph.cool/simple/v1/PlusOne"
---         |> Graphqelm.Http.send (RemoteData.fromResult >> GotResponse)
-
 
 init : ( EventModel, Cmd Msg )
 init =
