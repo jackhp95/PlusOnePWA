@@ -26,6 +26,11 @@ query =
     Query.selection Response
         |> with (Query.allEvents event)
 
+-- querySubmit : Selection SubmitResponse RootQuery
+-- querySubmit =
+--     Mutation.selection SubmitResponse
+--         |> with (Mutation.createEvent )
+
 event : SelectionSet Event GraphCool.Object.Event
 event =
     Event.selection Event
