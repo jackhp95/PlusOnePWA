@@ -1,26 +1,23 @@
 module Main exposing (main)
 
-import View exposing (render)
-import Types exposing (..)
-import Html exposing (..)
-import Update exposing (..)
-import WebSocket
-import SeatGeek.Query
-import SeatGeek.Decode
-import SeatGeek.Types as SG
-import Mouse
-import Window exposing (size)
-import Pages.Pool.View exposing (getPosition, determineTubers)
-
-import Pages.CreateEvent.Update exposing (update)
-import Pages.CreateEvent.Model as CreateEvent
-import Pages.Pool.Model as PoolModel
-
-
 -- Try to reomve these?
 
 import Date exposing (..)
+import Html exposing (..)
+import Mouse
+import Pages.CreateEvent.Model as CreateEvent
+import Pages.CreateEvent.Update exposing (update)
+import Pages.Pool.Model as PoolModel
+import Pages.Pool.View exposing (determineTubers, getPosition)
+import SeatGeek.Decode
+import SeatGeek.Query
+import SeatGeek.Types as SG
 import Task exposing (..)
+import Types exposing (..)
+import Update exposing (..)
+import View exposing (render)
+import WebSocket
+import Window exposing (size)
 
 
 initCmd : Cmd Msg
@@ -59,6 +56,7 @@ init =
 view : Model -> Html Msg
 view model =
     View.render model
+
 
 
 -- SUBSCRIPTIONS

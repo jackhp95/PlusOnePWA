@@ -1,7 +1,7 @@
 module Pages.Message.Update exposing (..)
 
-import Pages.Message.Model exposing (..)
 import Pages.Message.Messages exposing (..)
+import Pages.Message.Model exposing (..)
 
 
 update : Msg -> Message -> ( Message, Cmd Msg )

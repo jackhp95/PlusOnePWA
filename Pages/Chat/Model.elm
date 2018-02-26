@@ -1,5 +1,7 @@
 module Pages.Chat.Model exposing (..)
+
 import Pages.Chat.Messages exposing (..)
+
 
 type alias Chat =
     { canceled : String
@@ -14,13 +16,16 @@ type alias Chat =
     , userAvi : String
     }
 
+
 init : ( Chat, Cmd Msg )
 init =
     ( initModel, initCmd )
 
+
 initCmd : Cmd Msg
 initCmd =
     Cmd.none
+
 
 initModel : Chat
 initModel =
@@ -30,10 +35,11 @@ initModel =
         "Event 1"
         1
         "Alex"
-        ["Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?",
-        "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?",
-        "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?",
-        "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"]
+        [ "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
+        , "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
+        , "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
+        , "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
+        ]
         "Nope"
         "Nope"
         "Nope"

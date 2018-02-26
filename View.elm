@@ -1,29 +1,21 @@
 module View exposing (render)
 
-import Types
-
-
 -- DUCK TAPE --
+-- PAGES --
+-- SUBVIEWS --
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
-
-
--- PAGES --
-
+import Nav exposing (..)
 import Pages.Chat.View as Chat
 import Pages.Chats.View as Chats
-import Pages.User.View as User
-import Pages.Events.View as Events
-import Pages.Event.View as Event
-import Pages.Pool.View as Pool
 import Pages.CreateEvent.View as CreateEvent
-
-
--- SUBVIEWS --
-
+import Pages.Event.View as Event
+import Pages.Events.View as Events
+import Pages.Pool.View as Pool
+import Pages.User.View as User
 import Proto exposing (..)
-import Nav exposing (..)
+import Types
 
 
 render : Types.Model -> Html Types.Msg
@@ -37,12 +29,15 @@ render model =
                    ]
             )
         ]
-    -- div
-    --     [ class "animated fadeIn f6 fw3 flex flex-column-l flex-row-m flex-column-reverse items-stretch vh-100 white" ]
-    --     [ Nav.bar
-    --     , main_ [ class "flex-auto flex justify-stretch" ]
-    --         (page model)
-    --     ]
+
+
+
+-- div
+--     [ class "animated fadeIn f6 fw3 flex flex-column-l flex-row-m flex-column-reverse items-stretch vh-100 white" ]
+--     [ Nav.bar
+--     , main_ [ class "flex-auto flex justify-stretch" ]
+--         (page model)
+--     ]
 
 
 page : Types.Model -> List (Html Types.Msg)

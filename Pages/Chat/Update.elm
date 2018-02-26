@@ -1,7 +1,7 @@
 module Pages.Chat.Update exposing (..)
 
-import Pages.Chat.Model exposing (..)
 import Pages.Chat.Messages exposing (..)
+import Pages.Chat.Model exposing (..)
 
 
 update : Msg -> Chat -> ( Chat, Cmd Msg )

@@ -1,8 +1,8 @@
 module Pages.Pool.Update exposing (..)
 
-import SeatGeek.Types as SG
-import Pages.Pool.Model exposing (..)
 import Pages.Pool.Messages exposing (..)
+import Pages.Pool.Model exposing (..)
+import SeatGeek.Types as SG
 
 
 update : Msg -> Pool -> ( Pool, Cmd Msg )

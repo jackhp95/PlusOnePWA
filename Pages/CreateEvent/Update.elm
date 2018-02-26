@@ -1,26 +1,33 @@
 module Pages.CreateEvent.Update exposing (..)
 
-import SeatGeek.Types as SG
-import Pages.CreateEvent.Model exposing (..)
 import Pages.CreateEvent.Messages exposing (..)
+import Pages.CreateEvent.Model exposing (..)
+import SeatGeek.Types as SG
 
 
 update : Msg -> CreateEvent -> ( CreateEvent, Cmd Msg )
 update msg model =
     case msg of
         SubmitEvent e ->
-            ( model , Cmd.none )
+            ( model, Cmd.none )
+
         ChangeTitle newTitle ->
-            ( { model | title = newTitle }, Cmd.none)
+            ( { model | title = newTitle }, Cmd.none )
+
         ChangeDescription newDescription ->
-            ( { model | description = newDescription}, Cmd.none)
+            ( { model | description = newDescription }, Cmd.none )
+
         ChangeLocation newLocation ->
-            ( { model | location = newLocation }, Cmd.none)
+            ( { model | location = newLocation }, Cmd.none )
+
         ChangeDate newDate ->
-            ( { model | date = newDate }, Cmd.none)
+            ( { model | date = newDate }, Cmd.none )
+
         ChangeTime newTime ->
-            ( { model | time = newTime }, Cmd.none)
+            ( { model | time = newTime }, Cmd.none )
+
         ChangePrivacy newPrivacy ->
-            ( { model | privacy = newPrivacy }, Cmd.none)
+            ( { model | privacy = newPrivacy }, Cmd.none )
+
         ChangeTaxonomy newTaxonomy ->
-            ( { model | taxonomy = newTaxonomy }, Cmd.none)
+            ( { model | taxonomy = newTaxonomy }, Cmd.none )

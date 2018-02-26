@@ -1,8 +1,10 @@
 module Pages.User.Model exposing (..)
+
 import Pages.User.Messages exposing (..)
 
+
 type alias User =
-    { auth0UserId: String
+    { auth0UserId : String
     , avi : List String
     , bio : String
     , birthday : String
@@ -26,9 +28,11 @@ type alias User =
     , updatedAt : String
     }
 
+
 init : ( User, Cmd Msg )
 init =
     ( initModel, initCmd )
+
 
 initCmd : Cmd Msg
 initCmd =

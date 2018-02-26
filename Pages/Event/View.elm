@@ -4,20 +4,20 @@
 
 module Pages.Event.View exposing (..)
 
-import Types exposing (Msg)
-import Pages.Events.Model exposing (Events)
-import SeatGeek.Query exposing (composeRequest)
-import SeatGeek.Decode exposing (decodeReply)
-import SeatGeek.Types as SG
-import Nav exposing (bar)
 import Assets exposing (feather)
+import Date exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Http exposing (..)
-import Task exposing (..)
-import Date exposing (..)
 import Moment exposing (..)
+import Nav exposing (bar)
+import Pages.Events.Model exposing (Events)
+import SeatGeek.Decode exposing (decodeReply)
+import SeatGeek.Query exposing (composeRequest)
+import SeatGeek.Types as SG
+import Task exposing (..)
+import Types exposing (Msg)
 
 
 askQuery : SG.Query -> Cmd Msg
@@ -29,7 +29,7 @@ askQuery query =
         request =
             Http.get url decodeReply
     in
-        Http.send Types.GetReply request
+    Http.send Types.GetReply request
 
 
 
@@ -55,13 +55,13 @@ eventTitle event =
         icon x =
             div [ Assets.feather x, class "contain dib bg-center grow ml1 mr2 pt1 pb3 pl1 pr3" ] []
     in
-        div [ class "pt4 pb3 mh4 bb b--white-20" ]
-            [ div [ class "fw6 pv1 lh-solid ttn f3" ]
-                [ text event.title
-                ]
-            , div [ class "fw5 pv1 f4 flex items-center o-80 ttn" ]
-                [ icon "at-sign", text event.venue.name ]
+    div [ class "pt4 pb3 mh4 bb b--white-20" ]
+        [ div [ class "fw6 pv1 lh-solid ttn f3" ]
+            [ text event.title
             ]
+        , div [ class "fw5 pv1 f4 flex items-center o-80 ttn" ]
+            [ icon "at-sign", text event.venue.name ]
+        ]
 
 
 eventTickets : SG.Event -> Html msg
@@ -75,26 +75,26 @@ eventTickets event =
                 , event.stats.lowest_price_good_deals
                 ]
     in
-        case event.stats.lowest_price of
-            Just x ->
-                a [ href event.url, target "_blank", class "bg-white br1 pa2 mh1 flex items-center mh1 no-underline" ]
-                    [ div
-                        [ style [ ( "background-image", "url('Assets/SeatGeekLogo.svg')" ) ]
-                        , class "h2 w2 mh1 contain bg-center"
-                        ]
-                        []
-                    , div [ class "blue-80 mh2 f4 fw4 ttn" ] [ text ("$" ++ (toString x) ++ " tickets") ]
+    case event.stats.lowest_price of
+        Just x ->
+            a [ href event.url, target "_blank", class "bg-white br1 pa2 mh1 flex items-center mh1 no-underline" ]
+                [ div
+                    [ style [ ( "background-image", "url('Assets/SeatGeekLogo.svg')" ) ]
+                    , class "h2 w2 mh1 contain bg-center"
                     ]
+                    []
+                , div [ class "blue-80 mh2 f4 fw4 ttn" ] [ text ("$" ++ toString x ++ " tickets") ]
+                ]
 
-            Nothing ->
-                text ""
+        Nothing ->
+            text ""
 
 
 eventTime : SG.Event -> Maybe Date -> Html msg
 eventTime event maybeNow =
     let
         eventDateView =
-            case (maybeEventDate event.datetime_local) of
+            case maybeEventDate event.datetime_local of
                 Nothing ->
                     [ text "not sure what time this event is" ]
 
@@ -103,10 +103,10 @@ eventTime event maybeNow =
                     , div [ class "fw4 lh-solid" ] [ text (fullDate x) ]
                     ]
     in
-        div [ class "pv4 mh4 bb b--white-20 flex justify-between" ]
-            [ div [ class "mh1 flex flex-column justify-center" ] (eventDateView)
-            , eventTickets event
-            ]
+    div [ class "pv4 mh4 bb b--white-20 flex justify-between" ]
+        [ div [ class "mh1 flex flex-column justify-center" ] eventDateView
+        , eventTickets event
+        ]
 
 
 eventPopularity : SG.Event -> Html msg
@@ -162,7 +162,7 @@ eventPool =
             , class "white link lg-breathe-50 br1 pa2 mh1 flex items-center mh1 grow"
             ]
             [ div [ Assets.feather "life-buoy", class "h2 w2 mh1 contain bg-center" ] []
-            , div [ class "mh2 f4 fw4 ttn" ] [ text ("join pool") ]
+            , div [ class "mh2 f4 fw4 ttn" ] [ text "join pool" ]
             ]
         , div
             [ class "mr3 f2"
@@ -178,14 +178,14 @@ progressBar num =
         percent =
             num * 100
     in
-        case percent of
-            0.0 ->
-                text ""
+    case percent of
+        0.0 ->
+            text ""
 
-            percent ->
-                div [ class "w-100 bg-black-20 overflow-hidden br-pill" ]
-                    [ div [ style [ ( "width", ((toString percent) ++ "%") ) ], class "animated slideInleft pt2 bg-red-50" ] []
-                    ]
+        percent ->
+            div [ class "w-100 bg-black-20 overflow-hidden br-pill" ]
+                [ div [ style [ ( "width", toString percent ++ "%" ) ], class "animated slideInleft pt2 bg-red-50" ] []
+                ]
 
 
 eventEmojis : SG.Event -> Html msg
@@ -193,12 +193,12 @@ eventEmojis event =
     let
         toIcon x =
             li [ class "flex w4 flex-column items-center overflow-hidden pointer animated zoomIn" ]
-                [ div [ class "f1 grow" ] [ text (stringToEmoji (x.name)) ]
+                [ div [ class "f1 grow" ] [ text (stringToEmoji x.name) ]
                 , div [ class "pv2 o-80" ] [ text (Maybe.withDefault x.name (List.head (String.split "_" x.name))) ]
                 ]
     in
-        ul [ class "list mv0 mh4 ph0 pt4 pb3 flex justify-around items-center bb b--white-20" ]
-            (List.map toIcon event.taxonomies)
+    ul [ class "list mv0 mh4 ph0 pt4 pb3 flex justify-around items-center bb b--white-20" ]
+        (List.map toIcon event.taxonomies)
 
 
 eventBanner : SG.Event -> Html Msg
@@ -209,35 +209,35 @@ eventBanner event =
                 Nothing ->
                     let
                         seed =
-                            ((String.length event.title) * (String.length event.url))
+                            String.length event.title * String.length event.url
                     in
-                        class (Assets.randomGradient seed)
+                    class (Assets.randomGradient seed)
 
                 Just image ->
                     style [ ( "background-image", "url(" ++ image ++ ")" ) ]
     in
-        div
-            [ heroImg, class ("bg-center cover aspect-ratio aspect-ratio--16x9 bb b--white-20") ]
-            [ div
-                [ style [ ( "background-image", "linear-gradient( rgba(0,0,0,0.3), transparent)" ) ]
-                , class "aspect-ratio--object cover bg-center flex flex-column items-end justify-between pa3"
-                ]
-                [ Assets.discoverToolsView
-                , div [ class "pa3 lg-breathe-50 br-pill relative top-2 right-1 flex grow justify-center items-center" ]
-                    [ div
-                        [ Assets.feather "life-buoy"
-                        , onClick (Types.ChangeTo Types.GoPool)
-                        , class "h3 w3 contain"
-                        ]
-                        []
+    div
+        [ heroImg, class "bg-center cover aspect-ratio aspect-ratio--16x9 bb b--white-20" ]
+        [ div
+            [ style [ ( "background-image", "linear-gradient( rgba(0,0,0,0.3), transparent)" ) ]
+            , class "aspect-ratio--object cover bg-center flex flex-column items-end justify-between pa3"
+            ]
+            [ Assets.discoverToolsView
+            , div [ class "pa3 lg-breathe-50 br-pill relative top-2 right-1 flex grow justify-center items-center" ]
+                [ div
+                    [ Assets.feather "life-buoy"
+                    , onClick (Types.ChangeTo Types.GoPool)
+                    , class "h3 w3 contain"
                     ]
+                    []
                 ]
             ]
+        ]
 
 
 maybeImage : List SG.Performer -> Maybe String
 maybeImage performers =
-    case (List.head performers) of
+    case List.head performers of
         Just performer ->
             performer.image
 

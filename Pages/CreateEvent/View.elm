@@ -1,16 +1,15 @@
 module Pages.CreateEvent.View exposing (..)
 
-import Types exposing (Msg)
-import Pages.Events.Model exposing (Events)
-import Nav exposing (bar)
-import Assets exposing (feather, banner)
+import Assets exposing (banner, feather)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
-
-import SeatGeek.Types as SG
+import Nav exposing (bar)
 import Pages.CreateEvent.Messages exposing (..)
 import Pages.CreateEvent.Model exposing (..)
+import Pages.Events.Model exposing (Events)
+import SeatGeek.Types as SG
+import Types exposing (Msg)
 
 
 -- VIEW
@@ -39,22 +38,22 @@ view event =
                 , input [ type_ "date", class "f4 fw3 ma0 pa1 white bg-transparent bn outline-0", value "2017-06-01" ] []
                 , div [ class "pt1 bt b--white child" ] []
                 ]
+
         submitInput =
             div []
-              [ input [ type_ "button"] [ text "Submit" ]
-
-              ]
-    in
-        section [ class "animated fadeInUp flex flex-column items-stretch flex-auto pa0 ma0 measure-ns shadow-2-ns" ]
-            [ Assets.banner "create event"
-            , div [ class "flex-shrink-1 flex-grow-0 bg-black-70 overflow-auto pa3 white" ]
-                [ textInput "title" "📛" "what's it called?" ChangeTitle
-                , textInput "description" "📢" "what's it for?" ChangeDescription
-                , textInput "location" "⚓" "where's it at?" ChangeLocation
-                , dateInput "date" "📆" "what day is it?"
-                , timeInput "time" "🕒" "what time is it?"
-                , text event.title
-                , textInput "privacy" "🔒" "who's invited" ChangePrivacy
-                , textInput "taxonomy" "🏷️" "what is it?" ChangeTaxonomy
+                [ input [ type_ "button" ] [ text "Submit" ]
                 ]
+    in
+    section [ class "animated fadeInUp flex flex-column items-stretch flex-auto pa0 ma0 measure-ns shadow-2-ns" ]
+        [ Assets.banner "create event"
+        , div [ class "flex-shrink-1 flex-grow-0 bg-black-70 overflow-auto pa3 white" ]
+            [ textInput "title" "📛" "what's it called?" ChangeTitle
+            , textInput "description" "📢" "what's it for?" ChangeDescription
+            , textInput "location" "⚓" "where's it at?" ChangeLocation
+            , dateInput "date" "📆" "what day is it?"
+            , timeInput "time" "🕒" "what time is it?"
+            , text event.title
+            , textInput "privacy" "🔒" "who's invited" ChangePrivacy
+            , textInput "taxonomy" "🏷️" "what is it?" ChangeTaxonomy
             ]
+        ]

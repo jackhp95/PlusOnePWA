@@ -1,12 +1,12 @@
 module Pages.User.View exposing (..)
 
+import Assets exposing (bgImg, feather)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Nav exposing (bar)
-import Assets exposing (feather, bgImg)
-import Types
 import Pages.User.Model as UserModel
+import Types
 
 
 view : Types.Model -> Html msg
@@ -15,19 +15,19 @@ view x =
         model =
             x.user
     in
-        section [ class "w-100 mw7-l overflow-auto shadow-2-l" ]
-            [ div [ class "flex h5 ph3 ph4-m ph5-l pt6 items-center" ]
-                [ userAvi model.avi
-                , div [ class "f2 fw7 ml3 fadeInUp animated" ] [ text model.name ]
-                ]
-            , div
-                [ class "bg-black-70" ]
-                [ div [ class "ph3 bg-black-30 w-100" ]
-                    [ userToolsView ]
-                , userBio model
-                , pastEvents model
-                ]
+    section [ class "w-100 mw7-l overflow-auto shadow-2-l" ]
+        [ div [ class "flex h5 ph3 ph4-m ph5-l pt6 items-center" ]
+            [ userAvi model.avi
+            , div [ class "f2 fw7 ml3 fadeInUp animated" ] [ text model.name ]
             ]
+        , div
+            [ class "bg-black-70" ]
+            [ div [ class "ph3 bg-black-30 w-100" ]
+                [ userToolsView ]
+            , userBio model
+            , pastEvents model
+            ]
+        ]
 
 
 userAvi : List String -> Html msg
@@ -69,15 +69,15 @@ pastEvents model =
                 , div [ class "fw4 pt1" ] [ text venue ]
                 ]
     in
-        div [ class "ma0 pt4" ]
-            [ div [ class "fw7 pv2 mh4 f4" ] [ text "previous events" ]
-            , div [ class "mv2 overflow-auto" ]
-                [ table [ class "white collapse mh4" ]
-                    [ tr []
-                        ((List.map eventCard prevEvents) ++ [ td [ class "ph3" ] [] ])
-                    ]
+    div [ class "ma0 pt4" ]
+        [ div [ class "fw7 pv2 mh4 f4" ] [ text "previous events" ]
+        , div [ class "mv2 overflow-auto" ]
+            [ table [ class "white collapse mh4" ]
+                [ tr []
+                    (List.map eventCard prevEvents ++ [ td [ class "ph3" ] [] ])
                 ]
             ]
+        ]
 
 
 userToolsView : Html msg
@@ -89,8 +89,8 @@ userToolsView =
                 , div [ class "pa2" ] [ text x ]
                 ]
     in
-        div [ class "flex justify-end" ]
-            (List.map icon [ "settings", "edit" ])
+    div [ class "flex justify-end" ]
+        (List.map icon [ "settings", "edit" ])
 
 
 stringToEmoji : String -> String

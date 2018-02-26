@@ -6,12 +6,12 @@
 module Assets exposing (..)
 
 import Html exposing (..)
-import Html.Attributes exposing (style, class)
+import Html.Attributes exposing (class, style)
 
 
 bgImg : String -> Attribute msg
 bgImg imgPath =
-    (style [ ( "background-image", ("url('" ++ imgPath ++ "')") ) ])
+    style [ ( "background-image", "url('" ++ imgPath ++ "')" ) ]
 
 
 feather : String -> Html.Attribute msg
@@ -27,15 +27,15 @@ discoverToolsView =
                 [ div [ feather x, class "contain bg-center grow pt3 pb2 pl3 pr2" ] []
                 ]
     in
-        div [ class "flex justify-end" ]
-            (List.map icon
-                [ "search"
-                , "map-pin"
-                , "thumbs-up"
-                , "tag"
-                , "at-sign"
-                ]
-            )
+    div [ class "flex justify-end" ]
+        (List.map icon
+            [ "search"
+            , "map-pin"
+            , "thumbs-up"
+            , "tag"
+            , "at-sign"
+            ]
+        )
 
 
 stringToEmoji : String -> String
@@ -199,17 +199,17 @@ randomGradient : Int -> String
 randomGradient seed =
     let
         randomIndex =
-            seed % (List.length gradients)
+            seed % List.length gradients
 
         selectedGradient =
             List.head (List.drop randomIndex gradients)
     in
-        case selectedGradient of
-            Nothing ->
-                ""
+    case selectedGradient of
+        Nothing ->
+            ""
 
-            Just result ->
-                result ++ ""
+        Just result ->
+            result ++ ""
 
 
 banner : String -> Html msg

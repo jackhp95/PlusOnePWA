@@ -1,8 +1,8 @@
 module Pages.Events.Update exposing (..)
 
-import SeatGeek.Types as SG
-import Pages.Events.Model exposing (..)
 import Pages.Events.Messages exposing (..)
+import Pages.Events.Model exposing (..)
+import SeatGeek.Types as SG
 
 
 update : Msg -> Events -> ( Events, Cmd Msg )

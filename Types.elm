@@ -2,22 +2,21 @@ module Types exposing (..)
 
 -- Events
 
-import Http exposing (Error)
 import Date exposing (Date)
-import Task exposing (perform)
-import SeatGeek.Types as SG
+import Http exposing (Error)
 import Mouse exposing (Position)
-import Window exposing (Size)
-
-import Pages.CreateEvent.Messages as CreateEventMsg
-import Pages.User.Messages as UserMsg
 import Pages.Chat.Messages as ChatMsg
-import Pages.Chats.Messages as ChatsMsg
-import Pages.CreateEvent.Model as CreateEventModel
-import Pages.User.Model as UserModel
 import Pages.Chat.Model as ChatModel
+import Pages.Chats.Messages as ChatsMsg
+import Pages.CreateEvent.Messages as CreateEventMsg
+import Pages.CreateEvent.Model as CreateEventModel
 import Pages.Events.Model as EventsModel
 import Pages.Pool.Model as PoolModel
+import Pages.User.Messages as UserMsg
+import Pages.User.Model as UserModel
+import SeatGeek.Types as SG
+import Task exposing (perform)
+import Window exposing (Size)
 
 
 -- MODEL --
@@ -96,7 +95,7 @@ type
     Msg
     -- Route
     = ChangeTo Route
-    --Temp
+      --Temp
     | CreateEventMsg CreateEventMsg.Msg
     | UserMsg UserMsg.Msg
     | ChatMsg ChatMsg.Msg
