@@ -14,8 +14,10 @@ import Graphqelm.SelectionSet as SelectionSet exposing (SelectionSet, with)
 import Graphqelm.Subscription
 import Graphqelm.Subscription.Protocol as Protocol
 import Html exposing (Html, button, div, fieldset, h1, img, input, label, li, p, pre, text, ul)
-import Json.Decode as Decode exposing (..)
-import Json.Encode as Encode exposing (..)
+
+
+-- import Json.Decode as Decode exposing (..)
+-- import Json.Encode as Encode exposing (..)
 
 
 subscriptionDocument : SelectionSet User RootSubscription
@@ -75,7 +77,7 @@ init : ( Model, Cmd Msg )
 init =
     let
         ( graphqlSubscriptionModel, graphqlSubscriptionCmd ) =
-            Graphqelm.Subscription.init frameworkKnowledge socketUrl subscriptionDocument SubscriptionDataReceived
+            Graphqelm.Subscription.init Protocol.phoenixAbsinthe socketUrl subscriptionDocument SubscriptionDataReceived
     in
     ( { data = []
       , subscriptionStatus = Graphqelm.Subscription.Uninitialized
@@ -134,6 +136,7 @@ main =
 
 
 -- PROTOCOL
+-- https://www.graph.cool/docs/reference/graphql-api/subscription-api-aip7oojeiv/#type-subscriptions
 -- frameworkKnowledge : Protocol.Protocol subscriptionDecodesTo
 -- frameworkKnowledge =
 --     { initMessage =
