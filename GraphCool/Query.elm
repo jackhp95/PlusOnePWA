@@ -473,7 +473,7 @@ venue fillInOptionals object =
 
 me : SelectionSet decodesTo GraphCool.Object.User -> Field (Maybe decodesTo) RootQuery
 me object =
-    Object.selectionField "me" [] object (identity >> Decode.maybe)
+    Object.selectionField "user" [] object (identity >> Decode.maybe)
 
 
 {-| Fetches an object given its ID

@@ -1,6 +1,8 @@
 module TestGraphCool exposing (main)
+
 import GraphCool.Enum.DateState exposing (DateState)
 import GraphCool.InputObject as IO exposing (..)
+import GraphCool.Mutation as Mutation
 import GraphCool.Object
 import GraphCool.Object.Chat as Chat
 import GraphCool.Object.Event as Event
@@ -10,7 +12,6 @@ import GraphCool.Object.Message as Message
 import GraphCool.Object.User as User
 import GraphCool.Object.Venue as Venue
 import GraphCool.Query as Query
-import GraphCool.Mutation as Mutation
 import GraphCool.Scalar exposing (..)
 import Graphqelm.Document as Document
 import Graphqelm.Http exposing (..)
@@ -39,8 +40,8 @@ type alias Host =
     , id : Id
     , name : String
     , nameFull : Maybe String
-    , users: Maybe (List Id)
-    , venues: Maybe (List Id)
+    , users : Maybe (List Id)
+    , venues : Maybe (List Id)
     }
 
 
@@ -63,7 +64,7 @@ type alias Location =
     , lat : Float
     , lon : Float
     , state : String
-    , venue: Maybe Id
+    , venue : Maybe Id
     , zip : Maybe String
     }
 
@@ -87,9 +88,9 @@ type alias Event =
 
 
 type alias Message =
-    { chat: Id
+    { chat : Id
     , createdAt : DateTime
-    , from: Maybe Id
+    , from : Maybe Id
     , id : Id
     , text : String
     }
@@ -97,7 +98,7 @@ type alias Message =
 
 type alias Chat =
     { canceled : Maybe Id
-    , dateState: DateState
+    , dateState : DateState
     , event : Id
     , id : Id
     , initiated : Id
@@ -132,6 +133,7 @@ type alias User =
     , updatedAt : DateTime
     }
 
+
 queryEverything : SelectionSet Response RootQuery
 queryEverything =
     Query.selection Response
@@ -147,7 +149,7 @@ queryEverything =
 mutation : SelectionSet (Maybe User) Graphqelm.Operation.RootMutation
 mutation =
     Mutation.selection identity
-        |> with (Mutation.createUser identity { birthday = (DateTime "1969-06-09"), name = "elm", authProvider = IO.AuthProviderSignupData { auth0 = Null, email = Present (IO.AuthProviderEmail { email = "elm@elm.org", password = "elm" })}} user)
+        |> with (Mutation.createUser identity { birthday = DateTime "1969-06-09", name = "elm", authProvider = IO.AuthProviderSignupData { auth0 = Null, email = Present (IO.AuthProviderEmail { email = "elm@elm.org", password = "elm" }) } } user)
 
 
 hostId : SelectionSet Id GraphCool.Object.Host
@@ -300,7 +302,6 @@ makeQueryRequest =
         |> Graphqelm.Http.send (RemoteData.fromResult >> GotResponse)
 
 
-
 makeMutationRequest : Cmd Msg
 makeMutationRequest =
     mutation
@@ -315,14 +316,15 @@ type Msg
 
 type alias Model =
     { query : RemoteData Graphqelm.Http.Error Response
-    , mutation : RemoteData Graphqelm.Http.Error (Maybe User) 
+    , mutation : RemoteData Graphqelm.Http.Error (Maybe User)
     }
 
 
 init : ( Model, Cmd Msg )
 init =
     ( Model RemoteData.Loading RemoteData.Loading
-    , makeQueryRequest -- change this to MakeMutationRequest if you want to test a mutation.
+    , makeQueryRequest
+      -- change this to MakeMutationRequest if you want to test a mutation.
     )
 
 
@@ -396,10 +398,9 @@ update msg model =
     case msg of
         GotResponse response ->
             ( { model | query = response }, Cmd.none )
-        
+
         MutateUser response ->
             ( { model | mutation = response }, Cmd.none )
-        
 
 
 main : Program Never Model Msg
