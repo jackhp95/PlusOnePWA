@@ -2,6 +2,7 @@ module Update exposing (..)
 
 import Pages.CreateEvent.Messages as CreateEventMessages
 import Pages.CreateEvent.Update exposing (..)
+import Pages.Events.Update
 import Pages.User.Update exposing (..)
 import Pages.Chat.Update exposing (..)
 import Types
@@ -32,6 +33,14 @@ update msg model =
                 in
                     ( { model | createEvent = createEventModel }
                     , Cmd.map Types.CreateEventMsg createEventCmd
+                    )
+            Types.EventsMsg eventsMsg ->
+                let
+                    ( eventsModel, eventsCmd ) =
+                        Pages.Events.Update.update eventsMsg model.events
+                in
+                    ( { model | events = eventsModel }
+                    , Cmd.map Types.EventsMsg eventsCmd
                     )
             Types.UserMsg userMsg ->
                 let

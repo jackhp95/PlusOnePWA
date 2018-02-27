@@ -12,8 +12,9 @@ import Mouse
 import Window exposing (size)
 import Pages.Pool.View exposing (getPosition, determineTubers)
 
-import Pages.CreateEvent.Update exposing (update)
+import Pages.Events.Update exposing(makeQueryRequest)
 import Pages.CreateEvent.Model as CreateEvent
+import Pages.CreateEvent.Messages as CreateEventMsg
 import Pages.Pool.Model as PoolModel
 import Pages.CreateEvent.Messages
 
@@ -30,8 +31,12 @@ initCmd =
         [ SeatGeek.Query.askQuery SG.initQuery
         , getDatetime
         , initWindow
+        , initEventsQuery
         ]
 
+initEventsQuery : Cmd Msg
+initEventsQuery =
+    Cmd.map EventsMsg makeQueryRequest
 
 initWindow : Cmd Msg
 initWindow =

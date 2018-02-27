@@ -18,6 +18,7 @@ import Http exposing (..)
 import Task exposing (..)
 import Date exposing (..)
 import Moment exposing (..)
+import RemoteData exposing (..)
 
 
 -- HTTP
@@ -68,6 +69,18 @@ view model =
                 Just x ->
                     div [ class "bg-black-70" ]
                         (List.map (eventListView events.currentDatetime) x.events)
+       -- Show the reponse of the "allEvents" query
+        refineView a =
+           div [] [
+             h3 [] [ text "Events" ]
+            , div [] (List.map (\ b -> ul[ style [("background", "#000000")]][h4[][text b.name],p[][text (Basics.toString b.id)]]) a.events)]
+
+        response =
+        case events.eventResponse of
+            NotAsked -> text "Hold up, Lemme Check"
+            Loading -> text "Gimme a Sec"
+            Failure e -> text ("Shucks um, " ++ (Basics.toString e))
+            Success a -> refineView a
     in
         section [ class ("animated fadeInUp w-100 w-auto-ns mw6-l overflow-auto z-999 flex-grow-1 shadow-2-l" ++ mobileHide) ]
             [ Html.header [ class "h5 flex flex-column justify-between pa3" ]
@@ -75,7 +88,8 @@ view model =
                 , div [ class "f2 lh-solid fw7 ma0 pa0" ]
                     [ text "discover events" ]
                 ]
-            , eventsUnlessError
+            --, eventsUnlessError
+            , response
             ]
 
 
