@@ -8,6 +8,7 @@ import GraphCool.Object.User as User
 import GraphCool.Object.UserSubscriptionPayload as UserSubscriptionPayload
 import GraphCool.Scalar exposing (..)
 import GraphCool.Subscription as Subscription
+import Graphqelm.Document as Document
 import Graphqelm.Field as Field
 import Graphqelm.Operation exposing (RootSubscription)
 import Graphqelm.SelectionSet as SelectionSet exposing (SelectionSet, with)
@@ -92,7 +93,11 @@ init =
 view : Model -> Html.Html Msg
 view model =
     div []
-        [ h1 [] [ text "User Activity" ]
+        [ div []
+            [ h1 [] [ text "Generated Subscription" ]
+            , pre [] [ text (Document.serializeSubscription subscriptionDocument) ]
+            ]
+        , h1 [] [ text "User Activity" ]
         , text ("GraphCool Subscription connection status: " ++ toString model.subscriptionStatus)
         ]
 
