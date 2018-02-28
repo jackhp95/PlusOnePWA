@@ -69,5 +69,5 @@ venueId =
 makeQueryRequest : Cmd Msg
 makeQueryRequest =
     query
-        |> Graphqelm.Http.queryRequest "https://api.graph.cool/simple/v1/PlusOne"
+        |> Graphqelm.Http.queryRequest "https://api.graph.cool/simple/v1/OldPlusOne"
         |> Graphqelm.Http.send (RemoteData.fromResult >> GotResponse)

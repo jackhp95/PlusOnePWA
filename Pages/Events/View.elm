@@ -5,22 +5,23 @@
 module Pages.Events.View exposing (..)
 
 import Types exposing (Msg)
-import Pages.Events.Model exposing (Events)
+-- import Pages.Events.Model exposing (Events)
 import SeatGeek.Query exposing (composeRequest)
 import SeatGeek.Decode exposing (decodeReply)
 import SeatGeek.Types as SG
-import Nav exposing (bar)
+-- import Nav exposing (bar)
 import Assets exposing (feather)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Http exposing (..)
-import Task exposing (..)
+-- import Task exposing (..)
 import Date exposing (..) 
 import Moment exposing (..)
 import RemoteData exposing (..)
 import Pages.Event.Model exposing(Event,initEvent)
 import GraphCool.Scalar exposing(..)
+import Date.Extra
 
 
 -- HTTP
@@ -75,13 +76,16 @@ view model =
                     --     (List.map (eventListView events.currentDatetime) x.events)
                     convertList x.events
         
-       
+        
 
         -- Show the reponse of the "allEvents" query
         refineView a =
-           div [] [
-             h3 [] [ text "Events" ]
-            , div [] (List.map (\ b -> ul[ style [("background", "#000000")]][h4[][text b.name],p[][text (Basics.toString b.startsAt)]]) ((List.append a.events eventsUnlessError)))]
+            let
+                sortedEvents = sortListByDT (mergeLists a.events eventsUnlessError)
+            in
+                div [] [
+                    h3 [] [ text "Events" ]
+                    , div [] (List.map (\ b -> ul[ style [("background", "#000000")]][h4[][text b.name],p[][text (formatDateTime b.startsAt)]]) sortedEvents)]
 
         -- Add a function to compare Datetime
 
@@ -103,11 +107,7 @@ view model =
             ]
 
 -- Convert SeatGeek Event into Database Event
--- Append SeatGeek events to database event list
 -- Maybe convert SG.Venue to Database Venue too
--- newEvent : Event 
--- newEvent = 
---     Event
 convertEvent : Event -> SG.Event-> Event 
 convertEvent dbEvent sgEvent= 
     {dbEvent | name = sgEvent.title, id = Id (Basics.toString sgEvent.id), startsAt = DateTime sgEvent.datetime_local}  
@@ -115,6 +115,44 @@ convertEvent dbEvent sgEvent=
 convertList : List SG.Event -> List Event 
 convertList events =
     List.map (convertEvent initEvent) events
+
+-- Merge Lists -- Append SeatGeek events to database event list
+mergeLists : List Event -> List Event -> List Event
+mergeLists list1 list2 =
+    List.append list1 list2
+
+-- Sort list by datetime
+sortListByDT : List Event -> List Event
+sortListByDT list =
+    List.sortWith compareDateTime list    
+
+-- compareDateTime :     
+-- Use String.dropLeft, Date.fromString, Date.Extra.compare, List.sortWith
+
+compareDateTime : Event -> Event -> Order
+compareDateTime  event1 event2 =
+    let 
+        dt1 = event1.startsAt
+        dt2 = event2.startsAt
+
+        defaultDate = Date.Extra.fromParts 1999 Dec 31 23 59 0 0
+
+        date1 =
+            Date.Extra.fromIsoString (formatDateTime dt1) 
+            |> Result.withDefault defaultDate  
+
+        date2 = 
+            Date.Extra.fromIsoString (formatDateTime dt2) 
+            |> Result.withDefault defaultDate
+    in
+        Date.Extra.compare date1 date2 
+
+formatDateTime : DateTime -> String
+formatDateTime datetime = 
+    String.dropRight 1 (String.dropLeft 10 (Basics.toString datetime))
+
+
+
 
 eventListView : Maybe Date -> SG.Event -> Html Msg
 eventListView maybeNow event =
