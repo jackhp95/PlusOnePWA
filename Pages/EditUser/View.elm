@@ -10,34 +10,33 @@ import Pages.User.Model exposing (..)
 import Pages.EditUser.Messages exposing (..)
 import Pages.EditUser.Update exposing (..)
 import GraphCool.Scalar exposing (..)
+import Pages.User.Model as UserModel
 -- VIEW --
 
 
-view : User -> Html Msg
+view : UserModel.UserModel -> Html Msg
 view model =
+    let 
+        user = model.user
+    in
     div []
         [ text "Hello, World!"
         , text " bye"
         , br [] []
         , text "Name: "
-        , input [ placeholder "name", onInput ChangeName, value model.name ] []
+        , input [ placeholder "name", onInput ChangeName, value user.name ] []
         , br [] []
         , text "Full Name: "
-        , input [ placeholder "full name", onInput ChangeFullName, value model.nameFull ] []
+        , input [ placeholder "full name", onInput ChangeFullName, value (Maybe.withDefault "" user.nameFull) ] []
         , br [] []
         , text "Bio: "
-        , input [ placeholder "bio", onInput ChangeBio, value model.bio ] []
+        , input [ placeholder "bio", onInput ChangeBio, value (Maybe.withDefault "" user.bio) ] []
         , br [] []
         , text "Birthday"
         , input [ type_ "date", placeholder "birthday", onInput ChangeBirthday ] []
         , br [] []
-        , text "Gender "
-        , genderSelect ChangeGender model.gender
-        , br [] []
-        , text ("Looking for ")
-        , genderSelect ChangeSeekingGender model.seekingGender
-        , br [] []
-        , text <| toString <| model.birthday
+        , text <| toString <| user.birthday
+        , input [type_ "Button", onClick SaveEdit, value "Save"] []
         ]
 
 

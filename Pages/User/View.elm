@@ -9,28 +9,31 @@ import Pages.User.Model as UserModel
 import Types exposing (..)
 
 
-view : UserModel.User -> Html Msg
+view : UserModel.UserModel -> Html Msg
 view model =
+    let
+        user = model.user
+    in
     section [ class "w-100 mw7-l overflow-auto shadow-2-l" ]
         [ div [ class "flex h5 ph3 ph4-m ph5-l pt6 items-center" ]
-            [ userAvi model.avi
-            , div [ class "f2 fw7 ml3 fadeInUp animated" ] [ text model.name ]
+            [ userAvi
+            , div [ class "f2 fw7 ml3 fadeInUp animated" ] [ text user.name ]
             ]
         , div
             [ class "bg-black-70" ]
             [ div [ class "ph3 bg-black-30 w-100" ]
                 [ userToolsView ]
-            , userBio model
-            , pastEvents model
+            , userBio user
+            , pastEvents user
             ]
         ]
 
 
-userAvi : List String -> Html Msg
-userAvi avis =
+userAvi : Html Msg
+userAvi =
     div [ class "w5 bounceIn animated z-9" ]
         [ div
-            [ bgImg (Maybe.withDefault "" (List.head avis))
+            [ bgImg ("https://images.unsplash.com/photo-1496361001419-80f0d1be777a?dpr=1&auto=format&fit=crop&w=1000&q=80&cs=tinysrgb&ixid=dW5zcGxhc2guY29tOzs7Ozs%3D")
             , class "aspect-ratio--1x1 bg-white br-pill shadow-2 ba bw1 cover br-pill"
             ]
             []
@@ -41,7 +44,7 @@ userBio : UserModel.User -> Html Msg
 userBio model =
     div [ class "mv0 mh4 ph2 pv4 bb b--white-20" ]
         [ div [ class "fw7 pv2 f4" ] [ text "bio" ]
-        , div [ class "pv2 lh-copy measure" ] [ text model.bio]
+        , div [ class "pv2 lh-copy measure" ] [ text (Maybe.withDefault "" model.bio)]
         ]
 
 

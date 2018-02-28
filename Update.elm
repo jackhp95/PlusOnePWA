@@ -46,7 +46,7 @@ update msg model =
             Types.UserMsg userMsg ->
                 let
                     ( userModel, userCmd ) =
-                        Pages.User.Update.update userMsg model.user
+                        Pages.User.Update.update userMsg (model.user)
                 in
                     ( { model | user = userModel }
                     , Cmd.map Types.UserMsg userCmd

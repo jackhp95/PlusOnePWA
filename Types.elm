@@ -28,7 +28,7 @@ type alias Model =
     { route : Route
     , chat : ChatModel.Chat
     , chats : List ChatModel.Chat
-    , user : UserModel.User
+    , user : UserModel.UserModel
     , events : EventsModel.Events
     , pool : PoolModel.Pool
     , client : Client
