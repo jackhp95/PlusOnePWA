@@ -16,9 +16,11 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Http exposing (..)
 import Task exposing (..)
-import Date exposing (..)
+import Date exposing (..) 
 import Moment exposing (..)
 import RemoteData exposing (..)
+import Pages.Event.Model exposing(Event,initEvent)
+import GraphCool.Scalar exposing(..)
 
 
 -- HTTP
@@ -57,23 +59,31 @@ view model =
         eventsUnlessError =
             case events.seatgeek of
                 Nothing ->
-                    div [ class "ma3 bg-black-40 br3 shadow-2 ph3-ns ph2 pv4 grow" ]
-                        [ div [ class "pa2 f2-ns f3 fw6 lh-solid" ]
-                            [ text "What we've got here is a failure to communicate."
-                            ]
-                        , div
-                            [ class "pa2 lh-copy" ]
-                            [ text "Sometimes, we just can't reach SeatGeek. So you get what we had here last time you looked on this app, which is the way you'd likely want it. Well, we get it. We don't like this error message any more than you." ]
-                        ]
+                    []
+                    -- div [ class "ma3 bg-black-40 br3 shadow-2 ph3-ns ph2 pv4 grow" ]
+                    --     [ div [ class "pa2 f2-ns f3 fw6 lh-solid" ]
+                    --         [ text "What we've got here is a failure to communicate."
+                    --         ]
+                    --     , div
+                    --         [ class "pa2 lh-copy" ]
+                    --         [ text "Sometimes, we just can't reach SeatGeek. So you get what we had here last time you looked on this app, which is the way you'd likely want it. Well, we get it. We don't like this error message any more than you." ]
+                    --     ]
+                    
 
                 Just x ->
-                    div [ class "bg-black-70" ]
-                        (List.map (eventListView events.currentDatetime) x.events)
-       -- Show the reponse of the "allEvents" query
+                    -- div [ class "bg-black-70" ]
+                    --     (List.map (eventListView events.currentDatetime) x.events)
+                    convertList x.events
+        
+       
+
+        -- Show the reponse of the "allEvents" query
         refineView a =
            div [] [
              h3 [] [ text "Events" ]
-            , div [] (List.map (\ b -> ul[ style [("background", "#000000")]][h4[][text b.name],p[][text (Basics.toString b.id)]]) a.events)]
+            , div [] (List.map (\ b -> ul[ style [("background", "#000000")]][h4[][text b.name],p[][text (Basics.toString b.startsAt)]]) ((List.append a.events eventsUnlessError)))]
+
+        -- Add a function to compare Datetime
 
         response =
         case events.eventResponse of
@@ -92,6 +102,19 @@ view model =
             , response
             ]
 
+-- Convert SeatGeek Event into Database Event
+-- Append SeatGeek events to database event list
+-- Maybe convert SG.Venue to Database Venue too
+-- newEvent : Event 
+-- newEvent = 
+--     Event
+convertEvent : Event -> SG.Event-> Event 
+convertEvent dbEvent sgEvent= 
+    {dbEvent | name = sgEvent.title, id = Id (Basics.toString sgEvent.id), startsAt = DateTime sgEvent.datetime_local}  
+
+convertList : List SG.Event -> List Event 
+convertList events =
+    List.map (convertEvent initEvent) events
 
 eventListView : Maybe Date -> SG.Event -> Html Msg
 eventListView maybeNow event =
