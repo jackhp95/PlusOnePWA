@@ -74,5 +74,5 @@ page model =
 
                 Just x ->
                     [ Events.view model
-                    --, Event.view x model.events.currentDatetime
+                    , Event.view x model.events.currentDatetime
                     ]
