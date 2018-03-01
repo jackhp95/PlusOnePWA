@@ -68,7 +68,7 @@ type alias Page =
 type Route
     = GoChats (Maybe ChatModel.Chat)
     | GoUser
-    | GoEvents (Maybe SG.Event)
+    | GoEvents (Maybe EventModel.Event)
     | GoCreateEvent
     | GoPool
 

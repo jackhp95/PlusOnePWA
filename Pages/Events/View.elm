@@ -83,9 +83,9 @@ view model =
             let
                 sortedEvents = sortListByDT (mergeLists a.events eventsUnlessError)
             in
-                div [] [
-                    h3 [] [ text "Events" ]
-                    , div [] (List.map (\ b -> ul[ style [("background", "#000000")]][h4[][text b.name],p[][text (formatDateTime b.startsAt)]]) sortedEvents)]
+                div [class "bg-black-70"] 
+                    -- (List.map (\ b -> ul[ style [("background", "#000000")]][h4[][text b.name],p[][text (stringDateTime b.startsAt)]]) sortedEvents)
+                    (List.map eventListView sortedEvents)
 
         -- Add a function to compare Datetime
 
@@ -138,32 +138,39 @@ compareDateTime  event1 event2 =
         defaultDate = Date.Extra.fromParts 1999 Dec 31 23 59 0 0
 
         date1 =
-            Date.Extra.fromIsoString (formatDateTime dt1) 
+            Date.Extra.fromIsoString (stringDateTime dt1) 
             |> Result.withDefault defaultDate  
 
         date2 = 
-            Date.Extra.fromIsoString (formatDateTime dt2) 
+            Date.Extra.fromIsoString (stringDateTime dt2) 
             |> Result.withDefault defaultDate
     in
         Date.Extra.compare date1 date2 
 
-formatDateTime : DateTime -> String
-formatDateTime datetime = 
+stringDateTime : DateTime -> String
+stringDateTime datetime = 
     String.dropRight 1 (String.dropLeft 10 (Basics.toString datetime))
 
-
-
-
-eventListView : Maybe Date -> SG.Event -> Html Msg
-eventListView maybeNow event =
+viewDateTime : DateTime -> String
+viewDateTime datetime =
     let
-        viewTime =
-            case (maybeEventDate event.datetime_local) of
-                Nothing ->
-                    "not sure what time this event is"
+        maybeDateTime = Date.Extra.fromIsoString (stringDateTime datetime)
+    in 
+        case maybeDateTime of
+            Err msg ->
+                "Unknow Date"
+            Ok dt ->
+                let
+                    date = Date.Extra.toFormattedString "MMMM ddd, y" dt
+                    time = Date.Extra.toFormattedString "h:mm a" dt    
+                in
+                    date ++ " • " ++ time  
 
-                Just x ->
-                    ((shortDate x) ++ " • " ++ (clockTime x))
+
+eventListView : Event -> Html Msg
+eventListView event = 
+    let
+        datetime = viewDateTime event.startsAt
 
         atIcon =
             div
@@ -171,41 +178,75 @@ eventListView maybeNow event =
                 , class "contain dib bg-center mr1 mt1 pb3 pr3"
                 ]
                 []
-
-        cardImage =
-            let
-                seed =
-                    ((String.length event.title) * (String.length event.url))
-            in
-                case (maybeImage event.performers) of
-                    Just image ->
-                        div [ class ("w-100 mb2 mt1 " ++ (Assets.randomGradient seed)) ]
-                            [ div [ style [ ( "background-image", "url(" ++ image ++ ")" ) ], class "aspect-ratio--8x5 cover" ]
-                                []
-                            ]
-
-                    Nothing ->
-                        text ""
     in
-        div
-            [ class "animated fadeInUp ph3 pt3 ph4-m pt4-m hover-bg-black-30"
+        div [ class "animated fadeInUp ph3 pt3 ph4-m pt4-m hover-bg-black-30"
             , onClick (Types.ViewEvent (Types.GoEvents (Just event)))
             ]
-            [ cardImage
-            , div [ class "pb3 pb4-m bb b--white-20" ]
+            [ 
+            div [ class "pb3 pb4-m bb b--white-20" ]
                 [ div [ class "pb1 f5 f4-m pt3-m pt2" ]
-                    [ span [ class "mr2 fw5" ] [ text event.title ]
+                      [ span [ class "mr2 fw5" ] [ text event.name ]
                     , div [ class "fw5 o-80 dib" ]
-                        [ atIcon, text event.venue.name ]
+                        [ atIcon, text "Location" ]
                     ]
                 , div [ class "pb2 flex justify-between items-center" ]
-                    [ span [ class "fw4 o-60 ma0" ]
-                        [ text viewTime ]
-                    , ul [ class "pa0 ma0 list dib" ]
-                        (List.map (\x -> li [ class "ml2 dib" ] [ text (Assets.stringToEmoji x.name) ]) event.taxonomies)
-                    ]
+                      [ span [ class "fw4 o-60 ma0" ] [ text datetime ]
                 ]
             ]
+        ]           
+
+-- eventListView : Maybe Date -> SG.Event -> Html Msg
+-- eventListView maybeNow event =
+--     let
+--         viewTime =
+--             case (maybeEventDate event.datetime_local) of
+--                 Nothing ->
+--                     "not sure what time this event is"
+
+--                 Just x ->
+                    -- ((shortDate x) ++ " • " ++ (clockTime x))
+
+--         atIcon =
+--             div
+--                 [ Assets.feather "at-sign"
+--                 , class "contain dib bg-center mr1 mt1 pb3 pr3"
+--                 ]
+--                 []
+
+--         cardImage =
+--             let
+--                 seed =
+--                     ((String.length event.title) * (String.length event.url))
+--             in
+--                 case (maybeImage event.performers) of
+--                     Just image ->
+--                         div [ class ("w-100 mb2 mt1 " ++ (Assets.randomGradient seed)) ]
+--                             [ div [ style [ ( "background-image", "url(" ++ image ++ ")" ) ], class "aspect-ratio--8x5 cover" ]
+--                                 []
+--                             ]
+
+--                     Nothing ->
+--                         text ""
+--     in
+--         div
+--             [ class "animated fadeInUp ph3 pt3 ph4-m pt4-m hover-bg-black-30"
+--             , onClick (Types.ViewEvent (Types.GoEvents (Just event)))
+--             ]
+--             [ cardImage
+--             , div [ class "pb3 pb4-m bb b--white-20" ]
+--                 [ div [ class "pb1 f5 f4-m pt3-m pt2" ]
+--                     [ span [ class "mr2 fw5" ] [ text event.title ]
+--                     , div [ class "fw5 o-80 dib" ]
+--                         [ atIcon, text event.venue.name ]
+--                     ]
+--                 , div [ class "pb2 flex justify-between items-center" ]
+--                     [ span [ class "fw4 o-60 ma0" ]
+--                         [ text viewTime ]
+--                     , ul [ class "pa0 ma0 list dib" ]
+--                         (List.map (\x -> li [ class "ml2 dib" ] [ text (Assets.stringToEmoji x.name) ]) event.taxonomies)
+--                     ]
+--                 ]
+--             ]
 
 
 maybeImage : List SG.Performer -> Maybe String
