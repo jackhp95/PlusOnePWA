@@ -46,7 +46,7 @@ view event now =
          eventName event
         -- , eventEmojis event
         , eventTime event now
-        -- , eventPool
+        , eventPool
         -- , eventPopularity event
         -- , yetToBeAdded
         ]
@@ -207,25 +207,25 @@ viewTime datetime =
 --         ]
 
 
--- eventPool : Html Msg
--- eventPool =
---     div [ class "flex items-center justify-around mh4 pv4 bb b--white-20" ]
---         [ a [ href "Pool.html", class "white link br-pill pa2 mh1 flex items-center mh1 grow" ]
---             [ div [ Assets.feather "info", class "h2 w2 contain bg-center" ] []
---             ]
---         , a
---             [ onClick (Types.ChangeTo Types.GoPool)
---             , class "white link lg-breathe-50 br1 pa2 mh1 flex items-center mh1 grow"
---             ]
---             [ div [ Assets.feather "life-buoy", class "h2 w2 mh1 contain bg-center" ] []
---             , div [ class "mh2 f4 fw4 ttn" ] [ text ("join pool") ]
---             ]
---         , div
---             [ class "mr3 f2"
---             , onClick (Types.ChangeTo Types.GoPool)
---             ]
---             [ text "🏊" ]
---         ]
+eventPool : Html Msg
+eventPool =
+    div [ class "flex items-center justify-around mh4 pv4 bb b--white-20" ]
+        [ a [ href "Pool.html", class "white link br-pill pa2 mh1 flex items-center mh1 grow" ]
+            [ div [ Assets.feather "info", class "h2 w2 contain bg-center" ] []
+            ]
+        , a
+            [ onClick (Types.ChangeTo Types.GoPool)
+            , class "white link lg-breathe-50 br1 pa2 mh1 flex items-center mh1 grow"
+            ]
+            [ div [ Assets.feather "life-buoy", class "h2 w2 mh1 contain bg-center" ] []
+            , div [ class "mh2 f4 fw4 ttn" ] [ text ("join pool") ]
+            ]
+        , div
+            [ class "mr3 f2"
+            , onClick (Types.ChangeTo Types.GoPool)
+            ]
+            [ text "🏊" ]
+        ]
 
 
 -- progressBar : Float -> Html msg
