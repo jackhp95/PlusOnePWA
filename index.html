@@ -193,7 +193,8 @@ Breathe BG/LG
       domain: 'plusonedatingapp.auth0.com', // e.g., you.auth0.com
       clientID: 'V9DXVz9ylA_oLNRcHimDzU-haA__LCKm',
       responseType: 'token',
-      redirectUri: 'http://localhost:8000/index.html'
+      //redirectUri: 'http://localhost:8000/index.html',
+      redirectUri: 'http://plusone.dating/index.html'
     });
     var storedProfile = localStorage.getItem('profile');
     var storedToken = localStorage.getItem('token');
@@ -216,13 +217,10 @@ Breathe BG/LG
       if (err) {
         return console.error(err);
       }
-      console.log("hfdsfds==================================")
       if (authResult) {
-        webAuth.client.userInfo(authResult.accessToken, function(err, profile, temp) {
+        webAuth.client.userInfo(authResult.accessToken, function(err, profile) {
           var result = { err: null, ok: null };
           var token = authResult.accessToken;
-          console.log("------------------------------------------");
-          console.log(temp);
 
           if (err) {
             result.err = err.details;
