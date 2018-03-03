@@ -135,7 +135,7 @@ Breathe BG/LG
   <link rel="mask-icon" href="favicon/safari-pinned-tab.svg" color="#330064">
   <meta name="theme-color" content="#330064">
   <!-- Favicon ends -->
-
+  <script type="text/javascript" src="PlusOnePWA.js"></script>
 </head>
 
 <body>
@@ -180,7 +180,7 @@ Breathe BG/LG
 </body>
 
 <!-- <script type="text/javascript" src="/_compile/Events.elm"></script> -->
-<script type="text/javascript" src="PlusOnePWA.js"></script>
+<script src="https://cdn.auth0.com/js/auth0/9.0.0/auth0.min.js"></script>
 <script>
   //Removes splash and starts elm app.
   while (document.body.firstChild) {
@@ -188,7 +188,59 @@ Breathe BG/LG
       document.body.removeChild(document.body.firstChild);
     }
   }
-  var app = Elm.Main.fullscreen();
+	//var app = Elm.Main.fullscreen();
+	var webAuth = new auth0.WebAuth({
+      domain: 'plusonedatingapp.auth0.com', // e.g., you.auth0.com
+      clientID: 'V9DXVz9ylA_oLNRcHimDzU-haA__LCKm',
+      responseType: 'token',
+      redirectUri: 'http://localhost:8000/index.html'
+    });
+    var storedProfile = localStorage.getItem('profile');
+    var storedToken = localStorage.getItem('token');
+    var authData = storedProfile && storedToken ? { profile: JSON.parse(storedProfile), token: storedToken } : null;
+    var elmApp = Elm.Main.fullscreen(authData);
+
+    // Auth0 authorize subscription
+    elmApp.ports.auth0authorize.subscribe(function(opts) {
+      webAuth.authorize();
+    });
+
+    // Log out of Auth0 subscription
+    elmApp.ports.auth0logout.subscribe(function(opts) {
+      localStorage.removeItem('profile');
+      localStorage.removeItem('token');
+    });
+
+    // Watching for hash after redirect
+    webAuth.parseHash({ hash: window.location.hash }, function(err, authResult) {
+      if (err) {
+        return console.error(err);
+      }
+      console.log("hfdsfds==================================")
+      if (authResult) {
+        webAuth.client.userInfo(authResult.accessToken, function(err, profile, temp) {
+          var result = { err: null, ok: null };
+          var token = authResult.accessToken;
+          console.log("------------------------------------------");
+          console.log(temp);
+
+          if (err) {
+            result.err = err.details;
+            // Ensure that optional fields are on the object
+            result.err.name = result.err.name ? result.err.name : null;
+            result.err.code = result.err.code ? result.err.code : null;
+            result.err.statusCode = result.err.statusCode ? result.err.statusCode : null;
+          }
+          if (authResult) {
+            result.ok = { profile: profile, token: token };
+            localStorage.setItem('profile', JSON.stringify(profile));
+            localStorage.setItem('token', token);
+          }
+          elmApp.ports.auth0authResult.send(result);
+        });
+        window.location.hash = '';
+      }
+    });
 </script>
 
 <script>

@@ -1,4 +1,4 @@
-module Types exposing (..)
+port module Types exposing (..)
 
 -- Events
 
@@ -17,10 +17,22 @@ import Pages.User.Model as UserModel
 import SeatGeek.Types as SG
 import Task exposing (perform)
 import Window exposing (Size)
+import Auth0.Auth0 as Auth0
+import Auth0.Authentication as Authentication
 
+
+-- Ports
+
+
+port auth0authorize : Auth0.Options -> Cmd msg
+
+
+port auth0authResult : (Auth0.RawAuthenticationResult -> msg) -> Sub msg
+
+
+port auth0logout : () -> Cmd msg
 
 -- MODEL --
-
 
 type alias Model =
     { route : Route
@@ -31,11 +43,12 @@ type alias Model =
     , pool : PoolModel.Pool
     , client : Client
     , createEvent : CreateEventModel.CreateEvent
+    , authModel : Authentication.Model
     }
 
 
-initModel : Model
-initModel =
+initModel : Maybe Auth0.LoggedInUser -> Model
+initModel initialUser=
     Model
         -- (GoEvents Nothing)
         (GoChats Nothing)
@@ -53,6 +66,7 @@ initModel =
         PoolModel.initModel
         initClient
         CreateEventModel.initModel
+        (Authentication.init auth0authorize auth0logout initialUser)
 
 
 type alias Page =
@@ -115,3 +129,4 @@ type
     | MouseEnd Position
     | ResizePool Size
     | InitialWindow Size
+    | AuthenticationMsg Authentication.Msg
