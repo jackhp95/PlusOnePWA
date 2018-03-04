@@ -3,6 +3,10 @@ port module Pages.User.Model exposing (..)
 import Pages.User.Messages exposing (..)
 import Auth0.Auth0 as Auth0
 import Auth0.Authentication as Authentication
+import GraphCool.Scalar exposing (..)
+import RemoteData exposing (..)
+import Graphqelm.Http exposing (..)
+import GraphCool.Scalar exposing (..)
 
 -- Ports
 
@@ -18,20 +22,19 @@ port auth0logout : () -> Cmd msg
 -- User
 
 type alias User =
-    { auth0UserId : String
-    , avi : List String
-    , bio : String
-    , birthday : String
-    , createdAt : String
-    , createdEvents : List String
-    , datesCanceled : List String
-    , email : String
-    , eventsAttending : List String
-    , eventsLiked : List String
-    , eventsViewed : List String
-    , hosts : List String
-    , id : Int
-    , initiated : List String
+    { auth0UserId : Maybe String
+    , bio : Maybe String
+    , birthday : DateTime
+    , createdAt : DateTime
+    , createdEvents : Maybe (List Id)
+    , datesCanceled : Maybe (List Id)
+    , email : Maybe String
+    , eventsAttending : Maybe (List Id)
+    , eventsLiked : Maybe (List Id)
+    , eventsViewed : Maybe (List Id)
+    , hosts : Maybe (List Id)
+    , id : Id
+    , initiated : Maybe (List Id)
     , name : String
     , nameFull : Maybe String
     , passed : Maybe (List Id)
@@ -51,18 +54,10 @@ type Gender
     = Male
     | Female    
 
-<<<<<<< HEAD
-init : ( UserModel, Cmd Msg )
-=======
 type alias Me =
-    { user: User
+    { user: UserModel
     , authModel: Authentication.Model
     }
-
-init : ( User, Cmd Msg )
->>>>>>> master
-init =
-    ( initModel, initCmd )
 
 initMe :  Maybe Auth0.LoggedInUser -> Me
 initMe initialAuthUser =

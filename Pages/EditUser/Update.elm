@@ -10,6 +10,8 @@ import Date.Extra.Format exposing (..)
 import Date.Extra.Core exposing(monthToInt)
 import GraphCool.Scalar exposing (..)
 
+
+import GraphCool.Object.Pool as Pool
 import GraphCool.Enum.DateState exposing (DateState)
 import GraphCool.InputObject as IO exposing (..)
 import GraphCool.Object
@@ -40,7 +42,7 @@ import Json.Decode as Decode exposing (Decoder)
 import Graphqelm.Internal.Builder.Object as Object
 import Debug exposing (log)
 
-type alias Temp = { bio : OptionalArgument String, birthday : OptionalArgument GraphCool.Scalar.DateTime, name : OptionalArgument String, nameFull : OptionalArgument String, createdEventsIds : OptionalArgument (List GraphCool.Scalar.Id), createdEvents : OptionalArgument (List GraphCool.InputObject.UsercreatedEventsEvent), datesCanceledIds : OptionalArgument (List GraphCool.Scalar.Id), datesCanceled : OptionalArgument (List GraphCool.InputObject.UserdatesCanceledChat), eventsAttendingIds : OptionalArgument (List GraphCool.Scalar.Id), eventsAttending : OptionalArgument (List GraphCool.InputObject.UsereventsAttendingEvent), eventsLikedIds : OptionalArgument (List GraphCool.Scalar.Id), eventsLiked : OptionalArgument (List GraphCool.InputObject.UsereventsLikedEvent), eventsViewedIds : OptionalArgument (List GraphCool.Scalar.Id), eventsViewed : OptionalArgument (List GraphCool.InputObject.UsereventsViewedEvent), hostsIds : OptionalArgument (List GraphCool.Scalar.Id), hosts : OptionalArgument (List GraphCool.InputObject.UserhostsHost), initiatedIds : OptionalArgument (List GraphCool.Scalar.Id), initiated : OptionalArgument (List GraphCool.InputObject.UserinitiatedChat), passedIds : OptionalArgument (List GraphCool.Scalar.Id), passed : OptionalArgument (List GraphCool.InputObject.UserpassedChat), proposedIds : OptionalArgument (List GraphCool.Scalar.Id), proposed : OptionalArgument (List GraphCool.InputObject.UserproposedChat), recipientIds : OptionalArgument (List GraphCool.Scalar.Id), recipient : OptionalArgument (List GraphCool.InputObject.UserrecipientChat), sentIds : OptionalArgument (List GraphCool.Scalar.Id), sent : OptionalArgument (List GraphCool.InputObject.UsersentMessage) } -> { bio : OptionalArgument String, birthday : OptionalArgument GraphCool.Scalar.DateTime, name : OptionalArgument String, nameFull : OptionalArgument String, createdEventsIds : OptionalArgument (List GraphCool.Scalar.Id), createdEvents : OptionalArgument (List GraphCool.InputObject.UsercreatedEventsEvent), datesCanceledIds : OptionalArgument (List GraphCool.Scalar.Id), datesCanceled : OptionalArgument (List GraphCool.InputObject.UserdatesCanceledChat), eventsAttendingIds : OptionalArgument (List GraphCool.Scalar.Id), eventsAttending : OptionalArgument (List GraphCool.InputObject.UsereventsAttendingEvent), eventsLikedIds : OptionalArgument (List GraphCool.Scalar.Id), eventsLiked : OptionalArgument (List GraphCool.InputObject.UsereventsLikedEvent), eventsViewedIds : OptionalArgument (List GraphCool.Scalar.Id), eventsViewed : OptionalArgument (List GraphCool.InputObject.UsereventsViewedEvent), hostsIds : OptionalArgument (List GraphCool.Scalar.Id), hosts : OptionalArgument (List GraphCool.InputObject.UserhostsHost), initiatedIds : OptionalArgument (List GraphCool.Scalar.Id), initiated : OptionalArgument (List GraphCool.InputObject.UserinitiatedChat), passedIds : OptionalArgument (List GraphCool.Scalar.Id), passed : OptionalArgument (List GraphCool.InputObject.UserpassedChat), proposedIds : OptionalArgument (List GraphCool.Scalar.Id), proposed : OptionalArgument (List GraphCool.InputObject.UserproposedChat), recipientIds : OptionalArgument (List GraphCool.Scalar.Id), recipient : OptionalArgument (List GraphCool.InputObject.UserrecipientChat), sentIds : OptionalArgument (List GraphCool.Scalar.Id), sent : OptionalArgument (List GraphCool.InputObject.UsersentMessage) }
+type alias Temp = ({ bio : OptionalArgument String, birthday : OptionalArgument GraphCool.Scalar.DateTime, name : OptionalArgument String, nameFull : OptionalArgument String, attendingEventIds : OptionalArgument (List GraphCool.Scalar.Id), attendingEvent : OptionalArgument (List GraphCool.InputObject.UserattendingEventPool), createdEventsIds : OptionalArgument (List GraphCool.Scalar.Id), createdEvents : OptionalArgument (List GraphCool.InputObject.UsercreatedEventsEvent), datesCanceledIds : OptionalArgument (List GraphCool.Scalar.Id), datesCanceled : OptionalArgument (List GraphCool.InputObject.UserdatesCanceledChat), hostsIds : OptionalArgument (List GraphCool.Scalar.Id), hosts : OptionalArgument (List GraphCool.InputObject.UserhostsHost), initiatedIds : OptionalArgument (List GraphCool.Scalar.Id), initiated : OptionalArgument (List GraphCool.InputObject.UserinitiatedChat), likedEventIds : OptionalArgument (List GraphCool.Scalar.Id), likedEvent : OptionalArgument (List GraphCool.InputObject.UserlikedEventPool), passedIds : OptionalArgument (List GraphCool.Scalar.Id), passed : OptionalArgument (List GraphCool.InputObject.UserpassedChat), proposedIds : OptionalArgument (List GraphCool.Scalar.Id), proposed : OptionalArgument (List GraphCool.InputObject.UserproposedChat), recipientIds : OptionalArgument (List GraphCool.Scalar.Id), recipient : OptionalArgument (List GraphCool.InputObject.UserrecipientChat), sentIds : OptionalArgument (List GraphCool.Scalar.Id), sent : OptionalArgument (List GraphCool.InputObject.UsersentMessage), viewedEventIds : OptionalArgument (List GraphCool.Scalar.Id), viewedEvent : OptionalArgument (List GraphCool.InputObject.UserviewedEventPool) } -> { bio : OptionalArgument String, birthday : OptionalArgument GraphCool.Scalar.DateTime, name : OptionalArgument String, nameFull : OptionalArgument String, attendingEventIds : OptionalArgument (List GraphCool.Scalar.Id), attendingEvent : OptionalArgument (List GraphCool.InputObject.UserattendingEventPool), createdEventsIds : OptionalArgument (List GraphCool.Scalar.Id), createdEvents : OptionalArgument (List GraphCool.InputObject.UsercreatedEventsEvent), datesCanceledIds : OptionalArgument (List GraphCool.Scalar.Id), datesCanceled : OptionalArgument (List GraphCool.InputObject.UserdatesCanceledChat), hostsIds : OptionalArgument (List GraphCool.Scalar.Id), hosts : OptionalArgument (List GraphCool.InputObject.UserhostsHost), initiatedIds : OptionalArgument (List GraphCool.Scalar.Id), initiated : OptionalArgument (List GraphCool.InputObject.UserinitiatedChat), likedEventIds : OptionalArgument (List GraphCool.Scalar.Id), likedEvent : OptionalArgument (List GraphCool.InputObject.UserlikedEventPool), passedIds : OptionalArgument (List GraphCool.Scalar.Id), passed : OptionalArgument (List GraphCool.InputObject.UserpassedChat), proposedIds : OptionalArgument (List GraphCool.Scalar.Id), proposed : OptionalArgument (List GraphCool.InputObject.UserproposedChat), recipientIds : OptionalArgument (List GraphCool.Scalar.Id), recipient : OptionalArgument (List GraphCool.InputObject.UserrecipientChat), sentIds : OptionalArgument (List GraphCool.Scalar.Id), sent : OptionalArgument (List GraphCool.InputObject.UsersentMessage), viewedEventIds : OptionalArgument (List GraphCool.Scalar.Id), viewedEvent : OptionalArgument (List GraphCool.InputObject.UserviewedEventPool) })
 
 update : Msg -> UserModel -> ( UserModel, Cmd Msg )
 update msg model =
@@ -142,7 +144,10 @@ mutation userModel =
     --             |> List.filterMap identity
     -- in
     -- filledInOptionals
-    
+
+poolId : SelectionSet Id GraphCool.Object.Pool
+poolId =
+    Pool.selection identity |> with Pool.id    
 
 user : SelectionSet User GraphCool.Object.User
 user =
@@ -154,9 +159,9 @@ user =
         |> with (UserObj.createdEvents identity eventId)
         |> with (UserObj.datesCanceled identity chatId)
         |> with UserObj.email
-        |> with (UserObj.eventsAttending identity eventId)
-        |> with (UserObj.eventsLiked identity eventId)
-        |> with (UserObj.eventsViewed identity eventId)
+        |> with (UserObj.attendingEvent identity poolId)
+        |> with (UserObj.likedEvent identity poolId)
+        |> with (UserObj.viewedEvent identity poolId)
         |> with (UserObj.hosts identity hostId)
         |> with UserObj.id
         |> with (UserObj.initiated identity chatId)

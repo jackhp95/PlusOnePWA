@@ -3,27 +3,24 @@ module View exposing (render)
 -- DUCK TAPE --
 -- PAGES --
 -- SUBVIEWS --
+-- SUBVIEWS --
+
 import Auth0.Auth0 as Auth0
 import Auth0.Authentication as Authentication
 import Html exposing (..)
 import Html.Attributes exposing (..)
+import Html.Events exposing (..)
 import Nav exposing (..)
 import Pages.Chat.View as Chat
 import Pages.Chats.View as Chats
 import Pages.CreateEvent.View as CreateEvent
+import Pages.EditUser.View as EditUser
 import Pages.Event.View as Event
 import Pages.Events.View as Events
 import Pages.Pool.View as Pool
-import Pages.CreateEvent.View as CreateEvent
-import Pages.EditUser.View as EditUser
-
-
--- SUBVIEWS --
-
 import Pages.User.View as User
 import Proto exposing (..)
 import Types
-import Html.Events exposing (..)
 
 
 render : Types.Model -> Html Types.Msg
@@ -36,42 +33,40 @@ render model =
                         (page model)
                    ]
             )
+        , div [ class "container" ]
+            [ div [ class "jumbotron text-center" ]
+                [ div []
+                    (case Authentication.tryGetUserProfile model.me.authModel of
+                        Nothing ->
+                            [ p [] [ text "Please log in" ] ]
 
-            ,div [ class "container" ]
-                [ div [ class "jumbotron text-center" ]
-                    [ div []
-                        (case Authentication.tryGetUserProfile model.me.authModel of
-                            Nothing ->
-                                [ p [] [ text "Please log in" ] ]
-
-                            Just user ->
-                                [ p [] [ text ("Hello, " ++ user.email ++ "! " ++ (toString user.family_name)) ]
-                                , img[src user.picture][]
-                                ]
-                                
-                        )
-                    , p []
-                        [ button
-                            [ class "btn btn-primary"
-                            , onClick
-                                (Types.AuthenticationMsg
-                                    (if Authentication.isLoggedIn model.me.authModel then
-                                        Authentication.LogOut
-                                    else
-                                        Authentication.ShowLogIn
-                                    )
-                                )
+                        Just user ->
+                            [ p [] [ text ("Hello, " ++ user.email ++ "! " ++ toString user.family_name) ]
+                            , img [ src user.picture ] []
                             ]
-                            [ text
+                    )
+                , p []
+                    [ button
+                        [ class "btn btn-primary"
+                        , onClick
+                            (Types.AuthenticationMsg
                                 (if Authentication.isLoggedIn model.me.authModel then
-                                    "Log Out"
-                                else
-                                    "Log In"
+                                    Authentication.LogOut
+                                 else
+                                    Authentication.ShowLogIn
                                 )
-                            ]
+                            )
+                        ]
+                        [ text
+                            (if Authentication.isLoggedIn model.me.authModel then
+                                "Log Out"
+                             else
+                                "Log In"
+                            )
                         ]
                     ]
                 ]
+            ]
         ]
 
 
@@ -98,13 +93,13 @@ page model =
                     ]
 
         Types.GoUser ->
-            [ User.view model.user ]
+            [ User.view model.me.user ]
 
         Types.GoPool ->
             [ Pool.view model.pool ]
-        
+
         Types.GoEditUser ->
-            [ Html.map Types.EditUserMsg (EditUser.view model.user)]
+            [ Html.map Types.EditUserMsg (EditUser.view model.me.user) ]
 
         Types.GoCreateEvent ->
             [ Html.map Types.CreateEventMsg (CreateEvent.view model.createEvent model.me) ]

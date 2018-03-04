@@ -15,11 +15,11 @@ view x =
     let
 
         model =
-            x.me.user
+            x.user
     in
     section [ class "w-100 mw7-l overflow-auto shadow-2-l" ]
         [ div [ class "flex h5 ph3 ph4-m ph5-l pt6 items-center" ]
-            [ userAvi model.avi
+            [ userAvi
             , div [ class "f2 fw7 ml3 fadeInUp animated" ] [ text model.name ]
             ]
         , div
