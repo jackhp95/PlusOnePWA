@@ -2,7 +2,7 @@
 -- https://github.com/dillonkearns/graphqelm
 
 
-module GraphCool.Object.RemoveFromUserViewedEventPayload exposing (..)
+module GraphCool.Object.RemoveFromPoolOnUserPayload exposing (..)
 
 import GraphCool.InputObject
 import GraphCool.Interface
@@ -20,16 +20,16 @@ import Json.Decode as Decode
 
 {-| Select fields to build up a SelectionSet for this object.
 -}
-selection : (a -> constructor) -> SelectionSet (a -> constructor) GraphCool.Object.RemoveFromUserViewedEventPayload
+selection : (a -> constructor) -> SelectionSet (a -> constructor) GraphCool.Object.RemoveFromPoolOnUserPayload
 selection constructor =
     Object.selection constructor
 
 
-usersViewedUser : SelectionSet decodesTo GraphCool.Object.User -> Field (Maybe decodesTo) GraphCool.Object.RemoveFromUserViewedEventPayload
-usersViewedUser object =
-    Object.selectionField "usersViewedUser" [] object (identity >> Decode.maybe)
+viewedEventPool : SelectionSet decodesTo GraphCool.Object.Pool -> Field (Maybe decodesTo) GraphCool.Object.RemoveFromPoolOnUserPayload
+viewedEventPool object =
+    Object.selectionField "viewedEventPool" [] object (identity >> Decode.maybe)
 
 
-eventsViewedEvent : SelectionSet decodesTo GraphCool.Object.Event -> Field (Maybe decodesTo) GraphCool.Object.RemoveFromUserViewedEventPayload
-eventsViewedEvent object =
-    Object.selectionField "eventsViewedEvent" [] object (identity >> Decode.maybe)
+viewedUser : SelectionSet decodesTo GraphCool.Object.User -> Field (Maybe decodesTo) GraphCool.Object.RemoveFromPoolOnUserPayload
+viewedUser object =
+    Object.selectionField "viewedUser" [] object (identity >> Decode.maybe)

@@ -9,6 +9,7 @@ import GraphCool.Object.Event as Event
 import GraphCool.Object.Host as Host
 import GraphCool.Object.Location as Location
 import GraphCool.Object.Message as Message
+import GraphCool.Object.Pool as Pool
 import GraphCool.Object.User as User
 import GraphCool.Object.Venue as Venue
 import GraphCool.Query as Query
@@ -27,16 +28,17 @@ type alias Response =
     , venues : List Venue
     , locations : List Location
     , events : List Event
+    , pools : List Pool
     , messages : List Message
     , chats : List Chat
-    , users : List User
+    , users : List OtherUser
     }
 
 
 type alias Host =
     { createdAt : DateTime
     , description : Maybe String
-    , events : Maybe (List Id)
+    , events : Maybe (List Event)
     , id : Id
     , name : String
     , nameFull : Maybe String
@@ -80,10 +82,18 @@ type alias Event =
     , nameFull : Maybe String
     , private : Bool
     , startsAt : DateTime
+    , venues : Maybe (List Id)
+    }
+
+
+type alias Pool =
+    { chats : Maybe (List Id)
+    , event : Maybe Id
+    , id : Id
+    , seatGeekId : Maybe String
     , usersAttending : Maybe (List Id)
     , usersLiked : Maybe (List Id)
     , usersViewed : Maybe (List Id)
-    , venues : Maybe (List Id)
     }
 
 
@@ -102,7 +112,7 @@ type alias Chat =
     , event : Id
     , id : Id
     , initiated : Id
-    , messages : Maybe (List Id)
+    , messages : Maybe (List Message)
     , passed : Maybe Id
     , proposed : Maybe Id
     , recipient : Maybe Id
@@ -117,9 +127,9 @@ type alias User =
     , createdEvents : Maybe (List Id)
     , datesCanceled : Maybe (List Id)
     , email : Maybe String
-    , eventsAttending : Maybe (List Id)
-    , eventsLiked : Maybe (List Id)
-    , eventsViewed : Maybe (List Id)
+    , attendingEvent : Maybe (List Id)
+    , likedEvent : Maybe (List Id)
+    , viewedEvent : Maybe (List Id)
     , hosts : Maybe (List Id)
     , id : Id
     , initiated : Maybe (List Id)
@@ -134,6 +144,13 @@ type alias User =
     }
 
 
+type alias OtherUser =
+    { bio : Maybe String
+    , birthday : DateTime
+    , id : Id
+    }
+
+
 queryEverything : SelectionSet Response RootQuery
 queryEverything =
     Query.selection Response
@@ -141,9 +158,10 @@ queryEverything =
         |> with (Query.allVenues identity venue)
         |> with (Query.allLocations identity location)
         |> with (Query.allEvents identity event)
+        |> with (Query.allPools identity pool)
         |> with (Query.allMessages identity message)
         |> with (Query.allChats identity chat)
-        |> with (Query.allUsers identity user)
+        |> with (Query.allUsers identity otheruser)
 
 
 mutation : SelectionSet (Maybe User) Graphqelm.Operation.RootMutation
@@ -162,7 +180,7 @@ host =
     Host.selection Host
         |> with Host.createdAt
         |> with Host.description
-        |> with (Host.events identity eventId)
+        |> with (Host.events identity event)
         |> with Host.id
         |> with Host.name
         |> with Host.nameFull
@@ -224,15 +242,30 @@ event =
         |> with Event.nameFull
         |> with Event.private
         |> with Event.startsAt
-        |> with (Event.usersAttending identity userId)
-        |> with (Event.usersLiked identity userId)
-        |> with (Event.usersViewed identity userId)
         |> with (Event.venues identity venueId)
+
+
+poolId : SelectionSet Id GraphCool.Object.Pool
+poolId =
+    Pool.selection identity |> with Pool.id
+
+
+pool : SelectionSet Pool GraphCool.Object.Pool
+pool =
+    Pool.selection Pool
+        |> with (Pool.chats identity chatId)
+        |> with (Pool.event identity eventId)
+        |> with Pool.id
+        |> with Pool.seatGeekId
+        |> with (Pool.attending identity userId)
+        |> with (Pool.liked identity userId)
+        |> with (Pool.viewed identity userId)
 
 
 messageId : SelectionSet Id GraphCool.Object.Message
 messageId =
-    Message.selection identity |> with Message.id
+    Message.selection identity
+        |> with Message.id
 
 
 message : SelectionSet Message GraphCool.Object.Message
@@ -258,7 +291,7 @@ chat =
         |> with (Chat.event identity eventId)
         |> with Chat.id
         |> with (Chat.initiated identity userId)
-        |> with (Chat.messages identity messageId)
+        |> with (Chat.messages identity message)
         |> with (Chat.passed identity userId)
         |> with (Chat.proposed identity userId)
         |> with (Chat.recipient identity userId)
@@ -279,9 +312,9 @@ user =
         |> with (User.createdEvents identity eventId)
         |> with (User.datesCanceled identity chatId)
         |> with User.email
-        |> with (User.eventsAttending identity eventId)
-        |> with (User.eventsLiked identity eventId)
-        |> with (User.eventsViewed identity eventId)
+        |> with (User.attendingEvent identity poolId)
+        |> with (User.likedEvent identity poolId)
+        |> with (User.viewedEvent identity poolId)
         |> with (User.hosts identity hostId)
         |> with User.id
         |> with (User.initiated identity chatId)
@@ -293,6 +326,14 @@ user =
         |> with (User.recipient identity chatId)
         |> with (User.sent identity messageId)
         |> with User.updatedAt
+
+
+otheruser : SelectionSet OtherUser GraphCool.Object.User
+otheruser =
+    User.selection OtherUser
+        |> with User.bio
+        |> with User.birthday
+        |> with User.id
 
 
 makeQueryRequest : Cmd Msg

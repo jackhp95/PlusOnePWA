@@ -53,16 +53,20 @@ type AddToMessageOfChatPayload
     = AddToMessageOfChatPayload
 
 
+type AddToPoolOnChatPayload
+    = AddToPoolOnChatPayload
+
+
+type AddToPoolOnUserPayload
+    = AddToPoolOnUserPayload
+
+
 type AddToRecipientOfChatPayload
     = AddToRecipientOfChatPayload
 
 
 type AddToUserIsHostPayload
     = AddToUserIsHostPayload
-
-
-type AddToUserViewedEventPayload
-    = AddToUserViewedEventPayload
 
 
 type AddToVenueOfEventPayload
@@ -141,6 +145,18 @@ type MessageSubscriptionPayload
     = MessageSubscriptionPayload
 
 
+type Pool
+    = Pool
+
+
+type PoolPreviousValues
+    = PoolPreviousValues
+
+
+type PoolSubscriptionPayload
+    = PoolSubscriptionPayload
+
+
 type QueryMeta_
     = QueryMeta_
 
@@ -177,6 +193,14 @@ type RemoveFromMessageFromUserPayload
     = RemoveFromMessageFromUserPayload
 
 
+type RemoveFromPoolOnChatPayload
+    = RemoveFromPoolOnChatPayload
+
+
+type RemoveFromPoolOnUserPayload
+    = RemoveFromPoolOnUserPayload
+
+
 type RemoveFromRecipientOfChatPayload
     = RemoveFromRecipientOfChatPayload
 
@@ -185,12 +209,12 @@ type RemoveFromUserIsHostPayload
     = RemoveFromUserIsHostPayload
 
 
-type RemoveFromUserViewedEventPayload
-    = RemoveFromUserViewedEventPayload
-
-
 type RemoveFromVenueOfEventPayload
     = RemoveFromVenueOfEventPayload
+
+
+type SetEventOnPoolPayload
+    = SetEventOnPoolPayload
 
 
 type SetVenueOnLocationPayload

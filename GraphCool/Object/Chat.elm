@@ -132,6 +132,24 @@ passed fillInOptionals object =
   - filter -
 
 -}
+pool : ({ filter : OptionalArgument GraphCool.InputObject.PoolFilter } -> { filter : OptionalArgument GraphCool.InputObject.PoolFilter }) -> SelectionSet decodesTo GraphCool.Object.Pool -> Field (Maybe decodesTo) GraphCool.Object.Chat
+pool fillInOptionals object =
+    let
+        filledInOptionals =
+            fillInOptionals { filter = Absent }
+
+        optionalArgs =
+            [ Argument.optional "filter" filledInOptionals.filter GraphCool.InputObject.encodePoolFilter ]
+                |> List.filterMap identity
+    in
+    Object.selectionField "pool" optionalArgs object (identity >> Decode.maybe)
+
+
+{-|
+
+  - filter -
+
+-}
 proposed : ({ filter : OptionalArgument GraphCool.InputObject.UserFilter } -> { filter : OptionalArgument GraphCool.InputObject.UserFilter }) -> SelectionSet decodesTo GraphCool.Object.User -> Field (Maybe decodesTo) GraphCool.Object.Chat
 proposed fillInOptionals object =
     let

@@ -140,6 +140,24 @@ message fillInOptionals object =
   - filter -
 
 -}
+pool : ({ filter : OptionalArgument GraphCool.InputObject.PoolSubscriptionFilter } -> { filter : OptionalArgument GraphCool.InputObject.PoolSubscriptionFilter }) -> SelectionSet decodesTo GraphCool.Object.PoolSubscriptionPayload -> Field (Maybe decodesTo) RootSubscription
+pool fillInOptionals object =
+    let
+        filledInOptionals =
+            fillInOptionals { filter = Absent }
+
+        optionalArgs =
+            [ Argument.optional "filter" filledInOptionals.filter GraphCool.InputObject.encodePoolSubscriptionFilter ]
+                |> List.filterMap identity
+    in
+    Object.selectionField "Pool" optionalArgs object (identity >> Decode.maybe)
+
+
+{-|
+
+  - filter -
+
+-}
 user : ({ filter : OptionalArgument GraphCool.InputObject.UserSubscriptionFilter } -> { filter : OptionalArgument GraphCool.InputObject.UserSubscriptionFilter }) -> SelectionSet decodesTo GraphCool.Object.UserSubscriptionPayload -> Field (Maybe decodesTo) RootSubscription
 user fillInOptionals object =
     let

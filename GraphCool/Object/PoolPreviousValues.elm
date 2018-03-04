@@ -2,7 +2,7 @@
 -- https://github.com/dillonkearns/graphqelm
 
 
-module GraphCool.Object.AddToHostOfEventPayload exposing (..)
+module GraphCool.Object.PoolPreviousValues exposing (..)
 
 import GraphCool.InputObject
 import GraphCool.Interface
@@ -20,16 +20,16 @@ import Json.Decode as Decode
 
 {-| Select fields to build up a SelectionSet for this object.
 -}
-selection : (a -> constructor) -> SelectionSet (a -> constructor) GraphCool.Object.AddToHostOfEventPayload
+selection : (a -> constructor) -> SelectionSet (a -> constructor) GraphCool.Object.PoolPreviousValues
 selection constructor =
     Object.selection constructor
 
 
-eventsEvent : SelectionSet decodesTo GraphCool.Object.Event -> Field (Maybe decodesTo) GraphCool.Object.AddToHostOfEventPayload
-eventsEvent object =
-    Object.selectionField "eventsEvent" [] object (identity >> Decode.maybe)
+id : Field GraphCool.Scalar.Id GraphCool.Object.PoolPreviousValues
+id =
+    Object.fieldDecoder "id" [] (Decode.string |> Decode.map GraphCool.Scalar.Id)
 
 
-hostsHost : SelectionSet decodesTo GraphCool.Object.Host -> Field (Maybe decodesTo) GraphCool.Object.AddToHostOfEventPayload
-hostsHost object =
-    Object.selectionField "hostsHost" [] object (identity >> Decode.maybe)
+seatGeekId : Field (Maybe String) GraphCool.Object.PoolPreviousValues
+seatGeekId =
+    Object.fieldDecoder "seatGeekId" [] (Decode.string |> Decode.maybe)
