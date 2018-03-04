@@ -1,4 +1,4 @@
-module Main exposing (main)
+port module Main exposing (main)
 
 -- Try to reomve these?
 
@@ -18,6 +18,8 @@ import Update exposing (..)
 import View exposing (render)
 import WebSocket
 import Window exposing (size)
+import Auth0.Auth0 as Auth0
+import Auth0.Authentication as Authentication
 
 
 initCmd : Cmd Msg
@@ -44,9 +46,9 @@ getDatetime =
 -- INIT --
 
 
-init : ( Model, Cmd Msg )
-init =
-    ( initModel, initCmd )
+init : Maybe Auth0.LoggedInUser -> ( Model, Cmd Msg )
+init initialUser =
+    ( (initModel initialUser), initCmd )
 
 
 
@@ -64,7 +66,7 @@ view model =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.batch [ Window.resizes ResizePool, mouseMoveSubs model ]
+    Sub.batch [ Window.resizes ResizePool, mouseMoveSubs model, auth0authResult (Authentication.handleAuthResult >> AuthenticationMsg) ]
 
 
 mouseMoveSubs : Model -> Sub Msg
@@ -79,10 +81,9 @@ mouseMoveSubs model =
 
 
 -- MAIN --
-
-
+main : Program (Maybe Auth0.LoggedInUser) Model Msg
 main =
-    Html.program
+    Html.programWithFlags
         { init = init
         , view = view
         , update = Update.update

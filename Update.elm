@@ -8,6 +8,8 @@ import Pages.Pool.View exposing (determineTubers, getPosition)
 import Pages.User.Update exposing (..)
 import SeatGeek.Types as SG
 import Types
+import Auth0.Auth0 as Auth0
+import Auth0.Authentication as Authentication
 
 
 -- UPDATE --
@@ -26,6 +28,12 @@ update msg model =
             model.pool
     in
     case msg of
+        Types.AuthenticationMsg authMsg ->
+            let
+                ( authModel, cmd ) =
+                    Authentication.update authMsg model.authModel
+            in
+            ( { model | authModel = authModel }, Cmd.map Types.AuthenticationMsg cmd )
         Types.ChangeTo newRoute ->
             ( { model | route = newRoute }, Cmd.none )
 

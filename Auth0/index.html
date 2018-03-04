@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Elm with Auth0</title>
-    <script src="/Auth0/Main.js"></script>
+    <script src="Main.js"></script>
     <!-- <script src="/Auth0/Auth0.js"></script>
     <script src="/Auth0/Authentication.js"></script> -->
   </head>
@@ -15,11 +15,10 @@
   <script src="https://cdn.auth0.com/js/auth0/9.0.0/auth0.min.js"></script>
   <script>
     var webAuth = new auth0.WebAuth({
-      domain: 'jackhpeterson.auth0.com', // e.g., you.auth0.com
-      clientID: '9dnVsJt9w1exkGkazu8aZjGhPmxa3zFW',
-      scope: 'email',
+      domain: 'plusonedatingapp.auth0.com', // e.g., you.auth0.com
+      clientID: 'V9DXVz9ylA_oLNRcHimDzU-haA__LCKm',
       responseType: 'token',
-      redirectUri: 'http://127.0.0.1:5500/Auth0/index.html'
+      redirectUri: 'http://localhost:8000/Auth0/index.html'
     });
     var storedProfile = localStorage.getItem('profile');
     var storedToken = localStorage.getItem('token');
