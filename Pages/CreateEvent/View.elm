@@ -10,13 +10,16 @@ import Pages.CreateEvent.Model exposing (..)
 import Pages.Events.Model exposing (Events)
 import SeatGeek.Types as SG
 import Types exposing (Msg)
+import Auth0.Auth0 as Auth0
+import Auth0.Authentication as Authentication
+import Pages.User.Model exposing (Me)
 
 
 -- VIEW
 
 
-view : Pages.CreateEvent.Model.CreateEvent -> Html Pages.CreateEvent.Messages.Msg
-view event =
+view : Pages.CreateEvent.Model.CreateEvent -> Me -> Html Pages.CreateEvent.Messages.Msg
+view event me =
     let
         textInput title emoji desc onChange =
             fieldset [ class "flex flex-column flex-auto outline-0 bn pa3 ma0 hide-child" ]
@@ -55,5 +58,6 @@ view event =
             , text event.title
             , textInput "privacy" "🔒" "who's invited" ChangePrivacy
             , textInput "taxonomy" "🏷️" "what is it?" ChangeTaxonomy
+                
             ]
         ]

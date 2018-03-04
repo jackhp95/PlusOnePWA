@@ -1,4 +1,4 @@
-port module Types exposing (..)
+module Types exposing (..)
 
 -- Events
 
@@ -20,35 +20,22 @@ import Window exposing (Size)
 import Auth0.Auth0 as Auth0
 import Auth0.Authentication as Authentication
 
-
--- Ports
-
-
-port auth0authorize : Auth0.Options -> Cmd msg
-
-
-port auth0authResult : (Auth0.RawAuthenticationResult -> msg) -> Sub msg
-
-
-port auth0logout : () -> Cmd msg
-
 -- MODEL --
 
 type alias Model =
     { route : Route
     , chat : ChatModel.Chat
     , chats : List ChatModel.Chat
-    , user : UserModel.User
     , events : EventsModel.Events
     , pool : PoolModel.Pool
     , client : Client
     , createEvent : CreateEventModel.CreateEvent
-    , authModel : Authentication.Model
+    , me: UserModel.Me
     }
 
 
 initModel : Maybe Auth0.LoggedInUser -> Model
-initModel initialUser=
+initModel initialAuthUser=
     Model
         -- (GoEvents Nothing)
         (GoChats Nothing)
@@ -61,12 +48,12 @@ initModel initialUser=
         , ChatModel.initModel
         , ChatModel.initModel
         ]
-        UserModel.initModel
         EventsModel.initModel
         PoolModel.initModel
         initClient
         CreateEventModel.initModel
-        (Authentication.init auth0authorize auth0logout initialUser)
+        (UserModel.initMe initialAuthUser)
+        
 
 
 type alias Page =

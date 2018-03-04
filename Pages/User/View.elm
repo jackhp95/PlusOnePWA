@@ -13,7 +13,7 @@ view : Types.Model -> Html msg
 view x =
     let
         model =
-            x.user
+            x.me.user
     in
     section [ class "w-100 mw7-l overflow-auto shadow-2-l" ]
         [ div [ class "flex h5 ph3 ph4-m ph5-l pt6 items-center" ]

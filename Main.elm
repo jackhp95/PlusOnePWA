@@ -1,4 +1,4 @@
-port module Main exposing (main)
+module Main exposing (main)
 
 -- Try to reomve these?
 
@@ -20,6 +20,7 @@ import WebSocket
 import Window exposing (size)
 import Auth0.Auth0 as Auth0
 import Auth0.Authentication as Authentication
+import Pages.User.Model exposing (..)
 
 
 initCmd : Cmd Msg
@@ -48,7 +49,7 @@ getDatetime =
 
 init : Maybe Auth0.LoggedInUser -> ( Model, Cmd Msg )
 init initialUser =
-    ( (initModel initialUser), initCmd )
+    ( (Types.initModel initialUser), initCmd )
 
 
 

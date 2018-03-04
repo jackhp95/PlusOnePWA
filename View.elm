@@ -34,7 +34,7 @@ render model =
             ,div [ class "container" ]
                 [ div [ class "jumbotron text-center" ]
                     [ div []
-                        (case Authentication.tryGetUserProfile model.authModel of
+                        (case Authentication.tryGetUserProfile model.me.authModel of
                             Nothing ->
                                 [ p [] [ text "Please log in" ] ]
 
@@ -49,7 +49,7 @@ render model =
                             [ class "btn btn-primary"
                             , onClick
                                 (Types.AuthenticationMsg
-                                    (if Authentication.isLoggedIn model.authModel then
+                                    (if Authentication.isLoggedIn model.me.authModel then
                                         Authentication.LogOut
                                     else
                                         Authentication.ShowLogIn
@@ -57,7 +57,7 @@ render model =
                                 )
                             ]
                             [ text
-                                (if Authentication.isLoggedIn model.authModel then
+                                (if Authentication.isLoggedIn model.me.authModel then
                                     "Log Out"
                                 else
                                     "Log In"
@@ -98,7 +98,7 @@ page model =
             [ Pool.view model.pool ]
 
         Types.GoCreateEvent ->
-            [ Html.map Types.CreateEventMsg (CreateEvent.view model.createEvent) ]
+            [ Html.map Types.CreateEventMsg (CreateEvent.view model.createEvent model.me) ]
 
         Types.GoEvents event ->
             case event of

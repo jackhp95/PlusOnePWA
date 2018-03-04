@@ -1,7 +1,21 @@
-module Pages.User.Model exposing (..)
+port module Pages.User.Model exposing (..)
 
 import Pages.User.Messages exposing (..)
+import Auth0.Auth0 as Auth0
+import Auth0.Authentication as Authentication
 
+-- Ports
+
+
+port auth0authorize : Auth0.Options -> Cmd msg
+
+
+port auth0authResult : (Auth0.RawAuthenticationResult -> msg) -> Sub msg
+
+
+port auth0logout : () -> Cmd msg
+
+-- User
 
 type alias User =
     { auth0UserId : String
@@ -28,11 +42,20 @@ type alias User =
     , updatedAt : String
     }
 
+type alias Me =
+    { user: User
+    , authModel: Authentication.Model
+    }
 
 init : ( User, Cmd Msg )
 init =
     ( initModel, initCmd )
 
+initMe :  Maybe Auth0.LoggedInUser -> Me
+initMe initialAuthUser =
+    Me
+        initModel
+        (Authentication.init auth0authorize auth0logout initialAuthUser)
 
 initCmd : Cmd Msg
 initCmd =

@@ -13317,8 +13317,231 @@ var _user$project$SeatGeek_Types$initQuery = {
 	client_id: 'MzUwNDE1NnwxNDgxNjA1ODM2'
 };
 
-var _user$project$Pages_CreateEvent_Update$update = F2(
-	function (msg, model) {
+var _user$project$Pages_User_Messages$Temp = {ctor: 'Temp'};
+
+var _user$project$Pages_User_Model$initCmd = _elm_lang$core$Platform_Cmd$none;
+var _user$project$Pages_User_Model$auth0authorize = _elm_lang$core$Native_Platform.outgoingPort(
+	'auth0authorize',
+	function (v) {
+		return {};
+	});
+var _user$project$Pages_User_Model$auth0authResult = _elm_lang$core$Native_Platform.incomingPort(
+	'auth0authResult',
+	A2(
+		_elm_lang$core$Json_Decode$andThen,
+		function (err) {
+			return A2(
+				_elm_lang$core$Json_Decode$andThen,
+				function (ok) {
+					return _elm_lang$core$Json_Decode$succeed(
+						{err: err, ok: ok});
+				},
+				A2(
+					_elm_lang$core$Json_Decode$field,
+					'ok',
+					_elm_lang$core$Json_Decode$oneOf(
+						{
+							ctor: '::',
+							_0: _elm_lang$core$Json_Decode$null(_elm_lang$core$Maybe$Nothing),
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_elm_lang$core$Json_Decode$map,
+									_elm_lang$core$Maybe$Just,
+									A2(
+										_elm_lang$core$Json_Decode$andThen,
+										function (profile) {
+											return A2(
+												_elm_lang$core$Json_Decode$andThen,
+												function (token) {
+													return _elm_lang$core$Json_Decode$succeed(
+														{profile: profile, token: token});
+												},
+												A2(_elm_lang$core$Json_Decode$field, 'token', _elm_lang$core$Json_Decode$string));
+										},
+										A2(
+											_elm_lang$core$Json_Decode$field,
+											'profile',
+											A2(
+												_elm_lang$core$Json_Decode$andThen,
+												function (email) {
+													return A2(
+														_elm_lang$core$Json_Decode$andThen,
+														function (email_verified) {
+															return A2(
+																_elm_lang$core$Json_Decode$andThen,
+																function (family_name) {
+																	return A2(
+																		_elm_lang$core$Json_Decode$andThen,
+																		function (picture) {
+																			return _elm_lang$core$Json_Decode$succeed(
+																				{email: email, email_verified: email_verified, family_name: family_name, picture: picture});
+																		},
+																		A2(_elm_lang$core$Json_Decode$field, 'picture', _elm_lang$core$Json_Decode$string));
+																},
+																A2(_elm_lang$core$Json_Decode$field, 'family_name', _elm_lang$core$Json_Decode$string));
+														},
+														A2(_elm_lang$core$Json_Decode$field, 'email_verified', _elm_lang$core$Json_Decode$bool));
+												},
+												A2(_elm_lang$core$Json_Decode$field, 'email', _elm_lang$core$Json_Decode$string))))),
+								_1: {ctor: '[]'}
+							}
+						})));
+		},
+		A2(
+			_elm_lang$core$Json_Decode$field,
+			'err',
+			_elm_lang$core$Json_Decode$oneOf(
+				{
+					ctor: '::',
+					_0: _elm_lang$core$Json_Decode$null(_elm_lang$core$Maybe$Nothing),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$core$Json_Decode$map,
+							_elm_lang$core$Maybe$Just,
+							A2(
+								_elm_lang$core$Json_Decode$andThen,
+								function (name) {
+									return A2(
+										_elm_lang$core$Json_Decode$andThen,
+										function (code) {
+											return A2(
+												_elm_lang$core$Json_Decode$andThen,
+												function (description) {
+													return A2(
+														_elm_lang$core$Json_Decode$andThen,
+														function (statusCode) {
+															return _elm_lang$core$Json_Decode$succeed(
+																{name: name, code: code, description: description, statusCode: statusCode});
+														},
+														A2(
+															_elm_lang$core$Json_Decode$field,
+															'statusCode',
+															_elm_lang$core$Json_Decode$oneOf(
+																{
+																	ctor: '::',
+																	_0: _elm_lang$core$Json_Decode$null(_elm_lang$core$Maybe$Nothing),
+																	_1: {
+																		ctor: '::',
+																		_0: A2(_elm_lang$core$Json_Decode$map, _elm_lang$core$Maybe$Just, _elm_lang$core$Json_Decode$int),
+																		_1: {ctor: '[]'}
+																	}
+																})));
+												},
+												A2(_elm_lang$core$Json_Decode$field, 'description', _elm_lang$core$Json_Decode$string));
+										},
+										A2(
+											_elm_lang$core$Json_Decode$field,
+											'code',
+											_elm_lang$core$Json_Decode$oneOf(
+												{
+													ctor: '::',
+													_0: _elm_lang$core$Json_Decode$null(_elm_lang$core$Maybe$Nothing),
+													_1: {
+														ctor: '::',
+														_0: A2(_elm_lang$core$Json_Decode$map, _elm_lang$core$Maybe$Just, _elm_lang$core$Json_Decode$string),
+														_1: {ctor: '[]'}
+													}
+												})));
+								},
+								A2(
+									_elm_lang$core$Json_Decode$field,
+									'name',
+									_elm_lang$core$Json_Decode$oneOf(
+										{
+											ctor: '::',
+											_0: _elm_lang$core$Json_Decode$null(_elm_lang$core$Maybe$Nothing),
+											_1: {
+												ctor: '::',
+												_0: A2(_elm_lang$core$Json_Decode$map, _elm_lang$core$Maybe$Just, _elm_lang$core$Json_Decode$string),
+												_1: {ctor: '[]'}
+											}
+										})))),
+						_1: {ctor: '[]'}
+					}
+				}))));
+var _user$project$Pages_User_Model$auth0logout = _elm_lang$core$Native_Platform.outgoingPort(
+	'auth0logout',
+	function (v) {
+		return null;
+	});
+var _user$project$Pages_User_Model$User = function (a) {
+	return function (b) {
+		return function (c) {
+			return function (d) {
+				return function (e) {
+					return function (f) {
+						return function (g) {
+							return function (h) {
+								return function (i) {
+									return function (j) {
+										return function (k) {
+											return function (l) {
+												return function (m) {
+													return function (n) {
+														return function (o) {
+															return function (p) {
+																return function (q) {
+																	return function (r) {
+																		return function (s) {
+																			return function (t) {
+																				return function (u) {
+																					return function (v) {
+																						return {auth0UserId: a, avi: b, bio: c, birthday: d, createdAt: e, createdEvents: f, datesCanceled: g, email: h, eventsAttending: i, eventsLiked: j, eventsViewed: k, hosts: l, id: m, initiated: n, name: o, nameFull: p, passed: q, password: r, proposed: s, recipient: t, sent: u, updatedAt: v};
+																					};
+																				};
+																			};
+																		};
+																	};
+																};
+															};
+														};
+													};
+												};
+											};
+										};
+									};
+								};
+							};
+						};
+					};
+				};
+			};
+		};
+	};
+};
+var _user$project$Pages_User_Model$initModel = _user$project$Pages_User_Model$User('11111')(
+	{
+		ctor: '::',
+		_0: 'https://images.unsplash.com/photo-1496361001419-80f0d1be777a?dpr=1&auto=format&fit=crop&w=1000&q=80&cs=tinysrgb&ixid=dW5zcGxhc2guY29tOzs7Ozs%3D',
+		_1: {ctor: '[]'}
+	})('look. life is bad. everyone\'s sad. we\'re all gonna die. but I already bought this inflatable bouncy castle, so are you gonna take your shoes off or what?')('04/20/1960')('04/20/1970')(
+	{ctor: '[]'})(
+	{ctor: '[]'})('this@example.com')(
+	{ctor: '[]'})(
+	{ctor: '[]'})(
+	{ctor: '[]'})(
+	{ctor: '[]'})(1234)(
+	{ctor: '[]'})('Hannah Hazeldine')('Hannah Hazeldinanationator')(
+	{ctor: '[]'})('thisismypass')(
+	{ctor: '[]'})(
+	{ctor: '[]'})(
+	{ctor: '[]'})('04/20/1971');
+var _user$project$Pages_User_Model$init = {ctor: '_Tuple2', _0: _user$project$Pages_User_Model$initModel, _1: _user$project$Pages_User_Model$initCmd};
+var _user$project$Pages_User_Model$Me = F2(
+	function (a, b) {
+		return {user: a, authModel: b};
+	});
+var _user$project$Pages_User_Model$initMe = function (initialAuthUser) {
+	return A2(
+		_user$project$Pages_User_Model$Me,
+		_user$project$Pages_User_Model$initModel,
+		A3(_user$project$Auth0_Authentication$init, _user$project$Pages_User_Model$auth0authorize, _user$project$Pages_User_Model$auth0logout, initialAuthUser));
+};
+
+var _user$project$Pages_CreateEvent_Update$update = F3(
+	function (msg, model, me) {
 		var _p0 = msg;
 		switch (_p0.ctor) {
 			case 'SubmitEvent':
@@ -13512,223 +13735,10 @@ var _user$project$Pages_Events_Model$Events = F2(
 		return {seatgeek: a, currentDatetime: b};
 	});
 
-var _user$project$Pages_User_Messages$Temp = {ctor: 'Temp'};
-
-var _user$project$Pages_User_Model$initCmd = _elm_lang$core$Platform_Cmd$none;
-var _user$project$Pages_User_Model$User = function (a) {
-	return function (b) {
-		return function (c) {
-			return function (d) {
-				return function (e) {
-					return function (f) {
-						return function (g) {
-							return function (h) {
-								return function (i) {
-									return function (j) {
-										return function (k) {
-											return function (l) {
-												return function (m) {
-													return function (n) {
-														return function (o) {
-															return function (p) {
-																return function (q) {
-																	return function (r) {
-																		return function (s) {
-																			return function (t) {
-																				return function (u) {
-																					return function (v) {
-																						return {auth0UserId: a, avi: b, bio: c, birthday: d, createdAt: e, createdEvents: f, datesCanceled: g, email: h, eventsAttending: i, eventsLiked: j, eventsViewed: k, hosts: l, id: m, initiated: n, name: o, nameFull: p, passed: q, password: r, proposed: s, recipient: t, sent: u, updatedAt: v};
-																					};
-																				};
-																			};
-																		};
-																	};
-																};
-															};
-														};
-													};
-												};
-											};
-										};
-									};
-								};
-							};
-						};
-					};
-				};
-			};
-		};
-	};
-};
-var _user$project$Pages_User_Model$initModel = _user$project$Pages_User_Model$User('11111')(
-	{
-		ctor: '::',
-		_0: 'https://images.unsplash.com/photo-1496361001419-80f0d1be777a?dpr=1&auto=format&fit=crop&w=1000&q=80&cs=tinysrgb&ixid=dW5zcGxhc2guY29tOzs7Ozs%3D',
-		_1: {ctor: '[]'}
-	})('look. life is bad. everyone\'s sad. we\'re all gonna die. but I already bought this inflatable bouncy castle, so are you gonna take your shoes off or what?')('04/20/1960')('04/20/1970')(
-	{ctor: '[]'})(
-	{ctor: '[]'})('this@example.com')(
-	{ctor: '[]'})(
-	{ctor: '[]'})(
-	{ctor: '[]'})(
-	{ctor: '[]'})(1234)(
-	{ctor: '[]'})('Hannah Hazeldine')('Hannah Hazeldinanationator')(
-	{ctor: '[]'})('thisismypass')(
-	{ctor: '[]'})(
-	{ctor: '[]'})(
-	{ctor: '[]'})('04/20/1971');
-var _user$project$Pages_User_Model$init = {ctor: '_Tuple2', _0: _user$project$Pages_User_Model$initModel, _1: _user$project$Pages_User_Model$initCmd};
-
 var _user$project$Types$initClient = {textAreaHeight: 10};
-var _user$project$Types$auth0authorize = _elm_lang$core$Native_Platform.outgoingPort(
-	'auth0authorize',
-	function (v) {
-		return {};
-	});
-var _user$project$Types$auth0authResult = _elm_lang$core$Native_Platform.incomingPort(
-	'auth0authResult',
-	A2(
-		_elm_lang$core$Json_Decode$andThen,
-		function (err) {
-			return A2(
-				_elm_lang$core$Json_Decode$andThen,
-				function (ok) {
-					return _elm_lang$core$Json_Decode$succeed(
-						{err: err, ok: ok});
-				},
-				A2(
-					_elm_lang$core$Json_Decode$field,
-					'ok',
-					_elm_lang$core$Json_Decode$oneOf(
-						{
-							ctor: '::',
-							_0: _elm_lang$core$Json_Decode$null(_elm_lang$core$Maybe$Nothing),
-							_1: {
-								ctor: '::',
-								_0: A2(
-									_elm_lang$core$Json_Decode$map,
-									_elm_lang$core$Maybe$Just,
-									A2(
-										_elm_lang$core$Json_Decode$andThen,
-										function (profile) {
-											return A2(
-												_elm_lang$core$Json_Decode$andThen,
-												function (token) {
-													return _elm_lang$core$Json_Decode$succeed(
-														{profile: profile, token: token});
-												},
-												A2(_elm_lang$core$Json_Decode$field, 'token', _elm_lang$core$Json_Decode$string));
-										},
-										A2(
-											_elm_lang$core$Json_Decode$field,
-											'profile',
-											A2(
-												_elm_lang$core$Json_Decode$andThen,
-												function (email) {
-													return A2(
-														_elm_lang$core$Json_Decode$andThen,
-														function (email_verified) {
-															return A2(
-																_elm_lang$core$Json_Decode$andThen,
-																function (family_name) {
-																	return A2(
-																		_elm_lang$core$Json_Decode$andThen,
-																		function (picture) {
-																			return _elm_lang$core$Json_Decode$succeed(
-																				{email: email, email_verified: email_verified, family_name: family_name, picture: picture});
-																		},
-																		A2(_elm_lang$core$Json_Decode$field, 'picture', _elm_lang$core$Json_Decode$string));
-																},
-																A2(_elm_lang$core$Json_Decode$field, 'family_name', _elm_lang$core$Json_Decode$string));
-														},
-														A2(_elm_lang$core$Json_Decode$field, 'email_verified', _elm_lang$core$Json_Decode$bool));
-												},
-												A2(_elm_lang$core$Json_Decode$field, 'email', _elm_lang$core$Json_Decode$string))))),
-								_1: {ctor: '[]'}
-							}
-						})));
-		},
-		A2(
-			_elm_lang$core$Json_Decode$field,
-			'err',
-			_elm_lang$core$Json_Decode$oneOf(
-				{
-					ctor: '::',
-					_0: _elm_lang$core$Json_Decode$null(_elm_lang$core$Maybe$Nothing),
-					_1: {
-						ctor: '::',
-						_0: A2(
-							_elm_lang$core$Json_Decode$map,
-							_elm_lang$core$Maybe$Just,
-							A2(
-								_elm_lang$core$Json_Decode$andThen,
-								function (name) {
-									return A2(
-										_elm_lang$core$Json_Decode$andThen,
-										function (code) {
-											return A2(
-												_elm_lang$core$Json_Decode$andThen,
-												function (description) {
-													return A2(
-														_elm_lang$core$Json_Decode$andThen,
-														function (statusCode) {
-															return _elm_lang$core$Json_Decode$succeed(
-																{name: name, code: code, description: description, statusCode: statusCode});
-														},
-														A2(
-															_elm_lang$core$Json_Decode$field,
-															'statusCode',
-															_elm_lang$core$Json_Decode$oneOf(
-																{
-																	ctor: '::',
-																	_0: _elm_lang$core$Json_Decode$null(_elm_lang$core$Maybe$Nothing),
-																	_1: {
-																		ctor: '::',
-																		_0: A2(_elm_lang$core$Json_Decode$map, _elm_lang$core$Maybe$Just, _elm_lang$core$Json_Decode$int),
-																		_1: {ctor: '[]'}
-																	}
-																})));
-												},
-												A2(_elm_lang$core$Json_Decode$field, 'description', _elm_lang$core$Json_Decode$string));
-										},
-										A2(
-											_elm_lang$core$Json_Decode$field,
-											'code',
-											_elm_lang$core$Json_Decode$oneOf(
-												{
-													ctor: '::',
-													_0: _elm_lang$core$Json_Decode$null(_elm_lang$core$Maybe$Nothing),
-													_1: {
-														ctor: '::',
-														_0: A2(_elm_lang$core$Json_Decode$map, _elm_lang$core$Maybe$Just, _elm_lang$core$Json_Decode$string),
-														_1: {ctor: '[]'}
-													}
-												})));
-								},
-								A2(
-									_elm_lang$core$Json_Decode$field,
-									'name',
-									_elm_lang$core$Json_Decode$oneOf(
-										{
-											ctor: '::',
-											_0: _elm_lang$core$Json_Decode$null(_elm_lang$core$Maybe$Nothing),
-											_1: {
-												ctor: '::',
-												_0: A2(_elm_lang$core$Json_Decode$map, _elm_lang$core$Maybe$Just, _elm_lang$core$Json_Decode$string),
-												_1: {ctor: '[]'}
-											}
-										})))),
-						_1: {ctor: '[]'}
-					}
-				}))));
-var _user$project$Types$auth0logout = _elm_lang$core$Native_Platform.outgoingPort(
-	'auth0logout',
-	function (v) {
-		return null;
-	});
-var _user$project$Types$Model = F9(
-	function (a, b, c, d, e, f, g, h, i) {
-		return {route: a, chat: b, chats: c, user: d, events: e, pool: f, client: g, createEvent: h, authModel: i};
+var _user$project$Types$Model = F8(
+	function (a, b, c, d, e, f, g, h) {
+		return {route: a, chat: b, chats: c, events: d, pool: e, client: f, createEvent: g, me: h};
 	});
 var _user$project$Types$Page = F3(
 	function (a, b, c) {
@@ -13746,8 +13756,8 @@ var _user$project$Types$GoUser = {ctor: 'GoUser'};
 var _user$project$Types$GoChats = function (a) {
 	return {ctor: 'GoChats', _0: a};
 };
-var _user$project$Types$initModel = function (initialUser) {
-	return A9(
+var _user$project$Types$initModel = function (initialAuthUser) {
+	return A8(
 		_user$project$Types$Model,
 		_user$project$Types$GoChats(_elm_lang$core$Maybe$Nothing),
 		_user$project$Pages_Chat_Model$initModel,
@@ -13780,12 +13790,11 @@ var _user$project$Types$initModel = function (initialUser) {
 				}
 			}
 		},
-		_user$project$Pages_User_Model$initModel,
 		_user$project$Pages_Events_Model$initModel,
 		_user$project$Pages_Pool_Model$initModel,
 		_user$project$Types$initClient,
 		_user$project$Pages_CreateEvent_Model$initModel,
-		A3(_user$project$Auth0_Authentication$init, _user$project$Types$auth0authorize, _user$project$Types$auth0logout, initialUser));
+		_user$project$Pages_User_Model$initMe(initialAuthUser));
 };
 var _user$project$Types$AuthenticationMsg = function (a) {
 	return {ctor: 'AuthenticationMsg', _0: a};
@@ -14641,8 +14650,8 @@ var _user$project$SeatGeek_Query$askQuery = function (query) {
 	return A2(_elm_lang$http$Http$send, _user$project$Types$GetReply, request);
 };
 
-var _user$project$Pages_Chat_Update$update = F2(
-	function (msg, model) {
+var _user$project$Pages_Chat_Update$update = F3(
+	function (msg, model, me) {
 		var _p0 = msg;
 		return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 	});
@@ -14655,20 +14664,25 @@ var _user$project$Pages_User_Update$update = F2(
 
 var _user$project$Update$update = F2(
 	function (msg, model) {
+		var me = model.me;
 		var pool = model.pool;
 		var client = model.client;
 		var events = model.events;
 		var _p0 = msg;
 		switch (_p0.ctor) {
 			case 'AuthenticationMsg':
-				var _p1 = A2(_user$project$Auth0_Authentication$update, _p0._0, model.authModel);
+				var _p1 = A2(_user$project$Auth0_Authentication$update, _p0._0, model.me.authModel);
 				var authModel = _p1._0;
 				var cmd = _p1._1;
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{authModel: authModel}),
+						{
+							me: _elm_lang$core$Native_Utils.update(
+								me,
+								{authModel: authModel})
+						}),
 					_1: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Types$AuthenticationMsg, cmd)
 				};
 			case 'ChangeTo':
@@ -14680,7 +14694,7 @@ var _user$project$Update$update = F2(
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'CreateEventMsg':
-				var _p2 = A2(_user$project$Pages_CreateEvent_Update$update, _p0._0, model.createEvent);
+				var _p2 = A3(_user$project$Pages_CreateEvent_Update$update, _p0._0, model.createEvent, me);
 				var createEventModel = _p2._0;
 				var createEventCmd = _p2._1;
 				return {
@@ -14691,18 +14705,22 @@ var _user$project$Update$update = F2(
 					_1: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Types$CreateEventMsg, createEventCmd)
 				};
 			case 'UserMsg':
-				var _p3 = A2(_user$project$Pages_User_Update$update, _p0._0, model.user);
+				var _p3 = A2(_user$project$Pages_User_Update$update, _p0._0, me.user);
 				var userModel = _p3._0;
 				var userCmd = _p3._1;
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{user: userModel}),
+						{
+							me: _elm_lang$core$Native_Utils.update(
+								me,
+								{user: userModel})
+						}),
 					_1: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Types$UserMsg, userCmd)
 				};
 			case 'ChatMsg':
-				var _p4 = A2(_user$project$Pages_Chat_Update$update, _p0._0, model.chat);
+				var _p4 = A3(_user$project$Pages_Chat_Update$update, _p0._0, model.chat, me);
 				var chatModel = _p4._0;
 				var chatCmd = _p4._1;
 				return {
@@ -15461,7 +15479,7 @@ var _user$project$Pages_User_View$userAvi = function (avis) {
 		});
 };
 var _user$project$Pages_User_View$view = function (x) {
-	var model = x.user;
+	var model = x.me.user;
 	return A2(
 		_elm_lang$html$Html$section,
 		{
@@ -16053,262 +16071,263 @@ var _user$project$Pages_Chats_View$view = function (model) {
 		});
 };
 
-var _user$project$Pages_CreateEvent_View$view = function (event) {
-	var submitInput = A2(
-		_elm_lang$html$Html$div,
-		{ctor: '[]'},
-		{
-			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$input,
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$type_('button'),
-					_1: {ctor: '[]'}
-				},
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html$text('Submit'),
-					_1: {ctor: '[]'}
-				}),
-			_1: {ctor: '[]'}
-		});
-	var dateInput = F3(
-		function (title, emoji, desc) {
-			return A2(
-				_elm_lang$html$Html$fieldset,
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class('flex flex-column flex-auto outline-0 bn pa3 ma0 hide-child'),
-					_1: {ctor: '[]'}
-				},
-				{
-					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html$label,
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('pb1'),
-							_1: {ctor: '[]'}
-						},
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html$text(
-								A2(
-									_elm_lang$core$Basics_ops['++'],
-									emoji,
-									A2(_elm_lang$core$Basics_ops['++'], ' ', title))),
-							_1: {ctor: '[]'}
-						}),
-					_1: {
-						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$input,
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$type_('date'),
-								_1: {
-									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$class('f4 fw3 ma0 pa1 white bg-transparent bn outline-0'),
-									_1: {
-										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$value('2017-06-01'),
-										_1: {ctor: '[]'}
-									}
-								}
-							},
-							{ctor: '[]'}),
-						_1: {
-							ctor: '::',
-							_0: A2(
-								_elm_lang$html$Html$div,
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$class('pt1 bt b--white child'),
-									_1: {ctor: '[]'}
-								},
-								{ctor: '[]'}),
-							_1: {ctor: '[]'}
-						}
-					}
-				});
-		});
-	var timeInput = F3(
-		function (title, emoji, desc) {
-			return A2(
-				_elm_lang$html$Html$fieldset,
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class('flex flex-column flex-auto outline-0 bn pa3 ma0 hide-child'),
-					_1: {ctor: '[]'}
-				},
-				{
-					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html$label,
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('pb1'),
-							_1: {ctor: '[]'}
-						},
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html$text(
-								A2(
-									_elm_lang$core$Basics_ops['++'],
-									emoji,
-									A2(_elm_lang$core$Basics_ops['++'], ' ', title))),
-							_1: {ctor: '[]'}
-						}),
-					_1: {
-						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$input,
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$type_('time'),
-								_1: {
-									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$class('f4 fw3 ma0 pa1 white bg-transparent bn outline-0'),
-									_1: {
-										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$value('08:30'),
-										_1: {ctor: '[]'}
-									}
-								}
-							},
-							{ctor: '[]'}),
-						_1: {
-							ctor: '::',
-							_0: A2(
-								_elm_lang$html$Html$div,
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$class('pt1 bt b--white child'),
-									_1: {ctor: '[]'}
-								},
-								{ctor: '[]'}),
-							_1: {ctor: '[]'}
-						}
-					}
-				});
-		});
-	var textInput = F4(
-		function (title, emoji, desc, onChange) {
-			return A2(
-				_elm_lang$html$Html$fieldset,
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class('flex flex-column flex-auto outline-0 bn pa3 ma0 hide-child'),
-					_1: {ctor: '[]'}
-				},
-				{
-					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html$label,
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('pb1'),
-							_1: {ctor: '[]'}
-						},
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html$text(
-								A2(
-									_elm_lang$core$Basics_ops['++'],
-									emoji,
-									A2(_elm_lang$core$Basics_ops['++'], ' ', title))),
-							_1: {ctor: '[]'}
-						}),
-					_1: {
-						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$input,
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$class('f4 fw3 ma0 pv1 ph0 white bg-transparent bb bn outline-0 w-100'),
-								_1: {
-									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$placeholder(desc),
-									_1: {
-										ctor: '::',
-										_0: _elm_lang$html$Html_Events$onInput(onChange),
-										_1: {ctor: '[]'}
-									}
-								}
-							},
-							{ctor: '[]'}),
-						_1: {
-							ctor: '::',
-							_0: A2(
-								_elm_lang$html$Html$div,
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$class('pt1 bt b--white child'),
-									_1: {ctor: '[]'}
-								},
-								{ctor: '[]'}),
-							_1: {ctor: '[]'}
-						}
-					}
-				});
-		});
-	return A2(
-		_elm_lang$html$Html$section,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('animated fadeInUp flex flex-column items-stretch flex-auto pa0 ma0 measure-ns shadow-2-ns'),
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
-			_0: _user$project$Assets$banner('create event'),
-			_1: {
+var _user$project$Pages_CreateEvent_View$view = F2(
+	function (event, me) {
+		var submitInput = A2(
+			_elm_lang$html$Html$div,
+			{ctor: '[]'},
+			{
 				ctor: '::',
 				_0: A2(
-					_elm_lang$html$Html$div,
+					_elm_lang$html$Html$input,
 					{
 						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class('flex-shrink-1 flex-grow-0 bg-black-70 overflow-auto pa3 white'),
+						_0: _elm_lang$html$Html_Attributes$type_('button'),
 						_1: {ctor: '[]'}
 					},
 					{
 						ctor: '::',
-						_0: A4(textInput, 'title', '📛', 'what\'s it called?', _user$project$Pages_CreateEvent_Messages$ChangeTitle),
+						_0: _elm_lang$html$Html$text('Submit'),
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			});
+		var dateInput = F3(
+			function (title, emoji, desc) {
+				return A2(
+					_elm_lang$html$Html$fieldset,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('flex flex-column flex-auto outline-0 bn pa3 ma0 hide-child'),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$label,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$class('pb1'),
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text(
+									A2(
+										_elm_lang$core$Basics_ops['++'],
+										emoji,
+										A2(_elm_lang$core$Basics_ops['++'], ' ', title))),
+								_1: {ctor: '[]'}
+							}),
 						_1: {
 							ctor: '::',
-							_0: A4(textInput, 'description', '📢', 'what\'s it for?', _user$project$Pages_CreateEvent_Messages$ChangeDescription),
-							_1: {
-								ctor: '::',
-								_0: A4(textInput, 'location', '⚓', 'where\'s it at?', _user$project$Pages_CreateEvent_Messages$ChangeLocation),
-								_1: {
+							_0: A2(
+								_elm_lang$html$Html$input,
+								{
 									ctor: '::',
-									_0: A3(dateInput, 'date', '📆', 'what day is it?'),
+									_0: _elm_lang$html$Html_Attributes$type_('date'),
 									_1: {
 										ctor: '::',
-										_0: A3(timeInput, 'time', '🕒', 'what time is it?'),
+										_0: _elm_lang$html$Html_Attributes$class('f4 fw3 ma0 pa1 white bg-transparent bn outline-0'),
 										_1: {
 											ctor: '::',
-											_0: _elm_lang$html$Html$text(event.title),
+											_0: _elm_lang$html$Html_Attributes$value('2017-06-01'),
+											_1: {ctor: '[]'}
+										}
+									}
+								},
+								{ctor: '[]'}),
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$div,
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$class('pt1 bt b--white child'),
+										_1: {ctor: '[]'}
+									},
+									{ctor: '[]'}),
+								_1: {ctor: '[]'}
+							}
+						}
+					});
+			});
+		var timeInput = F3(
+			function (title, emoji, desc) {
+				return A2(
+					_elm_lang$html$Html$fieldset,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('flex flex-column flex-auto outline-0 bn pa3 ma0 hide-child'),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$label,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$class('pb1'),
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text(
+									A2(
+										_elm_lang$core$Basics_ops['++'],
+										emoji,
+										A2(_elm_lang$core$Basics_ops['++'], ' ', title))),
+								_1: {ctor: '[]'}
+							}),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$input,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$type_('time'),
+									_1: {
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$class('f4 fw3 ma0 pa1 white bg-transparent bn outline-0'),
+										_1: {
+											ctor: '::',
+											_0: _elm_lang$html$Html_Attributes$value('08:30'),
+											_1: {ctor: '[]'}
+										}
+									}
+								},
+								{ctor: '[]'}),
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$div,
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$class('pt1 bt b--white child'),
+										_1: {ctor: '[]'}
+									},
+									{ctor: '[]'}),
+								_1: {ctor: '[]'}
+							}
+						}
+					});
+			});
+		var textInput = F4(
+			function (title, emoji, desc, onChange) {
+				return A2(
+					_elm_lang$html$Html$fieldset,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('flex flex-column flex-auto outline-0 bn pa3 ma0 hide-child'),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$label,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$class('pb1'),
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text(
+									A2(
+										_elm_lang$core$Basics_ops['++'],
+										emoji,
+										A2(_elm_lang$core$Basics_ops['++'], ' ', title))),
+								_1: {ctor: '[]'}
+							}),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$input,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$class('f4 fw3 ma0 pv1 ph0 white bg-transparent bb bn outline-0 w-100'),
+									_1: {
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$placeholder(desc),
+										_1: {
+											ctor: '::',
+											_0: _elm_lang$html$Html_Events$onInput(onChange),
+											_1: {ctor: '[]'}
+										}
+									}
+								},
+								{ctor: '[]'}),
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$div,
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$class('pt1 bt b--white child'),
+										_1: {ctor: '[]'}
+									},
+									{ctor: '[]'}),
+								_1: {ctor: '[]'}
+							}
+						}
+					});
+			});
+		return A2(
+			_elm_lang$html$Html$section,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('animated fadeInUp flex flex-column items-stretch flex-auto pa0 ma0 measure-ns shadow-2-ns'),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: _user$project$Assets$banner('create event'),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$div,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class('flex-shrink-1 flex-grow-0 bg-black-70 overflow-auto pa3 white'),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: A4(textInput, 'title', '📛', 'what\'s it called?', _user$project$Pages_CreateEvent_Messages$ChangeTitle),
+							_1: {
+								ctor: '::',
+								_0: A4(textInput, 'description', '📢', 'what\'s it for?', _user$project$Pages_CreateEvent_Messages$ChangeDescription),
+								_1: {
+									ctor: '::',
+									_0: A4(textInput, 'location', '⚓', 'where\'s it at?', _user$project$Pages_CreateEvent_Messages$ChangeLocation),
+									_1: {
+										ctor: '::',
+										_0: A3(dateInput, 'date', '📆', 'what day is it?'),
+										_1: {
+											ctor: '::',
+											_0: A3(timeInput, 'time', '🕒', 'what time is it?'),
 											_1: {
 												ctor: '::',
-												_0: A4(textInput, 'privacy', '🔒', 'who\'s invited', _user$project$Pages_CreateEvent_Messages$ChangePrivacy),
+												_0: _elm_lang$html$Html$text(event.title),
 												_1: {
 													ctor: '::',
-													_0: A4(textInput, 'taxonomy', '🏷️', 'what is it?', _user$project$Pages_CreateEvent_Messages$ChangeTaxonomy),
-													_1: {ctor: '[]'}
+													_0: A4(textInput, 'privacy', '🔒', 'who\'s invited', _user$project$Pages_CreateEvent_Messages$ChangePrivacy),
+													_1: {
+														ctor: '::',
+														_0: A4(textInput, 'taxonomy', '🏷️', 'what is it?', _user$project$Pages_CreateEvent_Messages$ChangeTaxonomy),
+														_1: {ctor: '[]'}
+													}
 												}
 											}
 										}
 									}
 								}
 							}
-						}
-					}),
-				_1: {ctor: '[]'}
-			}
-		});
-};
+						}),
+					_1: {ctor: '[]'}
+				}
+			});
+	});
 
 var _user$project$Moment$clockTime = function (x) {
 	return A3(_rluiten$elm_date_extra$Date_Extra_Format$format, _rluiten$elm_date_extra$Date_Extra_Config_Config_en_us$config, '%-I:%M %P', x);
@@ -17438,7 +17457,7 @@ var _user$project$View$page = function (model) {
 				_0: A2(
 					_elm_lang$html$Html$map,
 					_user$project$Types$CreateEventMsg,
-					_user$project$Pages_CreateEvent_View$view(model.createEvent)),
+					A2(_user$project$Pages_CreateEvent_View$view, model.createEvent, model.me)),
 				_1: {ctor: '[]'}
 			};
 		default:
@@ -17516,7 +17535,7 @@ var _user$project$View$render = function (model) {
 									_elm_lang$html$Html$div,
 									{ctor: '[]'},
 									function () {
-										var _p3 = _user$project$Auth0_Authentication$tryGetUserProfile(model.authModel);
+										var _p3 = _user$project$Auth0_Authentication$tryGetUserProfile(model.me.authModel);
 										if (_p3.ctor === 'Nothing') {
 											return {
 												ctor: '::',
@@ -17583,14 +17602,14 @@ var _user$project$View$render = function (model) {
 														ctor: '::',
 														_0: _elm_lang$html$Html_Events$onClick(
 															_user$project$Types$AuthenticationMsg(
-																_user$project$Auth0_Authentication$isLoggedIn(model.authModel) ? _user$project$Auth0_Authentication$LogOut : _user$project$Auth0_Authentication$ShowLogIn)),
+																_user$project$Auth0_Authentication$isLoggedIn(model.me.authModel) ? _user$project$Auth0_Authentication$LogOut : _user$project$Auth0_Authentication$ShowLogIn)),
 														_1: {ctor: '[]'}
 													}
 												},
 												{
 													ctor: '::',
 													_0: _elm_lang$html$Html$text(
-														_user$project$Auth0_Authentication$isLoggedIn(model.authModel) ? 'Log Out' : 'Log In'),
+														_user$project$Auth0_Authentication$isLoggedIn(model.me.authModel) ? 'Log Out' : 'Log In'),
 													_1: {ctor: '[]'}
 												}),
 											_1: {ctor: '[]'}
@@ -17632,7 +17651,7 @@ var _user$project$Main$subscriptions = function (model) {
 				_0: _user$project$Main$mouseMoveSubs(model),
 				_1: {
 					ctor: '::',
-					_0: _user$project$Types$auth0authResult(
+					_0: _user$project$Pages_User_Model$auth0authResult(
 						function (_p1) {
 							return _user$project$Types$AuthenticationMsg(
 								_user$project$Auth0_Authentication$handleAuthResult(_p1));

@@ -3,10 +3,11 @@ module Pages.CreateEvent.Update exposing (..)
 import Pages.CreateEvent.Messages exposing (..)
 import Pages.CreateEvent.Model exposing (..)
 import SeatGeek.Types as SG
+import Pages.User.Model exposing (Me)
 
 
-update : Msg -> CreateEvent -> ( CreateEvent, Cmd Msg )
-update msg model =
+update : Msg -> CreateEvent -> Me -> ( CreateEvent, Cmd Msg )
+update msg model me =
     case msg of
         SubmitEvent e ->
             ( model, Cmd.none )

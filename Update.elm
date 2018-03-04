@@ -10,6 +10,7 @@ import SeatGeek.Types as SG
 import Types
 import Auth0.Auth0 as Auth0
 import Auth0.Authentication as Authentication
+import Pages.User.Model exposing (..)
 
 
 -- UPDATE --
@@ -26,21 +27,23 @@ update msg model =
 
         pool =
             model.pool
+        me =
+            model.me
     in
     case msg of
         Types.AuthenticationMsg authMsg ->
             let
                 ( authModel, cmd ) =
-                    Authentication.update authMsg model.authModel
+                    Authentication.update authMsg model.me.authModel
             in
-            ( { model | authModel = authModel }, Cmd.map Types.AuthenticationMsg cmd )
+            ( { model | me = {me | authModel = authModel }}, Cmd.map Types.AuthenticationMsg cmd )
         Types.ChangeTo newRoute ->
             ( { model | route = newRoute }, Cmd.none )
 
         Types.CreateEventMsg createEventMsg ->
             let
                 ( createEventModel, createEventCmd ) =
-                    Pages.CreateEvent.Update.update createEventMsg model.createEvent
+                    Pages.CreateEvent.Update.update createEventMsg model.createEvent me
             in
             ( { model | createEvent = createEventModel }
             , Cmd.map Types.CreateEventMsg createEventCmd
@@ -49,16 +52,16 @@ update msg model =
         Types.UserMsg userMsg ->
             let
                 ( userModel, userCmd ) =
-                    Pages.User.Update.update userMsg model.user
+                    Pages.User.Update.update userMsg me.user
             in
-            ( { model | user = userModel }
+            ( { model | me = {me | user = userModel }}
             , Cmd.map Types.UserMsg userCmd
             )
 
         Types.ChatMsg chatMsg ->
             let
                 ( chatModel, chatCmd ) =
-                    Pages.Chat.Update.update chatMsg model.chat
+                    Pages.Chat.Update.update chatMsg model.chat me
             in
             ( { model | chat = chatModel }
             , Cmd.map Types.ChatMsg chatCmd
