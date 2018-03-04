@@ -13,14 +13,14 @@
 module Pages.Chat.View exposing (..)
 
 import Assets exposing (..)
-import Pages.User.View exposing (userAvi)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
-import Types
-import TextArea exposing (auto)
 import Pages.Chat.Model as ChatModel
 import Pages.Message.View exposing (..)
+import Pages.User.View exposing (userAvi)
+import TextArea exposing (auto)
+import Types
 
 
 -- VIEW
@@ -40,38 +40,38 @@ view x =
         client =
             x.client
     in
-        div [ class "animated fadeInLeft bg-black-70 flex flex-column flex-auto measure-wide-l pa0 ma0 shadow-2-l" ]
-            [ nameBar chat
-            , section [ class "flex-auto lh-copy overflow-auto ph3 pt5 z-1 inner-shadow-1" ]
-                [ toast "conversation initiated by hannah"
-                , sent "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
-                , recieved "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
-                , sent "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
-                , recieved "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
-                , sent "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
-                , recieved "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
-                , sent "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
-                , recieved "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
-                , sent "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
-                , recieved "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
-                , sent "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
-                , recieved "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
-                , sent "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
-                , recieved "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
-                , sent "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
-                , recieved "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
-                , sent "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
-                , recieved "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
-                ]
-            , messageBar chat client
+    div [ class "animated fadeInLeft bg-black-70 flex flex-column flex-auto measure-wide-l pa0 ma0 shadow-2-l" ]
+        [ nameBar chat
+        , section [ class "flex-auto lh-copy overflow-auto ph3 pt5 z-1 inner-shadow-1" ]
+            [ toast "conversation initiated by hannah"
+            , sent "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
+            , recieved "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
+            , sent "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
+            , recieved "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
+            , sent "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
+            , recieved "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
+            , sent "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
+            , recieved "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
+            , sent "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
+            , recieved "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
+            , sent "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
+            , recieved "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
+            , sent "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
+            , recieved "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
+            , sent "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
+            , recieved "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
+            , sent "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
+            , recieved "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
             ]
+        , messageBar chat client
+        ]
 
 
 messageBar : ChatModel.Chat -> Types.Client -> Html Types.Msg
 messageBar chat client =
     div [ class "bg-black-40 flex flex-none z-2 items-stretch overflow-hidden pl2 slideInUp animated" ]
         [ textarea
-            ((TextArea.auto client)
+            (TextArea.auto client
                 ++ [ class "white bg-transparent overflow-visible pa3 self-center flex-auto bn outline-0"
                    , placeholder "strike up a convo"
                    , autofocus True

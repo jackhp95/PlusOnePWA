@@ -1,5 +1,6 @@
 module Pages.User.View exposing (..)
 
+import Assets exposing (bgImg, feather)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
@@ -10,21 +11,24 @@ import Types exposing (..)
 
 
 view : UserModel.UserModel -> Html Msg
-view model =
+view x =
     let
-        user = model.user
+
+        model =
+            x.me.user
     in
     section [ class "w-100 mw7-l overflow-auto shadow-2-l" ]
         [ div [ class "flex h5 ph3 ph4-m ph5-l pt6 items-center" ]
-            [ userAvi
-            , div [ class "f2 fw7 ml3 fadeInUp animated" ] [ text user.name ]
+            [ userAvi model.avi
+            , div [ class "f2 fw7 ml3 fadeInUp animated" ] [ text model.name ]
             ]
         , div
             [ class "bg-black-70" ]
             [ div [ class "ph3 bg-black-30 w-100" ]
                 [ userToolsView ]
-            , userBio user
-            , pastEvents user
+
+            , userBio model
+            , pastEvents model
             ]
         ]
 
@@ -66,15 +70,15 @@ pastEvents model =
                 , div [ class "fw4 pt1" ] [ text venue ]
                 ]
     in
-        div [ class "ma0 pt4" ]
-            [ div [ class "fw7 pv2 mh4 f4" ] [ text "previous events" ]
-            , div [ class "mv2 overflow-auto" ]
-                [ table [ class "white collapse mh4" ]
-                    [ tr []
-                        ((List.map eventCard prevEvents) ++ [ td [ class "ph3" ] [] ])
-                    ]
+    div [ class "ma0 pt4" ]
+        [ div [ class "fw7 pv2 mh4 f4" ] [ text "previous events" ]
+        , div [ class "mv2 overflow-auto" ]
+            [ table [ class "white collapse mh4" ]
+                [ tr []
+                    (List.map eventCard prevEvents ++ [ td [ class "ph3" ] [] ])
                 ]
             ]
+        ]
 
 
 userToolsView : Html Msg
@@ -86,8 +90,8 @@ userToolsView =
                 , div [ class "pa2" ] [ text newText ]
                 ]
     in
-        div [ class "flex justify-end" ]
-            (List.map icon [ "settings", "edit" ])
+    div [ class "flex justify-end" ]
+        (List.map icon [ "settings", "edit" ])
 
 
 stringToEmoji : String -> String

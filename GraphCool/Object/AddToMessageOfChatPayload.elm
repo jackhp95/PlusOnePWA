@@ -25,11 +25,11 @@ selection constructor =
     Object.selection constructor
 
 
-messagesMessage : SelectionSet decodesTo GraphCool.Object.Message -> Field (Maybe decodesTo) GraphCool.Object.AddToMessageOfChatPayload
-messagesMessage object =
-    Object.selectionField "messagesMessage" [] object (identity >> Decode.maybe)
-
-
 chatChat : SelectionSet decodesTo GraphCool.Object.Chat -> Field (Maybe decodesTo) GraphCool.Object.AddToMessageOfChatPayload
 chatChat object =
     Object.selectionField "chatChat" [] object (identity >> Decode.maybe)
+
+
+messagesMessage : SelectionSet decodesTo GraphCool.Object.Message -> Field (Maybe decodesTo) GraphCool.Object.AddToMessageOfChatPayload
+messagesMessage object =
+    Object.selectionField "messagesMessage" [] object (identity >> Decode.maybe)

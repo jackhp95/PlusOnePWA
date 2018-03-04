@@ -1,5 +1,6 @@
 module Pages.CreateEvent.Messages exposing (..)
 
+
 type Msg
     = SubmitEvent String
     | ChangeTitle String

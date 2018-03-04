@@ -74,7 +74,7 @@ routeToString page =
                 EditArticle slug ->
                     [ "editor", Article.slugToString slug ]
     in
-        "#/" ++ String.join "/" pieces
+    "#/" ++ String.join "/" pieces
 
 
 

@@ -2,10 +2,8 @@ module Types exposing (..)
 
 -- Events
 
-import Http exposing (Error)
 import Date exposing (Date)
-import Task exposing (perform)
-import SeatGeek.Types as SG
+import Http exposing (Error)
 import Mouse exposing (Position)
 import Window exposing (Size)
 
@@ -13,31 +11,36 @@ import Pages.CreateEvent.Messages as CreateEventMsg
 import Pages.EditUser.Messages as EditUserMsg
 import Pages.User.Messages as UserMsg
 import Pages.Chat.Messages as ChatMsg
-import Pages.Chats.Messages as ChatsMsg
-import Pages.CreateEvent.Model as CreateEventModel
-import Pages.User.Model as UserModel
 import Pages.Chat.Model as ChatModel
+import Pages.Chats.Messages as ChatsMsg
+import Pages.CreateEvent.Messages as CreateEventMsg
+import Pages.CreateEvent.Model as CreateEventModel
 import Pages.Events.Model as EventsModel
 import Pages.Pool.Model as PoolModel
-
+import Pages.User.Messages as UserMsg
+import Pages.User.Model as UserModel
+import SeatGeek.Types as SG
+import Task exposing (perform)
+import Window exposing (Size)
+import Auth0.Auth0 as Auth0
+import Auth0.Authentication as Authentication
 
 -- MODEL --
-
 
 type alias Model =
     { route : Route
     , chat : ChatModel.Chat
     , chats : List ChatModel.Chat
-    , user : UserModel.UserModel
     , events : EventsModel.Events
     , pool : PoolModel.Pool
     , client : Client
     , createEvent : CreateEventModel.CreateEvent
+    , me: UserModel.Me
     }
 
 
-initModel : Model
-initModel =
+initModel : Maybe Auth0.LoggedInUser -> Model
+initModel initialAuthUser=
     Model
         -- (GoEvents Nothing)
         (GoChats Nothing)
@@ -50,11 +53,12 @@ initModel =
         , ChatModel.initModel
         , ChatModel.initModel
         ]
-        UserModel.initModel
         EventsModel.initModel
         PoolModel.initModel
         initClient
         CreateEventModel.initModel
+        (UserModel.initMe initialAuthUser)
+        
 
 
 type alias Page =
@@ -98,7 +102,7 @@ type
     Msg
     -- Route
     = ChangeTo Route
-    --Temp
+      --Temp
     | CreateEventMsg CreateEventMsg.Msg
     | EditUserMsg EditUserMsg.Msg
     | UserMsg UserMsg.Msg
@@ -119,3 +123,4 @@ type
     | MouseEnd Position
     | ResizePool Size
     | InitialWindow Size
+    | AuthenticationMsg Authentication.Msg

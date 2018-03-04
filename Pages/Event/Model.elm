@@ -1,4 +1,5 @@
 module Pages.Event.Model exposing (..)
+
 import Pages.Event.Messages exposing (..)
 
 
@@ -10,7 +11,7 @@ type alias Event =
     , hosts : List String
     , id : Int
     , name : String
-    , nameFull : String 
+    , nameFull : String
     , private : Bool
     , startsAt : String
     , usersAttending : List String
@@ -19,13 +20,16 @@ type alias Event =
     , venues : List String
     }
 
+
 init : ( Event, Cmd Msg )
 init =
     ( initModel, initCmd )
 
+
 initCmd : Cmd Msg
 initCmd =
     Cmd.none
+
 
 initModel : Event
 initModel =

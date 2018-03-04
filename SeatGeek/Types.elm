@@ -32,6 +32,7 @@ type alias MetaGeolocation =
 type alias ReplyMeta =
     { per_page : Int
     , took : Int
+
     -- , geolocation : MetaGeolocation
     , total : Int
     , page : Int

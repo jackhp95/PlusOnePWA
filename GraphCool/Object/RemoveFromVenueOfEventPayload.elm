@@ -25,11 +25,11 @@ selection constructor =
     Object.selection constructor
 
 
-venuesVenue : SelectionSet decodesTo GraphCool.Object.Venue -> Field (Maybe decodesTo) GraphCool.Object.RemoveFromVenueOfEventPayload
-venuesVenue object =
-    Object.selectionField "venuesVenue" [] object (identity >> Decode.maybe)
-
-
 eventsEvent : SelectionSet decodesTo GraphCool.Object.Event -> Field (Maybe decodesTo) GraphCool.Object.RemoveFromVenueOfEventPayload
 eventsEvent object =
     Object.selectionField "eventsEvent" [] object (identity >> Decode.maybe)
+
+
+venuesVenue : SelectionSet decodesTo GraphCool.Object.Venue -> Field (Maybe decodesTo) GraphCool.Object.RemoveFromVenueOfEventPayload
+venuesVenue object =
+    Object.selectionField "venuesVenue" [] object (identity >> Decode.maybe)

@@ -13,10 +13,10 @@ self.addEventListener('activate', function (event) {
   event.waitUntil(
     caches.open('PlusOne').then(function (cache) {
       return cache.addAll([
-        'index.html',
-        'Styles/plusOne.css',
-        'Styles/tachyons.css',
-        'PlusOnePWA.js',
+        //'index.html',
+        //'Styles/plusOne.css',
+        //'Styles/tachyons.css',
+        //'PlusOnePWA.js',
         'Assets/WhitePlusOneLogo.svg'
       ]);
     })

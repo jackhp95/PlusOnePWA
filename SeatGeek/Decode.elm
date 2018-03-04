@@ -9,8 +9,8 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Json.Decode exposing (..)
 import Json.Decode.Extra exposing ((|:))
-import Types
 import SeatGeek.Types as SG
+import Types
 
 
 (:=) =

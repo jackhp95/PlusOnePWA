@@ -1,25 +1,37 @@
-module Pages.User.Model exposing (..)
+port module Pages.User.Model exposing (..)
 
 import Pages.User.Messages exposing (..)
-import GraphCool.Scalar exposing (..)
-import RemoteData exposing (..)
-import Graphqelm.Http exposing (..)
-import GraphCool.Scalar exposing (..)
+import Auth0.Auth0 as Auth0
+import Auth0.Authentication as Authentication
+
+-- Ports
+
+
+port auth0authorize : Auth0.Options -> Cmd msg
+
+
+port auth0authResult : (Auth0.RawAuthenticationResult -> msg) -> Sub msg
+
+
+port auth0logout : () -> Cmd msg
+
+-- User
 
 type alias User =
-    { auth0UserId : Maybe String
-    , bio : Maybe String
-    , birthday : DateTime
-    , createdAt : DateTime
-    , createdEvents : Maybe (List Id)
-    , datesCanceled : Maybe (List Id)
-    , email : Maybe String
-    , eventsAttending : Maybe (List Id)
-    , eventsLiked : Maybe (List Id)
-    , eventsViewed : Maybe (List Id)
-    , hosts : Maybe (List Id)
-    , id : Id
-    , initiated : Maybe (List Id)
+    { auth0UserId : String
+    , avi : List String
+    , bio : String
+    , birthday : String
+    , createdAt : String
+    , createdEvents : List String
+    , datesCanceled : List String
+    , email : String
+    , eventsAttending : List String
+    , eventsLiked : List String
+    , eventsViewed : List String
+    , hosts : List String
+    , id : Int
+    , initiated : List String
     , name : String
     , nameFull : Maybe String
     , passed : Maybe (List Id)
@@ -39,9 +51,24 @@ type Gender
     = Male
     | Female    
 
+<<<<<<< HEAD
 init : ( UserModel, Cmd Msg )
+=======
+type alias Me =
+    { user: User
+    , authModel: Authentication.Model
+    }
+
+init : ( User, Cmd Msg )
+>>>>>>> master
 init =
     ( initModel, initCmd )
+
+initMe :  Maybe Auth0.LoggedInUser -> Me
+initMe initialAuthUser =
+    Me
+        initModel
+        (Authentication.init auth0authorize auth0logout initialAuthUser)
 
 initCmd : Cmd Msg
 initCmd =
