@@ -3,6 +3,7 @@ import Pages.Event.Model exposing(..)
 
 
 
+
 type Msg
     = SubmitEvent
     | GotResponse ResponseModel

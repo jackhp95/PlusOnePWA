@@ -1,15 +1,15 @@
 module Pages.Event.Model exposing (..)
-import Pages.Event.Messages exposing (..)
-import GraphCool.Scalar exposing (..)
-import RemoteData exposing (..)
 
 -- import Graphqelm.SelectionSet exposing (SelectionSet, with)
 -- import GraphCool.Object.Event as Event
 -- import GraphCool.Query as Query
 -- import Graphqelm.Operation exposing (RootQuery)
 -- import GraphCool.Object
-import Graphqelm.Http exposing (..)
 
+import GraphCool.Scalar exposing (..)
+import Graphqelm.Http exposing (..)
+import Pages.Event.Messages exposing (..)
+import RemoteData exposing (..)
 
 
 -- type alias Event =
@@ -30,10 +30,12 @@ import Graphqelm.Http exposing (..)
 --     , eventResponse: ResponseModel
 --     }
 
+
 type alias Response =
-  {
-    events: List Event
-  }
+    { events : List Event
+    }
+
+
 type alias Event =
     { chats : Maybe (List Id)
     , createdAt : DateTime
@@ -45,20 +47,20 @@ type alias Event =
     , nameFull : Maybe String
     , private : Bool
     , startsAt : DateTime
-    , usersAttending : Maybe (List Id)
-    , usersLiked : Maybe (List Id)
-    , usersViewed : Maybe (List Id)
     , venues : Maybe (List Id)
     }
 
+
 type alias EventModel =
-   { event: Event
-   , eventResponse: ResponseModel
-   , createdEvent:  SubmitResponseModel
-   }
+    { event : Event
+    , eventResponse : ResponseModel
+    , createdEvent : SubmitResponseModel
+    }
+
 
 type alias ResponseModel =
-     RemoteData Graphqelm.Http.Error Response
+    RemoteData Graphqelm.Http.Error Response
+
 
 type alias SubmitResponseModel =
     RemoteData Graphqelm.Http.Error (Maybe Event)
@@ -68,11 +70,13 @@ init : ( EventModel, Cmd Msg )
 init =
     ( initModel, initCmd )
 
+
 initCmd : Cmd Msg
 initCmd =
     Cmd.none
 
-initEvent: Event
+
+initEvent : Event
 initEvent =
     Event
         Nothing
@@ -86,14 +90,11 @@ initEvent =
         False
         (GraphCool.Scalar.DateTime "10/11/10")
         Nothing
-        Nothing
-        Nothing
-        Nothing
 
 
 initModel : EventModel
 initModel =
     EventModel
-      initEvent
-      RemoteData.Loading
-      RemoteData.Loading
+        initEvent
+        RemoteData.Loading
+        RemoteData.Loading

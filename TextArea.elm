@@ -1,9 +1,9 @@
 module TextArea exposing (auto)
 
-import Html exposing (Html, div, p, br, textarea, text)
+import Html exposing (Html, br, div, p, text, textarea)
 import Html.Attributes exposing (rows, style)
-import Html.Events exposing (onInput, on)
-import Json.Decode exposing (Decoder, field, at, map, int, string)
+import Html.Events exposing (on, onInput)
+import Json.Decode exposing (Decoder, at, field, int, map, string)
 import Types
 
 
@@ -13,10 +13,10 @@ auto client =
         height =
             client.textAreaHeight
     in
-        [ on "input" scrollHeightDecoder
-        , textareaStyles
-        , textareaRows height
-        ]
+    [ on "input" scrollHeightDecoder
+    , textareaStyles
+    , textareaRows height
+    ]
 
 
 scrollHeightDecoder : Decoder Types.Msg
@@ -29,7 +29,7 @@ textareaRows : Int -> Html.Attribute msg
 textareaRows x =
     let
         calc =
-            round ((toFloat (x - 32)) / 18.4)
+            round (toFloat (x - 32) / 18.4)
 
         rowsNum =
             if calc < 2 then
@@ -37,7 +37,7 @@ textareaRows x =
             else
                 calc - 1
     in
-        rows rowsNum
+    rows rowsNum
 
 
 textareaStyles : Html.Attribute msg

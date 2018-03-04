@@ -1,62 +1,102 @@
-module Pages.User.Model exposing (..)
+port module Pages.User.Model exposing (..)
+
 import Pages.User.Messages exposing (..)
+import Auth0.Auth0 as Auth0
+import Auth0.Authentication as Authentication
+import GraphCool.Scalar exposing (..)
+import RemoteData exposing (..)
+import Graphqelm.Http exposing (..)
+import GraphCool.Scalar exposing (..)
+
+-- Ports
+
+
+port auth0authorize : Auth0.Options -> Cmd msg
+
+
+port auth0authResult : (Auth0.RawAuthenticationResult -> msg) -> Sub msg
+
+
+port auth0logout : () -> Cmd msg
+
+-- User
 
 type alias User =
-    { auth0UserId: String
-    , avi : List String
-    , bio : String
-    , birthday : String
-    , createdAt : String
-    , createdEvents : List String
-    , datesCanceled : List String
-    , email : String
-    , eventsAttending : List String
-    , eventsLiked : List String
-    , eventsViewed : List String
-    , hosts : List String
-    , id : Int
-    , initiated : List String
+    { auth0UserId : Maybe String
+    , bio : Maybe String
+    , birthday : DateTime
+    , createdAt : DateTime
+    , createdEvents : Maybe (List Id)
+    , datesCanceled : Maybe (List Id)
+    , email : Maybe String
+    , eventsAttending : Maybe (List Id)
+    , eventsLiked : Maybe (List Id)
+    , eventsViewed : Maybe (List Id)
+    , hosts : Maybe (List Id)
+    , id : Id
+    , initiated : Maybe (List Id)
     , name : String
-    , nameFull : String
-    , passed : List String
-    , password : String
-    , proposed : List String
-    , recipient : List String
-    , sent : List String
-    , updatedAt : String
+    , nameFull : Maybe String
+    , passed : Maybe (List Id)
+    , password : Maybe String
+    , proposed : Maybe (List Id)
+    , recipient : Maybe (List Id)
+    , sent : Maybe (List Id)
+    , updatedAt : DateTime
+    }
+type alias UserModel = 
+    { user : User
+    , userMutation : MutationModel
+    }
+type alias MutationModel =
+    RemoteData Graphqelm.Http.Error (Maybe User)
+type Gender
+    = Male
+    | Female    
+
+type alias Me =
+    { user: UserModel
+    , authModel: Authentication.Model
     }
 
-init : ( User, Cmd Msg )
-init =
-    ( initModel, initCmd )
+initMe :  Maybe Auth0.LoggedInUser -> Me
+initMe initialAuthUser =
+    Me
+        initModel
+        (Authentication.init auth0authorize auth0logout initialAuthUser)
 
 initCmd : Cmd Msg
 initCmd =
     Cmd.none
 
 
-initModel : User
+initModel : UserModel
 initModel =
+    UserModel
+        initUser
+        RemoteData.Loading
+
+initUser : User
+initUser =
     User
-        "11111"
-        [ "https://images.unsplash.com/photo-1496361001419-80f0d1be777a?dpr=1&auto=format&fit=crop&w=1000&q=80&cs=tinysrgb&ixid=dW5zcGxhc2guY29tOzs7Ozs%3D" ]
-        "look. life is bad. everyone's sad. we're all gonna die. but I already bought this inflatable bouncy castle, so are you gonna take your shoes off or what?"
-        "04/20/1960"
-        "04/20/1970"
-        []
-        []
-        "this@example.com"
-        []
-        []
-        []
-        []
-        1234
-        []
+        (Just "11111")
+        (Just "look. life is bad. everyone's sad. we're all gonna die. but I already bought this inflatable bouncy castle, so are you gonna take your shoes off or what?")
+        (DateTime "2017-01-13T09:00:00-05:00")
+        (DateTime "2017-01-13T09:00:00-05:00")
+        Nothing
+        Nothing
+        (Just "this@example.com")
+        Nothing
+        Nothing
+        Nothing
+        Nothing
+        (Id "1212")
+        Nothing
         "Hannah Hazeldine"
-        "Hannah Hazeldinanationator"
-        []
-        "thisismypass"
-        []
-        []
-        []
-        "04/20/1971"
+        (Just "Hannah Hazeldinanationator")
+        Nothing
+        (Just "thisismypass")
+        Nothing
+        Nothing
+        Nothing
+        (DateTime "2017-01-13T09:00:00-05:00")

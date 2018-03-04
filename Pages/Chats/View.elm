@@ -12,16 +12,15 @@
 
 module Pages.Chats.View exposing (..)
 
-import Pages.Chat.View exposing (..)
 import Assets exposing (..)
-import Pages.User.View exposing (userAvi)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
-import Types
-import TextArea exposing (auto)
-import Assets exposing (..)
 import Pages.Chat.Model as ChatModel
+import Pages.Chat.View exposing (..)
+import Pages.User.View exposing (userAvi)
+import TextArea exposing (auto)
+import Types
 
 
 -- VIEW
@@ -44,10 +43,10 @@ view model =
                 _ ->
                     " flex "
     in
-        section [ class ("animated fadeInUp flex-column items-stretch flex-auto pa0 ma0 measure-ns shadow-2-ns" ++ mobileHide) ]
-            [ Assets.banner "chats"
-            , div [ class "flex-shrink-1 flex-grow-0 bg-black-70 overflow-auto" ] (List.map nameBar chats)
-            ]
+    section [ class ("animated fadeInUp flex-column items-stretch flex-auto pa0 ma0 measure-ns shadow-2-ns" ++ mobileHide) ]
+        [ Assets.banner "chats"
+        , div [ class "flex-shrink-1 flex-grow-0 bg-black-70 overflow-auto" ] (List.map nameBar chats)
+        ]
 
 
 nameBar : ChatModel.Chat -> Html Types.Msg

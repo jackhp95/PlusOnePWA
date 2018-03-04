@@ -1,7 +1,9 @@
 module Pages.Pool.Model exposing (..)
-import Pages.Pool.Messages exposing (..)
+
 import Mouse exposing (Position)
+import Pages.Pool.Messages exposing (..)
 import Window exposing (Size)
+
 
 -- POOL --
 
@@ -15,13 +17,16 @@ type alias Pool =
     , users : List User
     }
 
+
 init : ( Pool, Cmd Msg )
 init =
     ( initModel, initCmd )
 
+
 initCmd : Cmd Msg
 initCmd =
     Cmd.none
+
 
 initModel : Pool
 initModel =
@@ -107,6 +112,7 @@ loremTubers =
     , Tuber 2 (Position 300 300)
     , Tuber 3 (Position 600 600)
     ]
+
 
 type alias User =
     { uniqueID : Int

@@ -62,6 +62,11 @@ onMessage (SelectionSet fields decoder) =
     FragmentSelectionSet "Message" fields decoder
 
 
+onPool : SelectionSet decodesTo GraphCool.Object.Pool -> FragmentSelectionSet decodesTo GraphCool.Interface.Node
+onPool (SelectionSet fields decoder) =
+    FragmentSelectionSet "Pool" fields decoder
+
+
 onUser : SelectionSet decodesTo GraphCool.Object.User -> FragmentSelectionSet decodesTo GraphCool.Interface.Node
 onUser (SelectionSet fields decoder) =
     FragmentSelectionSet "User" fields decoder

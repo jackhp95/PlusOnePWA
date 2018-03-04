@@ -4,23 +4,25 @@
 
 module Pages.Event.View exposing (..)
 
-import Types exposing (Msg)
-import Pages.Events.Model exposing (Events)
-import Pages.Event.Model exposing (Event)
-import SeatGeek.Query exposing (composeRequest)
-import SeatGeek.Decode exposing (decodeReply)
-import SeatGeek.Types as SG
-import Nav exposing (bar)
+-- import Moment exposing (..)
+
 import Assets exposing (feather)
+import Date exposing (..)
+import Date.Extra
+import GraphCool.Scalar exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Http exposing (..)
+import Moment exposing (..)
+import Nav exposing (bar)
+import Pages.Event.Model exposing (Event)
+import Pages.Events.Model exposing (Events)
+import SeatGeek.Decode exposing (decodeReply)
+import SeatGeek.Query exposing (composeRequest)
+import SeatGeek.Types as SG
 import Task exposing (..)
-import Date exposing (..)
--- import Moment exposing (..)
-import GraphCool.Scalar exposing (..)
-import Date.Extra 
+import Types exposing (Msg)
 
 
 askQuery : SG.Query -> Cmd Msg
@@ -32,7 +34,7 @@ askQuery query =
         request =
             Http.get url decodeReply
     in
-        Http.send Types.GetReply request
+    Http.send Types.GetReply request
 
 
 
@@ -43,13 +45,16 @@ view : Event -> Maybe Date -> Html Msg
 view event now =
     section [ class "overflow-auto w-100 flex-grow-1 animated fadeInLeft mw6-l flex-shrink-0 bg-black-70 shadow-2-l" ]
         [ -- eventBanner event
-         eventName event
+          eventName event
+
         -- , eventEmojis event
         , eventTime event now
         , eventPool
+
         -- , eventPopularity event
         -- , yetToBeAdded
         ]
+
 
 eventName : Event -> Html Msg
 eventName event =
@@ -57,13 +62,14 @@ eventName event =
         icon x =
             div [ Assets.feather x, class "contain dib bg-center grow ml1 mr2 pt1 pb3 pl1 pr3" ] []
     in
-        div [ class "pt4 pb3 mh4 bb b--white-20" ]
-            [ div [ class "fw6 pv1 lh-solid ttn f3" ]
-                [ text event.name
-                ]
-            , div [ class "fw5 pv1 f4 flex items-center o-80 ttn" ]
-                [ icon "at-sign", text "Location" ]
+    div [ class "pt4 pb3 mh4 bb b--white-20" ]
+        [ div [ class "fw6 pv1 lh-solid ttn f3" ]
+            [ text event.name
             ]
+        , div [ class "fw5 pv1 f4 flex items-center o-80 ttn" ]
+            [ icon "at-sign", text "Location" ]
+        ]
+
 
 
 -- eventTitle : SG.Event -> Html msg
@@ -79,8 +85,6 @@ eventName event =
 --             , div [ class "fw5 pv1 f4 flex items-center o-80 ttn" ]
 --                 [ icon "at-sign", text event.venue.name ]
 --             ]
-
-
 -- eventTickets : SG.Event -> Html msg
 -- eventTickets event =
 --     let
@@ -102,9 +106,9 @@ eventName event =
 --                         []
 --                     , div [ class "blue-80 mh2 f4 fw4 ttn" ] [ text ("$" ++ (toString x) ++ " tickets") ]
 --                     ]
-
 --             Nothing ->
 --                 text ""
+
 
 eventTime : Event -> Maybe Date -> Html msg
 eventTime event maybeNow =
@@ -114,37 +118,46 @@ eventTime event maybeNow =
             , div [ class "fw4 lh-solid" ] [ text (viewDate event.startsAt) ]
             ]
     in
-        div [ class "pv4 mh4 bb b--white-20 flex justify-between" ]
-            [ div [ class "mh1 flex flex-column justify-center" ] (eventDateView)
-            --, eventTickets event
-            ]
+    div [ class "pv4 mh4 bb b--white-20 flex justify-between" ]
+        [ div [ class "mh1 flex flex-column justify-center" ] eventDateView
+
+        --, eventTickets event
+        ]
+
 
 stringDateTime : DateTime -> String
-stringDateTime datetime = 
-    String.dropRight 1 (String.dropLeft 10 (Basics.toString datetime))    
+stringDateTime datetime =
+    String.dropRight 1 (String.dropLeft 10 (Basics.toString datetime))
+
 
 viewDate : DateTime -> String
 viewDate datetime =
     let
-        maybeDateTime = Date.Extra.fromIsoString (stringDateTime datetime)
-    in 
-        case maybeDateTime of
-            Err msg ->
-                "Unknow Date"
-            Ok dt ->
-                Date.Extra.toFormattedString "MMMM ddd, y" dt
+        maybeDateTime =
+            Date.Extra.fromIsoString (stringDateTime datetime)
+    in
+    case maybeDateTime of
+        Err msg ->
+            "Unknow Date"
+
+        Ok dt ->
+            Date.Extra.toFormattedString "MMMM ddd, y" dt
+
 
 viewTime : DateTime -> String
 viewTime datetime =
     let
-        maybeDateTime = Date.Extra.fromIsoString (stringDateTime datetime)
-    in 
-        case maybeDateTime of
-            Err msg ->
-                "Unknow Date"
-            Ok dt ->
-                Date.Extra.toFormattedString "h:mm a" dt     
-            
+        maybeDateTime =
+            Date.Extra.fromIsoString (stringDateTime datetime)
+    in
+    case maybeDateTime of
+        Err msg ->
+            "Unknow Date"
+
+        Ok dt ->
+            Date.Extra.toFormattedString "h:mm a" dt
+
+
 
 -- eventTime : SG.Event -> Maybe Date -> Html msg
 -- eventTime event maybeNow =
@@ -153,7 +166,6 @@ viewTime datetime =
 --             case (maybeEventDate event.datetime_local) of
 --                 Nothing ->
 --                     [ text "not sure what time this event is" ]
-
 --                 Just x ->
 --                     [ div [ class "fw7 f4 lh-solid pb1" ] [ text (clockTime x) ]
 --                     , div [ class "fw4 lh-solid" ] [ text (fullDate x) ]
@@ -163,14 +175,11 @@ viewTime datetime =
 --             [ div [ class "mh1 flex flex-column justify-center" ] (eventDateView)
 --             , eventTickets event
 --             ]
-
-
 -- eventPopularity : SG.Event -> Html msg
 -- eventPopularity event =
 --     case event.popularity of
 --         0.0 ->
 --             text ""
-
 --         _ ->
 --             div [ class "flex items-center mh4 pv4 bb b--white-20" ]
 --                 [ div [ class "mr3 f2" ] [ text "🔥" ]
@@ -179,8 +188,6 @@ viewTime datetime =
 --                     , progressBar event.score
 --                     ]
 --                 ]
-
-
 -- yetToBeAdded : Html msg
 -- yetToBeAdded =
 --     div [ class "flex items-center justify-around mh4 pv4 bb b--white-20 lh-copy" ]
@@ -189,7 +196,6 @@ viewTime datetime =
 --                 other events at the venue, other venues the artist will be at,
 --                 spotify, Last.fm, and google maps integration. I also need to make
 --                 events that do not have defined times do not display a time.
-
 --                 Sed ut perspiciatis, unde omnis iste natus error sit voluptatem
 --                 accusantium doloremque laudantium, totam rem aperiam eaque ipsa,
 --                 quae ab illo inventore veritatis et quasi architecto beatae vitae
@@ -218,7 +224,7 @@ eventPool =
             , class "white link lg-breathe-50 br1 pa2 mh1 flex items-center mh1 grow"
             ]
             [ div [ Assets.feather "life-buoy", class "h2 w2 mh1 contain bg-center" ] []
-            , div [ class "mh2 f4 fw4 ttn" ] [ text ("join pool") ]
+            , div [ class "mh2 f4 fw4 ttn" ] [ text "join pool" ]
             ]
         , div
             [ class "mr3 f2"
@@ -226,6 +232,7 @@ eventPool =
             ]
             [ text "🏊" ]
         ]
+
 
 
 -- progressBar : Float -> Html msg
@@ -237,13 +244,10 @@ eventPool =
 --         case percent of
 --             0.0 ->
 --                 text ""
-
 --             percent ->
 --                 div [ class "w-100 bg-black-20 overflow-hidden br-pill" ]
 --                     [ div [ style [ ( "width", ((toString percent) ++ "%") ) ], class "animated slideInleft pt2 bg-red-50" ] []
 --                     ]
-
-
 -- eventEmojis : SG.Event -> Html msg
 -- eventEmojis event =
 --     let
@@ -255,8 +259,6 @@ eventPool =
 --     in
 --         ul [ class "list mv0 mh4 ph0 pt4 pb3 flex justify-around items-center bb b--white-20" ]
 --             (List.map toIcon event.taxonomies)
-
-
 -- eventBanner : SG.Event -> Html Msg
 -- eventBanner event =
 --     let
@@ -268,7 +270,6 @@ eventPool =
 --                             ((String.length event.title) * (String.length event.url))
 --                     in
 --                         class (Assets.randomGradient seed)
-
 --                 Just image ->
 --                     style [ ( "background-image", "url(" ++ image ++ ")" ) ]
 --     in
@@ -289,110 +290,74 @@ eventPool =
 --                     ]
 --                 ]
 --             ]
-
-
 -- maybeImage : List SG.Performer -> Maybe String
 -- maybeImage performers =
 --     case (List.head performers) of
 --         Just performer ->
 --             performer.image
-
 --         Nothing ->
 --             Nothing
-
-
 -- stringToEmoji : String -> String
 -- stringToEmoji string =
 --     case string of
 --         "concert" ->
 --             "🎵"
-
 --         "music_festival" ->
 --             "🎶"
-
 --         "sports" ->
 --             "🏆"
-
 --         "theater" ->
 --             "🎭"
-
 --         "basketball" ->
 --             "🏀"
-
 --         "nba" ->
 --             "⛹"
-
 --         "ncaa_football" ->
 --             "👨\x1F3FB\x200D🎓"
-
 --         "ncaa_basketball" ->
 --             "👨\x1F3FB\x200D🎓"
-
 --         "ncaa_womens_basketball" ->
 --             "👩\x200D🎓"
-
 --         "wnba" ->
 --             "⛹️\x200D♀️"
-
 --         "family" ->
 --             "🚸"
-
 --         "broadway_tickets_national" ->
 --             "🎟"
-
 --         "dance_performance_tour" ->
 --             "💃"
-
 --         "classical" ->
 --             "🎼"
-
 --         "classical_orchestral_instrumental" ->
 --             "🎻"
-
 --         "comedy" ->
 --             "\x1F923"
-
 --         "hockey" ->
 --             "\x1F3D2"
-
 --         "fighting" ->
 --             "\x1F93C\x200D♂️"
-
 --         "soccer" ->
 --             "⚽"
-
 --         "wrestling" ->
 --             "\x1F93C"
-
 --         "football" ->
 --             "🏈"
-
 --         "auto_racing" ->
 --             "🏎️"
-
 --         "animal_sports" ->
 --             "🐾"
-
 --         "horse_racing" ->
 --             "🏇"
-
 --         "rodeo" ->
 --             "\x1F920"
-
 --         "nfl" ->
 --             "🏟️"
-
 --         "cirque_du_soleil" ->
 --             "\x1F938"
-
 --         "classical_opera" ->
 --             "🎤"
-
 --         _ ->
 --             "\x1F937"
-
-
-
 -- SUBSCRIPTIONS
 
 

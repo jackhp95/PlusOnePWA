@@ -2,10 +2,10 @@
 -- https://guide.elm-lang.org/architecture/effects/web_sockets.html
 
 
-module Proto exposing (plusOne, bg)
+module Proto exposing (bg, plusOne)
 
-import Html exposing (node, Html, div)
-import Html.Attributes exposing (rel, href, class)
+import Html exposing (Html, div, node)
+import Html.Attributes exposing (class, href, rel)
 
 
 plusOne : List (Html msg)
@@ -45,4 +45,3 @@ toStylesheet x =
 bg : List (Html msg) -> Html msg
 bg x =
     div [ class "lg-breathe-50" ] x
-

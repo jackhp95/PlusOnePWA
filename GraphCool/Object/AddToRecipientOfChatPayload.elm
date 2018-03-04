@@ -25,11 +25,11 @@ selection constructor =
     Object.selection constructor
 
 
-recipientUser : SelectionSet decodesTo GraphCool.Object.User -> Field (Maybe decodesTo) GraphCool.Object.AddToRecipientOfChatPayload
-recipientUser object =
-    Object.selectionField "recipientUser" [] object (identity >> Decode.maybe)
-
-
 recipientChat : SelectionSet decodesTo GraphCool.Object.Chat -> Field (Maybe decodesTo) GraphCool.Object.AddToRecipientOfChatPayload
 recipientChat object =
     Object.selectionField "recipientChat" [] object (identity >> Decode.maybe)
+
+
+recipientUser : SelectionSet decodesTo GraphCool.Object.User -> Field (Maybe decodesTo) GraphCool.Object.AddToRecipientOfChatPayload
+recipientUser object =
+    Object.selectionField "recipientUser" [] object (identity >> Decode.maybe)

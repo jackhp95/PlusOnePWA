@@ -1,28 +1,29 @@
 module Main exposing (main)
 
-import View exposing (render)
-import Types exposing (..)
-import Html exposing (..)
-import Update exposing (..)
-import WebSocket
-import SeatGeek.Query
-import SeatGeek.Decode
-import SeatGeek.Types as SG
-import Mouse
-import Window exposing (size)
-import Pages.Pool.View exposing (getPosition, determineTubers)
-
-import Pages.Events.Update exposing(makeQueryRequest)
-import Pages.CreateEvent.Model as CreateEvent
-import Pages.CreateEvent.Messages as CreateEventMsg
-import Pages.Pool.Model as PoolModel
-import Pages.CreateEvent.Messages
-
-
+-- Try to reomve these?
 -- Try to reomve these?
 
+import Auth0.Auth0 as Auth0
+import Auth0.Authentication as Authentication
 import Date exposing (..)
+import Html exposing (..)
+import Mouse
+import Pages.CreateEvent.Messages as CreateEventMsg
+import Pages.CreateEvent.Model as CreateEvent
+import Pages.CreateEvent.Update exposing (update)
+import Pages.Events.Update exposing (makeQueryRequest)
+import Pages.Pool.Model as PoolModel
+import Pages.Pool.View exposing (determineTubers, getPosition)
+import Pages.User.Model exposing (..)
+import SeatGeek.Decode
+import SeatGeek.Query
+import SeatGeek.Types as SG
 import Task exposing (..)
+import Types exposing (..)
+import Update exposing (..)
+import View exposing (render)
+import WebSocket
+import Window exposing (size)
 
 
 initCmd : Cmd Msg
@@ -34,9 +35,11 @@ initCmd =
         , initEventsQuery
         ]
 
+
 initEventsQuery : Cmd Msg
 initEventsQuery =
     Cmd.map EventsMsg makeQueryRequest
+
 
 initWindow : Cmd Msg
 initWindow =
@@ -53,9 +56,9 @@ getDatetime =
 -- INIT --
 
 
-init : ( Model, Cmd Msg )
-init =
-    ( initModel, initCmd )
+init : Maybe Auth0.LoggedInUser -> ( Model, Cmd Msg )
+init initialUser =
+    ( Types.initModel initialUser, initCmd )
 
 
 
@@ -67,12 +70,13 @@ view model =
     View.render model
 
 
+
 -- SUBSCRIPTIONS
 
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.batch [ Window.resizes ResizePool, mouseMoveSubs model ]
+    Sub.batch [ Window.resizes ResizePool, mouseMoveSubs model, auth0authResult (Authentication.handleAuthResult >> AuthenticationMsg) ]
 
 
 mouseMoveSubs : Model -> Sub Msg
@@ -89,8 +93,9 @@ mouseMoveSubs model =
 -- MAIN --
 
 
+main : Program (Maybe Auth0.LoggedInUser) Model Msg
 main =
-    Html.program
+    Html.programWithFlags
         { init = init
         , view = view
         , update = Update.update

@@ -1,11 +1,11 @@
 module Pages.Chats.Update exposing (..)
 
-import Pages.Chats.Model exposing (..)
 import Pages.Chats.Messages exposing (..)
+import Pages.Chats.Model exposing (..)
 
 
-update : Msg -> Chats -> ( Chats, Cmd Msg )
-update msg model =
+update : Msg -> Chats -> Me -> ( Chats, Cmd Msg )
+update msg model me =
     case msg of
         Temp ->
             ( model, Cmd.none )

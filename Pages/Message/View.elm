@@ -1,12 +1,14 @@
 module Pages.Message.View exposing (..)
 
-import Pages.Message.Model exposing (..)
-import Pages.Message.Messages exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
+import Pages.Message.Messages exposing (..)
+import Pages.Message.Model exposing (..)
+
 
 -- VIEW
+
 
 recieved : String -> Html msg
 recieved newText =

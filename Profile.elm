@@ -1,16 +1,16 @@
 module Main exposing (main)
 
 import Date exposing (..)
-import String exposing (..)
-import List exposing (..)
+import Date.Extra.Core exposing (monthToInt)
 import Date.Extra.Format exposing (..)
-import Date.Extra.Core exposing(monthToInt)
 import Debug exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onInput)
 import Http
 import Json.Decode as Decode
+import List exposing (..)
+import String exposing (..)
 
 
 type Gender
@@ -51,13 +51,16 @@ stringToGender gender =
         _ ->
             Male
 
+
 reformatDate : String -> String
 reformatDate date =
     case String.split "-" date of
         [ year, month, day ] ->
             String.join "/" [ month, day, year ]
+
         _ ->
             ""
+
 
 getUserBirthdayToDate : Maybe String -> Maybe Date
 getUserBirthdayToDate user =
@@ -67,7 +70,9 @@ getUserBirthdayToDate user =
 
         Just birthday ->
             log (reformatDate birthday)
-            Result.toMaybe <| Date.fromString (reformatDate birthday)
+                Result.toMaybe
+            <|
+                Date.fromString (reformatDate birthday)
 
 
 
@@ -85,14 +90,14 @@ init =
 
 type alias Model =
     { user : User
-    , gifUrl: String
+    , gifUrl : String
     }
 
 
 initModel : Model
-initModel = (
+initModel =
     Model initUser ""
-    )
+
 
 initUser : User
 initUser =
@@ -106,7 +111,6 @@ initUser =
         Female
 
 
-
 initCmd : Cmd Msg
 initCmd =
     Cmd.none
@@ -115,13 +119,15 @@ initCmd =
 
 -- UPDATE --
 
+
 postUser : User -> Cmd Msg
 postUser user =
     let
         request =
             "https://media1.giphy.com/media/w7rUI7vQ90DgQ/giphy.gif"
     in
-        Http.send NewGif (Http.get request (Decode.at ["data", "image_url"] Decode.string))
+    Http.send NewGif (Http.get request (Decode.at [ "data", "image_url" ] Decode.string))
+
 
 type Msg
     = ChangeName String
@@ -170,16 +176,19 @@ update msg model =
             ( Model { user | seekingGender = stringToGender newSeekingGender } ""
             , Cmd.none
             )
+
         SaveEdit ->
             ( model
             , postUser user
             )
+
         NewGif (Ok newUrl) ->
-            ( { model | gifUrl = newUrl}
+            ( { model | gifUrl = newUrl }
             , Cmd.none
             )
+
         NewGif (Err _) ->
-            (model, Cmd.none)
+            ( model, Cmd.none )
 
 
 
@@ -207,10 +216,10 @@ view model =
         , text "Gender "
         , genderSelect ChangeGender model.user.gender
         , br [] []
-        , text ("Looking for ")
+        , text "Looking for "
         , genderSelect ChangeSeekingGender model.user.seekingGender
         , br [] []
-        , text <| reformatDate <|getUserBirthday model.user.birthday
+        , text <| reformatDate <| getUserBirthday model.user.birthday
         ]
 
 
@@ -218,7 +227,7 @@ genderSelect : (String -> Msg) -> Gender -> Html Msg
 genderSelect msg currentGender =
     select [ onInput msg ]
         [ option [ value "Male" ] [ text "Male" ]
-        , option [ value "Female", selected ((toString currentGender) == "Female") ] [ text "Female" ]
+        , option [ value "Female", selected (toString currentGender == "Female") ] [ text "Female" ]
         ]
 
 
