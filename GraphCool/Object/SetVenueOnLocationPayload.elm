@@ -25,11 +25,11 @@ selection constructor =
     Object.selection constructor
 
 
-venueVenue : SelectionSet decodesTo GraphCool.Object.Venue -> Field (Maybe decodesTo) GraphCool.Object.SetVenueOnLocationPayload
-venueVenue object =
-    Object.selectionField "venueVenue" [] object (identity >> Decode.maybe)
-
-
 locationLocation : SelectionSet decodesTo GraphCool.Object.Location -> Field (Maybe decodesTo) GraphCool.Object.SetVenueOnLocationPayload
 locationLocation object =
     Object.selectionField "locationLocation" [] object (identity >> Decode.maybe)
+
+
+venueVenue : SelectionSet decodesTo GraphCool.Object.Venue -> Field (Maybe decodesTo) GraphCool.Object.SetVenueOnLocationPayload
+venueVenue object =
+    Object.selectionField "venueVenue" [] object (identity >> Decode.maybe)

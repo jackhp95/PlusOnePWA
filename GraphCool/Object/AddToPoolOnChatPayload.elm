@@ -2,7 +2,7 @@
 -- https://github.com/dillonkearns/graphqelm
 
 
-module GraphCool.Object.AddToHostOfEventPayload exposing (..)
+module GraphCool.Object.AddToPoolOnChatPayload exposing (..)
 
 import GraphCool.InputObject
 import GraphCool.Interface
@@ -20,16 +20,16 @@ import Json.Decode as Decode
 
 {-| Select fields to build up a SelectionSet for this object.
 -}
-selection : (a -> constructor) -> SelectionSet (a -> constructor) GraphCool.Object.AddToHostOfEventPayload
+selection : (a -> constructor) -> SelectionSet (a -> constructor) GraphCool.Object.AddToPoolOnChatPayload
 selection constructor =
     Object.selection constructor
 
 
-eventsEvent : SelectionSet decodesTo GraphCool.Object.Event -> Field (Maybe decodesTo) GraphCool.Object.AddToHostOfEventPayload
-eventsEvent object =
-    Object.selectionField "eventsEvent" [] object (identity >> Decode.maybe)
+poolPool : SelectionSet decodesTo GraphCool.Object.Pool -> Field (Maybe decodesTo) GraphCool.Object.AddToPoolOnChatPayload
+poolPool object =
+    Object.selectionField "poolPool" [] object (identity >> Decode.maybe)
 
 
-hostsHost : SelectionSet decodesTo GraphCool.Object.Host -> Field (Maybe decodesTo) GraphCool.Object.AddToHostOfEventPayload
-hostsHost object =
-    Object.selectionField "hostsHost" [] object (identity >> Decode.maybe)
+chatsChat : SelectionSet decodesTo GraphCool.Object.Chat -> Field (Maybe decodesTo) GraphCool.Object.AddToPoolOnChatPayload
+chatsChat object =
+    Object.selectionField "chatsChat" [] object (identity >> Decode.maybe)

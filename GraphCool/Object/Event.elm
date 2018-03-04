@@ -6,7 +6,6 @@ module GraphCool.Object.Event exposing (..)
 
 import GraphCool.Enum.ChatOrderBy
 import GraphCool.Enum.HostOrderBy
-import GraphCool.Enum.UserOrderBy
 import GraphCool.Enum.VenueOrderBy
 import GraphCool.InputObject
 import GraphCool.Interface
@@ -108,6 +107,24 @@ nameFull =
     Object.fieldDecoder "nameFull" [] (Decode.string |> Decode.maybe)
 
 
+{-|
+
+  - filter -
+
+-}
+pool : ({ filter : OptionalArgument GraphCool.InputObject.PoolFilter } -> { filter : OptionalArgument GraphCool.InputObject.PoolFilter }) -> SelectionSet decodesTo GraphCool.Object.Pool -> Field decodesTo GraphCool.Object.Event
+pool fillInOptionals object =
+    let
+        filledInOptionals =
+            fillInOptionals { filter = Absent }
+
+        optionalArgs =
+            [ Argument.optional "filter" filledInOptionals.filter GraphCool.InputObject.encodePoolFilter ]
+                |> List.filterMap identity
+    in
+    Object.selectionField "pool" optionalArgs object identity
+
+
 private : Field Bool GraphCool.Object.Event
 private =
     Object.fieldDecoder "private" [] Decode.bool
@@ -116,60 +133,6 @@ private =
 startsAt : Field GraphCool.Scalar.DateTime GraphCool.Object.Event
 startsAt =
     Object.fieldDecoder "startsAt" [] (Decode.string |> Decode.map GraphCool.Scalar.DateTime)
-
-
-{-|
-
-  - filter -
-
--}
-usersAttending : ({ filter : OptionalArgument GraphCool.InputObject.UserFilter, orderBy : OptionalArgument GraphCool.Enum.UserOrderBy.UserOrderBy, skip : OptionalArgument Int, after : OptionalArgument String, before : OptionalArgument String, first : OptionalArgument Int, last : OptionalArgument Int } -> { filter : OptionalArgument GraphCool.InputObject.UserFilter, orderBy : OptionalArgument GraphCool.Enum.UserOrderBy.UserOrderBy, skip : OptionalArgument Int, after : OptionalArgument String, before : OptionalArgument String, first : OptionalArgument Int, last : OptionalArgument Int }) -> SelectionSet decodesTo GraphCool.Object.User -> Field (Maybe (List decodesTo)) GraphCool.Object.Event
-usersAttending fillInOptionals object =
-    let
-        filledInOptionals =
-            fillInOptionals { filter = Absent, orderBy = Absent, skip = Absent, after = Absent, before = Absent, first = Absent, last = Absent }
-
-        optionalArgs =
-            [ Argument.optional "filter" filledInOptionals.filter GraphCool.InputObject.encodeUserFilter, Argument.optional "orderBy" filledInOptionals.orderBy (Encode.enum GraphCool.Enum.UserOrderBy.toString), Argument.optional "skip" filledInOptionals.skip Encode.int, Argument.optional "after" filledInOptionals.after Encode.string, Argument.optional "before" filledInOptionals.before Encode.string, Argument.optional "first" filledInOptionals.first Encode.int, Argument.optional "last" filledInOptionals.last Encode.int ]
-                |> List.filterMap identity
-    in
-    Object.selectionField "usersAttending" optionalArgs object (identity >> Decode.list >> Decode.maybe)
-
-
-{-|
-
-  - filter -
-
--}
-usersLiked : ({ filter : OptionalArgument GraphCool.InputObject.UserFilter, orderBy : OptionalArgument GraphCool.Enum.UserOrderBy.UserOrderBy, skip : OptionalArgument Int, after : OptionalArgument String, before : OptionalArgument String, first : OptionalArgument Int, last : OptionalArgument Int } -> { filter : OptionalArgument GraphCool.InputObject.UserFilter, orderBy : OptionalArgument GraphCool.Enum.UserOrderBy.UserOrderBy, skip : OptionalArgument Int, after : OptionalArgument String, before : OptionalArgument String, first : OptionalArgument Int, last : OptionalArgument Int }) -> SelectionSet decodesTo GraphCool.Object.User -> Field (Maybe (List decodesTo)) GraphCool.Object.Event
-usersLiked fillInOptionals object =
-    let
-        filledInOptionals =
-            fillInOptionals { filter = Absent, orderBy = Absent, skip = Absent, after = Absent, before = Absent, first = Absent, last = Absent }
-
-        optionalArgs =
-            [ Argument.optional "filter" filledInOptionals.filter GraphCool.InputObject.encodeUserFilter, Argument.optional "orderBy" filledInOptionals.orderBy (Encode.enum GraphCool.Enum.UserOrderBy.toString), Argument.optional "skip" filledInOptionals.skip Encode.int, Argument.optional "after" filledInOptionals.after Encode.string, Argument.optional "before" filledInOptionals.before Encode.string, Argument.optional "first" filledInOptionals.first Encode.int, Argument.optional "last" filledInOptionals.last Encode.int ]
-                |> List.filterMap identity
-    in
-    Object.selectionField "usersLiked" optionalArgs object (identity >> Decode.list >> Decode.maybe)
-
-
-{-|
-
-  - filter -
-
--}
-usersViewed : ({ filter : OptionalArgument GraphCool.InputObject.UserFilter, orderBy : OptionalArgument GraphCool.Enum.UserOrderBy.UserOrderBy, skip : OptionalArgument Int, after : OptionalArgument String, before : OptionalArgument String, first : OptionalArgument Int, last : OptionalArgument Int } -> { filter : OptionalArgument GraphCool.InputObject.UserFilter, orderBy : OptionalArgument GraphCool.Enum.UserOrderBy.UserOrderBy, skip : OptionalArgument Int, after : OptionalArgument String, before : OptionalArgument String, first : OptionalArgument Int, last : OptionalArgument Int }) -> SelectionSet decodesTo GraphCool.Object.User -> Field (Maybe (List decodesTo)) GraphCool.Object.Event
-usersViewed fillInOptionals object =
-    let
-        filledInOptionals =
-            fillInOptionals { filter = Absent, orderBy = Absent, skip = Absent, after = Absent, before = Absent, first = Absent, last = Absent }
-
-        optionalArgs =
-            [ Argument.optional "filter" filledInOptionals.filter GraphCool.InputObject.encodeUserFilter, Argument.optional "orderBy" filledInOptionals.orderBy (Encode.enum GraphCool.Enum.UserOrderBy.toString), Argument.optional "skip" filledInOptionals.skip Encode.int, Argument.optional "after" filledInOptionals.after Encode.string, Argument.optional "before" filledInOptionals.before Encode.string, Argument.optional "first" filledInOptionals.first Encode.int, Argument.optional "last" filledInOptionals.last Encode.int ]
-                |> List.filterMap identity
-    in
-    Object.selectionField "usersViewed" optionalArgs object (identity >> Decode.list >> Decode.maybe)
 
 
 {-|
@@ -224,60 +187,6 @@ hostsMeta_ fillInOptionals object =
                 |> List.filterMap identity
     in
     Object.selectionField "_hostsMeta" optionalArgs object identity
-
-
-{-| Meta information about the query.
-
-  - filter -
-
--}
-usersAttendingMeta_ : ({ filter : OptionalArgument GraphCool.InputObject.UserFilter, orderBy : OptionalArgument GraphCool.Enum.UserOrderBy.UserOrderBy, skip : OptionalArgument Int, after : OptionalArgument String, before : OptionalArgument String, first : OptionalArgument Int, last : OptionalArgument Int } -> { filter : OptionalArgument GraphCool.InputObject.UserFilter, orderBy : OptionalArgument GraphCool.Enum.UserOrderBy.UserOrderBy, skip : OptionalArgument Int, after : OptionalArgument String, before : OptionalArgument String, first : OptionalArgument Int, last : OptionalArgument Int }) -> SelectionSet decodesTo GraphCool.Object.QueryMeta_ -> Field decodesTo GraphCool.Object.Event
-usersAttendingMeta_ fillInOptionals object =
-    let
-        filledInOptionals =
-            fillInOptionals { filter = Absent, orderBy = Absent, skip = Absent, after = Absent, before = Absent, first = Absent, last = Absent }
-
-        optionalArgs =
-            [ Argument.optional "filter" filledInOptionals.filter GraphCool.InputObject.encodeUserFilter, Argument.optional "orderBy" filledInOptionals.orderBy (Encode.enum GraphCool.Enum.UserOrderBy.toString), Argument.optional "skip" filledInOptionals.skip Encode.int, Argument.optional "after" filledInOptionals.after Encode.string, Argument.optional "before" filledInOptionals.before Encode.string, Argument.optional "first" filledInOptionals.first Encode.int, Argument.optional "last" filledInOptionals.last Encode.int ]
-                |> List.filterMap identity
-    in
-    Object.selectionField "_usersAttendingMeta" optionalArgs object identity
-
-
-{-| Meta information about the query.
-
-  - filter -
-
--}
-usersLikedMeta_ : ({ filter : OptionalArgument GraphCool.InputObject.UserFilter, orderBy : OptionalArgument GraphCool.Enum.UserOrderBy.UserOrderBy, skip : OptionalArgument Int, after : OptionalArgument String, before : OptionalArgument String, first : OptionalArgument Int, last : OptionalArgument Int } -> { filter : OptionalArgument GraphCool.InputObject.UserFilter, orderBy : OptionalArgument GraphCool.Enum.UserOrderBy.UserOrderBy, skip : OptionalArgument Int, after : OptionalArgument String, before : OptionalArgument String, first : OptionalArgument Int, last : OptionalArgument Int }) -> SelectionSet decodesTo GraphCool.Object.QueryMeta_ -> Field decodesTo GraphCool.Object.Event
-usersLikedMeta_ fillInOptionals object =
-    let
-        filledInOptionals =
-            fillInOptionals { filter = Absent, orderBy = Absent, skip = Absent, after = Absent, before = Absent, first = Absent, last = Absent }
-
-        optionalArgs =
-            [ Argument.optional "filter" filledInOptionals.filter GraphCool.InputObject.encodeUserFilter, Argument.optional "orderBy" filledInOptionals.orderBy (Encode.enum GraphCool.Enum.UserOrderBy.toString), Argument.optional "skip" filledInOptionals.skip Encode.int, Argument.optional "after" filledInOptionals.after Encode.string, Argument.optional "before" filledInOptionals.before Encode.string, Argument.optional "first" filledInOptionals.first Encode.int, Argument.optional "last" filledInOptionals.last Encode.int ]
-                |> List.filterMap identity
-    in
-    Object.selectionField "_usersLikedMeta" optionalArgs object identity
-
-
-{-| Meta information about the query.
-
-  - filter -
-
--}
-usersViewedMeta_ : ({ filter : OptionalArgument GraphCool.InputObject.UserFilter, orderBy : OptionalArgument GraphCool.Enum.UserOrderBy.UserOrderBy, skip : OptionalArgument Int, after : OptionalArgument String, before : OptionalArgument String, first : OptionalArgument Int, last : OptionalArgument Int } -> { filter : OptionalArgument GraphCool.InputObject.UserFilter, orderBy : OptionalArgument GraphCool.Enum.UserOrderBy.UserOrderBy, skip : OptionalArgument Int, after : OptionalArgument String, before : OptionalArgument String, first : OptionalArgument Int, last : OptionalArgument Int }) -> SelectionSet decodesTo GraphCool.Object.QueryMeta_ -> Field decodesTo GraphCool.Object.Event
-usersViewedMeta_ fillInOptionals object =
-    let
-        filledInOptionals =
-            fillInOptionals { filter = Absent, orderBy = Absent, skip = Absent, after = Absent, before = Absent, first = Absent, last = Absent }
-
-        optionalArgs =
-            [ Argument.optional "filter" filledInOptionals.filter GraphCool.InputObject.encodeUserFilter, Argument.optional "orderBy" filledInOptionals.orderBy (Encode.enum GraphCool.Enum.UserOrderBy.toString), Argument.optional "skip" filledInOptionals.skip Encode.int, Argument.optional "after" filledInOptionals.after Encode.string, Argument.optional "before" filledInOptionals.before Encode.string, Argument.optional "first" filledInOptionals.first Encode.int, Argument.optional "last" filledInOptionals.last Encode.int ]
-                |> List.filterMap identity
-    in
-    Object.selectionField "_usersViewedMeta" optionalArgs object identity
 
 
 {-| Meta information about the query.

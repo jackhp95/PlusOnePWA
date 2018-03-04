@@ -25,11 +25,11 @@ selection constructor =
     Object.selection constructor
 
 
-usersAttendingUser : SelectionSet decodesTo GraphCool.Object.User -> Field (Maybe decodesTo) GraphCool.Object.AddToAttendingEventPayload
-usersAttendingUser object =
-    Object.selectionField "usersAttendingUser" [] object (identity >> Decode.maybe)
+attendingEventPool : SelectionSet decodesTo GraphCool.Object.Pool -> Field (Maybe decodesTo) GraphCool.Object.AddToAttendingEventPayload
+attendingEventPool object =
+    Object.selectionField "attendingEventPool" [] object (identity >> Decode.maybe)
 
 
-eventsAttendingEvent : SelectionSet decodesTo GraphCool.Object.Event -> Field (Maybe decodesTo) GraphCool.Object.AddToAttendingEventPayload
-eventsAttendingEvent object =
-    Object.selectionField "eventsAttendingEvent" [] object (identity >> Decode.maybe)
+attendingUser : SelectionSet decodesTo GraphCool.Object.User -> Field (Maybe decodesTo) GraphCool.Object.AddToAttendingEventPayload
+attendingUser object =
+    Object.selectionField "attendingUser" [] object (identity >> Decode.maybe)
