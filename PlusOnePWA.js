@@ -17472,14 +17472,14 @@ var _user$project$Auth0_Auth0$mapResult = function (result) {
 		}
 	}
 };
-var _user$project$Auth0_Auth0$LoggedInUser = F2(
-	function (a, b) {
-		return {profile: a, token: b};
+var _user$project$Auth0_Auth0$LoggedInUser = F3(
+	function (a, b, c) {
+		return {profile: a, token: b, idtoken: c};
 	});
 var _user$project$Auth0_Auth0$Options = {};
-var _user$project$Auth0_Auth0$UserProfile = F4(
-	function (a, b, c, d) {
-		return {email: a, email_verified: b, family_name: c, picture: d};
+var _user$project$Auth0_Auth0$UserProfile = F5(
+	function (a, b, c, d, e) {
+		return {name: a, email: b, email_verified: c, family_name: d, picture: e};
 	});
 var _user$project$Auth0_Auth0$AuthenticationError = F4(
 	function (a, b, c, d) {
@@ -17493,139 +17493,6 @@ var _user$project$Auth0_Auth0$LoggedIn = function (a) {
 	return {ctor: 'LoggedIn', _0: a};
 };
 var _user$project$Auth0_Auth0$LoggedOut = {ctor: 'LoggedOut'};
-
-var _user$project$Auth0_Authentication$isLoggedIn = function (model) {
-	var _p0 = model.state;
-	if (_p0.ctor === 'LoggedIn') {
-		return true;
-	} else {
-		return false;
-	}
-};
-var _user$project$Auth0_Authentication$tryGetUserProfile = function (model) {
-	var _p1 = model.state;
-	if (_p1.ctor === 'LoggedIn') {
-		return _elm_lang$core$Maybe$Just(_p1._0.profile);
-	} else {
-		return _elm_lang$core$Maybe$Nothing;
-	}
-};
-var _user$project$Auth0_Authentication$update = F2(
-	function (msg, model) {
-		var _p2 = msg;
-		switch (_p2.ctor) {
-			case 'AuthenticationResult':
-				var _p3 = function () {
-					var _p4 = _p2._0;
-					if (_p4.ctor === 'Ok') {
-						return {
-							ctor: '_Tuple2',
-							_0: _user$project$Auth0_Auth0$LoggedIn(_p4._0),
-							_1: _elm_lang$core$Maybe$Nothing
-						};
-					} else {
-						return {
-							ctor: '_Tuple2',
-							_0: model.state,
-							_1: _elm_lang$core$Maybe$Just(_p4._0)
-						};
-					}
-				}();
-				var newState = _p3._0;
-				var error = _p3._1;
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{state: newState, lastError: error}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			case 'ShowLogIn':
-				return {
-					ctor: '_Tuple2',
-					_0: model,
-					_1: model.authorize(_user$project$Auth0_Auth0$defaultOpts)
-				};
-			default:
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{state: _user$project$Auth0_Auth0$LoggedOut}),
-					_1: model.logOut(
-						{ctor: '_Tuple0'})
-				};
-		}
-	});
-var _user$project$Auth0_Authentication$init = F3(
-	function (authorize, logOut, initialData) {
-		return {
-			state: function () {
-				var _p5 = initialData;
-				if (_p5.ctor === 'Just') {
-					return _user$project$Auth0_Auth0$LoggedIn(_p5._0);
-				} else {
-					return _user$project$Auth0_Auth0$LoggedOut;
-				}
-			}(),
-			lastError: _elm_lang$core$Maybe$Nothing,
-			authorize: authorize,
-			logOut: logOut
-		};
-	});
-var _user$project$Auth0_Authentication$Model = F4(
-	function (a, b, c, d) {
-		return {state: a, lastError: b, authorize: c, logOut: d};
-	});
-var _user$project$Auth0_Authentication$LogOut = {ctor: 'LogOut'};
-var _user$project$Auth0_Authentication$ShowLogIn = {ctor: 'ShowLogIn'};
-var _user$project$Auth0_Authentication$AuthenticationResult = function (a) {
-	return {ctor: 'AuthenticationResult', _0: a};
-};
-var _user$project$Auth0_Authentication$handleAuthResult = function (_p6) {
-	return _user$project$Auth0_Authentication$AuthenticationResult(
-		_user$project$Auth0_Auth0$mapResult(_p6));
-};
-
-var _user$project$GraphCool_Enum_ChatOrderBy$toString = function ($enum) {
-	var _p0 = $enum;
-	switch (_p0.ctor) {
-		case 'DateState_ASC':
-			return 'dateState_ASC';
-		case 'DateState_DESC':
-			return 'dateState_DESC';
-		case 'Id_ASC':
-			return 'id_ASC';
-		default:
-			return 'id_DESC';
-	}
-};
-var _user$project$GraphCool_Enum_ChatOrderBy$Id_DESC = {ctor: 'Id_DESC'};
-var _user$project$GraphCool_Enum_ChatOrderBy$Id_ASC = {ctor: 'Id_ASC'};
-var _user$project$GraphCool_Enum_ChatOrderBy$DateState_DESC = {ctor: 'DateState_DESC'};
-var _user$project$GraphCool_Enum_ChatOrderBy$DateState_ASC = {ctor: 'DateState_ASC'};
-var _user$project$GraphCool_Enum_ChatOrderBy$decoder = A2(
-	_elm_lang$core$Json_Decode$andThen,
-	function (string) {
-		var _p1 = string;
-		switch (_p1) {
-			case 'dateState_ASC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_ChatOrderBy$DateState_ASC);
-			case 'dateState_DESC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_ChatOrderBy$DateState_DESC);
-			case 'id_ASC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_ChatOrderBy$Id_ASC);
-			case 'id_DESC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_ChatOrderBy$Id_DESC);
-			default:
-				return _elm_lang$core$Json_Decode$fail(
-					A2(
-						_elm_lang$core$Basics_ops['++'],
-						'Invalid ChatOrderBy type, ',
-						A2(_elm_lang$core$Basics_ops['++'], string, ' try re-running the graphqelm CLI ')));
-		}
-	},
-	_elm_lang$core$Json_Decode$string);
 
 var _user$project$GraphCool_Enum_DateState$toString = function ($enum) {
 	var _p0 = $enum;
@@ -17667,386 +17534,6 @@ var _user$project$GraphCool_Enum_DateState$decoder = A2(
 					A2(
 						_elm_lang$core$Basics_ops['++'],
 						'Invalid DateState type, ',
-						A2(_elm_lang$core$Basics_ops['++'], string, ' try re-running the graphqelm CLI ')));
-		}
-	},
-	_elm_lang$core$Json_Decode$string);
-
-var _user$project$GraphCool_Enum_EventOrderBy$toString = function ($enum) {
-	var _p0 = $enum;
-	switch (_p0.ctor) {
-		case 'CreatedAt_ASC':
-			return 'createdAt_ASC';
-		case 'CreatedAt_DESC':
-			return 'createdAt_DESC';
-		case 'EndsAt_ASC':
-			return 'endsAt_ASC';
-		case 'EndsAt_DESC':
-			return 'endsAt_DESC';
-		case 'Id_ASC':
-			return 'id_ASC';
-		case 'Id_DESC':
-			return 'id_DESC';
-		case 'Name_ASC':
-			return 'name_ASC';
-		case 'Name_DESC':
-			return 'name_DESC';
-		case 'NameFull_ASC':
-			return 'nameFull_ASC';
-		case 'NameFull_DESC':
-			return 'nameFull_DESC';
-		case 'Private_ASC':
-			return 'private_ASC';
-		case 'Private_DESC':
-			return 'private_DESC';
-		case 'StartsAt_ASC':
-			return 'startsAt_ASC';
-		default:
-			return 'startsAt_DESC';
-	}
-};
-var _user$project$GraphCool_Enum_EventOrderBy$StartsAt_DESC = {ctor: 'StartsAt_DESC'};
-var _user$project$GraphCool_Enum_EventOrderBy$StartsAt_ASC = {ctor: 'StartsAt_ASC'};
-var _user$project$GraphCool_Enum_EventOrderBy$Private_DESC = {ctor: 'Private_DESC'};
-var _user$project$GraphCool_Enum_EventOrderBy$Private_ASC = {ctor: 'Private_ASC'};
-var _user$project$GraphCool_Enum_EventOrderBy$NameFull_DESC = {ctor: 'NameFull_DESC'};
-var _user$project$GraphCool_Enum_EventOrderBy$NameFull_ASC = {ctor: 'NameFull_ASC'};
-var _user$project$GraphCool_Enum_EventOrderBy$Name_DESC = {ctor: 'Name_DESC'};
-var _user$project$GraphCool_Enum_EventOrderBy$Name_ASC = {ctor: 'Name_ASC'};
-var _user$project$GraphCool_Enum_EventOrderBy$Id_DESC = {ctor: 'Id_DESC'};
-var _user$project$GraphCool_Enum_EventOrderBy$Id_ASC = {ctor: 'Id_ASC'};
-var _user$project$GraphCool_Enum_EventOrderBy$EndsAt_DESC = {ctor: 'EndsAt_DESC'};
-var _user$project$GraphCool_Enum_EventOrderBy$EndsAt_ASC = {ctor: 'EndsAt_ASC'};
-var _user$project$GraphCool_Enum_EventOrderBy$CreatedAt_DESC = {ctor: 'CreatedAt_DESC'};
-var _user$project$GraphCool_Enum_EventOrderBy$CreatedAt_ASC = {ctor: 'CreatedAt_ASC'};
-var _user$project$GraphCool_Enum_EventOrderBy$decoder = A2(
-	_elm_lang$core$Json_Decode$andThen,
-	function (string) {
-		var _p1 = string;
-		switch (_p1) {
-			case 'createdAt_ASC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_EventOrderBy$CreatedAt_ASC);
-			case 'createdAt_DESC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_EventOrderBy$CreatedAt_DESC);
-			case 'endsAt_ASC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_EventOrderBy$EndsAt_ASC);
-			case 'endsAt_DESC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_EventOrderBy$EndsAt_DESC);
-			case 'id_ASC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_EventOrderBy$Id_ASC);
-			case 'id_DESC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_EventOrderBy$Id_DESC);
-			case 'name_ASC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_EventOrderBy$Name_ASC);
-			case 'name_DESC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_EventOrderBy$Name_DESC);
-			case 'nameFull_ASC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_EventOrderBy$NameFull_ASC);
-			case 'nameFull_DESC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_EventOrderBy$NameFull_DESC);
-			case 'private_ASC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_EventOrderBy$Private_ASC);
-			case 'private_DESC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_EventOrderBy$Private_DESC);
-			case 'startsAt_ASC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_EventOrderBy$StartsAt_ASC);
-			case 'startsAt_DESC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_EventOrderBy$StartsAt_DESC);
-			default:
-				return _elm_lang$core$Json_Decode$fail(
-					A2(
-						_elm_lang$core$Basics_ops['++'],
-						'Invalid EventOrderBy type, ',
-						A2(_elm_lang$core$Basics_ops['++'], string, ' try re-running the graphqelm CLI ')));
-		}
-	},
-	_elm_lang$core$Json_Decode$string);
-
-var _user$project$GraphCool_Enum_FileOrderBy$toString = function ($enum) {
-	var _p0 = $enum;
-	switch (_p0.ctor) {
-		case 'ContentType_ASC':
-			return 'contentType_ASC';
-		case 'ContentType_DESC':
-			return 'contentType_DESC';
-		case 'CreatedAt_ASC':
-			return 'createdAt_ASC';
-		case 'CreatedAt_DESC':
-			return 'createdAt_DESC';
-		case 'Id_ASC':
-			return 'id_ASC';
-		case 'Id_DESC':
-			return 'id_DESC';
-		case 'Name_ASC':
-			return 'name_ASC';
-		case 'Name_DESC':
-			return 'name_DESC';
-		case 'Secret_ASC':
-			return 'secret_ASC';
-		case 'Secret_DESC':
-			return 'secret_DESC';
-		case 'Size_ASC':
-			return 'size_ASC';
-		case 'Size_DESC':
-			return 'size_DESC';
-		case 'UpdatedAt_ASC':
-			return 'updatedAt_ASC';
-		case 'UpdatedAt_DESC':
-			return 'updatedAt_DESC';
-		case 'Url_ASC':
-			return 'url_ASC';
-		default:
-			return 'url_DESC';
-	}
-};
-var _user$project$GraphCool_Enum_FileOrderBy$Url_DESC = {ctor: 'Url_DESC'};
-var _user$project$GraphCool_Enum_FileOrderBy$Url_ASC = {ctor: 'Url_ASC'};
-var _user$project$GraphCool_Enum_FileOrderBy$UpdatedAt_DESC = {ctor: 'UpdatedAt_DESC'};
-var _user$project$GraphCool_Enum_FileOrderBy$UpdatedAt_ASC = {ctor: 'UpdatedAt_ASC'};
-var _user$project$GraphCool_Enum_FileOrderBy$Size_DESC = {ctor: 'Size_DESC'};
-var _user$project$GraphCool_Enum_FileOrderBy$Size_ASC = {ctor: 'Size_ASC'};
-var _user$project$GraphCool_Enum_FileOrderBy$Secret_DESC = {ctor: 'Secret_DESC'};
-var _user$project$GraphCool_Enum_FileOrderBy$Secret_ASC = {ctor: 'Secret_ASC'};
-var _user$project$GraphCool_Enum_FileOrderBy$Name_DESC = {ctor: 'Name_DESC'};
-var _user$project$GraphCool_Enum_FileOrderBy$Name_ASC = {ctor: 'Name_ASC'};
-var _user$project$GraphCool_Enum_FileOrderBy$Id_DESC = {ctor: 'Id_DESC'};
-var _user$project$GraphCool_Enum_FileOrderBy$Id_ASC = {ctor: 'Id_ASC'};
-var _user$project$GraphCool_Enum_FileOrderBy$CreatedAt_DESC = {ctor: 'CreatedAt_DESC'};
-var _user$project$GraphCool_Enum_FileOrderBy$CreatedAt_ASC = {ctor: 'CreatedAt_ASC'};
-var _user$project$GraphCool_Enum_FileOrderBy$ContentType_DESC = {ctor: 'ContentType_DESC'};
-var _user$project$GraphCool_Enum_FileOrderBy$ContentType_ASC = {ctor: 'ContentType_ASC'};
-var _user$project$GraphCool_Enum_FileOrderBy$decoder = A2(
-	_elm_lang$core$Json_Decode$andThen,
-	function (string) {
-		var _p1 = string;
-		switch (_p1) {
-			case 'contentType_ASC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_FileOrderBy$ContentType_ASC);
-			case 'contentType_DESC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_FileOrderBy$ContentType_DESC);
-			case 'createdAt_ASC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_FileOrderBy$CreatedAt_ASC);
-			case 'createdAt_DESC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_FileOrderBy$CreatedAt_DESC);
-			case 'id_ASC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_FileOrderBy$Id_ASC);
-			case 'id_DESC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_FileOrderBy$Id_DESC);
-			case 'name_ASC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_FileOrderBy$Name_ASC);
-			case 'name_DESC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_FileOrderBy$Name_DESC);
-			case 'secret_ASC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_FileOrderBy$Secret_ASC);
-			case 'secret_DESC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_FileOrderBy$Secret_DESC);
-			case 'size_ASC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_FileOrderBy$Size_ASC);
-			case 'size_DESC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_FileOrderBy$Size_DESC);
-			case 'updatedAt_ASC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_FileOrderBy$UpdatedAt_ASC);
-			case 'updatedAt_DESC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_FileOrderBy$UpdatedAt_DESC);
-			case 'url_ASC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_FileOrderBy$Url_ASC);
-			case 'url_DESC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_FileOrderBy$Url_DESC);
-			default:
-				return _elm_lang$core$Json_Decode$fail(
-					A2(
-						_elm_lang$core$Basics_ops['++'],
-						'Invalid FileOrderBy type, ',
-						A2(_elm_lang$core$Basics_ops['++'], string, ' try re-running the graphqelm CLI ')));
-		}
-	},
-	_elm_lang$core$Json_Decode$string);
-
-var _user$project$GraphCool_Enum_HostOrderBy$toString = function ($enum) {
-	var _p0 = $enum;
-	switch (_p0.ctor) {
-		case 'CreatedAt_ASC':
-			return 'createdAt_ASC';
-		case 'CreatedAt_DESC':
-			return 'createdAt_DESC';
-		case 'Description_ASC':
-			return 'description_ASC';
-		case 'Description_DESC':
-			return 'description_DESC';
-		case 'Id_ASC':
-			return 'id_ASC';
-		case 'Id_DESC':
-			return 'id_DESC';
-		case 'Name_ASC':
-			return 'name_ASC';
-		case 'Name_DESC':
-			return 'name_DESC';
-		case 'NameFull_ASC':
-			return 'nameFull_ASC';
-		default:
-			return 'nameFull_DESC';
-	}
-};
-var _user$project$GraphCool_Enum_HostOrderBy$NameFull_DESC = {ctor: 'NameFull_DESC'};
-var _user$project$GraphCool_Enum_HostOrderBy$NameFull_ASC = {ctor: 'NameFull_ASC'};
-var _user$project$GraphCool_Enum_HostOrderBy$Name_DESC = {ctor: 'Name_DESC'};
-var _user$project$GraphCool_Enum_HostOrderBy$Name_ASC = {ctor: 'Name_ASC'};
-var _user$project$GraphCool_Enum_HostOrderBy$Id_DESC = {ctor: 'Id_DESC'};
-var _user$project$GraphCool_Enum_HostOrderBy$Id_ASC = {ctor: 'Id_ASC'};
-var _user$project$GraphCool_Enum_HostOrderBy$Description_DESC = {ctor: 'Description_DESC'};
-var _user$project$GraphCool_Enum_HostOrderBy$Description_ASC = {ctor: 'Description_ASC'};
-var _user$project$GraphCool_Enum_HostOrderBy$CreatedAt_DESC = {ctor: 'CreatedAt_DESC'};
-var _user$project$GraphCool_Enum_HostOrderBy$CreatedAt_ASC = {ctor: 'CreatedAt_ASC'};
-var _user$project$GraphCool_Enum_HostOrderBy$decoder = A2(
-	_elm_lang$core$Json_Decode$andThen,
-	function (string) {
-		var _p1 = string;
-		switch (_p1) {
-			case 'createdAt_ASC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_HostOrderBy$CreatedAt_ASC);
-			case 'createdAt_DESC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_HostOrderBy$CreatedAt_DESC);
-			case 'description_ASC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_HostOrderBy$Description_ASC);
-			case 'description_DESC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_HostOrderBy$Description_DESC);
-			case 'id_ASC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_HostOrderBy$Id_ASC);
-			case 'id_DESC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_HostOrderBy$Id_DESC);
-			case 'name_ASC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_HostOrderBy$Name_ASC);
-			case 'name_DESC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_HostOrderBy$Name_DESC);
-			case 'nameFull_ASC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_HostOrderBy$NameFull_ASC);
-			case 'nameFull_DESC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_HostOrderBy$NameFull_DESC);
-			default:
-				return _elm_lang$core$Json_Decode$fail(
-					A2(
-						_elm_lang$core$Basics_ops['++'],
-						'Invalid HostOrderBy type, ',
-						A2(_elm_lang$core$Basics_ops['++'], string, ' try re-running the graphqelm CLI ')));
-		}
-	},
-	_elm_lang$core$Json_Decode$string);
-
-var _user$project$GraphCool_Enum_LocationOrderBy$toString = function ($enum) {
-	var _p0 = $enum;
-	switch (_p0.ctor) {
-		case 'Address_ASC':
-			return 'address_ASC';
-		case 'Address_DESC':
-			return 'address_DESC';
-		case 'AddressFull_ASC':
-			return 'addressFull_ASC';
-		case 'AddressFull_DESC':
-			return 'addressFull_DESC';
-		case 'City_ASC':
-			return 'city_ASC';
-		case 'City_DESC':
-			return 'city_DESC';
-		case 'Country_ASC':
-			return 'country_ASC';
-		case 'Country_DESC':
-			return 'country_DESC';
-		case 'CreatedAt_ASC':
-			return 'createdAt_ASC';
-		case 'CreatedAt_DESC':
-			return 'createdAt_DESC';
-		case 'Id_ASC':
-			return 'id_ASC';
-		case 'Id_DESC':
-			return 'id_DESC';
-		case 'Lat_ASC':
-			return 'lat_ASC';
-		case 'Lat_DESC':
-			return 'lat_DESC';
-		case 'Lon_ASC':
-			return 'lon_ASC';
-		case 'Lon_DESC':
-			return 'lon_DESC';
-		case 'State_ASC':
-			return 'state_ASC';
-		case 'State_DESC':
-			return 'state_DESC';
-		case 'Zip_ASC':
-			return 'zip_ASC';
-		default:
-			return 'zip_DESC';
-	}
-};
-var _user$project$GraphCool_Enum_LocationOrderBy$Zip_DESC = {ctor: 'Zip_DESC'};
-var _user$project$GraphCool_Enum_LocationOrderBy$Zip_ASC = {ctor: 'Zip_ASC'};
-var _user$project$GraphCool_Enum_LocationOrderBy$State_DESC = {ctor: 'State_DESC'};
-var _user$project$GraphCool_Enum_LocationOrderBy$State_ASC = {ctor: 'State_ASC'};
-var _user$project$GraphCool_Enum_LocationOrderBy$Lon_DESC = {ctor: 'Lon_DESC'};
-var _user$project$GraphCool_Enum_LocationOrderBy$Lon_ASC = {ctor: 'Lon_ASC'};
-var _user$project$GraphCool_Enum_LocationOrderBy$Lat_DESC = {ctor: 'Lat_DESC'};
-var _user$project$GraphCool_Enum_LocationOrderBy$Lat_ASC = {ctor: 'Lat_ASC'};
-var _user$project$GraphCool_Enum_LocationOrderBy$Id_DESC = {ctor: 'Id_DESC'};
-var _user$project$GraphCool_Enum_LocationOrderBy$Id_ASC = {ctor: 'Id_ASC'};
-var _user$project$GraphCool_Enum_LocationOrderBy$CreatedAt_DESC = {ctor: 'CreatedAt_DESC'};
-var _user$project$GraphCool_Enum_LocationOrderBy$CreatedAt_ASC = {ctor: 'CreatedAt_ASC'};
-var _user$project$GraphCool_Enum_LocationOrderBy$Country_DESC = {ctor: 'Country_DESC'};
-var _user$project$GraphCool_Enum_LocationOrderBy$Country_ASC = {ctor: 'Country_ASC'};
-var _user$project$GraphCool_Enum_LocationOrderBy$City_DESC = {ctor: 'City_DESC'};
-var _user$project$GraphCool_Enum_LocationOrderBy$City_ASC = {ctor: 'City_ASC'};
-var _user$project$GraphCool_Enum_LocationOrderBy$AddressFull_DESC = {ctor: 'AddressFull_DESC'};
-var _user$project$GraphCool_Enum_LocationOrderBy$AddressFull_ASC = {ctor: 'AddressFull_ASC'};
-var _user$project$GraphCool_Enum_LocationOrderBy$Address_DESC = {ctor: 'Address_DESC'};
-var _user$project$GraphCool_Enum_LocationOrderBy$Address_ASC = {ctor: 'Address_ASC'};
-var _user$project$GraphCool_Enum_LocationOrderBy$decoder = A2(
-	_elm_lang$core$Json_Decode$andThen,
-	function (string) {
-		var _p1 = string;
-		switch (_p1) {
-			case 'address_ASC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_LocationOrderBy$Address_ASC);
-			case 'address_DESC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_LocationOrderBy$Address_DESC);
-			case 'addressFull_ASC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_LocationOrderBy$AddressFull_ASC);
-			case 'addressFull_DESC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_LocationOrderBy$AddressFull_DESC);
-			case 'city_ASC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_LocationOrderBy$City_ASC);
-			case 'city_DESC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_LocationOrderBy$City_DESC);
-			case 'country_ASC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_LocationOrderBy$Country_ASC);
-			case 'country_DESC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_LocationOrderBy$Country_DESC);
-			case 'createdAt_ASC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_LocationOrderBy$CreatedAt_ASC);
-			case 'createdAt_DESC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_LocationOrderBy$CreatedAt_DESC);
-			case 'id_ASC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_LocationOrderBy$Id_ASC);
-			case 'id_DESC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_LocationOrderBy$Id_DESC);
-			case 'lat_ASC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_LocationOrderBy$Lat_ASC);
-			case 'lat_DESC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_LocationOrderBy$Lat_DESC);
-			case 'lon_ASC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_LocationOrderBy$Lon_ASC);
-			case 'lon_DESC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_LocationOrderBy$Lon_DESC);
-			case 'state_ASC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_LocationOrderBy$State_ASC);
-			case 'state_DESC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_LocationOrderBy$State_DESC);
-			case 'zip_ASC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_LocationOrderBy$Zip_ASC);
-			case 'zip_DESC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_LocationOrderBy$Zip_DESC);
-			default:
-				return _elm_lang$core$Json_Decode$fail(
-					A2(
-						_elm_lang$core$Basics_ops['++'],
-						'Invalid LocationOrderBy type, ',
 						A2(_elm_lang$core$Basics_ops['++'], string, ' try re-running the graphqelm CLI ')));
 		}
 	},
@@ -18132,236 +17619,6 @@ var _user$project$GraphCool_Enum_ModelMutationType_$decoder = A2(
 					A2(
 						_elm_lang$core$Basics_ops['++'],
 						'Invalid ModelMutationType_ type, ',
-						A2(_elm_lang$core$Basics_ops['++'], string, ' try re-running the graphqelm CLI ')));
-		}
-	},
-	_elm_lang$core$Json_Decode$string);
-
-var _user$project$GraphCool_Enum_PoolOrderBy$toString = function ($enum) {
-	var _p0 = $enum;
-	switch (_p0.ctor) {
-		case 'Id_ASC':
-			return 'id_ASC';
-		case 'Id_DESC':
-			return 'id_DESC';
-		case 'SeatGeekId_ASC':
-			return 'seatGeekId_ASC';
-		default:
-			return 'seatGeekId_DESC';
-	}
-};
-var _user$project$GraphCool_Enum_PoolOrderBy$SeatGeekId_DESC = {ctor: 'SeatGeekId_DESC'};
-var _user$project$GraphCool_Enum_PoolOrderBy$SeatGeekId_ASC = {ctor: 'SeatGeekId_ASC'};
-var _user$project$GraphCool_Enum_PoolOrderBy$Id_DESC = {ctor: 'Id_DESC'};
-var _user$project$GraphCool_Enum_PoolOrderBy$Id_ASC = {ctor: 'Id_ASC'};
-var _user$project$GraphCool_Enum_PoolOrderBy$decoder = A2(
-	_elm_lang$core$Json_Decode$andThen,
-	function (string) {
-		var _p1 = string;
-		switch (_p1) {
-			case 'id_ASC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_PoolOrderBy$Id_ASC);
-			case 'id_DESC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_PoolOrderBy$Id_DESC);
-			case 'seatGeekId_ASC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_PoolOrderBy$SeatGeekId_ASC);
-			case 'seatGeekId_DESC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_PoolOrderBy$SeatGeekId_DESC);
-			default:
-				return _elm_lang$core$Json_Decode$fail(
-					A2(
-						_elm_lang$core$Basics_ops['++'],
-						'Invalid PoolOrderBy type, ',
-						A2(_elm_lang$core$Basics_ops['++'], string, ' try re-running the graphqelm CLI ')));
-		}
-	},
-	_elm_lang$core$Json_Decode$string);
-
-var _user$project$GraphCool_Enum_UserOrderBy$toString = function ($enum) {
-	var _p0 = $enum;
-	switch (_p0.ctor) {
-		case 'Auth0UserId_ASC':
-			return 'auth0UserId_ASC';
-		case 'Auth0UserId_DESC':
-			return 'auth0UserId_DESC';
-		case 'Bio_ASC':
-			return 'bio_ASC';
-		case 'Bio_DESC':
-			return 'bio_DESC';
-		case 'Birthday_ASC':
-			return 'birthday_ASC';
-		case 'Birthday_DESC':
-			return 'birthday_DESC';
-		case 'CreatedAt_ASC':
-			return 'createdAt_ASC';
-		case 'CreatedAt_DESC':
-			return 'createdAt_DESC';
-		case 'Email_ASC':
-			return 'email_ASC';
-		case 'Email_DESC':
-			return 'email_DESC';
-		case 'Id_ASC':
-			return 'id_ASC';
-		case 'Id_DESC':
-			return 'id_DESC';
-		case 'Name_ASC':
-			return 'name_ASC';
-		case 'Name_DESC':
-			return 'name_DESC';
-		case 'NameFull_ASC':
-			return 'nameFull_ASC';
-		case 'NameFull_DESC':
-			return 'nameFull_DESC';
-		case 'Password_ASC':
-			return 'password_ASC';
-		case 'Password_DESC':
-			return 'password_DESC';
-		case 'UpdatedAt_ASC':
-			return 'updatedAt_ASC';
-		default:
-			return 'updatedAt_DESC';
-	}
-};
-var _user$project$GraphCool_Enum_UserOrderBy$UpdatedAt_DESC = {ctor: 'UpdatedAt_DESC'};
-var _user$project$GraphCool_Enum_UserOrderBy$UpdatedAt_ASC = {ctor: 'UpdatedAt_ASC'};
-var _user$project$GraphCool_Enum_UserOrderBy$Password_DESC = {ctor: 'Password_DESC'};
-var _user$project$GraphCool_Enum_UserOrderBy$Password_ASC = {ctor: 'Password_ASC'};
-var _user$project$GraphCool_Enum_UserOrderBy$NameFull_DESC = {ctor: 'NameFull_DESC'};
-var _user$project$GraphCool_Enum_UserOrderBy$NameFull_ASC = {ctor: 'NameFull_ASC'};
-var _user$project$GraphCool_Enum_UserOrderBy$Name_DESC = {ctor: 'Name_DESC'};
-var _user$project$GraphCool_Enum_UserOrderBy$Name_ASC = {ctor: 'Name_ASC'};
-var _user$project$GraphCool_Enum_UserOrderBy$Id_DESC = {ctor: 'Id_DESC'};
-var _user$project$GraphCool_Enum_UserOrderBy$Id_ASC = {ctor: 'Id_ASC'};
-var _user$project$GraphCool_Enum_UserOrderBy$Email_DESC = {ctor: 'Email_DESC'};
-var _user$project$GraphCool_Enum_UserOrderBy$Email_ASC = {ctor: 'Email_ASC'};
-var _user$project$GraphCool_Enum_UserOrderBy$CreatedAt_DESC = {ctor: 'CreatedAt_DESC'};
-var _user$project$GraphCool_Enum_UserOrderBy$CreatedAt_ASC = {ctor: 'CreatedAt_ASC'};
-var _user$project$GraphCool_Enum_UserOrderBy$Birthday_DESC = {ctor: 'Birthday_DESC'};
-var _user$project$GraphCool_Enum_UserOrderBy$Birthday_ASC = {ctor: 'Birthday_ASC'};
-var _user$project$GraphCool_Enum_UserOrderBy$Bio_DESC = {ctor: 'Bio_DESC'};
-var _user$project$GraphCool_Enum_UserOrderBy$Bio_ASC = {ctor: 'Bio_ASC'};
-var _user$project$GraphCool_Enum_UserOrderBy$Auth0UserId_DESC = {ctor: 'Auth0UserId_DESC'};
-var _user$project$GraphCool_Enum_UserOrderBy$Auth0UserId_ASC = {ctor: 'Auth0UserId_ASC'};
-var _user$project$GraphCool_Enum_UserOrderBy$decoder = A2(
-	_elm_lang$core$Json_Decode$andThen,
-	function (string) {
-		var _p1 = string;
-		switch (_p1) {
-			case 'auth0UserId_ASC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_UserOrderBy$Auth0UserId_ASC);
-			case 'auth0UserId_DESC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_UserOrderBy$Auth0UserId_DESC);
-			case 'bio_ASC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_UserOrderBy$Bio_ASC);
-			case 'bio_DESC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_UserOrderBy$Bio_DESC);
-			case 'birthday_ASC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_UserOrderBy$Birthday_ASC);
-			case 'birthday_DESC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_UserOrderBy$Birthday_DESC);
-			case 'createdAt_ASC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_UserOrderBy$CreatedAt_ASC);
-			case 'createdAt_DESC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_UserOrderBy$CreatedAt_DESC);
-			case 'email_ASC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_UserOrderBy$Email_ASC);
-			case 'email_DESC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_UserOrderBy$Email_DESC);
-			case 'id_ASC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_UserOrderBy$Id_ASC);
-			case 'id_DESC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_UserOrderBy$Id_DESC);
-			case 'name_ASC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_UserOrderBy$Name_ASC);
-			case 'name_DESC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_UserOrderBy$Name_DESC);
-			case 'nameFull_ASC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_UserOrderBy$NameFull_ASC);
-			case 'nameFull_DESC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_UserOrderBy$NameFull_DESC);
-			case 'password_ASC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_UserOrderBy$Password_ASC);
-			case 'password_DESC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_UserOrderBy$Password_DESC);
-			case 'updatedAt_ASC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_UserOrderBy$UpdatedAt_ASC);
-			case 'updatedAt_DESC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_UserOrderBy$UpdatedAt_DESC);
-			default:
-				return _elm_lang$core$Json_Decode$fail(
-					A2(
-						_elm_lang$core$Basics_ops['++'],
-						'Invalid UserOrderBy type, ',
-						A2(_elm_lang$core$Basics_ops['++'], string, ' try re-running the graphqelm CLI ')));
-		}
-	},
-	_elm_lang$core$Json_Decode$string);
-
-var _user$project$GraphCool_Enum_VenueOrderBy$toString = function ($enum) {
-	var _p0 = $enum;
-	switch (_p0.ctor) {
-		case 'CreatedAt_ASC':
-			return 'createdAt_ASC';
-		case 'CreatedAt_DESC':
-			return 'createdAt_DESC';
-		case 'Description_ASC':
-			return 'description_ASC';
-		case 'Description_DESC':
-			return 'description_DESC';
-		case 'Id_ASC':
-			return 'id_ASC';
-		case 'Id_DESC':
-			return 'id_DESC';
-		case 'Name_ASC':
-			return 'name_ASC';
-		case 'Name_DESC':
-			return 'name_DESC';
-		case 'NameFull_ASC':
-			return 'nameFull_ASC';
-		default:
-			return 'nameFull_DESC';
-	}
-};
-var _user$project$GraphCool_Enum_VenueOrderBy$NameFull_DESC = {ctor: 'NameFull_DESC'};
-var _user$project$GraphCool_Enum_VenueOrderBy$NameFull_ASC = {ctor: 'NameFull_ASC'};
-var _user$project$GraphCool_Enum_VenueOrderBy$Name_DESC = {ctor: 'Name_DESC'};
-var _user$project$GraphCool_Enum_VenueOrderBy$Name_ASC = {ctor: 'Name_ASC'};
-var _user$project$GraphCool_Enum_VenueOrderBy$Id_DESC = {ctor: 'Id_DESC'};
-var _user$project$GraphCool_Enum_VenueOrderBy$Id_ASC = {ctor: 'Id_ASC'};
-var _user$project$GraphCool_Enum_VenueOrderBy$Description_DESC = {ctor: 'Description_DESC'};
-var _user$project$GraphCool_Enum_VenueOrderBy$Description_ASC = {ctor: 'Description_ASC'};
-var _user$project$GraphCool_Enum_VenueOrderBy$CreatedAt_DESC = {ctor: 'CreatedAt_DESC'};
-var _user$project$GraphCool_Enum_VenueOrderBy$CreatedAt_ASC = {ctor: 'CreatedAt_ASC'};
-var _user$project$GraphCool_Enum_VenueOrderBy$decoder = A2(
-	_elm_lang$core$Json_Decode$andThen,
-	function (string) {
-		var _p1 = string;
-		switch (_p1) {
-			case 'createdAt_ASC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_VenueOrderBy$CreatedAt_ASC);
-			case 'createdAt_DESC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_VenueOrderBy$CreatedAt_DESC);
-			case 'description_ASC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_VenueOrderBy$Description_ASC);
-			case 'description_DESC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_VenueOrderBy$Description_DESC);
-			case 'id_ASC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_VenueOrderBy$Id_ASC);
-			case 'id_DESC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_VenueOrderBy$Id_DESC);
-			case 'name_ASC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_VenueOrderBy$Name_ASC);
-			case 'name_DESC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_VenueOrderBy$Name_DESC);
-			case 'nameFull_ASC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_VenueOrderBy$NameFull_ASC);
-			case 'nameFull_DESC':
-				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_VenueOrderBy$NameFull_DESC);
-			default:
-				return _elm_lang$core$Json_Decode$fail(
-					A2(
-						_elm_lang$core$Basics_ops['++'],
-						'Invalid VenueOrderBy type, ',
 						A2(_elm_lang$core$Basics_ops['++'], string, ' try re-running the graphqelm CLI ')));
 		}
 	},
@@ -43421,6 +42678,186 @@ var _user$project$GraphCool_Object_Chat$selection = function (constructor) {
 	return _dillonkearns$graphqelm$Graphqelm_Internal_Builder_Object$selection(constructor);
 };
 
+var _user$project$GraphCool_Enum_ChatOrderBy$toString = function ($enum) {
+	var _p0 = $enum;
+	switch (_p0.ctor) {
+		case 'DateState_ASC':
+			return 'dateState_ASC';
+		case 'DateState_DESC':
+			return 'dateState_DESC';
+		case 'Id_ASC':
+			return 'id_ASC';
+		default:
+			return 'id_DESC';
+	}
+};
+var _user$project$GraphCool_Enum_ChatOrderBy$Id_DESC = {ctor: 'Id_DESC'};
+var _user$project$GraphCool_Enum_ChatOrderBy$Id_ASC = {ctor: 'Id_ASC'};
+var _user$project$GraphCool_Enum_ChatOrderBy$DateState_DESC = {ctor: 'DateState_DESC'};
+var _user$project$GraphCool_Enum_ChatOrderBy$DateState_ASC = {ctor: 'DateState_ASC'};
+var _user$project$GraphCool_Enum_ChatOrderBy$decoder = A2(
+	_elm_lang$core$Json_Decode$andThen,
+	function (string) {
+		var _p1 = string;
+		switch (_p1) {
+			case 'dateState_ASC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_ChatOrderBy$DateState_ASC);
+			case 'dateState_DESC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_ChatOrderBy$DateState_DESC);
+			case 'id_ASC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_ChatOrderBy$Id_ASC);
+			case 'id_DESC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_ChatOrderBy$Id_DESC);
+			default:
+				return _elm_lang$core$Json_Decode$fail(
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						'Invalid ChatOrderBy type, ',
+						A2(_elm_lang$core$Basics_ops['++'], string, ' try re-running the graphqelm CLI ')));
+		}
+	},
+	_elm_lang$core$Json_Decode$string);
+
+var _user$project$GraphCool_Enum_HostOrderBy$toString = function ($enum) {
+	var _p0 = $enum;
+	switch (_p0.ctor) {
+		case 'CreatedAt_ASC':
+			return 'createdAt_ASC';
+		case 'CreatedAt_DESC':
+			return 'createdAt_DESC';
+		case 'Description_ASC':
+			return 'description_ASC';
+		case 'Description_DESC':
+			return 'description_DESC';
+		case 'Id_ASC':
+			return 'id_ASC';
+		case 'Id_DESC':
+			return 'id_DESC';
+		case 'Name_ASC':
+			return 'name_ASC';
+		case 'Name_DESC':
+			return 'name_DESC';
+		case 'NameFull_ASC':
+			return 'nameFull_ASC';
+		default:
+			return 'nameFull_DESC';
+	}
+};
+var _user$project$GraphCool_Enum_HostOrderBy$NameFull_DESC = {ctor: 'NameFull_DESC'};
+var _user$project$GraphCool_Enum_HostOrderBy$NameFull_ASC = {ctor: 'NameFull_ASC'};
+var _user$project$GraphCool_Enum_HostOrderBy$Name_DESC = {ctor: 'Name_DESC'};
+var _user$project$GraphCool_Enum_HostOrderBy$Name_ASC = {ctor: 'Name_ASC'};
+var _user$project$GraphCool_Enum_HostOrderBy$Id_DESC = {ctor: 'Id_DESC'};
+var _user$project$GraphCool_Enum_HostOrderBy$Id_ASC = {ctor: 'Id_ASC'};
+var _user$project$GraphCool_Enum_HostOrderBy$Description_DESC = {ctor: 'Description_DESC'};
+var _user$project$GraphCool_Enum_HostOrderBy$Description_ASC = {ctor: 'Description_ASC'};
+var _user$project$GraphCool_Enum_HostOrderBy$CreatedAt_DESC = {ctor: 'CreatedAt_DESC'};
+var _user$project$GraphCool_Enum_HostOrderBy$CreatedAt_ASC = {ctor: 'CreatedAt_ASC'};
+var _user$project$GraphCool_Enum_HostOrderBy$decoder = A2(
+	_elm_lang$core$Json_Decode$andThen,
+	function (string) {
+		var _p1 = string;
+		switch (_p1) {
+			case 'createdAt_ASC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_HostOrderBy$CreatedAt_ASC);
+			case 'createdAt_DESC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_HostOrderBy$CreatedAt_DESC);
+			case 'description_ASC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_HostOrderBy$Description_ASC);
+			case 'description_DESC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_HostOrderBy$Description_DESC);
+			case 'id_ASC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_HostOrderBy$Id_ASC);
+			case 'id_DESC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_HostOrderBy$Id_DESC);
+			case 'name_ASC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_HostOrderBy$Name_ASC);
+			case 'name_DESC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_HostOrderBy$Name_DESC);
+			case 'nameFull_ASC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_HostOrderBy$NameFull_ASC);
+			case 'nameFull_DESC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_HostOrderBy$NameFull_DESC);
+			default:
+				return _elm_lang$core$Json_Decode$fail(
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						'Invalid HostOrderBy type, ',
+						A2(_elm_lang$core$Basics_ops['++'], string, ' try re-running the graphqelm CLI ')));
+		}
+	},
+	_elm_lang$core$Json_Decode$string);
+
+var _user$project$GraphCool_Enum_VenueOrderBy$toString = function ($enum) {
+	var _p0 = $enum;
+	switch (_p0.ctor) {
+		case 'CreatedAt_ASC':
+			return 'createdAt_ASC';
+		case 'CreatedAt_DESC':
+			return 'createdAt_DESC';
+		case 'Description_ASC':
+			return 'description_ASC';
+		case 'Description_DESC':
+			return 'description_DESC';
+		case 'Id_ASC':
+			return 'id_ASC';
+		case 'Id_DESC':
+			return 'id_DESC';
+		case 'Name_ASC':
+			return 'name_ASC';
+		case 'Name_DESC':
+			return 'name_DESC';
+		case 'NameFull_ASC':
+			return 'nameFull_ASC';
+		default:
+			return 'nameFull_DESC';
+	}
+};
+var _user$project$GraphCool_Enum_VenueOrderBy$NameFull_DESC = {ctor: 'NameFull_DESC'};
+var _user$project$GraphCool_Enum_VenueOrderBy$NameFull_ASC = {ctor: 'NameFull_ASC'};
+var _user$project$GraphCool_Enum_VenueOrderBy$Name_DESC = {ctor: 'Name_DESC'};
+var _user$project$GraphCool_Enum_VenueOrderBy$Name_ASC = {ctor: 'Name_ASC'};
+var _user$project$GraphCool_Enum_VenueOrderBy$Id_DESC = {ctor: 'Id_DESC'};
+var _user$project$GraphCool_Enum_VenueOrderBy$Id_ASC = {ctor: 'Id_ASC'};
+var _user$project$GraphCool_Enum_VenueOrderBy$Description_DESC = {ctor: 'Description_DESC'};
+var _user$project$GraphCool_Enum_VenueOrderBy$Description_ASC = {ctor: 'Description_ASC'};
+var _user$project$GraphCool_Enum_VenueOrderBy$CreatedAt_DESC = {ctor: 'CreatedAt_DESC'};
+var _user$project$GraphCool_Enum_VenueOrderBy$CreatedAt_ASC = {ctor: 'CreatedAt_ASC'};
+var _user$project$GraphCool_Enum_VenueOrderBy$decoder = A2(
+	_elm_lang$core$Json_Decode$andThen,
+	function (string) {
+		var _p1 = string;
+		switch (_p1) {
+			case 'createdAt_ASC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_VenueOrderBy$CreatedAt_ASC);
+			case 'createdAt_DESC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_VenueOrderBy$CreatedAt_DESC);
+			case 'description_ASC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_VenueOrderBy$Description_ASC);
+			case 'description_DESC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_VenueOrderBy$Description_DESC);
+			case 'id_ASC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_VenueOrderBy$Id_ASC);
+			case 'id_DESC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_VenueOrderBy$Id_DESC);
+			case 'name_ASC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_VenueOrderBy$Name_ASC);
+			case 'name_DESC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_VenueOrderBy$Name_DESC);
+			case 'nameFull_ASC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_VenueOrderBy$NameFull_ASC);
+			case 'nameFull_DESC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_VenueOrderBy$NameFull_DESC);
+			default:
+				return _elm_lang$core$Json_Decode$fail(
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						'Invalid VenueOrderBy type, ',
+						A2(_elm_lang$core$Basics_ops['++'], string, ' try re-running the graphqelm CLI ')));
+		}
+	},
+	_elm_lang$core$Json_Decode$string);
+
 var _user$project$GraphCool_Object_Event$venuesMeta_ = F2(
 	function (fillInOptionals, object) {
 		var filledInOptionals = fillInOptionals(
@@ -43767,6 +43204,216 @@ var _user$project$GraphCool_Object_Event$chats = F2(
 var _user$project$GraphCool_Object_Event$selection = function (constructor) {
 	return _dillonkearns$graphqelm$Graphqelm_Internal_Builder_Object$selection(constructor);
 };
+
+var _user$project$GraphCool_Enum_EventOrderBy$toString = function ($enum) {
+	var _p0 = $enum;
+	switch (_p0.ctor) {
+		case 'CreatedAt_ASC':
+			return 'createdAt_ASC';
+		case 'CreatedAt_DESC':
+			return 'createdAt_DESC';
+		case 'EndsAt_ASC':
+			return 'endsAt_ASC';
+		case 'EndsAt_DESC':
+			return 'endsAt_DESC';
+		case 'Id_ASC':
+			return 'id_ASC';
+		case 'Id_DESC':
+			return 'id_DESC';
+		case 'Name_ASC':
+			return 'name_ASC';
+		case 'Name_DESC':
+			return 'name_DESC';
+		case 'NameFull_ASC':
+			return 'nameFull_ASC';
+		case 'NameFull_DESC':
+			return 'nameFull_DESC';
+		case 'Private_ASC':
+			return 'private_ASC';
+		case 'Private_DESC':
+			return 'private_DESC';
+		case 'StartsAt_ASC':
+			return 'startsAt_ASC';
+		default:
+			return 'startsAt_DESC';
+	}
+};
+var _user$project$GraphCool_Enum_EventOrderBy$StartsAt_DESC = {ctor: 'StartsAt_DESC'};
+var _user$project$GraphCool_Enum_EventOrderBy$StartsAt_ASC = {ctor: 'StartsAt_ASC'};
+var _user$project$GraphCool_Enum_EventOrderBy$Private_DESC = {ctor: 'Private_DESC'};
+var _user$project$GraphCool_Enum_EventOrderBy$Private_ASC = {ctor: 'Private_ASC'};
+var _user$project$GraphCool_Enum_EventOrderBy$NameFull_DESC = {ctor: 'NameFull_DESC'};
+var _user$project$GraphCool_Enum_EventOrderBy$NameFull_ASC = {ctor: 'NameFull_ASC'};
+var _user$project$GraphCool_Enum_EventOrderBy$Name_DESC = {ctor: 'Name_DESC'};
+var _user$project$GraphCool_Enum_EventOrderBy$Name_ASC = {ctor: 'Name_ASC'};
+var _user$project$GraphCool_Enum_EventOrderBy$Id_DESC = {ctor: 'Id_DESC'};
+var _user$project$GraphCool_Enum_EventOrderBy$Id_ASC = {ctor: 'Id_ASC'};
+var _user$project$GraphCool_Enum_EventOrderBy$EndsAt_DESC = {ctor: 'EndsAt_DESC'};
+var _user$project$GraphCool_Enum_EventOrderBy$EndsAt_ASC = {ctor: 'EndsAt_ASC'};
+var _user$project$GraphCool_Enum_EventOrderBy$CreatedAt_DESC = {ctor: 'CreatedAt_DESC'};
+var _user$project$GraphCool_Enum_EventOrderBy$CreatedAt_ASC = {ctor: 'CreatedAt_ASC'};
+var _user$project$GraphCool_Enum_EventOrderBy$decoder = A2(
+	_elm_lang$core$Json_Decode$andThen,
+	function (string) {
+		var _p1 = string;
+		switch (_p1) {
+			case 'createdAt_ASC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_EventOrderBy$CreatedAt_ASC);
+			case 'createdAt_DESC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_EventOrderBy$CreatedAt_DESC);
+			case 'endsAt_ASC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_EventOrderBy$EndsAt_ASC);
+			case 'endsAt_DESC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_EventOrderBy$EndsAt_DESC);
+			case 'id_ASC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_EventOrderBy$Id_ASC);
+			case 'id_DESC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_EventOrderBy$Id_DESC);
+			case 'name_ASC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_EventOrderBy$Name_ASC);
+			case 'name_DESC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_EventOrderBy$Name_DESC);
+			case 'nameFull_ASC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_EventOrderBy$NameFull_ASC);
+			case 'nameFull_DESC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_EventOrderBy$NameFull_DESC);
+			case 'private_ASC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_EventOrderBy$Private_ASC);
+			case 'private_DESC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_EventOrderBy$Private_DESC);
+			case 'startsAt_ASC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_EventOrderBy$StartsAt_ASC);
+			case 'startsAt_DESC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_EventOrderBy$StartsAt_DESC);
+			default:
+				return _elm_lang$core$Json_Decode$fail(
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						'Invalid EventOrderBy type, ',
+						A2(_elm_lang$core$Basics_ops['++'], string, ' try re-running the graphqelm CLI ')));
+		}
+	},
+	_elm_lang$core$Json_Decode$string);
+
+var _user$project$GraphCool_Enum_UserOrderBy$toString = function ($enum) {
+	var _p0 = $enum;
+	switch (_p0.ctor) {
+		case 'Auth0UserId_ASC':
+			return 'auth0UserId_ASC';
+		case 'Auth0UserId_DESC':
+			return 'auth0UserId_DESC';
+		case 'Bio_ASC':
+			return 'bio_ASC';
+		case 'Bio_DESC':
+			return 'bio_DESC';
+		case 'Birthday_ASC':
+			return 'birthday_ASC';
+		case 'Birthday_DESC':
+			return 'birthday_DESC';
+		case 'CreatedAt_ASC':
+			return 'createdAt_ASC';
+		case 'CreatedAt_DESC':
+			return 'createdAt_DESC';
+		case 'Email_ASC':
+			return 'email_ASC';
+		case 'Email_DESC':
+			return 'email_DESC';
+		case 'Id_ASC':
+			return 'id_ASC';
+		case 'Id_DESC':
+			return 'id_DESC';
+		case 'Name_ASC':
+			return 'name_ASC';
+		case 'Name_DESC':
+			return 'name_DESC';
+		case 'NameFull_ASC':
+			return 'nameFull_ASC';
+		case 'NameFull_DESC':
+			return 'nameFull_DESC';
+		case 'Password_ASC':
+			return 'password_ASC';
+		case 'Password_DESC':
+			return 'password_DESC';
+		case 'UpdatedAt_ASC':
+			return 'updatedAt_ASC';
+		default:
+			return 'updatedAt_DESC';
+	}
+};
+var _user$project$GraphCool_Enum_UserOrderBy$UpdatedAt_DESC = {ctor: 'UpdatedAt_DESC'};
+var _user$project$GraphCool_Enum_UserOrderBy$UpdatedAt_ASC = {ctor: 'UpdatedAt_ASC'};
+var _user$project$GraphCool_Enum_UserOrderBy$Password_DESC = {ctor: 'Password_DESC'};
+var _user$project$GraphCool_Enum_UserOrderBy$Password_ASC = {ctor: 'Password_ASC'};
+var _user$project$GraphCool_Enum_UserOrderBy$NameFull_DESC = {ctor: 'NameFull_DESC'};
+var _user$project$GraphCool_Enum_UserOrderBy$NameFull_ASC = {ctor: 'NameFull_ASC'};
+var _user$project$GraphCool_Enum_UserOrderBy$Name_DESC = {ctor: 'Name_DESC'};
+var _user$project$GraphCool_Enum_UserOrderBy$Name_ASC = {ctor: 'Name_ASC'};
+var _user$project$GraphCool_Enum_UserOrderBy$Id_DESC = {ctor: 'Id_DESC'};
+var _user$project$GraphCool_Enum_UserOrderBy$Id_ASC = {ctor: 'Id_ASC'};
+var _user$project$GraphCool_Enum_UserOrderBy$Email_DESC = {ctor: 'Email_DESC'};
+var _user$project$GraphCool_Enum_UserOrderBy$Email_ASC = {ctor: 'Email_ASC'};
+var _user$project$GraphCool_Enum_UserOrderBy$CreatedAt_DESC = {ctor: 'CreatedAt_DESC'};
+var _user$project$GraphCool_Enum_UserOrderBy$CreatedAt_ASC = {ctor: 'CreatedAt_ASC'};
+var _user$project$GraphCool_Enum_UserOrderBy$Birthday_DESC = {ctor: 'Birthday_DESC'};
+var _user$project$GraphCool_Enum_UserOrderBy$Birthday_ASC = {ctor: 'Birthday_ASC'};
+var _user$project$GraphCool_Enum_UserOrderBy$Bio_DESC = {ctor: 'Bio_DESC'};
+var _user$project$GraphCool_Enum_UserOrderBy$Bio_ASC = {ctor: 'Bio_ASC'};
+var _user$project$GraphCool_Enum_UserOrderBy$Auth0UserId_DESC = {ctor: 'Auth0UserId_DESC'};
+var _user$project$GraphCool_Enum_UserOrderBy$Auth0UserId_ASC = {ctor: 'Auth0UserId_ASC'};
+var _user$project$GraphCool_Enum_UserOrderBy$decoder = A2(
+	_elm_lang$core$Json_Decode$andThen,
+	function (string) {
+		var _p1 = string;
+		switch (_p1) {
+			case 'auth0UserId_ASC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_UserOrderBy$Auth0UserId_ASC);
+			case 'auth0UserId_DESC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_UserOrderBy$Auth0UserId_DESC);
+			case 'bio_ASC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_UserOrderBy$Bio_ASC);
+			case 'bio_DESC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_UserOrderBy$Bio_DESC);
+			case 'birthday_ASC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_UserOrderBy$Birthday_ASC);
+			case 'birthday_DESC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_UserOrderBy$Birthday_DESC);
+			case 'createdAt_ASC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_UserOrderBy$CreatedAt_ASC);
+			case 'createdAt_DESC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_UserOrderBy$CreatedAt_DESC);
+			case 'email_ASC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_UserOrderBy$Email_ASC);
+			case 'email_DESC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_UserOrderBy$Email_DESC);
+			case 'id_ASC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_UserOrderBy$Id_ASC);
+			case 'id_DESC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_UserOrderBy$Id_DESC);
+			case 'name_ASC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_UserOrderBy$Name_ASC);
+			case 'name_DESC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_UserOrderBy$Name_DESC);
+			case 'nameFull_ASC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_UserOrderBy$NameFull_ASC);
+			case 'nameFull_DESC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_UserOrderBy$NameFull_DESC);
+			case 'password_ASC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_UserOrderBy$Password_ASC);
+			case 'password_DESC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_UserOrderBy$Password_DESC);
+			case 'updatedAt_ASC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_UserOrderBy$UpdatedAt_ASC);
+			case 'updatedAt_DESC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_UserOrderBy$UpdatedAt_DESC);
+			default:
+				return _elm_lang$core$Json_Decode$fail(
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						'Invalid UserOrderBy type, ',
+						A2(_elm_lang$core$Basics_ops['++'], string, ' try re-running the graphqelm CLI ')));
+		}
+	},
+	_elm_lang$core$Json_Decode$string);
 
 var _user$project$GraphCool_Object_Host$venuesMeta_ = F2(
 	function (fillInOptionals, object) {
@@ -44614,6 +44261,46 @@ var _user$project$GraphCool_Object_Pool$attending = F2(
 var _user$project$GraphCool_Object_Pool$selection = function (constructor) {
 	return _dillonkearns$graphqelm$Graphqelm_Internal_Builder_Object$selection(constructor);
 };
+
+var _user$project$GraphCool_Enum_PoolOrderBy$toString = function ($enum) {
+	var _p0 = $enum;
+	switch (_p0.ctor) {
+		case 'Id_ASC':
+			return 'id_ASC';
+		case 'Id_DESC':
+			return 'id_DESC';
+		case 'SeatGeekId_ASC':
+			return 'seatGeekId_ASC';
+		default:
+			return 'seatGeekId_DESC';
+	}
+};
+var _user$project$GraphCool_Enum_PoolOrderBy$SeatGeekId_DESC = {ctor: 'SeatGeekId_DESC'};
+var _user$project$GraphCool_Enum_PoolOrderBy$SeatGeekId_ASC = {ctor: 'SeatGeekId_ASC'};
+var _user$project$GraphCool_Enum_PoolOrderBy$Id_DESC = {ctor: 'Id_DESC'};
+var _user$project$GraphCool_Enum_PoolOrderBy$Id_ASC = {ctor: 'Id_ASC'};
+var _user$project$GraphCool_Enum_PoolOrderBy$decoder = A2(
+	_elm_lang$core$Json_Decode$andThen,
+	function (string) {
+		var _p1 = string;
+		switch (_p1) {
+			case 'id_ASC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_PoolOrderBy$Id_ASC);
+			case 'id_DESC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_PoolOrderBy$Id_DESC);
+			case 'seatGeekId_ASC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_PoolOrderBy$SeatGeekId_ASC);
+			case 'seatGeekId_DESC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_PoolOrderBy$SeatGeekId_DESC);
+			default:
+				return _elm_lang$core$Json_Decode$fail(
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						'Invalid PoolOrderBy type, ',
+						A2(_elm_lang$core$Basics_ops['++'], string, ' try re-running the graphqelm CLI ')));
+		}
+	},
+	_elm_lang$core$Json_Decode$string);
 
 var _user$project$GraphCool_Object_User$viewedEventMeta_ = F2(
 	function (fillInOptionals, object) {
@@ -45929,6 +45616,226 @@ var _user$project$GraphCool_Object_Venue$selection = function (constructor) {
 	return _dillonkearns$graphqelm$Graphqelm_Internal_Builder_Object$selection(constructor);
 };
 
+var _user$project$GraphCool_Enum_FileOrderBy$toString = function ($enum) {
+	var _p0 = $enum;
+	switch (_p0.ctor) {
+		case 'ContentType_ASC':
+			return 'contentType_ASC';
+		case 'ContentType_DESC':
+			return 'contentType_DESC';
+		case 'CreatedAt_ASC':
+			return 'createdAt_ASC';
+		case 'CreatedAt_DESC':
+			return 'createdAt_DESC';
+		case 'Id_ASC':
+			return 'id_ASC';
+		case 'Id_DESC':
+			return 'id_DESC';
+		case 'Name_ASC':
+			return 'name_ASC';
+		case 'Name_DESC':
+			return 'name_DESC';
+		case 'Secret_ASC':
+			return 'secret_ASC';
+		case 'Secret_DESC':
+			return 'secret_DESC';
+		case 'Size_ASC':
+			return 'size_ASC';
+		case 'Size_DESC':
+			return 'size_DESC';
+		case 'UpdatedAt_ASC':
+			return 'updatedAt_ASC';
+		case 'UpdatedAt_DESC':
+			return 'updatedAt_DESC';
+		case 'Url_ASC':
+			return 'url_ASC';
+		default:
+			return 'url_DESC';
+	}
+};
+var _user$project$GraphCool_Enum_FileOrderBy$Url_DESC = {ctor: 'Url_DESC'};
+var _user$project$GraphCool_Enum_FileOrderBy$Url_ASC = {ctor: 'Url_ASC'};
+var _user$project$GraphCool_Enum_FileOrderBy$UpdatedAt_DESC = {ctor: 'UpdatedAt_DESC'};
+var _user$project$GraphCool_Enum_FileOrderBy$UpdatedAt_ASC = {ctor: 'UpdatedAt_ASC'};
+var _user$project$GraphCool_Enum_FileOrderBy$Size_DESC = {ctor: 'Size_DESC'};
+var _user$project$GraphCool_Enum_FileOrderBy$Size_ASC = {ctor: 'Size_ASC'};
+var _user$project$GraphCool_Enum_FileOrderBy$Secret_DESC = {ctor: 'Secret_DESC'};
+var _user$project$GraphCool_Enum_FileOrderBy$Secret_ASC = {ctor: 'Secret_ASC'};
+var _user$project$GraphCool_Enum_FileOrderBy$Name_DESC = {ctor: 'Name_DESC'};
+var _user$project$GraphCool_Enum_FileOrderBy$Name_ASC = {ctor: 'Name_ASC'};
+var _user$project$GraphCool_Enum_FileOrderBy$Id_DESC = {ctor: 'Id_DESC'};
+var _user$project$GraphCool_Enum_FileOrderBy$Id_ASC = {ctor: 'Id_ASC'};
+var _user$project$GraphCool_Enum_FileOrderBy$CreatedAt_DESC = {ctor: 'CreatedAt_DESC'};
+var _user$project$GraphCool_Enum_FileOrderBy$CreatedAt_ASC = {ctor: 'CreatedAt_ASC'};
+var _user$project$GraphCool_Enum_FileOrderBy$ContentType_DESC = {ctor: 'ContentType_DESC'};
+var _user$project$GraphCool_Enum_FileOrderBy$ContentType_ASC = {ctor: 'ContentType_ASC'};
+var _user$project$GraphCool_Enum_FileOrderBy$decoder = A2(
+	_elm_lang$core$Json_Decode$andThen,
+	function (string) {
+		var _p1 = string;
+		switch (_p1) {
+			case 'contentType_ASC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_FileOrderBy$ContentType_ASC);
+			case 'contentType_DESC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_FileOrderBy$ContentType_DESC);
+			case 'createdAt_ASC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_FileOrderBy$CreatedAt_ASC);
+			case 'createdAt_DESC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_FileOrderBy$CreatedAt_DESC);
+			case 'id_ASC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_FileOrderBy$Id_ASC);
+			case 'id_DESC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_FileOrderBy$Id_DESC);
+			case 'name_ASC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_FileOrderBy$Name_ASC);
+			case 'name_DESC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_FileOrderBy$Name_DESC);
+			case 'secret_ASC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_FileOrderBy$Secret_ASC);
+			case 'secret_DESC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_FileOrderBy$Secret_DESC);
+			case 'size_ASC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_FileOrderBy$Size_ASC);
+			case 'size_DESC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_FileOrderBy$Size_DESC);
+			case 'updatedAt_ASC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_FileOrderBy$UpdatedAt_ASC);
+			case 'updatedAt_DESC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_FileOrderBy$UpdatedAt_DESC);
+			case 'url_ASC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_FileOrderBy$Url_ASC);
+			case 'url_DESC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_FileOrderBy$Url_DESC);
+			default:
+				return _elm_lang$core$Json_Decode$fail(
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						'Invalid FileOrderBy type, ',
+						A2(_elm_lang$core$Basics_ops['++'], string, ' try re-running the graphqelm CLI ')));
+		}
+	},
+	_elm_lang$core$Json_Decode$string);
+
+var _user$project$GraphCool_Enum_LocationOrderBy$toString = function ($enum) {
+	var _p0 = $enum;
+	switch (_p0.ctor) {
+		case 'Address_ASC':
+			return 'address_ASC';
+		case 'Address_DESC':
+			return 'address_DESC';
+		case 'AddressFull_ASC':
+			return 'addressFull_ASC';
+		case 'AddressFull_DESC':
+			return 'addressFull_DESC';
+		case 'City_ASC':
+			return 'city_ASC';
+		case 'City_DESC':
+			return 'city_DESC';
+		case 'Country_ASC':
+			return 'country_ASC';
+		case 'Country_DESC':
+			return 'country_DESC';
+		case 'CreatedAt_ASC':
+			return 'createdAt_ASC';
+		case 'CreatedAt_DESC':
+			return 'createdAt_DESC';
+		case 'Id_ASC':
+			return 'id_ASC';
+		case 'Id_DESC':
+			return 'id_DESC';
+		case 'Lat_ASC':
+			return 'lat_ASC';
+		case 'Lat_DESC':
+			return 'lat_DESC';
+		case 'Lon_ASC':
+			return 'lon_ASC';
+		case 'Lon_DESC':
+			return 'lon_DESC';
+		case 'State_ASC':
+			return 'state_ASC';
+		case 'State_DESC':
+			return 'state_DESC';
+		case 'Zip_ASC':
+			return 'zip_ASC';
+		default:
+			return 'zip_DESC';
+	}
+};
+var _user$project$GraphCool_Enum_LocationOrderBy$Zip_DESC = {ctor: 'Zip_DESC'};
+var _user$project$GraphCool_Enum_LocationOrderBy$Zip_ASC = {ctor: 'Zip_ASC'};
+var _user$project$GraphCool_Enum_LocationOrderBy$State_DESC = {ctor: 'State_DESC'};
+var _user$project$GraphCool_Enum_LocationOrderBy$State_ASC = {ctor: 'State_ASC'};
+var _user$project$GraphCool_Enum_LocationOrderBy$Lon_DESC = {ctor: 'Lon_DESC'};
+var _user$project$GraphCool_Enum_LocationOrderBy$Lon_ASC = {ctor: 'Lon_ASC'};
+var _user$project$GraphCool_Enum_LocationOrderBy$Lat_DESC = {ctor: 'Lat_DESC'};
+var _user$project$GraphCool_Enum_LocationOrderBy$Lat_ASC = {ctor: 'Lat_ASC'};
+var _user$project$GraphCool_Enum_LocationOrderBy$Id_DESC = {ctor: 'Id_DESC'};
+var _user$project$GraphCool_Enum_LocationOrderBy$Id_ASC = {ctor: 'Id_ASC'};
+var _user$project$GraphCool_Enum_LocationOrderBy$CreatedAt_DESC = {ctor: 'CreatedAt_DESC'};
+var _user$project$GraphCool_Enum_LocationOrderBy$CreatedAt_ASC = {ctor: 'CreatedAt_ASC'};
+var _user$project$GraphCool_Enum_LocationOrderBy$Country_DESC = {ctor: 'Country_DESC'};
+var _user$project$GraphCool_Enum_LocationOrderBy$Country_ASC = {ctor: 'Country_ASC'};
+var _user$project$GraphCool_Enum_LocationOrderBy$City_DESC = {ctor: 'City_DESC'};
+var _user$project$GraphCool_Enum_LocationOrderBy$City_ASC = {ctor: 'City_ASC'};
+var _user$project$GraphCool_Enum_LocationOrderBy$AddressFull_DESC = {ctor: 'AddressFull_DESC'};
+var _user$project$GraphCool_Enum_LocationOrderBy$AddressFull_ASC = {ctor: 'AddressFull_ASC'};
+var _user$project$GraphCool_Enum_LocationOrderBy$Address_DESC = {ctor: 'Address_DESC'};
+var _user$project$GraphCool_Enum_LocationOrderBy$Address_ASC = {ctor: 'Address_ASC'};
+var _user$project$GraphCool_Enum_LocationOrderBy$decoder = A2(
+	_elm_lang$core$Json_Decode$andThen,
+	function (string) {
+		var _p1 = string;
+		switch (_p1) {
+			case 'address_ASC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_LocationOrderBy$Address_ASC);
+			case 'address_DESC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_LocationOrderBy$Address_DESC);
+			case 'addressFull_ASC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_LocationOrderBy$AddressFull_ASC);
+			case 'addressFull_DESC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_LocationOrderBy$AddressFull_DESC);
+			case 'city_ASC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_LocationOrderBy$City_ASC);
+			case 'city_DESC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_LocationOrderBy$City_DESC);
+			case 'country_ASC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_LocationOrderBy$Country_ASC);
+			case 'country_DESC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_LocationOrderBy$Country_DESC);
+			case 'createdAt_ASC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_LocationOrderBy$CreatedAt_ASC);
+			case 'createdAt_DESC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_LocationOrderBy$CreatedAt_DESC);
+			case 'id_ASC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_LocationOrderBy$Id_ASC);
+			case 'id_DESC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_LocationOrderBy$Id_DESC);
+			case 'lat_ASC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_LocationOrderBy$Lat_ASC);
+			case 'lat_DESC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_LocationOrderBy$Lat_DESC);
+			case 'lon_ASC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_LocationOrderBy$Lon_ASC);
+			case 'lon_DESC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_LocationOrderBy$Lon_DESC);
+			case 'state_ASC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_LocationOrderBy$State_ASC);
+			case 'state_DESC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_LocationOrderBy$State_DESC);
+			case 'zip_ASC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_LocationOrderBy$Zip_ASC);
+			case 'zip_DESC':
+				return _elm_lang$core$Json_Decode$succeed(_user$project$GraphCool_Enum_LocationOrderBy$Zip_DESC);
+			default:
+				return _elm_lang$core$Json_Decode$fail(
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						'Invalid LocationOrderBy type, ',
+						A2(_elm_lang$core$Basics_ops['++'], string, ' try re-running the graphqelm CLI ')));
+		}
+	},
+	_elm_lang$core$Json_Decode$string);
+
 var _user$project$GraphCool_Query$node = F2(
 	function (requiredArgs, object) {
 		return A4(
@@ -45990,41 +45897,43 @@ var _user$project$GraphCool_Query$venue = function (object) {
 				_elm_lang$core$Basics$identity(_p6));
 		});
 };
-var _user$project$GraphCool_Query$user = function (object) {
-	var filledInOptionals = {auth0UserId: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent, email: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent, id: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent};
-	var optionalArgs = A2(
-		_elm_lang$core$List$filterMap,
-		_elm_lang$core$Basics$identity,
-		{
-			ctor: '::',
-			_0: A3(_dillonkearns$graphqelm$Graphqelm_Internal_Builder_Argument$optional, 'auth0UserId', filledInOptionals.auth0UserId, _dillonkearns$graphqelm$Graphqelm_Internal_Encode$string),
-			_1: {
+var _user$project$GraphCool_Query$user = F2(
+	function (fillInOptionals, object) {
+		var filledInOptionals = fillInOptionals(
+			{auth0UserId: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent, email: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent, id: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent});
+		var optionalArgs = A2(
+			_elm_lang$core$List$filterMap,
+			_elm_lang$core$Basics$identity,
+			{
 				ctor: '::',
-				_0: A3(_dillonkearns$graphqelm$Graphqelm_Internal_Builder_Argument$optional, 'email', filledInOptionals.email, _dillonkearns$graphqelm$Graphqelm_Internal_Encode$string),
+				_0: A3(_dillonkearns$graphqelm$Graphqelm_Internal_Builder_Argument$optional, 'auth0UserId', filledInOptionals.auth0UserId, _dillonkearns$graphqelm$Graphqelm_Internal_Encode$string),
 				_1: {
 					ctor: '::',
-					_0: A3(
-						_dillonkearns$graphqelm$Graphqelm_Internal_Builder_Argument$optional,
-						'id',
-						filledInOptionals.id,
-						function (_p7) {
-							var _p8 = _p7;
-							return _dillonkearns$graphqelm$Graphqelm_Internal_Encode$string(_p8._0);
-						}),
-					_1: {ctor: '[]'}
+					_0: A3(_dillonkearns$graphqelm$Graphqelm_Internal_Builder_Argument$optional, 'email', filledInOptionals.email, _dillonkearns$graphqelm$Graphqelm_Internal_Encode$string),
+					_1: {
+						ctor: '::',
+						_0: A3(
+							_dillonkearns$graphqelm$Graphqelm_Internal_Builder_Argument$optional,
+							'id',
+							filledInOptionals.id,
+							function (_p7) {
+								var _p8 = _p7;
+								return _dillonkearns$graphqelm$Graphqelm_Internal_Encode$string(_p8._0);
+							}),
+						_1: {ctor: '[]'}
+					}
 				}
-			}
-		});
-	return A4(
-		_dillonkearns$graphqelm$Graphqelm_Internal_Builder_Object$selectionField,
-		'User',
-		optionalArgs,
-		object,
-		function (_p9) {
-			return _elm_lang$core$Json_Decode$maybe(
-				_elm_lang$core$Basics$identity(_p9));
-		});
-};
+			});
+		return A4(
+			_dillonkearns$graphqelm$Graphqelm_Internal_Builder_Object$selectionField,
+			'User',
+			optionalArgs,
+			object,
+			function (_p9) {
+				return _elm_lang$core$Json_Decode$maybe(
+					_elm_lang$core$Basics$identity(_p9));
+			});
+	});
 var _user$project$GraphCool_Query$pool = F2(
 	function (fillInOptionals, object) {
 		var filledInOptionals = fillInOptionals(
@@ -47071,6 +46980,289 @@ var _user$project$Pages_Event_Model$EventModel = F3(
 var _user$project$Pages_Event_Model$initModel = A3(_user$project$Pages_Event_Model$EventModel, _user$project$Pages_Event_Model$initEvent, _krisajenkins$remotedata$RemoteData$Loading, _krisajenkins$remotedata$RemoteData$Loading);
 var _user$project$Pages_Event_Model$init = {ctor: '_Tuple2', _0: _user$project$Pages_Event_Model$initModel, _1: _user$project$Pages_Event_Model$initCmd};
 
+var _user$project$Auth0_Authentication$poolId = A2(
+	_dillonkearns$graphqelm$Graphqelm_SelectionSet$with,
+	_user$project$GraphCool_Object_Pool$id,
+	_user$project$GraphCool_Object_Pool$selection(_elm_lang$core$Basics$identity));
+var _user$project$Auth0_Authentication$messageId = A2(
+	_dillonkearns$graphqelm$Graphqelm_SelectionSet$with,
+	_user$project$GraphCool_Object_Message$id,
+	_user$project$GraphCool_Object_Message$selection(_elm_lang$core$Basics$identity));
+var _user$project$Auth0_Authentication$hostId = A2(
+	_dillonkearns$graphqelm$Graphqelm_SelectionSet$with,
+	_user$project$GraphCool_Object_Host$id,
+	_user$project$GraphCool_Object_Host$selection(_elm_lang$core$Basics$identity));
+var _user$project$Auth0_Authentication$eventId = A2(
+	_dillonkearns$graphqelm$Graphqelm_SelectionSet$with,
+	_user$project$GraphCool_Object_Event$id,
+	_user$project$GraphCool_Object_Event$selection(_elm_lang$core$Basics$identity));
+var _user$project$Auth0_Authentication$chatId = A2(
+	_dillonkearns$graphqelm$Graphqelm_SelectionSet$with,
+	_user$project$GraphCool_Object_Chat$id,
+	_user$project$GraphCool_Object_Chat$selection(_elm_lang$core$Basics$identity));
+var _user$project$Auth0_Authentication$isLoggedIn = function (model) {
+	var _p0 = model.state;
+	if (_p0.ctor === 'LoggedIn') {
+		return true;
+	} else {
+		return false;
+	}
+};
+var _user$project$Auth0_Authentication$tryGetUserProfile = function (model) {
+	var _p1 = model.state;
+	if (_p1.ctor === 'LoggedIn') {
+		return _elm_lang$core$Maybe$Just(_p1._0.profile);
+	} else {
+		return _elm_lang$core$Maybe$Nothing;
+	}
+};
+var _user$project$Auth0_Authentication$init = F3(
+	function (authorize, logOut, initialData) {
+		return {
+			state: function () {
+				var _p2 = initialData;
+				if (_p2.ctor === 'Just') {
+					return _user$project$Auth0_Auth0$LoggedIn(_p2._0);
+				} else {
+					return _user$project$Auth0_Auth0$LoggedOut;
+				}
+			}(),
+			lastError: _elm_lang$core$Maybe$Nothing,
+			authorize: authorize,
+			logOut: logOut,
+			createUserResponse: _krisajenkins$remotedata$RemoteData$Loading,
+			getUserId: _user$project$GraphCool_Scalar$Id('0')
+		};
+	});
+var _user$project$Auth0_Authentication$Model = F6(
+	function (a, b, c, d, e, f) {
+		return {state: a, lastError: b, authorize: c, logOut: d, createUserResponse: e, getUserId: f};
+	});
+var _user$project$Auth0_Authentication$User = function (a) {
+	return function (b) {
+		return function (c) {
+			return function (d) {
+				return function (e) {
+					return function (f) {
+						return function (g) {
+							return function (h) {
+								return function (i) {
+									return function (j) {
+										return function (k) {
+											return function (l) {
+												return function (m) {
+													return function (n) {
+														return function (o) {
+															return function (p) {
+																return function (q) {
+																	return function (r) {
+																		return function (s) {
+																			return function (t) {
+																				return function (u) {
+																					return {auth0UserId: a, bio: b, birthday: c, createdAt: d, createdEvents: e, datesCanceled: f, email: g, attendingEvent: h, likedEvent: i, viewedEvent: j, hosts: k, id: l, initiated: m, name: n, nameFull: o, passed: p, password: q, proposed: r, recipient: s, sent: t, updatedAt: u};
+																				};
+																			};
+																		};
+																	};
+																};
+															};
+														};
+													};
+												};
+											};
+										};
+									};
+								};
+							};
+						};
+					};
+				};
+			};
+		};
+	};
+};
+var _user$project$Auth0_Authentication$user = A2(
+	_dillonkearns$graphqelm$Graphqelm_SelectionSet$with,
+	_user$project$GraphCool_Object_User$updatedAt,
+	A2(
+		_dillonkearns$graphqelm$Graphqelm_SelectionSet$with,
+		A2(_user$project$GraphCool_Object_User$sent, _elm_lang$core$Basics$identity, _user$project$Auth0_Authentication$messageId),
+		A2(
+			_dillonkearns$graphqelm$Graphqelm_SelectionSet$with,
+			A2(_user$project$GraphCool_Object_User$recipient, _elm_lang$core$Basics$identity, _user$project$Auth0_Authentication$chatId),
+			A2(
+				_dillonkearns$graphqelm$Graphqelm_SelectionSet$with,
+				A2(_user$project$GraphCool_Object_User$proposed, _elm_lang$core$Basics$identity, _user$project$Auth0_Authentication$chatId),
+				A2(
+					_dillonkearns$graphqelm$Graphqelm_SelectionSet$with,
+					_user$project$GraphCool_Object_User$password,
+					A2(
+						_dillonkearns$graphqelm$Graphqelm_SelectionSet$with,
+						A2(_user$project$GraphCool_Object_User$passed, _elm_lang$core$Basics$identity, _user$project$Auth0_Authentication$chatId),
+						A2(
+							_dillonkearns$graphqelm$Graphqelm_SelectionSet$with,
+							_user$project$GraphCool_Object_User$nameFull,
+							A2(
+								_dillonkearns$graphqelm$Graphqelm_SelectionSet$with,
+								_user$project$GraphCool_Object_User$name,
+								A2(
+									_dillonkearns$graphqelm$Graphqelm_SelectionSet$with,
+									A2(_user$project$GraphCool_Object_User$initiated, _elm_lang$core$Basics$identity, _user$project$Auth0_Authentication$chatId),
+									A2(
+										_dillonkearns$graphqelm$Graphqelm_SelectionSet$with,
+										_user$project$GraphCool_Object_User$id,
+										A2(
+											_dillonkearns$graphqelm$Graphqelm_SelectionSet$with,
+											A2(_user$project$GraphCool_Object_User$hosts, _elm_lang$core$Basics$identity, _user$project$Auth0_Authentication$hostId),
+											A2(
+												_dillonkearns$graphqelm$Graphqelm_SelectionSet$with,
+												A2(_user$project$GraphCool_Object_User$viewedEvent, _elm_lang$core$Basics$identity, _user$project$Auth0_Authentication$poolId),
+												A2(
+													_dillonkearns$graphqelm$Graphqelm_SelectionSet$with,
+													A2(_user$project$GraphCool_Object_User$likedEvent, _elm_lang$core$Basics$identity, _user$project$Auth0_Authentication$poolId),
+													A2(
+														_dillonkearns$graphqelm$Graphqelm_SelectionSet$with,
+														A2(_user$project$GraphCool_Object_User$attendingEvent, _elm_lang$core$Basics$identity, _user$project$Auth0_Authentication$poolId),
+														A2(
+															_dillonkearns$graphqelm$Graphqelm_SelectionSet$with,
+															_user$project$GraphCool_Object_User$email,
+															A2(
+																_dillonkearns$graphqelm$Graphqelm_SelectionSet$with,
+																A2(_user$project$GraphCool_Object_User$datesCanceled, _elm_lang$core$Basics$identity, _user$project$Auth0_Authentication$chatId),
+																A2(
+																	_dillonkearns$graphqelm$Graphqelm_SelectionSet$with,
+																	A2(_user$project$GraphCool_Object_User$createdEvents, _elm_lang$core$Basics$identity, _user$project$Auth0_Authentication$eventId),
+																	A2(
+																		_dillonkearns$graphqelm$Graphqelm_SelectionSet$with,
+																		_user$project$GraphCool_Object_User$createdAt,
+																		A2(
+																			_dillonkearns$graphqelm$Graphqelm_SelectionSet$with,
+																			_user$project$GraphCool_Object_User$birthday,
+																			A2(
+																				_dillonkearns$graphqelm$Graphqelm_SelectionSet$with,
+																				_user$project$GraphCool_Object_User$bio,
+																				A2(
+																					_dillonkearns$graphqelm$Graphqelm_SelectionSet$with,
+																					_user$project$GraphCool_Object_User$auth0UserId,
+																					_user$project$GraphCool_Object_User$selection(_user$project$Auth0_Authentication$User))))))))))))))))))))));
+var _user$project$Auth0_Authentication$queryUserIdTokenSelect = function (loggedInUser) {
+	return A2(
+		_dillonkearns$graphqelm$Graphqelm_SelectionSet$with,
+		A2(
+			_user$project$GraphCool_Query$user,
+			function (optionals) {
+				return _elm_lang$core$Native_Utils.update(
+					optionals,
+					{
+						auth0UserId: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Present(loggedInUser.idtoken)
+					});
+			},
+			_user$project$Auth0_Authentication$user),
+		_user$project$GraphCool_Query$selection(_elm_lang$core$Basics$identity));
+};
+var _user$project$Auth0_Authentication$GetUser = function (a) {
+	return {ctor: 'GetUser', _0: a};
+};
+var _user$project$Auth0_Authentication$queryUserIdToken = function (authState) {
+	var _p3 = authState;
+	if (_p3.ctor === 'LoggedIn') {
+		return A2(
+			_dillonkearns$graphqelm$Graphqelm_Http$send,
+			function (_p4) {
+				return _user$project$Auth0_Authentication$GetUser(
+					_krisajenkins$remotedata$RemoteData$fromResult(_p4));
+			},
+			A2(
+				_dillonkearns$graphqelm$Graphqelm_Http$queryRequest,
+				'https://api.graph.cool/simple/v1/PlusOne',
+				_user$project$Auth0_Authentication$queryUserIdTokenSelect(_p3._0)));
+	} else {
+		return _elm_lang$core$Platform_Cmd$none;
+	}
+};
+var _user$project$Auth0_Authentication$update = F2(
+	function (msg, model) {
+		var _p5 = msg;
+		switch (_p5.ctor) {
+			case 'AuthenticationResult':
+				var _p6 = function () {
+					var _p7 = _p5._0;
+					if (_p7.ctor === 'Ok') {
+						return {
+							ctor: '_Tuple2',
+							_0: _user$project$Auth0_Auth0$LoggedIn(_p7._0),
+							_1: _elm_lang$core$Maybe$Nothing
+						};
+					} else {
+						return {
+							ctor: '_Tuple2',
+							_0: model.state,
+							_1: _elm_lang$core$Maybe$Just(_p7._0)
+						};
+					}
+				}();
+				var newState = _p6._0;
+				var error = _p6._1;
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{state: newState, lastError: error}),
+					_1: _user$project$Auth0_Authentication$queryUserIdToken(newState)
+				};
+			case 'ShowLogIn':
+				return {
+					ctor: '_Tuple2',
+					_0: model,
+					_1: model.authorize(_user$project$Auth0_Auth0$defaultOpts)
+				};
+			case 'LogOut':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{state: _user$project$Auth0_Auth0$LoggedOut}),
+					_1: model.logOut(
+						{ctor: '_Tuple0'})
+				};
+			default:
+				var responseId = function () {
+					var _p8 = _p5._0;
+					switch (_p8.ctor) {
+						case 'NotAsked':
+							return _user$project$GraphCool_Scalar$Id('0');
+						case 'Loading':
+							return _user$project$GraphCool_Scalar$Id('1');
+						case 'Failure':
+							return _user$project$GraphCool_Scalar$Id('2');
+						default:
+							var _p9 = _p8._0;
+							if (_p9.ctor === 'Nothing') {
+								return _user$project$GraphCool_Scalar$Id('3');
+							} else {
+								return _p9._0.id;
+							}
+					}
+				}();
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{getUserId: responseId}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+		}
+	});
+var _user$project$Auth0_Authentication$LogOut = {ctor: 'LogOut'};
+var _user$project$Auth0_Authentication$ShowLogIn = {ctor: 'ShowLogIn'};
+var _user$project$Auth0_Authentication$AuthenticationResult = function (a) {
+	return {ctor: 'AuthenticationResult', _0: a};
+};
+var _user$project$Auth0_Authentication$handleAuthResult = function (_p10) {
+	return _user$project$Auth0_Authentication$AuthenticationResult(
+		_user$project$Auth0_Auth0$mapResult(_p10));
+};
+
 var _user$project$Pages_CreateEvent_Messages$ChangeEndDate = function (a) {
 	return {ctor: 'ChangeEndDate', _0: a};
 };
@@ -47586,8 +47778,13 @@ var _user$project$Pages_User_Model$auth0authResult = _elm_lang$core$Native_Platf
 											return A2(
 												_elm_lang$core$Json_Decode$andThen,
 												function (token) {
-													return _elm_lang$core$Json_Decode$succeed(
-														{profile: profile, token: token});
+													return A2(
+														_elm_lang$core$Json_Decode$andThen,
+														function (idtoken) {
+															return _elm_lang$core$Json_Decode$succeed(
+																{profile: profile, token: token, idtoken: idtoken});
+														},
+														A2(_elm_lang$core$Json_Decode$field, 'idtoken', _elm_lang$core$Json_Decode$string));
 												},
 												A2(_elm_lang$core$Json_Decode$field, 'token', _elm_lang$core$Json_Decode$string));
 										},
@@ -47596,26 +47793,31 @@ var _user$project$Pages_User_Model$auth0authResult = _elm_lang$core$Native_Platf
 											'profile',
 											A2(
 												_elm_lang$core$Json_Decode$andThen,
-												function (email) {
+												function (name) {
 													return A2(
 														_elm_lang$core$Json_Decode$andThen,
-														function (email_verified) {
+														function (email) {
 															return A2(
 																_elm_lang$core$Json_Decode$andThen,
-																function (family_name) {
+																function (email_verified) {
 																	return A2(
 																		_elm_lang$core$Json_Decode$andThen,
-																		function (picture) {
-																			return _elm_lang$core$Json_Decode$succeed(
-																				{email: email, email_verified: email_verified, family_name: family_name, picture: picture});
+																		function (family_name) {
+																			return A2(
+																				_elm_lang$core$Json_Decode$andThen,
+																				function (picture) {
+																					return _elm_lang$core$Json_Decode$succeed(
+																						{name: name, email: email, email_verified: email_verified, family_name: family_name, picture: picture});
+																				},
+																				A2(_elm_lang$core$Json_Decode$field, 'picture', _elm_lang$core$Json_Decode$string));
 																		},
-																		A2(_elm_lang$core$Json_Decode$field, 'picture', _elm_lang$core$Json_Decode$string));
+																		A2(_elm_lang$core$Json_Decode$field, 'family_name', _elm_lang$core$Json_Decode$string));
 																},
-																A2(_elm_lang$core$Json_Decode$field, 'family_name', _elm_lang$core$Json_Decode$string));
+																A2(_elm_lang$core$Json_Decode$field, 'email_verified', _elm_lang$core$Json_Decode$bool));
 														},
-														A2(_elm_lang$core$Json_Decode$field, 'email_verified', _elm_lang$core$Json_Decode$bool));
+														A2(_elm_lang$core$Json_Decode$field, 'email', _elm_lang$core$Json_Decode$string));
 												},
-												A2(_elm_lang$core$Json_Decode$field, 'email', _elm_lang$core$Json_Decode$string))))),
+												A2(_elm_lang$core$Json_Decode$field, 'name', _elm_lang$core$Json_Decode$string))))),
 								_1: {ctor: '[]'}
 							}
 						})));
@@ -47970,7 +48172,6 @@ var _user$project$Pages_Chat_Model$init = {ctor: '_Tuple2', _0: _user$project$Pa
 
 var _user$project$Pages_Chats_Messages$Temp = {ctor: 'Temp'};
 
-var _user$project$Pages_EditUser_Messages$CreateUser = {ctor: 'CreateUser'};
 var _user$project$Pages_EditUser_Messages$SaveEdit = {ctor: 'SaveEdit'};
 var _user$project$Pages_EditUser_Messages$MutateUser = function (a) {
 	return {ctor: 'MutateUser', _0: a};
@@ -49000,51 +49201,115 @@ var _user$project$Pages_EditUser_Update$user = A2(
 																					_dillonkearns$graphqelm$Graphqelm_SelectionSet$with,
 																					_user$project$GraphCool_Object_User$auth0UserId,
 																					_user$project$GraphCool_Object_User$selection(_user$project$Pages_User_Model$User))))))))))))))))))))));
-var _user$project$Pages_EditUser_Update$mutation = function (userModel) {
+var _user$project$Pages_EditUser_Update$mutation = function (me) {
 	return A2(
-		_dillonkearns$graphqelm$Graphqelm_SelectionSet$with,
-		A3(
-			_user$project$GraphCool_Mutation$updateUser,
-			function (optionals) {
-				return _elm_lang$core$Native_Utils.update(
-					optionals,
+		_elm_lang$core$Debug$log,
+		_elm_lang$core$Basics$toString(me.user.user.id),
+		function () {
+			var idtoken = function () {
+				var _p0 = me.authModel.state;
+				if (_p0.ctor === 'LoggedIn') {
+					return _p0._0.idtoken;
+				} else {
+					return '';
+				}
+			}();
+			return A2(
+				_dillonkearns$graphqelm$Graphqelm_SelectionSet$with,
+				A2(
+					_user$project$GraphCool_Mutation$updateOrCreateUser,
 					{
-						name: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Present(userModel.name)
-					});
-			},
-			{
-				id: _user$project$GraphCool_Scalar$Id('cje4udnbk4wyb0177nm4fv22a')
-			},
-			_user$project$Pages_EditUser_Update$user),
-		_user$project$GraphCool_Mutation$selection(_elm_lang$core$Basics$identity));
+						update: _user$project$GraphCool_InputObject$UpdateUser(
+							{
+								bio: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								birthday: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								id: me.user.user.id,
+								name: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Present('Alex1'),
+								nameFull: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								attendingEventIds: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								attendingEvent: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								createdEventsIds: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								createdEvents: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								datesCanceledIds: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								datesCanceled: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								hostsIds: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								hosts: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								initiatedIds: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								initiated: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								likedEventIds: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								likedEvent: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								passedIds: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								passed: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								proposedIds: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								proposed: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								recipientIds: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								recipient: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								sentIds: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								sent: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								viewedEventIds: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								viewedEvent: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent
+							}),
+						create: _user$project$GraphCool_InputObject$CreateUser(
+							{
+								bio: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								birthday: _user$project$GraphCool_Scalar$DateTime('2018-10-10'),
+								name: 'name',
+								nameFull: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								attendingEventIds: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								attendingEvent: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								createdEventsIds: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								createdEvents: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								datesCanceledIds: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								datesCanceled: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								hostsIds: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								hosts: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								initiatedIds: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								initiated: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								likedEventIds: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								likedEvent: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								passedIds: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								passed: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								proposedIds: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								proposed: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								recipientIds: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								recipient: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								sentIds: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								sent: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								viewedEventIds: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								viewedEvent: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent
+							})
+					},
+					_user$project$Pages_EditUser_Update$user),
+				_user$project$GraphCool_Mutation$selection(_elm_lang$core$Basics$identity));
+		}());
 };
-var _user$project$Pages_EditUser_Update$makeMutationRequest = function (model) {
+var _user$project$Pages_EditUser_Update$makeMutationRequest = function (me) {
 	return A2(
 		_dillonkearns$graphqelm$Graphqelm_Http$send,
-		function (_p0) {
+		function (_p1) {
 			return _user$project$Pages_EditUser_Messages$MutateUser(
-				_krisajenkins$remotedata$RemoteData$fromResult(_p0));
+				_krisajenkins$remotedata$RemoteData$fromResult(_p1));
 		},
 		A2(
 			_dillonkearns$graphqelm$Graphqelm_Http$mutationRequest,
-			'https://api.graph.cool/simple/v1/OldPlusOne',
-			_user$project$Pages_EditUser_Update$mutation(model.user)));
+			'https://api.graph.cool/simple/v1/PlusOne',
+			_user$project$Pages_EditUser_Update$mutation(me)));
 };
 var _user$project$Pages_EditUser_Update$reformatDate = function (date) {
-	var _p1 = A2(_elm_lang$core$String$split, '-', date);
-	if ((((_p1.ctor === '::') && (_p1._1.ctor === '::')) && (_p1._1._1.ctor === '::')) && (_p1._1._1._1.ctor === '[]')) {
+	var _p2 = A2(_elm_lang$core$String$split, '-', date);
+	if ((((_p2.ctor === '::') && (_p2._1.ctor === '::')) && (_p2._1._1.ctor === '::')) && (_p2._1._1._1.ctor === '[]')) {
 		return A2(
 			_elm_lang$core$String$join,
 			'/',
 			{
 				ctor: '::',
-				_0: _p1._1._0,
+				_0: _p2._1._0,
 				_1: {
 					ctor: '::',
-					_0: _p1._1._1._0,
+					_0: _p2._1._1._0,
 					_1: {
 						ctor: '::',
-						_0: _p1._0,
+						_0: _p2._0,
 						_1: {ctor: '[]'}
 					}
 				}
@@ -49054,8 +49319,8 @@ var _user$project$Pages_EditUser_Update$reformatDate = function (date) {
 	}
 };
 var _user$project$Pages_EditUser_Update$stringToGender = function (gender) {
-	var _p2 = gender;
-	switch (_p2) {
+	var _p3 = gender;
+	switch (_p3) {
 		case 'Male':
 			return _user$project$Pages_User_Model$Male;
 		case 'Female':
@@ -49065,22 +49330,22 @@ var _user$project$Pages_EditUser_Update$stringToGender = function (gender) {
 	}
 };
 var _user$project$Pages_EditUser_Update$getUserBirthday = function (user) {
-	var _p3 = user;
-	if (_p3.ctor === 'Nothing') {
+	var _p4 = user;
+	if (_p4.ctor === 'Nothing') {
 		return '';
 	} else {
-		return _rluiten$elm_date_extra$Date_Extra_Format$isoDateString(_p3._0);
+		return _rluiten$elm_date_extra$Date_Extra_Format$isoDateString(_p4._0);
 	}
 };
-var _user$project$Pages_EditUser_Update$update = F2(
-	function (msg, model) {
-		var _p4 = msg;
-		switch (_p4.ctor) {
+var _user$project$Pages_EditUser_Update$update = F3(
+	function (msg, model, me) {
+		var _p5 = msg;
+		switch (_p5.ctor) {
 			case 'ChangeName':
 				var oldUser = model.user;
 				var newUser = _elm_lang$core$Native_Utils.update(
 					oldUser,
-					{name: _p4._0});
+					{name: _p5._0});
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
@@ -49093,7 +49358,7 @@ var _user$project$Pages_EditUser_Update$update = F2(
 				var newUser = _elm_lang$core$Native_Utils.update(
 					oldUser,
 					{
-						nameFull: _elm_lang$core$Maybe$Just(_p4._0)
+						nameFull: _elm_lang$core$Maybe$Just(_p5._0)
 					});
 				return {
 					ctor: '_Tuple2',
@@ -49107,7 +49372,7 @@ var _user$project$Pages_EditUser_Update$update = F2(
 				var newUser = _elm_lang$core$Native_Utils.update(
 					oldUser,
 					{
-						bio: _elm_lang$core$Maybe$Just(_p4._0)
+						bio: _elm_lang$core$Maybe$Just(_p5._0)
 					});
 				return {
 					ctor: '_Tuple2',
@@ -49121,7 +49386,7 @@ var _user$project$Pages_EditUser_Update$update = F2(
 				var newUser = _elm_lang$core$Native_Utils.update(
 					oldUser,
 					{
-						birthday: _user$project$GraphCool_Scalar$DateTime(_p4._0)
+						birthday: _user$project$GraphCool_Scalar$DateTime(_p5._0)
 					});
 				return {
 					ctor: '_Tuple2',
@@ -49134,21 +49399,15 @@ var _user$project$Pages_EditUser_Update$update = F2(
 				return {
 					ctor: '_Tuple2',
 					_0: model,
-					_1: _user$project$Pages_EditUser_Update$makeMutationRequest(model)
-				};
-			case 'MutateUser':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{userMutation: _p4._0}),
-					_1: _elm_lang$core$Platform_Cmd$none
+					_1: _user$project$Pages_EditUser_Update$makeMutationRequest(me)
 				};
 			default:
 				return {
 					ctor: '_Tuple2',
-					_0: model,
-					_1: _user$project$Pages_EditUser_Update$makeMutationRequest(model)
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{userMutation: _p5._0}),
+					_1: _elm_lang$core$Platform_Cmd$none
 				};
 		}
 	});
@@ -49161,6 +49420,8 @@ var _user$project$Pages_User_Update$update = F2(
 
 var _user$project$Update$update = F2(
 	function (msg, model) {
+		var user2 = model.me.user.user;
+		var user = model.me.user;
 		var me = model.me;
 		var pool = model.pool;
 		var client = model.client;
@@ -49171,6 +49432,27 @@ var _user$project$Update$update = F2(
 				var _p1 = A2(_user$project$Auth0_Authentication$update, _p0._0, model.me.authModel);
 				var authModel = _p1._0;
 				var cmd = _p1._1;
+				var newUser2 = _elm_lang$core$Native_Utils.update(
+					user2,
+					{id: authModel.getUserId});
+				var newUser = _elm_lang$core$Native_Utils.update(
+					user,
+					{user: newUser2});
+				var resultRoute = function () {
+					var _p2 = authModel.getUserId;
+					switch (_p2._0) {
+						case '0':
+							return _user$project$Types$GoChats(_elm_lang$core$Maybe$Nothing);
+						case '1':
+							return _user$project$Types$GoChats(_elm_lang$core$Maybe$Nothing);
+						case '2':
+							return _user$project$Types$GoChats(_elm_lang$core$Maybe$Nothing);
+						case '3':
+							return _user$project$Types$GoEditUser;
+						default:
+							return _user$project$Types$GoCreateEvent;
+					}
+				}();
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
@@ -49178,7 +49460,8 @@ var _user$project$Update$update = F2(
 						{
 							me: _elm_lang$core$Native_Utils.update(
 								me,
-								{authModel: authModel})
+								{authModel: authModel, user: newUser}),
+							route: resultRoute
 						}),
 					_1: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Types$AuthenticationMsg, cmd)
 				};
@@ -49191,9 +49474,9 @@ var _user$project$Update$update = F2(
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'CreateEventMsg':
-				var _p2 = A2(_user$project$Pages_CreateEvent_Update$update, _p0._0, model.createEvent);
-				var createEventModel = _p2._0;
-				var createEventCmd = _p2._1;
+				var _p3 = A2(_user$project$Pages_CreateEvent_Update$update, _p0._0, model.createEvent);
+				var createEventModel = _p3._0;
+				var createEventCmd = _p3._1;
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
@@ -49202,9 +49485,9 @@ var _user$project$Update$update = F2(
 					_1: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Types$CreateEventMsg, createEventCmd)
 				};
 			case 'EditUserMsg':
-				var _p3 = A2(_user$project$Pages_EditUser_Update$update, _p0._0, me.user);
-				var userModel = _p3._0;
-				var userCmd = _p3._1;
+				var _p4 = A3(_user$project$Pages_EditUser_Update$update, _p0._0, me.user, me);
+				var userModel = _p4._0;
+				var userCmd = _p4._1;
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
@@ -49217,9 +49500,9 @@ var _user$project$Update$update = F2(
 					_1: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Types$EditUserMsg, userCmd)
 				};
 			case 'EventsMsg':
-				var _p4 = A3(_user$project$Pages_Events_Update$update, _p0._0, model.events, me);
-				var eventsModel = _p4._0;
-				var eventsCmd = _p4._1;
+				var _p5 = A3(_user$project$Pages_Events_Update$update, _p0._0, model.events, me);
+				var eventsModel = _p5._0;
+				var eventsCmd = _p5._1;
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
@@ -49228,9 +49511,9 @@ var _user$project$Update$update = F2(
 					_1: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Types$EventsMsg, eventsCmd)
 				};
 			case 'UserMsg':
-				var _p5 = A2(_user$project$Pages_User_Update$update, _p0._0, me.user);
-				var userModel = _p5._0;
-				var userCmd = _p5._1;
+				var _p6 = A2(_user$project$Pages_User_Update$update, _p0._0, me.user);
+				var userModel = _p6._0;
+				var userCmd = _p6._1;
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
@@ -49243,9 +49526,9 @@ var _user$project$Update$update = F2(
 					_1: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Types$UserMsg, userCmd)
 				};
 			case 'ChatMsg':
-				var _p6 = A3(_user$project$Pages_Chat_Update$update, _p0._0, model.chat, me);
-				var chatModel = _p6._0;
-				var chatCmd = _p6._1;
+				var _p7 = A3(_user$project$Pages_Chat_Update$update, _p0._0, model.chat, me);
+				var chatModel = _p7._0;
+				var chatCmd = _p7._1;
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
@@ -49300,7 +49583,7 @@ var _user$project$Update$update = F2(
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'MouseStart':
-				var _p8 = _p0._0;
+				var _p9 = _p0._0;
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
@@ -49310,7 +49593,7 @@ var _user$project$Update$update = F2(
 								pool,
 								{
 									move: _elm_lang$core$Maybe$Just(
-										A2(_user$project$Pages_Pool_Model$Move, _p8, _p8))
+										A2(_user$project$Pages_Pool_Model$Move, _p9, _p9))
 								})
 						}),
 					_1: _elm_lang$core$Platform_Cmd$none
@@ -49326,9 +49609,9 @@ var _user$project$Update$update = F2(
 								{
 									move: A2(
 										_elm_lang$core$Maybe$map,
-										function (_p9) {
-											var _p10 = _p9;
-											return A2(_user$project$Pages_Pool_Model$Move, _p10.start, _p0._0);
+										function (_p10) {
+											var _p11 = _p10;
+											return A2(_user$project$Pages_Pool_Model$Move, _p11.start, _p0._0);
 										},
 										pool.move)
 								})
@@ -49351,22 +49634,6 @@ var _user$project$Update$update = F2(
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'ResizePool':
-				var _p11 = _p0._0;
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{
-							pool: _elm_lang$core$Native_Utils.update(
-								pool,
-								{
-									windowSize: _p11,
-									tubers: A2(_user$project$Pages_Pool_View$determineTubers, pool, _p11)
-								})
-						}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			case 'InitialWindow':
 				var _p12 = _p0._0;
 				return {
 					ctor: '_Tuple2',
@@ -49382,9 +49649,25 @@ var _user$project$Update$update = F2(
 						}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
+			case 'InitialWindow':
+				var _p13 = _p0._0;
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							pool: _elm_lang$core$Native_Utils.update(
+								pool,
+								{
+									windowSize: _p13,
+									tubers: A2(_user$project$Pages_Pool_View$determineTubers, pool, _p13)
+								})
+						}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
 			default:
 				if (_p0._0.ctor === 'Ok') {
-					var _p7 = _p0._0._0;
+					var _p8 = _p0._0._0;
 					return {
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
@@ -49394,13 +49677,13 @@ var _user$project$Update$update = F2(
 									events,
 									{
 										seatgeek: _elm_lang$core$Maybe$Just(
-											A2(_user$project$SeatGeek_Types$Reply, _p7.meta, _p7.events))
+											A2(_user$project$SeatGeek_Types$Reply, _p8.meta, _p8.events))
 									})
 							}),
 						_1: _elm_lang$core$Platform_Cmd$none
 					};
 				} else {
-					var _p13 = A2(_elm_lang$core$Debug$log, 'err', _p0._0._0);
+					var _p14 = A2(_elm_lang$core$Debug$log, 'err', _p0._0._0);
 					return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 				}
 		}
@@ -51338,7 +51621,12 @@ var _user$project$Pages_EditUser_View$view = function (model) {
 																					}
 																				},
 																				{ctor: '[]'}),
-																			_1: {ctor: '[]'}
+																			_1: {
+																				ctor: '::',
+																				_0: _elm_lang$html$Html$text(
+																					_elm_lang$core$Basics$toString(model.userMutation)),
+																				_1: {ctor: '[]'}
+																			}
 																		}
 																	}
 																}
@@ -52169,32 +52457,53 @@ var _user$project$View$render = function (model) {
 								_1: {
 									ctor: '::',
 									_0: A2(
-										_elm_lang$html$Html$p,
+										_elm_lang$html$Html$div,
 										{ctor: '[]'},
 										{
 											ctor: '::',
 											_0: A2(
-												_elm_lang$html$Html$button,
-												{
-													ctor: '::',
-													_0: _elm_lang$html$Html_Attributes$class('btn btn-primary'),
-													_1: {
-														ctor: '::',
-														_0: _elm_lang$html$Html_Events$onClick(
-															_user$project$Types$AuthenticationMsg(
-																_user$project$Auth0_Authentication$isLoggedIn(model.me.authModel) ? _user$project$Auth0_Authentication$LogOut : _user$project$Auth0_Authentication$ShowLogIn)),
-														_1: {ctor: '[]'}
-													}
-												},
+												_elm_lang$html$Html$p,
+												{ctor: '[]'},
 												{
 													ctor: '::',
 													_0: _elm_lang$html$Html$text(
-														_user$project$Auth0_Authentication$isLoggedIn(model.me.authModel) ? 'Log Out' : 'Log In'),
+														A2(
+															_elm_lang$core$Basics_ops['++'],
+															'Hello, ',
+															_elm_lang$core$Basics$toString(model.me.authModel.getUserId))),
 													_1: {ctor: '[]'}
 												}),
 											_1: {ctor: '[]'}
 										}),
-									_1: {ctor: '[]'}
+									_1: {
+										ctor: '::',
+										_0: A2(
+											_elm_lang$html$Html$p,
+											{ctor: '[]'},
+											{
+												ctor: '::',
+												_0: A2(
+													_elm_lang$html$Html$button,
+													{
+														ctor: '::',
+														_0: _elm_lang$html$Html_Attributes$class('btn btn-primary'),
+														_1: {
+															ctor: '::',
+															_0: _elm_lang$html$Html_Events$onClick(
+																_user$project$Types$AuthenticationMsg(_user$project$Auth0_Authentication$ShowLogIn)),
+															_1: {ctor: '[]'}
+														}
+													},
+													{
+														ctor: '::',
+														_0: _elm_lang$html$Html$text(
+															_user$project$Auth0_Authentication$isLoggedIn(model.me.authModel) ? 'Log Out' : 'Log In'),
+														_1: {ctor: '[]'}
+													}),
+												_1: {ctor: '[]'}
+											}),
+										_1: {ctor: '[]'}
+									}
 								}
 							}),
 						_1: {ctor: '[]'}
@@ -52285,40 +52594,50 @@ var _user$project$Main$main = _elm_lang$html$Html$programWithFlags(
 					_elm_lang$core$Maybe$Just,
 					A2(
 						_elm_lang$core$Json_Decode$andThen,
-						function (profile) {
+						function (idtoken) {
 							return A2(
 								_elm_lang$core$Json_Decode$andThen,
-								function (token) {
-									return _elm_lang$core$Json_Decode$succeed(
-										{profile: profile, token: token});
-								},
-								A2(_elm_lang$core$Json_Decode$field, 'token', _elm_lang$core$Json_Decode$string));
-						},
-						A2(
-							_elm_lang$core$Json_Decode$field,
-							'profile',
-							A2(
-								_elm_lang$core$Json_Decode$andThen,
-								function (email) {
+								function (profile) {
 									return A2(
 										_elm_lang$core$Json_Decode$andThen,
-										function (email_verified) {
+										function (token) {
+											return _elm_lang$core$Json_Decode$succeed(
+												{idtoken: idtoken, profile: profile, token: token});
+										},
+										A2(_elm_lang$core$Json_Decode$field, 'token', _elm_lang$core$Json_Decode$string));
+								},
+								A2(
+									_elm_lang$core$Json_Decode$field,
+									'profile',
+									A2(
+										_elm_lang$core$Json_Decode$andThen,
+										function (email) {
 											return A2(
 												_elm_lang$core$Json_Decode$andThen,
-												function (family_name) {
+												function (email_verified) {
 													return A2(
 														_elm_lang$core$Json_Decode$andThen,
-														function (picture) {
-															return _elm_lang$core$Json_Decode$succeed(
-																{email: email, email_verified: email_verified, family_name: family_name, picture: picture});
+														function (family_name) {
+															return A2(
+																_elm_lang$core$Json_Decode$andThen,
+																function (name) {
+																	return A2(
+																		_elm_lang$core$Json_Decode$andThen,
+																		function (picture) {
+																			return _elm_lang$core$Json_Decode$succeed(
+																				{email: email, email_verified: email_verified, family_name: family_name, name: name, picture: picture});
+																		},
+																		A2(_elm_lang$core$Json_Decode$field, 'picture', _elm_lang$core$Json_Decode$string));
+																},
+																A2(_elm_lang$core$Json_Decode$field, 'name', _elm_lang$core$Json_Decode$string));
 														},
-														A2(_elm_lang$core$Json_Decode$field, 'picture', _elm_lang$core$Json_Decode$string));
+														A2(_elm_lang$core$Json_Decode$field, 'family_name', _elm_lang$core$Json_Decode$string));
 												},
-												A2(_elm_lang$core$Json_Decode$field, 'family_name', _elm_lang$core$Json_Decode$string));
+												A2(_elm_lang$core$Json_Decode$field, 'email_verified', _elm_lang$core$Json_Decode$bool));
 										},
-										A2(_elm_lang$core$Json_Decode$field, 'email_verified', _elm_lang$core$Json_Decode$bool));
-								},
-								A2(_elm_lang$core$Json_Decode$field, 'email', _elm_lang$core$Json_Decode$string))))),
+										A2(_elm_lang$core$Json_Decode$field, 'email', _elm_lang$core$Json_Decode$string))));
+						},
+						A2(_elm_lang$core$Json_Decode$field, 'idtoken', _elm_lang$core$Json_Decode$string))),
 				_1: {ctor: '[]'}
 			}
 		}));

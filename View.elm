@@ -45,6 +45,9 @@ render model =
                             , img [ src user.picture ] []
                             ]
                     )
+                , div []
+                    [ p [] [ text ("Hello, " ++ toString model.me.authModel.getUserId) ]
+                    ]
                 , p []
                     [ button
                         [ class "btn btn-primary"

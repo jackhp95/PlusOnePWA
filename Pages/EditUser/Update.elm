@@ -1,57 +1,55 @@
 module Pages.EditUser.Update exposing (..)
 
-import Pages.User.Model exposing (..)
-import Pages.EditUser.Messages exposing (..)
-
+import Auth0.Auth0 as Auth0 exposing (..)
 import Date exposing (..)
-import String exposing (..)
-import List exposing (..)
+import Date.Extra.Core exposing (monthToInt)
 import Date.Extra.Format exposing (..)
-import Date.Extra.Core exposing(monthToInt)
-import GraphCool.Scalar exposing (..)
-
-
-import GraphCool.Object.Pool as Pool
+import Debug exposing (log)
 import GraphCool.Enum.DateState exposing (DateState)
 import GraphCool.InputObject as IO exposing (..)
+import GraphCool.Mutation as Mutation
 import GraphCool.Object
 import GraphCool.Object.Chat as Chat
 import GraphCool.Object.Event as Event
 import GraphCool.Object.Host as Host
 import GraphCool.Object.Location as Location
 import GraphCool.Object.Message as Message
+import GraphCool.Object.Pool as Pool
 import GraphCool.Object.User as UserObj
 import GraphCool.Object.Venue as Venue
 import GraphCool.Query as Query
-import GraphCool.Mutation as Mutation
 import GraphCool.Scalar exposing (..)
 import Graphqelm.Document as Document
 import Graphqelm.Http exposing (..)
-import Graphqelm.Operation exposing (RootQuery, RootMutation)
-import Graphqelm.OptionalArgument exposing (OptionalArgument(Null, Present))
-import Graphqelm.SelectionSet exposing (SelectionSet, with)
-import Graphqelm.OptionalArgument exposing (OptionalArgument(Absent, Null, Present))
-import RemoteData exposing (..)
-import Maybe
-
 import Graphqelm.Internal.Builder.Argument as Argument exposing (Argument)
-import Graphqelm.Internal.Encode as Encode exposing (Value)
-import GraphCool.InputObject
-
-import Json.Decode as Decode exposing (Decoder)
 import Graphqelm.Internal.Builder.Object as Object
-import Debug exposing (log)
+import Graphqelm.Internal.Encode as Encode exposing (Value)
+import Graphqelm.Operation exposing (RootMutation, RootQuery)
+import Graphqelm.OptionalArgument exposing (OptionalArgument(Absent, Null, Present))
+import Graphqelm.SelectionSet exposing (SelectionSet, with)
+import Json.Decode as Decode exposing (Decoder)
+import List exposing (..)
+import Maybe
+import Pages.EditUser.Messages exposing (..)
+import Pages.User.Model exposing (..)
+import RemoteData exposing (..)
+import String exposing (..)
 
-type alias Temp = ({ bio : OptionalArgument String, birthday : OptionalArgument GraphCool.Scalar.DateTime, name : OptionalArgument String, nameFull : OptionalArgument String, attendingEventIds : OptionalArgument (List GraphCool.Scalar.Id), attendingEvent : OptionalArgument (List GraphCool.InputObject.UserattendingEventPool), createdEventsIds : OptionalArgument (List GraphCool.Scalar.Id), createdEvents : OptionalArgument (List GraphCool.InputObject.UsercreatedEventsEvent), datesCanceledIds : OptionalArgument (List GraphCool.Scalar.Id), datesCanceled : OptionalArgument (List GraphCool.InputObject.UserdatesCanceledChat), hostsIds : OptionalArgument (List GraphCool.Scalar.Id), hosts : OptionalArgument (List GraphCool.InputObject.UserhostsHost), initiatedIds : OptionalArgument (List GraphCool.Scalar.Id), initiated : OptionalArgument (List GraphCool.InputObject.UserinitiatedChat), likedEventIds : OptionalArgument (List GraphCool.Scalar.Id), likedEvent : OptionalArgument (List GraphCool.InputObject.UserlikedEventPool), passedIds : OptionalArgument (List GraphCool.Scalar.Id), passed : OptionalArgument (List GraphCool.InputObject.UserpassedChat), proposedIds : OptionalArgument (List GraphCool.Scalar.Id), proposed : OptionalArgument (List GraphCool.InputObject.UserproposedChat), recipientIds : OptionalArgument (List GraphCool.Scalar.Id), recipient : OptionalArgument (List GraphCool.InputObject.UserrecipientChat), sentIds : OptionalArgument (List GraphCool.Scalar.Id), sent : OptionalArgument (List GraphCool.InputObject.UsersentMessage), viewedEventIds : OptionalArgument (List GraphCool.Scalar.Id), viewedEvent : OptionalArgument (List GraphCool.InputObject.UserviewedEventPool) } -> { bio : OptionalArgument String, birthday : OptionalArgument GraphCool.Scalar.DateTime, name : OptionalArgument String, nameFull : OptionalArgument String, attendingEventIds : OptionalArgument (List GraphCool.Scalar.Id), attendingEvent : OptionalArgument (List GraphCool.InputObject.UserattendingEventPool), createdEventsIds : OptionalArgument (List GraphCool.Scalar.Id), createdEvents : OptionalArgument (List GraphCool.InputObject.UsercreatedEventsEvent), datesCanceledIds : OptionalArgument (List GraphCool.Scalar.Id), datesCanceled : OptionalArgument (List GraphCool.InputObject.UserdatesCanceledChat), hostsIds : OptionalArgument (List GraphCool.Scalar.Id), hosts : OptionalArgument (List GraphCool.InputObject.UserhostsHost), initiatedIds : OptionalArgument (List GraphCool.Scalar.Id), initiated : OptionalArgument (List GraphCool.InputObject.UserinitiatedChat), likedEventIds : OptionalArgument (List GraphCool.Scalar.Id), likedEvent : OptionalArgument (List GraphCool.InputObject.UserlikedEventPool), passedIds : OptionalArgument (List GraphCool.Scalar.Id), passed : OptionalArgument (List GraphCool.InputObject.UserpassedChat), proposedIds : OptionalArgument (List GraphCool.Scalar.Id), proposed : OptionalArgument (List GraphCool.InputObject.UserproposedChat), recipientIds : OptionalArgument (List GraphCool.Scalar.Id), recipient : OptionalArgument (List GraphCool.InputObject.UserrecipientChat), sentIds : OptionalArgument (List GraphCool.Scalar.Id), sent : OptionalArgument (List GraphCool.InputObject.UsersentMessage), viewedEventIds : OptionalArgument (List GraphCool.Scalar.Id), viewedEvent : OptionalArgument (List GraphCool.InputObject.UserviewedEventPool) })
 
-update : Msg -> UserModel -> ( UserModel, Cmd Msg )
-update msg model =
+type alias Temp =
+    { bio : OptionalArgument String, birthday : OptionalArgument GraphCool.Scalar.DateTime, name : OptionalArgument String, nameFull : OptionalArgument String, attendingEventIds : OptionalArgument (List GraphCool.Scalar.Id), attendingEvent : OptionalArgument (List IO.UserattendingEventPool), createdEventsIds : OptionalArgument (List GraphCool.Scalar.Id), createdEvents : OptionalArgument (List IO.UsercreatedEventsEvent), datesCanceledIds : OptionalArgument (List GraphCool.Scalar.Id), datesCanceled : OptionalArgument (List IO.UserdatesCanceledChat), hostsIds : OptionalArgument (List GraphCool.Scalar.Id), hosts : OptionalArgument (List IO.UserhostsHost), initiatedIds : OptionalArgument (List GraphCool.Scalar.Id), initiated : OptionalArgument (List IO.UserinitiatedChat), likedEventIds : OptionalArgument (List GraphCool.Scalar.Id), likedEvent : OptionalArgument (List IO.UserlikedEventPool), passedIds : OptionalArgument (List GraphCool.Scalar.Id), passed : OptionalArgument (List IO.UserpassedChat), proposedIds : OptionalArgument (List GraphCool.Scalar.Id), proposed : OptionalArgument (List IO.UserproposedChat), recipientIds : OptionalArgument (List GraphCool.Scalar.Id), recipient : OptionalArgument (List IO.UserrecipientChat), sentIds : OptionalArgument (List GraphCool.Scalar.Id), sent : OptionalArgument (List IO.UsersentMessage), viewedEventIds : OptionalArgument (List GraphCool.Scalar.Id), viewedEvent : OptionalArgument (List IO.UserviewedEventPool) } -> { bio : OptionalArgument String, birthday : OptionalArgument GraphCool.Scalar.DateTime, name : OptionalArgument String, nameFull : OptionalArgument String, attendingEventIds : OptionalArgument (List GraphCool.Scalar.Id), attendingEvent : OptionalArgument (List IO.UserattendingEventPool), createdEventsIds : OptionalArgument (List GraphCool.Scalar.Id), createdEvents : OptionalArgument (List IO.UsercreatedEventsEvent), datesCanceledIds : OptionalArgument (List GraphCool.Scalar.Id), datesCanceled : OptionalArgument (List IO.UserdatesCanceledChat), hostsIds : OptionalArgument (List GraphCool.Scalar.Id), hosts : OptionalArgument (List IO.UserhostsHost), initiatedIds : OptionalArgument (List GraphCool.Scalar.Id), initiated : OptionalArgument (List IO.UserinitiatedChat), likedEventIds : OptionalArgument (List GraphCool.Scalar.Id), likedEvent : OptionalArgument (List IO.UserlikedEventPool), passedIds : OptionalArgument (List GraphCool.Scalar.Id), passed : OptionalArgument (List IO.UserpassedChat), proposedIds : OptionalArgument (List GraphCool.Scalar.Id), proposed : OptionalArgument (List IO.UserproposedChat), recipientIds : OptionalArgument (List GraphCool.Scalar.Id), recipient : OptionalArgument (List IO.UserrecipientChat), sentIds : OptionalArgument (List GraphCool.Scalar.Id), sent : OptionalArgument (List IO.UsersentMessage), viewedEventIds : OptionalArgument (List GraphCool.Scalar.Id), viewedEvent : OptionalArgument (List IO.UserviewedEventPool) }
+
+
+update : Msg -> UserModel -> Me -> ( UserModel, Cmd Msg )
+update msg model me =
     case msg of
         ChangeName newName ->
             let
-              oldUser = model.user
-              newUser =
-                { oldUser | name = newName }
+                oldUser =
+                    model.user
+
+                newUser =
+                    { oldUser | name = newName }
             in
             ( { model | user = newUser }
             , Cmd.none
@@ -59,9 +57,11 @@ update msg model =
 
         ChangeFullName newFullName ->
             let
-              oldUser = model.user
-              newUser =
-                { oldUser | nameFull = (Just newFullName) }
+                oldUser =
+                    model.user
+
+                newUser =
+                    { oldUser | nameFull = Just newFullName }
             in
             ( { model | user = newUser }
             , Cmd.none
@@ -69,9 +69,11 @@ update msg model =
 
         ChangeBio newBio ->
             let
-              oldUser = model.user
-              newUser =
-                { oldUser | bio = (Just newBio) }
+                oldUser =
+                    model.user
+
+                newUser =
+                    { oldUser | bio = Just newBio }
             in
             ( { model | user = newUser }
             , Cmd.none
@@ -79,21 +81,27 @@ update msg model =
 
         ChangeBirthday newBirthday ->
             let
-              oldUser = model.user
-              newUser =
-                { oldUser | birthday = (DateTime newBirthday) }
+                oldUser =
+                    model.user
+
+                newUser =
+                    { oldUser | birthday = DateTime newBirthday }
             in
             ( { model | user = newUser }
             , Cmd.none
             )
-        
+
         SaveEdit ->
-            (model, makeMutationRequest model)
-        
+            ( model, makeMutationRequest me )
+
         MutateUser response ->
             ( { model | userMutation = response }, Cmd.none )
-        Pages.EditUser.Messages.CreateUser ->
-            ( model, makeMutationRequest model)
+
+
+
+-- Pages.EditUser.Messages.CreateUser ->
+--     ( model, makeMutationRequest model )
+
 
 getUserBirthday : Maybe Date -> String
 getUserBirthday user =
@@ -117,37 +125,49 @@ stringToGender gender =
         _ ->
             Male
 
+
 reformatDate : String -> String
 reformatDate date =
     case String.split "-" date of
         [ year, month, day ] ->
             String.join "/" [ month, day, year ]
+
         _ ->
             ""
 
-mutation : User -> SelectionSet (Maybe User) RootMutation
-mutation userModel =
-    Mutation.selection identity -- (Maybe Event)
-        |> with (Mutation.updateUser
-         --identity
-         (\optionals -> { optionals | name = Present userModel.name })
-         {id=(Id "cje4udnbk4wyb0177nm4fv22a")} user)
-         --{ name = userModel.name, birthday = userModel.birthday, authProvider = IO.AuthProviderSignupData { auth0 = Null, email = Present (IO.AuthProviderEmail { email = "elm@elm.org", password = "elm" })} } user)
 
-    --{ bio = Present, birthday = Absent, name = Absent, nameFull = Absent, createdEventsIds = Absent, createdEvents = Absent, datesCanceledIds = Absent, datesCanceled = Absent, eventsAttendingIds = Absent, eventsAttending = Absent, eventsLikedIds = Absent, eventsLiked = Absent, eventsViewedIds = Absent, eventsViewed = Absent, hostsIds = Absent, hosts = Absent, initiatedIds = Absent, initiated = Absent, passedIds = Absent, passed = Absent, proposedIds = Absent, proposed = Absent, recipientIds = Absent, recipient = Absent, sentIds = Absent, sent = Absent }
-    -- let
-    --     filledInOptionals =
-    --         identity { bio = Present, birthday = Absent, name = Absent, nameFull = Absent, createdEventsIds = Absent, createdEvents = Absent, datesCanceledIds = Absent, datesCanceled = Absent, eventsAttendingIds = Absent, eventsAttending = Absent, eventsLikedIds = Absent, eventsLiked = Absent, eventsViewedIds = Absent, eventsViewed = Absent, hostsIds = Absent, hosts = Absent, initiatedIds = Absent, initiated = Absent, passedIds = Absent, passed = Absent, proposedIds = Absent, proposed = Absent, recipientIds = Absent, recipient = Absent, sentIds = Absent, sent = Absent }
+mutation : Me -> SelectionSet (Maybe User) RootMutation
+mutation me =
+    log (toString me.user.user.id) <|
+        let
+            idtoken =
+                case me.authModel.state of
+                    Auth0.LoggedIn loggedInUser ->
+                        loggedInUser.idtoken
 
-    --     optionalArgs =
-    --         [ Argument.optional "bio" filledInOptionals.bio Encode.string, Argument.optional "birthday" filledInOptionals.birthday (\(GraphCool.Scalar.DateTime raw) -> Encode.string raw), Argument.optional "name" filledInOptionals.name Encode.string, Argument.optional "nameFull" filledInOptionals.nameFull Encode.string, Argument.optional "createdEventsIds" filledInOptionals.createdEventsIds ((\(GraphCool.Scalar.Id raw) -> Encode.string raw) |> Encode.list), Argument.optional "createdEvents" filledInOptionals.createdEvents (GraphCool.InputObject.encodeUsercreatedEventsEvent |> Encode.list), Argument.optional "datesCanceledIds" filledInOptionals.datesCanceledIds ((\(GraphCool.Scalar.Id raw) -> Encode.string raw) |> Encode.list), Argument.optional "datesCanceled" filledInOptionals.datesCanceled (GraphCool.InputObject.encodeUserdatesCanceledChat |> Encode.list), Argument.optional "eventsAttendingIds" filledInOptionals.eventsAttendingIds ((\(GraphCool.Scalar.Id raw) -> Encode.string raw) |> Encode.list), Argument.optional "eventsAttending" filledInOptionals.eventsAttending (GraphCool.InputObject.encodeUsereventsAttendingEvent |> Encode.list), Argument.optional "eventsLikedIds" filledInOptionals.eventsLikedIds ((\(GraphCool.Scalar.Id raw) -> Encode.string raw) |> Encode.list), Argument.optional "eventsLiked" filledInOptionals.eventsLiked (GraphCool.InputObject.encodeUsereventsLikedEvent |> Encode.list), Argument.optional "eventsViewedIds" filledInOptionals.eventsViewedIds ((\(GraphCool.Scalar.Id raw) -> Encode.string raw) |> Encode.list), Argument.optional "eventsViewed" filledInOptionals.eventsViewed (GraphCool.InputObject.encodeUsereventsViewedEvent |> Encode.list), Argument.optional "hostsIds" filledInOptionals.hostsIds ((\(GraphCool.Scalar.Id raw) -> Encode.string raw) |> Encode.list), Argument.optional "hosts" filledInOptionals.hosts (GraphCool.InputObject.encodeUserhostsHost |> Encode.list), Argument.optional "initiatedIds" filledInOptionals.initiatedIds ((\(GraphCool.Scalar.Id raw) -> Encode.string raw) |> Encode.list), Argument.optional "initiated" filledInOptionals.initiated (GraphCool.InputObject.encodeUserinitiatedChat |> Encode.list), Argument.optional "passedIds" filledInOptionals.passedIds ((\(GraphCool.Scalar.Id raw) -> Encode.string raw) |> Encode.list), Argument.optional "passed" filledInOptionals.passed (GraphCool.InputObject.encodeUserpassedChat |> Encode.list), Argument.optional "proposedIds" filledInOptionals.proposedIds ((\(GraphCool.Scalar.Id raw) -> Encode.string raw) |> Encode.list), Argument.optional "proposed" filledInOptionals.proposed (GraphCool.InputObject.encodeUserproposedChat |> Encode.list), Argument.optional "recipientIds" filledInOptionals.recipientIds ((\(GraphCool.Scalar.Id raw) -> Encode.string raw) |> Encode.list), Argument.optional "recipient" filledInOptionals.recipient (GraphCool.InputObject.encodeUserrecipientChat |> Encode.list), Argument.optional "sentIds" filledInOptionals.sentIds ((\(GraphCool.Scalar.Id raw) -> Encode.string raw) |> Encode.list), Argument.optional "sent" filledInOptionals.sent (GraphCool.InputObject.encodeUsersentMessage |> Encode.list) ]
-    --             |> List.filterMap identity
-    -- in
-    -- filledInOptionals
+                    Auth0.LoggedOut ->
+                        ""
+        in
+        Mutation.selection identity
+            |> with
+                (Mutation.updateOrCreateUser
+                    { update = IO.UpdateUser { bio = Absent, birthday = Absent, id = me.user.user.id, name = Present "Alex1", nameFull = Absent, attendingEventIds = Absent, attendingEvent = Absent, createdEventsIds = Absent, createdEvents = Absent, datesCanceledIds = Absent, datesCanceled = Absent, hostsIds = Absent, hosts = Absent, initiatedIds = Absent, initiated = Absent, likedEventIds = Absent, likedEvent = Absent, passedIds = Absent, passed = Absent, proposedIds = Absent, proposed = Absent, recipientIds = Absent, recipient = Absent, sentIds = Absent, sent = Absent, viewedEventIds = Absent, viewedEvent = Absent }
+                    , create =
+                        IO.CreateUser
+                            { bio = Absent, birthday = DateTime "2018-10-10", name = "name", nameFull = Absent, attendingEventIds = Absent, attendingEvent = Absent, createdEventsIds = Absent, createdEvents = Absent, datesCanceledIds = Absent, datesCanceled = Absent, hostsIds = Absent, hosts = Absent, initiatedIds = Absent, initiated = Absent, likedEventIds = Absent, likedEvent = Absent, passedIds = Absent, passed = Absent, proposedIds = Absent, proposed = Absent, recipientIds = Absent, recipient = Absent, sentIds = Absent, sent = Absent, viewedEventIds = Absent, viewedEvent = Absent }
+                    }
+                    user
+                )
+
+
+
+--authProvider = IO.AuthProviderSignupData { auth0 = Present (IO.AuthProviderAuth0 { idToken = idtoken }), email = Absent }
+
 
 poolId : SelectionSet Id GraphCool.Object.Pool
 poolId =
-    Pool.selection identity |> with Pool.id    
+    Pool.selection identity |> with Pool.id
+
 
 user : SelectionSet User GraphCool.Object.User
 user =
@@ -173,25 +193,30 @@ user =
         |> with (UserObj.recipient identity chatId)
         |> with (UserObj.sent identity messageId)
         |> with UserObj.updatedAt
-        
+
+
 chatId : SelectionSet Id GraphCool.Object.Chat
 chatId =
     Chat.selection identity |> with Chat.id
+
 
 eventId : SelectionSet Id GraphCool.Object.Event
 eventId =
     Event.selection identity |> with Event.id
 
+
 hostId : SelectionSet Id GraphCool.Object.Host
 hostId =
     Host.selection identity |> with Host.id
+
 
 messageId : SelectionSet Id GraphCool.Object.Message
 messageId =
     Message.selection identity |> with Message.id
 
-makeMutationRequest : UserModel -> Cmd Msg
-makeMutationRequest model =
-    mutation model.user
-        |> Graphqelm.Http.mutationRequest "https://api.graph.cool/simple/v1/OldPlusOne"
+
+makeMutationRequest : Me -> Cmd Msg
+makeMutationRequest me =
+    mutation me
+        |> Graphqelm.Http.mutationRequest "https://api.graph.cool/simple/v1/PlusOne"
         |> Graphqelm.Http.send (RemoteData.fromResult >> MutateUser)
