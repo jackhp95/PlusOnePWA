@@ -39,6 +39,14 @@ update msg model =
             let
                 ( authModel, cmd ) =
                     Authentication.update authMsg model.me.authModel
+
+                userId =
+                    case authModel.state of
+                        Auth0.LoggedIn loggedInUser ->
+                            loggedInUser.profile.name
+
+                        Auth0.LoggedOut ->
+                            "123"
             in
             ( { model | me = { me | authModel = authModel } }, Cmd.map Types.AuthenticationMsg cmd )
 

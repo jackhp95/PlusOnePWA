@@ -6,6 +6,7 @@ module Main exposing (main)
 import Auth0.Auth0 as Auth0
 import Auth0.Authentication as Authentication
 import Date exposing (..)
+import Debug exposing (log)
 import Html exposing (..)
 import Mouse
 import Pages.CreateEvent.Messages as CreateEventMsg
