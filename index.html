@@ -9,9 +9,23 @@
     const start = Date.now();
   </script>
 
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-115062655-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-115062655-1');
+  </script>
+
+
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tachyons/4.9.0/tachyons.min.css" />
   <link rel="stylesheet" href="Styles/plusOne.css" />
+
+  <!-- VERIFY PINTEREST -->
+  <meta name="p:domain_verify" content="aa0d3f2f032f9008f061169631809a2e" />
 
   <!-- Load Font -->
   <link href="https://fonts.googleapis.com/css?family=Montserrat:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i"
@@ -174,8 +188,8 @@ Breathe BG/LG
     </div>
   </div>
   <noscript style="width:50ch; padding: 1em;">
-    Hey bud, Why are you not using JavaScript? We kinda depend on JavaScript to, like, do much of anything on this site. But look,
-    If you tweet @dateplusone we'll start building non JS options of our site. Cool beans?
+    Hey bud, Why are you not using JavaScript? We kinda depend on JavaScript to, like, do much of anything on this site. But
+    look, If you tweet @dateplusone we'll start building non JS options of our site. Cool beans?
   </noscript>
 </body>
 
@@ -188,57 +202,57 @@ Breathe BG/LG
       document.body.removeChild(document.body.firstChild);
     }
   }
-	//var app = Elm.Main.fullscreen();
-	var webAuth = new auth0.WebAuth({
-      domain: 'plusonedatingapp.auth0.com', // e.g., you.auth0.com
-      clientID: 'V9DXVz9ylA_oLNRcHimDzU-haA__LCKm',
-      responseType: 'token',
-      //redirectUri: 'http://localhost:8000/index.html',
-      redirectUri: 'http://plusone.dating/index.html'
-    });
-    var storedProfile = localStorage.getItem('profile');
-    var storedToken = localStorage.getItem('token');
-    var authData = storedProfile && storedToken ? { profile: JSON.parse(storedProfile), token: storedToken } : null;
-    var elmApp = Elm.Main.fullscreen(authData);
+  //var app = Elm.Main.fullscreen();
+  var webAuth = new auth0.WebAuth({
+    domain: 'plusonedatingapp.auth0.com', // e.g., you.auth0.com
+    clientID: 'V9DXVz9ylA_oLNRcHimDzU-haA__LCKm',
+    responseType: 'token',
+    //redirectUri: 'http://localhost:8000/index.html',
+    redirectUri: 'http://plusone.dating/index.html'
+  });
+  var storedProfile = localStorage.getItem('profile');
+  var storedToken = localStorage.getItem('token');
+  var authData = storedProfile && storedToken ? { profile: JSON.parse(storedProfile), token: storedToken } : null;
+  var elmApp = Elm.Main.fullscreen(authData);
 
-    // Auth0 authorize subscription
-    elmApp.ports.auth0authorize.subscribe(function(opts) {
-      webAuth.authorize();
-    });
+  // Auth0 authorize subscription
+  elmApp.ports.auth0authorize.subscribe(function (opts) {
+    webAuth.authorize();
+  });
 
-    // Log out of Auth0 subscription
-    elmApp.ports.auth0logout.subscribe(function(opts) {
-      localStorage.removeItem('profile');
-      localStorage.removeItem('token');
-    });
+  // Log out of Auth0 subscription
+  elmApp.ports.auth0logout.subscribe(function (opts) {
+    localStorage.removeItem('profile');
+    localStorage.removeItem('token');
+  });
 
-    // Watching for hash after redirect
-    webAuth.parseHash({ hash: window.location.hash }, function(err, authResult) {
-      if (err) {
-        return console.error(err);
-      }
-      if (authResult) {
-        webAuth.client.userInfo(authResult.accessToken, function(err, profile) {
-          var result = { err: null, ok: null };
-          var token = authResult.accessToken;
+  // Watching for hash after redirect
+  webAuth.parseHash({ hash: window.location.hash }, function (err, authResult) {
+    if (err) {
+      return console.error(err);
+    }
+    if (authResult) {
+      webAuth.client.userInfo(authResult.accessToken, function (err, profile) {
+        var result = { err: null, ok: null };
+        var token = authResult.accessToken;
 
-          if (err) {
-            result.err = err.details;
-            // Ensure that optional fields are on the object
-            result.err.name = result.err.name ? result.err.name : null;
-            result.err.code = result.err.code ? result.err.code : null;
-            result.err.statusCode = result.err.statusCode ? result.err.statusCode : null;
-          }
-          if (authResult) {
-            result.ok = { profile: profile, token: token };
-            localStorage.setItem('profile', JSON.stringify(profile));
-            localStorage.setItem('token', token);
-          }
-          elmApp.ports.auth0authResult.send(result);
-        });
-        window.location.hash = '';
-      }
-    });
+        if (err) {
+          result.err = err.details;
+          // Ensure that optional fields are on the object
+          result.err.name = result.err.name ? result.err.name : null;
+          result.err.code = result.err.code ? result.err.code : null;
+          result.err.statusCode = result.err.statusCode ? result.err.statusCode : null;
+        }
+        if (authResult) {
+          result.ok = { profile: profile, token: token };
+          localStorage.setItem('profile', JSON.stringify(profile));
+          localStorage.setItem('token', token);
+        }
+        elmApp.ports.auth0authResult.send(result);
+      });
+      window.location.hash = '';
+    }
+  });
 </script>
 
 <script>
