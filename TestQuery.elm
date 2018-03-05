@@ -1,28 +1,30 @@
 module TestGraphCool exposing (main)
 
+import GraphCool.Object
+import GraphCool.Object.Event as Event
+import GraphCool.Object.User as User
+import GraphCool.Query as Query
+import GraphCool.Scalar
 import Graphqelm.Document as Document
 import Graphqelm.Http exposing (..)
 import Graphqelm.Operation exposing (RootQuery)
 import Graphqelm.SelectionSet exposing (SelectionSet, with)
 import Html exposing (..)
-import RemoteData exposing (..)
 import Html.Attributes exposing (..)
-import GraphCool.Object
-import GraphCool.Object.User as User
-import GraphCool.Object.Event as Event
-import GraphCool.Query as Query
-import GraphCool.Scalar
+import RemoteData exposing (..)
+
 
 type alias Response =
-    {
-     events : List EventQuery
+    { events : List EventQuery
     }
+
 
 type alias EventQuery =
     { startsAt : GraphCool.Scalar.DateTime
     , name : String
     , id : GraphCool.Scalar.Id
     }
+
 
 query : SelectionSet Response RootQuery
 query =
@@ -36,7 +38,6 @@ event =
         |> with Event.startsAt
         |> with Event.name
         |> with Event.id
-
 
 
 makeRequest : Cmd Msg
@@ -65,18 +66,25 @@ view : Model -> Html.Html Msg
 view model =
     let
         refineView a =
-        div [] [
-             h3 [] [ text "Events" ]
-            , div [] (List.map (\ b -> ul[ style [("background", "#eeeeee")]][h4[][text b.name],p[][text (Basics.toString b.id)]]) a.events)]
+            div []
+                [ h3 [] [ text "Events" ]
+                , div [] (List.map (\b -> ul [ style [ ( "background", "#eeeeee" ) ] ] [ h4 [] [ text b.name ], p [] [ text (Basics.toString b.id) ] ]) a.events)
+                ]
 
         response =
-        case model of
-            NotAsked -> text "Hold up, Lemme Check"
-            Loading -> text "Gimme a Sec"
-            Failure e -> text ("Shucks um, " ++ (Basics.toString e))
-            Success a -> refineView a
-    in
+            case model of
+                NotAsked ->
+                    text "Hold up, Lemme Check"
 
+                Loading ->
+                    text "Gimme a Sec"
+
+                Failure e ->
+                    text ("Shucks um, " ++ Basics.toString e)
+
+                Success a ->
+                    refineView a
+    in
     div []
         [ div []
             [ h1 [] [ text "Generated Query" ]
@@ -90,6 +98,7 @@ view model =
             , response
             ]
         ]
+
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =

@@ -1,5 +1,7 @@
 module TestGraphCool exposing (main)
+
 import GraphCool.Enum.DateState exposing (DateState)
+import GraphCool.Mutation as Mutation
 import GraphCool.Object
 import GraphCool.Object.Chat as Chat
 import GraphCool.Object.Event as Event
@@ -12,12 +14,11 @@ import GraphCool.Query as Query
 import GraphCool.Scalar exposing (..)
 import Graphqelm.Document as Document
 import Graphqelm.Http exposing (..)
-import Graphqelm.Operation exposing (RootQuery,RootMutation)
+import Graphqelm.Operation exposing (RootMutation, RootQuery)
+import Graphqelm.OptionalArgument exposing (OptionalArgument(Absent, Null, Present))
 import Graphqelm.SelectionSet exposing (SelectionSet, with)
 import Html exposing (..)
 import RemoteData exposing (..)
-import GraphCool.Mutation as Mutation
-import Graphqelm.OptionalArgument exposing (OptionalArgument(Absent, Null, Present))
 
 
 type alias Event =
@@ -40,12 +41,15 @@ type alias Event =
 
 mutation : SelectionSet (Maybe Event) RootMutation
 mutation =
-    Mutation.selection identity -- (Maybe Event)
-        |> with (Mutation.createEvent
-         --identity
-         (\optionals -> { optionals | createdById = Present (Id "cje07e7y7e227015745hh81m3") })
-         { name = "Ed Sheeran Perfect Concert", startsAt = DateTime "2018-03-20T10:00:00.000Z" } event)
-
+    Mutation.selection identity
+        -- (Maybe Event)
+        |> with
+            (Mutation.createEvent
+                --identity
+                (\optionals -> { optionals | createdById = Present (Id "cje07e7y7e227015745hh81m3") })
+                { name = "Ed Sheeran Perfect Concert", startsAt = DateTime "2018-03-20T10:00:00.000Z" }
+                event
+            )
 
 
 event : SelectionSet Event GraphCool.Object.Event
@@ -71,10 +75,10 @@ chatId : SelectionSet Id GraphCool.Object.Chat
 chatId =
     Chat.selection identity |> with Chat.id
 
+
 hostId : SelectionSet Id GraphCool.Object.Host
 hostId =
     Host.selection identity |> with Host.id
-
 
 
 venueId : SelectionSet Id GraphCool.Object.Venue
@@ -85,7 +89,6 @@ venueId =
 userId : SelectionSet Id GraphCool.Object.User
 userId =
     User.selection identity |> with User.id
-
 
 
 makeRequest : Cmd Msg
@@ -126,20 +129,20 @@ view model =
 
                 Success a ->
                     case a of
-                      Nothing ->
-                        div [][ text "Success. No response"]
-                      Just e ->
-                        div []
-                        [
-                         div []
-                            [ h5 [] [ text "Events" ]
-                            , div [] [ text "ID: ", text (Basics.toString e.id) ]
-                            , div [] [ text "Name: ", text (Basics.toString e.name) ]
-                            , div [] [ text "Full Name: ", text (Basics.toString e.nameFull) ]
-                            , div [] [ text "Start Date: ", text (Basics.toString e.startsAt) ]
-                            , div [] [ text "Created By: ", text (Basics.toString e.createdBy) ]
-                            ]
-                        ]
+                        Nothing ->
+                            div [] [ text "Success. No response" ]
+
+                        Just e ->
+                            div []
+                                [ div []
+                                    [ h5 [] [ text "Events" ]
+                                    , div [] [ text "ID: ", text (Basics.toString e.id) ]
+                                    , div [] [ text "Name: ", text (Basics.toString e.name) ]
+                                    , div [] [ text "Full Name: ", text (Basics.toString e.nameFull) ]
+                                    , div [] [ text "Start Date: ", text (Basics.toString e.startsAt) ]
+                                    , div [] [ text "Created By: ", text (Basics.toString e.createdBy) ]
+                                    ]
+                                ]
     in
     div []
         [ div []

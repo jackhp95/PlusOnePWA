@@ -1,7 +1,6 @@
 module Pages.CreateEvent.Messages exposing (..)
-import Pages.Event.Model exposing(..)
 
-
+import Pages.Event.Model exposing (..)
 
 
 type Msg

@@ -5,7 +5,6 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Nav exposing (bar)
-import Assets exposing (feather, bgImg)
 import Pages.User.Model as UserModel
 import Types exposing (..)
 
@@ -13,7 +12,6 @@ import Types exposing (..)
 view : UserModel.UserModel -> Html Msg
 view x =
     let
-
         model =
             x.user
     in
@@ -26,7 +24,6 @@ view x =
             [ class "bg-black-70" ]
             [ div [ class "ph3 bg-black-30 w-100" ]
                 [ userToolsView ]
-
             , userBio model
             , pastEvents model
             ]
@@ -37,7 +34,7 @@ userAvi : Html Msg
 userAvi =
     div [ class "w5 bounceIn animated z-9" ]
         [ div
-            [ bgImg ("https://images.unsplash.com/photo-1496361001419-80f0d1be777a?dpr=1&auto=format&fit=crop&w=1000&q=80&cs=tinysrgb&ixid=dW5zcGxhc2guY29tOzs7Ozs%3D")
+            [ bgImg "https://images.unsplash.com/photo-1496361001419-80f0d1be777a?dpr=1&auto=format&fit=crop&w=1000&q=80&cs=tinysrgb&ixid=dW5zcGxhc2guY29tOzs7Ozs%3D"
             , class "aspect-ratio--1x1 bg-white br-pill shadow-2 ba bw1 cover br-pill"
             ]
             []
@@ -48,7 +45,7 @@ userBio : UserModel.User -> Html Msg
 userBio model =
     div [ class "mv0 mh4 ph2 pv4 bb b--white-20" ]
         [ div [ class "fw7 pv2 f4" ] [ text "bio" ]
-        , div [ class "pv2 lh-copy measure" ] [ text (Maybe.withDefault "" model.bio)]
+        , div [ class "pv2 lh-copy measure" ] [ text (Maybe.withDefault "" model.bio) ]
         ]
 
 
@@ -84,8 +81,9 @@ pastEvents model =
 userToolsView : Html Msg
 userToolsView =
     let
-        icon newText = --onClick (Types.ChangeTo Types.GoUser)  // ChangeTo return UserMsg
-            div [ class "animated bounceIn pointer hover-bg-black-50 br-2 pa3 flex items-center", onClick (Types.ChangeTo Types.GoEditUser)]
+        icon newText =
+            --onClick (Types.ChangeTo Types.GoUser)  // ChangeTo return UserMsg
+            div [ class "animated bounceIn pointer hover-bg-black-50 br-2 pa3 flex items-center", onClick (Types.ChangeTo Types.GoEditUser) ]
                 [ div [ Assets.feather newText, class "contain bg-center grow pt3 pb2 pl3 pr2" ] []
                 , div [ class "pa2" ] [ text newText ]
                 ]

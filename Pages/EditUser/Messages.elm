@@ -1,7 +1,9 @@
 module Pages.EditUser.Messages exposing (..)
-import RemoteData exposing (..)
+
 import Graphqelm.Http exposing (..)
 import Pages.User.Model exposing (..)
+import RemoteData exposing (..)
+
 
 type Msg
     = ChangeName String

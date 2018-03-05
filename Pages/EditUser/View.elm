@@ -1,23 +1,24 @@
 module Pages.EditUser.View exposing (..)
 
+import Assets exposing (bgImg, feather)
+import GraphCool.Scalar exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Nav exposing (bar)
-import Assets exposing (feather, bgImg)
-import Pages.User.Model exposing (..)
-
 import Pages.EditUser.Messages exposing (..)
 import Pages.EditUser.Update exposing (..)
-import GraphCool.Scalar exposing (..)
-import Pages.User.Model as UserModel
+import Pages.User.Model as UserModel exposing (..)
+
+
 -- VIEW --
 
 
 view : UserModel.UserModel -> Html Msg
 view model =
-    let 
-        user = model.user
+    let
+        user =
+            model.user
     in
     div []
         [ text "Hello, World!"
@@ -36,7 +37,7 @@ view model =
         , input [ type_ "date", placeholder "birthday", onInput ChangeBirthday ] []
         , br [] []
         , text <| toString <| user.birthday
-        , input [type_ "Button", onClick SaveEdit, value "Save"] []
+        , input [ type_ "Button", onClick SaveEdit, value "Save" ] []
         ]
 
 
@@ -44,6 +45,5 @@ genderSelect : (String -> Msg) -> Gender -> Html Msg
 genderSelect msg currentGender =
     select [ onInput msg ]
         [ option [ value "Male" ] [ text "Male" ]
-        , option [ value "Female", selected ((toString currentGender) == "Female") ] [ text "Female" ]
+        , option [ value "Female", selected (toString currentGender == "Female") ] [ text "Female" ]
         ]
-

@@ -1,12 +1,12 @@
 port module Pages.User.Model exposing (..)
 
-import Pages.User.Messages exposing (..)
 import Auth0.Auth0 as Auth0
 import Auth0.Authentication as Authentication
 import GraphCool.Scalar exposing (..)
-import RemoteData exposing (..)
 import Graphqelm.Http exposing (..)
-import GraphCool.Scalar exposing (..)
+import Pages.User.Messages exposing (..)
+import RemoteData exposing (..)
+
 
 -- Ports
 
@@ -19,7 +19,10 @@ port auth0authResult : (Auth0.RawAuthenticationResult -> msg) -> Sub msg
 
 port auth0logout : () -> Cmd msg
 
+
+
 -- User
+
 
 type alias User =
     { auth0UserId : Maybe String
@@ -44,26 +47,35 @@ type alias User =
     , sent : Maybe (List Id)
     , updatedAt : DateTime
     }
-type alias UserModel = 
+
+
+type alias UserModel =
     { user : User
     , userMutation : MutationModel
     }
+
+
 type alias MutationModel =
     RemoteData Graphqelm.Http.Error (Maybe User)
+
+
 type Gender
     = Male
-    | Female    
+    | Female
+
 
 type alias Me =
-    { user: UserModel
-    , authModel: Authentication.Model
+    { user : UserModel
+    , authModel : Authentication.Model
     }
 
-initMe :  Maybe Auth0.LoggedInUser -> Me
+
+initMe : Maybe Auth0.LoggedInUser -> Me
 initMe initialAuthUser =
     Me
         initModel
         (Authentication.init auth0authorize auth0logout initialAuthUser)
+
 
 initCmd : Cmd Msg
 initCmd =
@@ -75,6 +87,7 @@ initModel =
     UserModel
         initUser
         RemoteData.Loading
+
 
 initUser : User
 initUser =
