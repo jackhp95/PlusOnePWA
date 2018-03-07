@@ -42,8 +42,8 @@ type alias Model =
 initModel : Maybe Auth0.LoggedInUser -> Model
 initModel initialAuthUser =
     Model
-        -- (GoEvents Nothing)
-        (GoChats Nothing)
+        (GoEvents Nothing)
+        -- (GoChats Nothing)
         ChatModel.initModel
         [ ChatModel.initModel
         , ChatModel.initModel

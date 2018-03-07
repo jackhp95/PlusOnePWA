@@ -8,7 +8,6 @@ module Pages.Event.View exposing (..)
 
 import Assets exposing (feather)
 import Date exposing (..)
-import Date.Extra
 import GraphCool.Scalar exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -132,33 +131,36 @@ stringDateTime datetime =
 
 viewDate : DateTime -> String
 viewDate datetime =
-    let
-        maybeDateTime =
-            Date.Extra.fromIsoString (stringDateTime datetime)
-    in
-    case maybeDateTime of
-        Err msg ->
-            "Unknow Date"
+    "FIX viewDate"
 
-        Ok dt ->
-            Date.Extra.toFormattedString "MMMM ddd, y" dt
+
+
+-- let
+--     maybeDateTime =
+--         Date.Extra.fromIsoString (stringDateTime datetime)
+-- in
+-- case maybeDateTime of
+--     Err msg ->
+--         "Unknow Date"
+--     Ok dt ->
+--         Date.Extra.toFormattedString "MMMM ddd, y" dt
 
 
 viewTime : DateTime -> String
 viewTime datetime =
-    let
-        maybeDateTime =
-            Date.Extra.fromIsoString (stringDateTime datetime)
-    in
-    case maybeDateTime of
-        Err msg ->
-            "Unknow Date"
-
-        Ok dt ->
-            Date.Extra.toFormattedString "h:mm a" dt
+    "FIX viewDate"
 
 
 
+-- let
+--     maybeDateTime =
+--         Date.Extra.fromIsoString (stringDateTime datetime)
+-- in
+-- case maybeDateTime of
+--     Err msg ->
+--         "Unknow Date"
+--     Ok dt ->
+--         Date.Extra.toFormattedString "h:mm a" dt
 -- eventTime : SG.Event -> Maybe Date -> Html msg
 -- eventTime event maybeNow =
 --     let
