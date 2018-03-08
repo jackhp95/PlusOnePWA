@@ -4,27 +4,19 @@
 
 module Pages.Events.View exposing (..)
 
--- import Pages.Events.Model exposing (Events)
--- import Nav exposing (bar)
--- import Task exposing (..)
-
 import Assets exposing (feather)
 import Date exposing (..)
-import Date.Extra
 import GraphCool.Scalar exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Http exposing (..)
 import Moment exposing (..)
-import Nav exposing (bar)
 import Pages.Event.Model exposing (Event, initEvent)
-import Pages.Events.Model exposing (Events)
 import RemoteData exposing (..)
 import SeatGeek.Decode exposing (decodeReply)
 import SeatGeek.Query exposing (composeRequest)
 import SeatGeek.Types as SG
-import Task exposing (..)
 import Types exposing (Msg)
 
 
@@ -146,7 +138,7 @@ mergeLists list1 list2 =
 
 sortListByDT : List Event -> List Event
 sortListByDT list =
-    List.sortWith compareDateTime list
+    List.sortWith compareEventDateTime list
 
 
 
@@ -154,8 +146,8 @@ sortListByDT list =
 -- Use String.dropLeft, Date.fromString, Date.Extra.compare, List.sortWith
 
 
-compareDateTime : Event -> Event -> Order
-compareDateTime event1 event2 =
+compareEventDateTime : Event -> Event -> Order
+compareEventDateTime event1 event2 =
     let
         dt1 =
             event1.startsAt
@@ -163,51 +155,26 @@ compareDateTime event1 event2 =
         dt2 =
             event2.startsAt
 
-        defaultDate =
-            Date.Extra.fromParts 1999 Dec 31 23 59 0 0
-
         date1 =
-            Date.Extra.fromIsoString (stringDateTime dt1)
+            Date.fromString (stringDateTime dt1)
                 |> Result.withDefault defaultDate
 
         date2 =
-            Date.Extra.fromIsoString (stringDateTime dt2)
+            Date.fromString (stringDateTime dt2)
                 |> Result.withDefault defaultDate
     in
-    Date.Extra.compare date1 date2
+        compareDateTime date1 date2
 
-
-stringDateTime : DateTime -> String
-stringDateTime datetime =
-    String.dropRight 1 (String.dropLeft 10 (Basics.toString datetime))
-
-
-viewDateTime : DateTime -> String
-viewDateTime datetime =
-    let
-        maybeDateTime =
-            Date.Extra.fromIsoString (stringDateTime datetime)
-    in
-    case maybeDateTime of
-        Err msg ->
-            "Unknow Date"
-
-        Ok dt ->
-            let
-                date =
-                    Date.Extra.toFormattedString "MMMM ddd, y" dt
-
-                time =
-                    Date.Extra.toFormattedString "h:mm a" dt
-            in
-            date ++ " • " ++ time
 
 
 eventListView : Event -> Html Msg
 eventListView event =
     let
         datetime =
-            viewDateTime event.startsAt
+            case (maybeEventDate (stringDateTime event.startsAt)) of
+                Nothing -> "Unknown DateTime"
+                Just dt ->
+                    (shortDate dt) ++ " • " ++ (clockTime dt)
 
         atIcon =
             div

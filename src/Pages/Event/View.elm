@@ -4,8 +4,6 @@
 
 module Pages.Event.View exposing (..)
 
--- import Moment exposing (..)
-
 import Assets exposing (feather)
 import Date exposing (..)
 import GraphCool.Scalar exposing (..)
@@ -14,13 +12,11 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Http exposing (..)
 import Moment exposing (..)
-import Nav exposing (bar)
 import Pages.Event.Model exposing (Event)
 import Pages.Events.Model exposing (Events)
 import SeatGeek.Decode exposing (decodeReply)
 import SeatGeek.Query exposing (composeRequest)
 import SeatGeek.Types as SG
-import Task exposing (..)
 import Types exposing (Msg)
 
 
@@ -112,9 +108,18 @@ eventName event =
 eventTime : Event -> Maybe Date -> Html msg
 eventTime event maybeNow =
     let
+        viewDate =
+            case (maybeEventDate (stringDateTime event.startsAt)) of
+                Nothing -> "Unknown DateTime"
+                Just dt -> shortDate dt
+        viewTime =
+            case (maybeEventDate (stringDateTime event.startsAt)) of
+                Nothing -> "Unknown DateTime"
+                Just dt -> clockTime dt
+
         eventDateView =
-            [ div [ class "fw7 f4 lh-solid pb1" ] [ text (viewTime event.startsAt) ]
-            , div [ class "fw4 lh-solid" ] [ text (viewDate event.startsAt) ]
+            [ div [ class "fw7 f4 lh-solid pb1" ] [ text (viewTime) ]
+            , div [ class "fw4 lh-solid" ] [ text (viewDate) ]
             ]
     in
     div [ class "pv4 mh4 bb b--white-20 flex justify-between" ]
@@ -129,38 +134,6 @@ stringDateTime datetime =
     String.dropRight 1 (String.dropLeft 10 (Basics.toString datetime))
 
 
-viewDate : DateTime -> String
-viewDate datetime =
-    "FIX viewDate"
-
-
-
--- let
---     maybeDateTime =
---         Date.Extra.fromIsoString (stringDateTime datetime)
--- in
--- case maybeDateTime of
---     Err msg ->
---         "Unknow Date"
---     Ok dt ->
---         Date.Extra.toFormattedString "MMMM ddd, y" dt
-
-
-viewTime : DateTime -> String
-viewTime datetime =
-    "FIX viewDate"
-
-
-
--- let
---     maybeDateTime =
---         Date.Extra.fromIsoString (stringDateTime datetime)
--- in
--- case maybeDateTime of
---     Err msg ->
---         "Unknow Date"
---     Ok dt ->
---         Date.Extra.toFormattedString "h:mm a" dt
 -- eventTime : SG.Event -> Maybe Date -> Html msg
 -- eventTime event maybeNow =
 --     let
