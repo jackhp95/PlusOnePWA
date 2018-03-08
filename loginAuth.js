@@ -40,8 +40,7 @@
         webAuth.client.userInfo(authResult.accessToken, function(err, profile) {
           var result = { err: null, ok: null };
           var token = authResult.accessToken;
-          var id_token = authResult.idToken;
-          console.log(id_token);
+          var sub = authResult.idTokenPayload.sub;
           console.log(authResult);
 
           if (err) {
@@ -52,10 +51,10 @@
             result.err.statusCode = result.err.statusCode ? result.err.statusCode : null;
           }
           if (authResult) {
-            result.ok = { profile: profile, token: token, idtoken: id_token };
+            result.ok = { profile: profile, token: token, idtoken: sub };
             localStorage.setItem('profile', JSON.stringify(profile));
             localStorage.setItem('token', token);
-            localStorage.setItem('idtoken', id_token)
+            localStorage.setItem('idtoken', sub)
           }
           elmApp.ports.auth0authResult.send(result);
         });

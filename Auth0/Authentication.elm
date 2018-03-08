@@ -12,6 +12,7 @@ module Auth0.Authentication
 import Auth0.Auth0 as Auth0
 import Debug exposing (log)
 import GraphCool.Enum.DateState exposing (DateState)
+import GraphCool.Enum.MessageOrderBy exposing (..)
 import GraphCool.InputObject as IO exposing (..)
 import GraphCool.Mutation as Mutation
 import GraphCool.Object
@@ -30,6 +31,7 @@ import Graphqelm.Http exposing (..)
 import Graphqelm.Operation exposing (RootMutation, RootQuery)
 import Graphqelm.OptionalArgument exposing (OptionalArgument(Absent, Null, Present))
 import Graphqelm.SelectionSet exposing (SelectionSet, with)
+import Pages.Event.Model exposing (Event, Response)
 import RemoteData exposing (..)
 
 
@@ -39,6 +41,7 @@ type alias Model =
     , authorize : Auth0.Options -> Cmd Msg
     , logOut : () -> Cmd Msg
     , createUserResponse : SubmitResponseModel
+    , getUserId : Id
     }
 
 
@@ -55,6 +58,7 @@ init authorize logOut initialData =
     , authorize = authorize
     , logOut = logOut
     , createUserResponse = RemoteData.Loading
+    , getUserId = Id "0"
     }
 
 
@@ -62,7 +66,7 @@ type Msg
     = AuthenticationResult Auth0.AuthenticationResult
     | ShowLogIn
     | LogOut
-    | CreateUser SubmitResponseModel
+    | GetUser SubmitResponseModel
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -78,7 +82,7 @@ update msg model =
                         Err err ->
                             ( model.state, Just err )
             in
-            ( { model | state = newState, lastError = error }, makeMutationRequest newState )
+            ( { model | state = newState, lastError = error }, queryUserIdToken newState )
 
         ShowLogIn ->
             ( model, model.authorize Auth0.defaultOpts )
@@ -86,8 +90,28 @@ update msg model =
         LogOut ->
             ( { model | state = Auth0.LoggedOut }, model.logOut () )
 
-        CreateUser response ->
-            ( { model | createUserResponse = response }, Cmd.none )
+        GetUser response ->
+            let
+                responseId =
+                    case response of
+                        NotAsked ->
+                            Id "0"
+
+                        Loading ->
+                            Id "1"
+
+                        Failure e ->
+                            Id "2"
+
+                        Success a ->
+                            case a of
+                                Nothing ->
+                                    Id "3"
+
+                                Just user ->
+                                    user.id
+            in
+            ( { model | getUserId = responseId }, Cmd.none )
 
 
 type alias SubmitResponseModel =
@@ -119,29 +143,22 @@ isLoggedIn model =
             False
 
 
-makeMutationRequest : Auth0.AuthenticationState -> Cmd Msg
-makeMutationRequest authState =
+queryUserIdToken : Auth0.AuthenticationState -> Cmd Msg
+queryUserIdToken authState =
     case authState of
         Auth0.LoggedIn loggedInUser ->
-            mutation loggedInUser
-                |> Graphqelm.Http.mutationRequest "https://api.graph.cool/simple/v1/PlusOne"
-                |> Graphqelm.Http.send (RemoteData.fromResult >> CreateUser)
+            queryUserIdTokenSelect loggedInUser
+                |> Graphqelm.Http.queryRequest "https://api.graph.cool/simple/v1/PlusOne"
+                |> Graphqelm.Http.send (RemoteData.fromResult >> GetUser)
 
         Auth0.LoggedOut ->
             Cmd.none
 
 
-mutation : Auth0.LoggedInUser -> SelectionSet (Maybe User) RootMutation
-mutation loggedInUser =
-    Mutation.selection identity
-        -- (Maybe Event)
-        |> with
-            (Mutation.createUser
-                identity
-                --(\optionals -> { optionals | name = Present userModel.name })
-                { name = "Testing person", authProvider = IO.AuthProviderSignupData { auth0 = Present (IO.AuthProviderAuth0 { idToken = loggedInUser.idtoken }), email = Absent }, birthday = DateTime "2018-04-04" }
-                user
-            )
+queryUserIdTokenSelect : Auth0.LoggedInUser -> SelectionSet (Maybe User) RootQuery
+queryUserIdTokenSelect loggedInUser =
+    Query.selection identity
+        |> with (Query.user (\optionals -> { optionals | auth0UserId = Present loggedInUser.idtoken }) user)
 
 
 chatId : SelectionSet Id GraphCool.Object.Chat

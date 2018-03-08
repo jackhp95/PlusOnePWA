@@ -2,6 +2,8 @@ module Update exposing (..)
 
 import Auth0.Auth0 as Auth0
 import Auth0.Authentication as Authentication
+import Debug exposing (log)
+import GraphCool.Scalar exposing (..)
 import Pages.Chat.Update exposing (..)
 import Pages.CreateEvent.Messages as CreateEventMessages
 import Pages.CreateEvent.Update exposing (..)
@@ -47,8 +49,25 @@ update msg model =
 
                         Auth0.LoggedOut ->
                             "123"
+
+                resultRoute =
+                    case authModel.getUserId of
+                        Id "0" ->
+                            Types.GoChats Nothing
+
+                        Id "1" ->
+                            Types.GoChats Nothing
+
+                        Id "2" ->
+                            Types.GoChats Nothing
+
+                        Id "3" ->
+                            Types.GoEditUser
+
+                        _ ->
+                            Types.GoCreateEvent
             in
-            ( { model | me = { me | authModel = authModel } }, Cmd.map Types.AuthenticationMsg cmd )
+            ( { model | me = { me | authModel = authModel }, route = resultRoute }, Cmd.map Types.AuthenticationMsg cmd )
 
         Types.ChangeTo newRoute ->
             ( { model | route = newRoute }, Cmd.none )
@@ -65,7 +84,7 @@ update msg model =
         Types.EditUserMsg userMsg ->
             let
                 ( userModel, userCmd ) =
-                    Pages.EditUser.Update.update userMsg me.user
+                    Pages.EditUser.Update.update userMsg me.user me
             in
             ( { model | me = { me | user = userModel } }
             , Cmd.map Types.EditUserMsg userCmd
