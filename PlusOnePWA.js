@@ -47160,26 +47160,6 @@ var _user$project$Auth0_Authentication$queryUserIdTokenSelect = function (logged
 			_user$project$Auth0_Authentication$user),
 		_user$project$GraphCool_Query$selection(_elm_lang$core$Basics$identity));
 };
-var _user$project$Auth0_Authentication$mutation = function (loggedInUser) {
-	return A2(
-		_dillonkearns$graphqelm$Graphqelm_SelectionSet$with,
-		A3(
-			_user$project$GraphCool_Mutation$createUser,
-			_elm_lang$core$Basics$identity,
-			{
-				name: 'Testing person',
-				authProvider: _user$project$GraphCool_InputObject$AuthProviderSignupData(
-					{
-						auth0: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Present(
-							_user$project$GraphCool_InputObject$AuthProviderAuth0(
-								{idToken: loggedInUser.idtoken})),
-						email: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent
-					}),
-				birthday: _user$project$GraphCool_Scalar$DateTime('2018-04-04')
-			},
-			_user$project$Auth0_Authentication$user),
-		_user$project$GraphCool_Mutation$selection(_elm_lang$core$Basics$identity));
-};
 var _user$project$Auth0_Authentication$GetUser = function (a) {
 	return {ctor: 'GetUser', _0: a};
 };
@@ -47245,59 +47225,10 @@ var _user$project$Auth0_Authentication$update = F2(
 					_1: model.logOut(
 						{ctor: '_Tuple0'})
 				};
-			case 'CreateUser':
-				var _p10 = _p5._0;
-				var tempval = function () {
-					var _p8 = _p10;
-					switch (_p8.ctor) {
-						case 'NotAsked':
-							return 'notAsked';
-						case 'Loading':
-							return 'Loading';
-						case 'Failure':
-							return 'fail';
-						default:
-							var _p9 = _p8._0;
-							if (_p9.ctor === 'Nothing') {
-								return 'No User';
-							} else {
-								return _elm_lang$core$Basics$toString(_p9._0.id);
-							}
-					}
-				}();
-				return A2(
-					_elm_lang$core$Debug$log,
-					_elm_lang$core$Basics$toString(tempval),
-					{
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Native_Utils.update(
-							model,
-							{createUserResponse: _p10}),
-						_1: _elm_lang$core$Platform_Cmd$none
-					});
 			default:
-				var _p15 = _p5._0;
-				var tokenId = function () {
-					var _p11 = _p15;
-					switch (_p11.ctor) {
-						case 'NotAsked':
-							return '0';
-						case 'Loading':
-							return '1';
-						case 'Failure':
-							return '2';
-						default:
-							var _p12 = _p11._0;
-							if (_p12.ctor === 'Nothing') {
-								return '3';
-							} else {
-								return A2(_elm_lang$core$Maybe$withDefault, '', _p12._0.auth0UserId);
-							}
-					}
-				}();
 				var responseId = function () {
-					var _p13 = _p15;
-					switch (_p13.ctor) {
+					var _p8 = _p5._0;
+					switch (_p8.ctor) {
 						case 'NotAsked':
 							return _user$project$GraphCool_Scalar$Id('0');
 						case 'Loading':
@@ -47305,54 +47236,31 @@ var _user$project$Auth0_Authentication$update = F2(
 						case 'Failure':
 							return _user$project$GraphCool_Scalar$Id('2');
 						default:
-							var _p14 = _p13._0;
-							if (_p14.ctor === 'Nothing') {
+							var _p9 = _p8._0;
+							if (_p9.ctor === 'Nothing') {
 								return _user$project$GraphCool_Scalar$Id('3');
 							} else {
-								return _p14._0.id;
+								return _p9._0.id;
 							}
 					}
 				}();
-				return A2(
-					_elm_lang$core$Debug$log,
-					_elm_lang$core$Basics$toString(responseId),
-					{
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Native_Utils.update(
-							model,
-							{getUserId: responseId}),
-						_1: _elm_lang$core$Platform_Cmd$none
-					});
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{getUserId: responseId}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
 		}
 	});
-var _user$project$Auth0_Authentication$CreateUser = function (a) {
-	return {ctor: 'CreateUser', _0: a};
-};
-var _user$project$Auth0_Authentication$makeMutationRequest = function (authState) {
-	var _p16 = authState;
-	if (_p16.ctor === 'LoggedIn') {
-		return A2(
-			_dillonkearns$graphqelm$Graphqelm_Http$send,
-			function (_p17) {
-				return _user$project$Auth0_Authentication$CreateUser(
-					_krisajenkins$remotedata$RemoteData$fromResult(_p17));
-			},
-			A2(
-				_dillonkearns$graphqelm$Graphqelm_Http$mutationRequest,
-				'https://api.graph.cool/simple/v1/PlusOne',
-				_user$project$Auth0_Authentication$mutation(_p16._0)));
-	} else {
-		return _elm_lang$core$Platform_Cmd$none;
-	}
-};
 var _user$project$Auth0_Authentication$LogOut = {ctor: 'LogOut'};
 var _user$project$Auth0_Authentication$ShowLogIn = {ctor: 'ShowLogIn'};
 var _user$project$Auth0_Authentication$AuthenticationResult = function (a) {
 	return {ctor: 'AuthenticationResult', _0: a};
 };
-var _user$project$Auth0_Authentication$handleAuthResult = function (_p18) {
+var _user$project$Auth0_Authentication$handleAuthResult = function (_p10) {
 	return _user$project$Auth0_Authentication$AuthenticationResult(
-		_user$project$Auth0_Auth0$mapResult(_p18));
+		_user$project$Auth0_Auth0$mapResult(_p10));
 };
 
 var _user$project$Pages_CreateEvent_Messages$ChangeEndDate = function (a) {
@@ -48264,7 +48172,6 @@ var _user$project$Pages_Chat_Model$init = {ctor: '_Tuple2', _0: _user$project$Pa
 
 var _user$project$Pages_Chats_Messages$Temp = {ctor: 'Temp'};
 
-var _user$project$Pages_EditUser_Messages$CreateUser = {ctor: 'CreateUser'};
 var _user$project$Pages_EditUser_Messages$SaveEdit = {ctor: 'SaveEdit'};
 var _user$project$Pages_EditUser_Messages$MutateUser = function (a) {
 	return {ctor: 'MutateUser', _0: a};
@@ -49294,102 +49201,115 @@ var _user$project$Pages_EditUser_Update$user = A2(
 																					_dillonkearns$graphqelm$Graphqelm_SelectionSet$with,
 																					_user$project$GraphCool_Object_User$auth0UserId,
 																					_user$project$GraphCool_Object_User$selection(_user$project$Pages_User_Model$User))))))))))))))))))))));
-var _user$project$Pages_EditUser_Update$mutation = function (userModel) {
+var _user$project$Pages_EditUser_Update$mutation = function (me) {
 	return A2(
-		_dillonkearns$graphqelm$Graphqelm_SelectionSet$with,
-		A2(
-			_user$project$GraphCool_Mutation$updateOrCreateUser,
-			{
-				update: _user$project$GraphCool_InputObject$UpdateUser(
+		_elm_lang$core$Debug$log,
+		_elm_lang$core$Basics$toString(me.user.user.id),
+		function () {
+			var idtoken = function () {
+				var _p0 = me.authModel.state;
+				if (_p0.ctor === 'LoggedIn') {
+					return _p0._0.idtoken;
+				} else {
+					return '';
+				}
+			}();
+			return A2(
+				_dillonkearns$graphqelm$Graphqelm_SelectionSet$with,
+				A2(
+					_user$project$GraphCool_Mutation$updateOrCreateUser,
 					{
-						bio: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
-						birthday: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
-						id: _user$project$GraphCool_Scalar$Id('cjed2224jh6a4019863siiw2e'),
-						name: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Present('new Alex'),
-						nameFull: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
-						attendingEventIds: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
-						attendingEvent: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
-						createdEventsIds: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
-						createdEvents: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
-						datesCanceledIds: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
-						datesCanceled: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
-						hostsIds: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
-						hosts: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
-						initiatedIds: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
-						initiated: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
-						likedEventIds: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
-						likedEvent: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
-						passedIds: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
-						passed: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
-						proposedIds: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
-						proposed: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
-						recipientIds: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
-						recipient: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
-						sentIds: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
-						sent: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
-						viewedEventIds: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
-						viewedEvent: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent
-					}),
-				create: _user$project$GraphCool_InputObject$CreateUser(
-					{
-						bio: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
-						birthday: _user$project$GraphCool_Scalar$DateTime('2018-10-10'),
-						name: 'name',
-						nameFull: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
-						attendingEventIds: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
-						attendingEvent: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
-						createdEventsIds: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
-						createdEvents: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
-						datesCanceledIds: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
-						datesCanceled: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
-						hostsIds: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
-						hosts: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
-						initiatedIds: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
-						initiated: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
-						likedEventIds: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
-						likedEvent: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
-						passedIds: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
-						passed: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
-						proposedIds: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
-						proposed: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
-						recipientIds: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
-						recipient: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
-						sentIds: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
-						sent: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
-						viewedEventIds: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
-						viewedEvent: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent
-					})
-			},
-			_user$project$Pages_EditUser_Update$user),
-		_user$project$GraphCool_Mutation$selection(_elm_lang$core$Basics$identity));
+						update: _user$project$GraphCool_InputObject$UpdateUser(
+							{
+								bio: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								birthday: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								id: me.user.user.id,
+								name: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Present('Alex1'),
+								nameFull: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								attendingEventIds: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								attendingEvent: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								createdEventsIds: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								createdEvents: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								datesCanceledIds: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								datesCanceled: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								hostsIds: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								hosts: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								initiatedIds: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								initiated: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								likedEventIds: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								likedEvent: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								passedIds: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								passed: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								proposedIds: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								proposed: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								recipientIds: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								recipient: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								sentIds: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								sent: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								viewedEventIds: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								viewedEvent: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent
+							}),
+						create: _user$project$GraphCool_InputObject$CreateUser(
+							{
+								bio: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								birthday: _user$project$GraphCool_Scalar$DateTime('2018-10-10'),
+								name: 'name',
+								nameFull: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								attendingEventIds: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								attendingEvent: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								createdEventsIds: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								createdEvents: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								datesCanceledIds: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								datesCanceled: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								hostsIds: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								hosts: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								initiatedIds: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								initiated: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								likedEventIds: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								likedEvent: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								passedIds: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								passed: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								proposedIds: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								proposed: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								recipientIds: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								recipient: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								sentIds: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								sent: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								viewedEventIds: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent,
+								viewedEvent: _dillonkearns$graphqelm$Graphqelm_OptionalArgument$Absent
+							})
+					},
+					_user$project$Pages_EditUser_Update$user),
+				_user$project$GraphCool_Mutation$selection(_elm_lang$core$Basics$identity));
+		}());
 };
-var _user$project$Pages_EditUser_Update$makeMutationRequest = function (model) {
+var _user$project$Pages_EditUser_Update$makeMutationRequest = function (me) {
 	return A2(
 		_dillonkearns$graphqelm$Graphqelm_Http$send,
-		function (_p0) {
+		function (_p1) {
 			return _user$project$Pages_EditUser_Messages$MutateUser(
-				_krisajenkins$remotedata$RemoteData$fromResult(_p0));
+				_krisajenkins$remotedata$RemoteData$fromResult(_p1));
 		},
 		A2(
 			_dillonkearns$graphqelm$Graphqelm_Http$mutationRequest,
 			'https://api.graph.cool/simple/v1/PlusOne',
-			_user$project$Pages_EditUser_Update$mutation(model.user)));
+			_user$project$Pages_EditUser_Update$mutation(me)));
 };
 var _user$project$Pages_EditUser_Update$reformatDate = function (date) {
-	var _p1 = A2(_elm_lang$core$String$split, '-', date);
-	if ((((_p1.ctor === '::') && (_p1._1.ctor === '::')) && (_p1._1._1.ctor === '::')) && (_p1._1._1._1.ctor === '[]')) {
+	var _p2 = A2(_elm_lang$core$String$split, '-', date);
+	if ((((_p2.ctor === '::') && (_p2._1.ctor === '::')) && (_p2._1._1.ctor === '::')) && (_p2._1._1._1.ctor === '[]')) {
 		return A2(
 			_elm_lang$core$String$join,
 			'/',
 			{
 				ctor: '::',
-				_0: _p1._1._0,
+				_0: _p2._1._0,
 				_1: {
 					ctor: '::',
-					_0: _p1._1._1._0,
+					_0: _p2._1._1._0,
 					_1: {
 						ctor: '::',
-						_0: _p1._0,
+						_0: _p2._0,
 						_1: {ctor: '[]'}
 					}
 				}
@@ -49399,8 +49319,8 @@ var _user$project$Pages_EditUser_Update$reformatDate = function (date) {
 	}
 };
 var _user$project$Pages_EditUser_Update$stringToGender = function (gender) {
-	var _p2 = gender;
-	switch (_p2) {
+	var _p3 = gender;
+	switch (_p3) {
 		case 'Male':
 			return _user$project$Pages_User_Model$Male;
 		case 'Female':
@@ -49410,22 +49330,22 @@ var _user$project$Pages_EditUser_Update$stringToGender = function (gender) {
 	}
 };
 var _user$project$Pages_EditUser_Update$getUserBirthday = function (user) {
-	var _p3 = user;
-	if (_p3.ctor === 'Nothing') {
+	var _p4 = user;
+	if (_p4.ctor === 'Nothing') {
 		return '';
 	} else {
-		return _rluiten$elm_date_extra$Date_Extra_Format$isoDateString(_p3._0);
+		return _rluiten$elm_date_extra$Date_Extra_Format$isoDateString(_p4._0);
 	}
 };
 var _user$project$Pages_EditUser_Update$update = F3(
 	function (msg, model, me) {
-		var _p4 = msg;
-		switch (_p4.ctor) {
+		var _p5 = msg;
+		switch (_p5.ctor) {
 			case 'ChangeName':
 				var oldUser = model.user;
 				var newUser = _elm_lang$core$Native_Utils.update(
 					oldUser,
-					{name: _p4._0});
+					{name: _p5._0});
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
@@ -49438,7 +49358,7 @@ var _user$project$Pages_EditUser_Update$update = F3(
 				var newUser = _elm_lang$core$Native_Utils.update(
 					oldUser,
 					{
-						nameFull: _elm_lang$core$Maybe$Just(_p4._0)
+						nameFull: _elm_lang$core$Maybe$Just(_p5._0)
 					});
 				return {
 					ctor: '_Tuple2',
@@ -49452,7 +49372,7 @@ var _user$project$Pages_EditUser_Update$update = F3(
 				var newUser = _elm_lang$core$Native_Utils.update(
 					oldUser,
 					{
-						bio: _elm_lang$core$Maybe$Just(_p4._0)
+						bio: _elm_lang$core$Maybe$Just(_p5._0)
 					});
 				return {
 					ctor: '_Tuple2',
@@ -49466,7 +49386,7 @@ var _user$project$Pages_EditUser_Update$update = F3(
 				var newUser = _elm_lang$core$Native_Utils.update(
 					oldUser,
 					{
-						birthday: _user$project$GraphCool_Scalar$DateTime(_p4._0)
+						birthday: _user$project$GraphCool_Scalar$DateTime(_p5._0)
 					});
 				return {
 					ctor: '_Tuple2',
@@ -49479,21 +49399,15 @@ var _user$project$Pages_EditUser_Update$update = F3(
 				return {
 					ctor: '_Tuple2',
 					_0: model,
-					_1: _user$project$Pages_EditUser_Update$makeMutationRequest(model)
-				};
-			case 'MutateUser':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{userMutation: _p4._0}),
-					_1: _elm_lang$core$Platform_Cmd$none
+					_1: _user$project$Pages_EditUser_Update$makeMutationRequest(me)
 				};
 			default:
 				return {
 					ctor: '_Tuple2',
-					_0: model,
-					_1: _user$project$Pages_EditUser_Update$makeMutationRequest(model)
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{userMutation: _p5._0}),
+					_1: _elm_lang$core$Platform_Cmd$none
 				};
 		}
 	});
@@ -49506,6 +49420,8 @@ var _user$project$Pages_User_Update$update = F2(
 
 var _user$project$Update$update = F2(
 	function (msg, model) {
+		var user2 = model.me.user.user;
+		var user = model.me.user;
 		var me = model.me;
 		var pool = model.pool;
 		var client = model.client;
@@ -49516,17 +49432,15 @@ var _user$project$Update$update = F2(
 				var _p1 = A2(_user$project$Auth0_Authentication$update, _p0._0, model.me.authModel);
 				var authModel = _p1._0;
 				var cmd = _p1._1;
-				var userId = function () {
-					var _p2 = authModel.state;
-					if (_p2.ctor === 'LoggedIn') {
-						return _p2._0.profile.name;
-					} else {
-						return '123';
-					}
-				}();
+				var newUser2 = _elm_lang$core$Native_Utils.update(
+					user2,
+					{id: authModel.getUserId});
+				var newUser = _elm_lang$core$Native_Utils.update(
+					user,
+					{user: newUser2});
 				var resultRoute = function () {
-					var _p3 = authModel.getUserId;
-					switch (_p3._0) {
+					var _p2 = authModel.getUserId;
+					switch (_p2._0) {
 						case '0':
 							return _user$project$Types$GoChats(_elm_lang$core$Maybe$Nothing);
 						case '1':
@@ -49546,7 +49460,7 @@ var _user$project$Update$update = F2(
 						{
 							me: _elm_lang$core$Native_Utils.update(
 								me,
-								{authModel: authModel}),
+								{authModel: authModel, user: newUser}),
 							route: resultRoute
 						}),
 					_1: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Types$AuthenticationMsg, cmd)
@@ -49560,9 +49474,9 @@ var _user$project$Update$update = F2(
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'CreateEventMsg':
-				var _p4 = A2(_user$project$Pages_CreateEvent_Update$update, _p0._0, model.createEvent);
-				var createEventModel = _p4._0;
-				var createEventCmd = _p4._1;
+				var _p3 = A2(_user$project$Pages_CreateEvent_Update$update, _p0._0, model.createEvent);
+				var createEventModel = _p3._0;
+				var createEventCmd = _p3._1;
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
@@ -49571,9 +49485,9 @@ var _user$project$Update$update = F2(
 					_1: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Types$CreateEventMsg, createEventCmd)
 				};
 			case 'EditUserMsg':
-				var _p5 = A3(_user$project$Pages_EditUser_Update$update, _p0._0, me.user, me);
-				var userModel = _p5._0;
-				var userCmd = _p5._1;
+				var _p4 = A3(_user$project$Pages_EditUser_Update$update, _p0._0, me.user, me);
+				var userModel = _p4._0;
+				var userCmd = _p4._1;
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
@@ -49586,9 +49500,9 @@ var _user$project$Update$update = F2(
 					_1: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Types$EditUserMsg, userCmd)
 				};
 			case 'EventsMsg':
-				var _p6 = A3(_user$project$Pages_Events_Update$update, _p0._0, model.events, me);
-				var eventsModel = _p6._0;
-				var eventsCmd = _p6._1;
+				var _p5 = A3(_user$project$Pages_Events_Update$update, _p0._0, model.events, me);
+				var eventsModel = _p5._0;
+				var eventsCmd = _p5._1;
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
@@ -49597,9 +49511,9 @@ var _user$project$Update$update = F2(
 					_1: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Types$EventsMsg, eventsCmd)
 				};
 			case 'UserMsg':
-				var _p7 = A2(_user$project$Pages_User_Update$update, _p0._0, me.user);
-				var userModel = _p7._0;
-				var userCmd = _p7._1;
+				var _p6 = A2(_user$project$Pages_User_Update$update, _p0._0, me.user);
+				var userModel = _p6._0;
+				var userCmd = _p6._1;
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
@@ -49612,9 +49526,9 @@ var _user$project$Update$update = F2(
 					_1: A2(_elm_lang$core$Platform_Cmd$map, _user$project$Types$UserMsg, userCmd)
 				};
 			case 'ChatMsg':
-				var _p8 = A3(_user$project$Pages_Chat_Update$update, _p0._0, model.chat, me);
-				var chatModel = _p8._0;
-				var chatCmd = _p8._1;
+				var _p7 = A3(_user$project$Pages_Chat_Update$update, _p0._0, model.chat, me);
+				var chatModel = _p7._0;
+				var chatCmd = _p7._1;
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
@@ -49669,7 +49583,7 @@ var _user$project$Update$update = F2(
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'MouseStart':
-				var _p10 = _p0._0;
+				var _p9 = _p0._0;
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
@@ -49679,7 +49593,7 @@ var _user$project$Update$update = F2(
 								pool,
 								{
 									move: _elm_lang$core$Maybe$Just(
-										A2(_user$project$Pages_Pool_Model$Move, _p10, _p10))
+										A2(_user$project$Pages_Pool_Model$Move, _p9, _p9))
 								})
 						}),
 					_1: _elm_lang$core$Platform_Cmd$none
@@ -49695,9 +49609,9 @@ var _user$project$Update$update = F2(
 								{
 									move: A2(
 										_elm_lang$core$Maybe$map,
-										function (_p11) {
-											var _p12 = _p11;
-											return A2(_user$project$Pages_Pool_Model$Move, _p12.start, _p0._0);
+										function (_p10) {
+											var _p11 = _p10;
+											return A2(_user$project$Pages_Pool_Model$Move, _p11.start, _p0._0);
 										},
 										pool.move)
 								})
@@ -49720,6 +49634,22 @@ var _user$project$Update$update = F2(
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'ResizePool':
+				var _p12 = _p0._0;
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							pool: _elm_lang$core$Native_Utils.update(
+								pool,
+								{
+									windowSize: _p12,
+									tubers: A2(_user$project$Pages_Pool_View$determineTubers, pool, _p12)
+								})
+						}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'InitialWindow':
 				var _p13 = _p0._0;
 				return {
 					ctor: '_Tuple2',
@@ -49735,25 +49665,9 @@ var _user$project$Update$update = F2(
 						}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
-			case 'InitialWindow':
-				var _p14 = _p0._0;
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{
-							pool: _elm_lang$core$Native_Utils.update(
-								pool,
-								{
-									windowSize: _p14,
-									tubers: A2(_user$project$Pages_Pool_View$determineTubers, pool, _p14)
-								})
-						}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
 			default:
 				if (_p0._0.ctor === 'Ok') {
-					var _p9 = _p0._0._0;
+					var _p8 = _p0._0._0;
 					return {
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
@@ -49763,13 +49677,13 @@ var _user$project$Update$update = F2(
 									events,
 									{
 										seatgeek: _elm_lang$core$Maybe$Just(
-											A2(_user$project$SeatGeek_Types$Reply, _p9.meta, _p9.events))
+											A2(_user$project$SeatGeek_Types$Reply, _p8.meta, _p8.events))
 									})
 							}),
 						_1: _elm_lang$core$Platform_Cmd$none
 					};
 				} else {
-					var _p15 = A2(_elm_lang$core$Debug$log, 'err', _p0._0._0);
+					var _p14 = A2(_elm_lang$core$Debug$log, 'err', _p0._0._0);
 					return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 				}
 		}
@@ -52576,8 +52490,7 @@ var _user$project$View$render = function (model) {
 														_1: {
 															ctor: '::',
 															_0: _elm_lang$html$Html_Events$onClick(
-																_user$project$Types$AuthenticationMsg(
-																	_user$project$Auth0_Authentication$isLoggedIn(model.me.authModel) ? _user$project$Auth0_Authentication$LogOut : _user$project$Auth0_Authentication$ShowLogIn)),
+																_user$project$Types$AuthenticationMsg(_user$project$Auth0_Authentication$ShowLogIn)),
 															_1: {ctor: '[]'}
 														}
 													},

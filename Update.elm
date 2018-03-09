@@ -35,6 +35,12 @@ update msg model =
 
         me =
             model.me
+
+        user =
+            model.me.user
+
+        user2 =
+            model.me.user.user
     in
     case msg of
         Types.AuthenticationMsg authMsg ->
@@ -42,13 +48,11 @@ update msg model =
                 ( authModel, cmd ) =
                     Authentication.update authMsg model.me.authModel
 
-                userId =
-                    case authModel.state of
-                        Auth0.LoggedIn loggedInUser ->
-                            loggedInUser.profile.name
+                newUser2 =
+                    { user2 | id = authModel.getUserId }
 
-                        Auth0.LoggedOut ->
-                            "123"
+                newUser =
+                    { user | user = newUser2 }
 
                 resultRoute =
                     case authModel.getUserId of
@@ -67,7 +71,7 @@ update msg model =
                         _ ->
                             Types.GoCreateEvent
             in
-            ( { model | me = { me | authModel = authModel }, route = resultRoute }, Cmd.map Types.AuthenticationMsg cmd )
+            ( { model | me = { me | authModel = authModel, user = newUser }, route = resultRoute }, Cmd.map Types.AuthenticationMsg cmd )
 
         Types.ChangeTo newRoute ->
             ( { model | route = newRoute }, Cmd.none )
