@@ -1,10 +1,10 @@
 {
     "version": "1.0.0",
-    "summary": "PlusOne Dating App",
+    "summary": "PlusOne Dating PWA",
     "repository": "https://github.com/user/project.git",
     "license": "BSD3",
     "source-directories": [
-        "./src"
+        "src/elm"
     ],
     "exposed-modules": [],
     "dependencies": {
