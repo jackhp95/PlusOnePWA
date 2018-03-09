@@ -4,10 +4,6 @@ import GraphCool.Enum.DateState exposing (DateState)
 import GraphCool.Scalar exposing (..)
 import Pages.Chat.Messages exposing (..)
 import Pages.Message.Model exposing (Message)
-<<<<<<< HEAD
-=======
-
->>>>>>> 435affb344c0a6bb2ba136fefce7d94fd7849169
 
 type alias Chat =
     { canceled : Maybe String
@@ -19,15 +15,6 @@ type alias Chat =
     , passed : Maybe String
     , proposed : Maybe String
     , recipient : Maybe Chatter
-<<<<<<< HEAD
-=======
-    }
-
-
-type alias Chatter =
-    { id : Id
-    , name : String
->>>>>>> 435affb344c0a6bb2ba136fefce7d94fd7849169
     }
 
 type alias Chatter =
