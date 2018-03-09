@@ -9,7 +9,11 @@ import Pages.Chats.Update exposing (..)
 import Pages.CreateEvent.Update exposing (..)
 import Pages.CreateMessage.Messages as CreateMessageMsg
 import Pages.CreateMessage.Update exposing (makeSendRequest)
+<<<<<<< HEAD
 -- import Pages.EditUser.Messages as EditUserMsg
+=======
+import Pages.EditUser.Messages as EditUserMsg
+>>>>>>> 435affb344c0a6bb2ba136fefce7d94fd7849169
 import Pages.EditUser.Update exposing (..)
 import Pages.Events.Update
 import Pages.Pool.Model as PoolModel
@@ -67,6 +71,24 @@ update msg model =
             , Cmd.map Types.CreateEventMsg createEventCmd
             )
         
+        Types.UpdateTextInput text ->
+            let
+                ( createMessageModel, createMessageCmd ) =
+                    Pages.CreateMessage.Update.update (CreateMessageMsg.ChangeText text) model.createMessage
+            in
+            ( { model | createMessage = createMessageModel }
+            , Cmd.none
+            )
+
+        Types.CreateMessageMsg createMessageMsg ->
+            let
+                ( createMsgModel, createMessageCmd ) =
+                    Pages.CreateMessage.Update.update createMessageMsg model.createMessage
+            in
+            ( { model | createMessage = createMsgModel }
+            , Cmd.map Types.CreateMessageMsg createMessageCmd
+            )
+
         Types.UpdateTextInput text ->
             let
                 ( createMessageModel, createMessageCmd ) =

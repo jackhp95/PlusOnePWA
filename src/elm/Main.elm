@@ -41,6 +41,14 @@ initCmd =
 initEventsQuery : Cmd Msg
 initEventsQuery =
     Cmd.map Types.EventsMsg EventsUpdate.makeQueryRequest
+<<<<<<< HEAD
+=======
+
+
+initChatsQuery : Cmd Msg
+initChatsQuery =
+    Cmd.map Types.ChatsMsg ChatsUpdate.makeQueryRequest
+>>>>>>> 435affb344c0a6bb2ba136fefce7d94fd7849169
 
 initChatsQuery : Cmd Msg
 initChatsQuery = 

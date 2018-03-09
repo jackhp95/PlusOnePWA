@@ -13,6 +13,10 @@ import GraphCool.Scalar exposing(..)
 
 -- VIEW
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 435affb344c0a6bb2ba136fefce7d94fd7849169
 received : Message -> Html msg
 received ms =
     div [ class "flex flex-auto pb3 pr5 slideInLeft animated" ]
@@ -39,6 +43,19 @@ displayMessage ms =
                 sent ms
             else 
                 received ms
+
+displayMessage : Message -> Html msg
+displayMessage ms =
+    case ms.from of
+        Nothing ->
+            received ms
+
+        Just id ->
+            if id == Id "cjed2224jh6a4019863siiw2e" then
+                sent ms
+            else
+                received ms
+
 
 toast : String -> Html msg
 toast newText =

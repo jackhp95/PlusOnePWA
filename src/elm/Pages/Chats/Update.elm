@@ -24,7 +24,11 @@ update : Msg -> Chats -> Me -> ( Chats, Cmd Msg )
 update msg model me =
     case msg of
         MakeQueryRequest ->
+<<<<<<< HEAD
             ( model, makeQueryRequest)
+=======
+            ( model, makeQueryRequest )
+>>>>>>> 435affb344c0a6bb2ba136fefce7d94fd7849169
 
         GotQueryResponse response ->
             ( response, Cmd.none )
@@ -72,6 +76,10 @@ chatter =
         |> with User.id
         |> with User.name
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 435affb344c0a6bb2ba136fefce7d94fd7849169
 message : SelectionSet Message GraphCool.Object.Message
 message =
     Message.selection Message
@@ -81,6 +89,10 @@ message =
         |> with Message.id
         |> with Message.text
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 435affb344c0a6bb2ba136fefce7d94fd7849169
 chatId : SelectionSet Id GraphCool.Object.Chat
 chatId =
     Chat.selection identity |> with Chat.id

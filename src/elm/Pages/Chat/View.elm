@@ -106,6 +106,27 @@ crushName chat =
         chat.initiated.name
 
 
+initiatedName : ChatModel.Chat -> String
+initiatedName chat =
+    if chat.initiated.id == Id "cjed2224jh6a4019863siiw2e" then
+        "Me"
+    else
+        chat.initiated.name
+
+
+crushName : ChatModel.Chat -> String
+crushName chat =
+    if chat.initiated.id == Id "cjed2224jh6a4019863siiw2e" then
+        case chat.recipient of
+            Nothing ->
+                "Anonymous"
+
+            Just obj ->
+                obj.name
+    else
+        chat.initiated.name
+
+
 nameBar : ChatModel.Chat -> Html Types.Msg
 nameBar chat =
     div [ class "bg-black-90 flex items-stretch absolute w-100 measure-wide-l z-2 h3 fadeIn animated" ]
