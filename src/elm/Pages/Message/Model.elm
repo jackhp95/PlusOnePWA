@@ -21,11 +21,6 @@ type alias Message =
 --         , sendResponse : SendResponseModel   
 --     }  
 
-type alias SendResponseModel =
-    RemoteData Graphqelm.Http.Error (Maybe Message)
-
-
-
 -- Supposed to be the model of CreateMessage
 -- type alias Model =
 --     {
