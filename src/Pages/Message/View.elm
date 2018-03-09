@@ -2,28 +2,39 @@ module Pages.Message.View exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Html.Events exposing (..)
-import Pages.Message.Messages exposing (..)
+-- import Html.Events exposing (..)
+-- import Pages.Message.Messages exposing (..)
 import Pages.Message.Model exposing (..)
-
+import Moment exposing (..)
+import GraphCool.Scalar exposing(..)
 
 -- VIEW
 
-
-recieved : String -> Html msg
-recieved newText =
+received : Message -> Html msg
+received ms =
     div [ class "flex flex-auto pb3 pr5 slideInLeft animated" ]
         [ div [ class "measure-narrow bg-blue-50 br2 ph3 pv2" ]
-            [ text "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?" ]
+            [ text ms.text ]
+        , p [][text (getDateTime ms.createdAt)]   
         ]
 
-
-sent : String -> Html msg
-sent newText =
+sent : Message -> Html msg
+sent ms =
     div [ class "flex justify-end flex-auto pb3 pl5 slideInRight animated" ]
-        [ div [ class "measure-narrow bg-black-50 br2 ph3 pv2" ]
-            [ text newText ]
+        [ p [][text (getDateTime ms.createdAt)]  
+        ,div [ class "measure-narrow bg-black-50 br2 ph3 pv2" ]
+            [ text ms.text ]        
         ]
+
+displayMessage : Message -> Html msg  
+displayMessage ms =
+    case ms.from of
+        Nothing -> received ms
+        Just id ->
+            if id == (Id "cjed2224jh6a4019863siiw2e") then
+                sent ms
+            else 
+                received ms
 
 
 toast : String -> Html msg

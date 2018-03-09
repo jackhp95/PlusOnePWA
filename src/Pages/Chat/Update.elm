@@ -8,6 +8,5 @@ import Pages.User.Model exposing (Me)
 update : Msg -> Chat -> Me -> ( Chat, Cmd Msg )
 update msg model me =
     case msg of
-        -- ( { model | input = newInput }, Cmd.none )
-        SendChatMessage ->
+        Temp ->
             ( model, Cmd.none )
