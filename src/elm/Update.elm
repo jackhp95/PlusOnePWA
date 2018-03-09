@@ -1,10 +1,14 @@
 module Update exposing (..)
 
-import Auth0.Auth0 as Auth0
+-- import Auth0.Auth0 as Auth0
+-- import GraphCool.Scalar exposing (..)
+
 import Auth0.Authentication as Authentication
 import Pages.Chat.Update exposing (..)
-import Pages.CreateEvent.Messages as CreateEventMessages
+import Pages.Chats.Update exposing (..)
 import Pages.CreateEvent.Update exposing (..)
+import Pages.CreateMessage.Messages as CreateMessageMsg
+import Pages.CreateMessage.Update exposing (makeSendRequest)
 import Pages.EditUser.Messages as EditUserMsg
 import Pages.EditUser.Update exposing (..)
 import Pages.Events.Update
@@ -45,6 +49,15 @@ update msg model =
         Types.ChangeTo newRoute ->
             ( { model | route = newRoute }, Cmd.none )
 
+        Types.ChatsMsg chatsMsg ->
+            let
+                ( chatsModel, chatsCmd ) =
+                    Pages.Chats.Update.update chatsMsg model.chats me
+            in
+            ( { model | chats = chatsModel }
+            , Cmd.map Types.ChatsMsg chatsCmd
+            )
+
         Types.CreateEventMsg createEventMsg ->
             let
                 ( createEventModel, createEventCmd ) =
@@ -52,6 +65,24 @@ update msg model =
             in
             ( { model | createEvent = createEventModel }
             , Cmd.map Types.CreateEventMsg createEventCmd
+            )
+
+        Types.UpdateTextInput text ->
+            let
+                ( createMessageModel, createMessageCmd ) =
+                    Pages.CreateMessage.Update.update (CreateMessageMsg.ChangeText text) model.createMessage
+            in
+            ( { model | createMessage = createMessageModel }
+            , Cmd.none
+            )
+
+        Types.CreateMessageMsg createMessageMsg ->
+            let
+                ( createMsgModel, createMessageCmd ) =
+                    Pages.CreateMessage.Update.update createMessageMsg model.createMessage
+            in
+            ( { model | createMessage = createMsgModel }
+            , Cmd.map Types.CreateMessageMsg createMessageCmd
             )
 
         Types.EditUserMsg userMsg ->
@@ -97,9 +128,31 @@ update msg model =
         Types.NewMessage str ->
             ( model, Cmd.none )
 
-        Types.ViewChat chat ->
+        Types.ViewChat newRoute ->
+            let
+                newChat =
+                    case newRoute of
+                        Types.GoChats maybeChat ->
+                            case maybeChat of
+                                Nothing ->
+                                    model.chat
+
+                                Just c ->
+                                    c
+
+                        _ ->
+                            model.chat
+
+                oldCM =
+                    model.createMessage
+
+                newCM =
+                    { oldCM | chatId = newChat.id }
+            in
             ( { model
-                | route = chat
+                | route = newRoute
+                , chat = newChat
+                , createMessage = newCM
               }
             , Cmd.none
             )

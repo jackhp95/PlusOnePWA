@@ -12,13 +12,16 @@
 
 module Pages.Chat.View exposing (..)
 
+-- import Pages.User.View exposing (userAvi)
+
 import Assets exposing (..)
+import GraphCool.Scalar exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Pages.Chat.Model as ChatModel
+import Pages.CreateMessage.Messages exposing (..)
 import Pages.Message.View exposing (..)
-import Pages.User.View exposing (userAvi)
 import TextArea exposing (auto)
 import Types
 
@@ -39,49 +42,69 @@ view x =
 
         client =
             x.client
+
+        conversation =
+            case chat.messages of
+                Nothing ->
+                    []
+
+                Just msgs ->
+                    List.map displayMessage msgs
     in
     div [ class "animated fadeInLeft bg-black-70 flex flex-column flex-auto measure-wide-l pa0 ma0 shadow-2-l" ]
         [ nameBar chat
         , section [ class "flex-auto lh-copy overflow-auto ph3 pt5 z-1 inner-shadow-1" ]
-            [ toast "conversation initiated by hannah"
-            , sent "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
-            , recieved "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
-            , sent "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
-            , recieved "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
-            , sent "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
-            , recieved "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
-            , sent "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
-            , recieved "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
-            , sent "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
-            , recieved "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
-            , sent "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
-            , recieved "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
-            , sent "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
-            , recieved "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
-            , sent "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
-            , recieved "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
-            , sent "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
-            , recieved "Woah, That's cool. This game seems pretty volitile when it comes to score. Is it stressful?"
-            ]
-        , messageBar chat client
+            (toast ("conversation initiated by " ++ initiatedName chat) :: conversation)
+        , text (Basics.toString x.createMessage.sendResponse)
+        , messageBar x chat client
         ]
 
 
-messageBar : ChatModel.Chat -> Types.Client -> Html Types.Msg
-messageBar chat client =
+messageBar : Types.Model -> ChatModel.Chat -> Types.Client -> Html Types.Msg
+messageBar model chat client =
+    let
+        content =
+            if model.createMessage.text == "" then
+                ""
+            else
+                model.createMessage.text
+    in
     div [ class "bg-black-40 flex flex-none z-2 items-stretch overflow-hidden pl2 slideInUp animated" ]
         [ textarea
             (TextArea.auto client
                 ++ [ class "white bg-transparent overflow-visible pa3 self-center flex-auto bn outline-0"
                    , placeholder "strike up a convo"
                    , autofocus True
+                   , value content
+                   , onInput Types.UpdateTextInput
                    ]
             )
             []
         , div [ class "bg-black-60 pa2 flex items-center hover-bg-blue grow" ]
-            [ div [ {- onClick SendChatMessage, -} Assets.feather "chevron-right", class "w2 h2 contain" ] []
+            [ div [ onClick (Types.CreateMessageMsg SendMessage), Assets.feather "chevron-right", class "w2 h2 contain" ] []
             ]
         ]
+
+
+initiatedName : ChatModel.Chat -> String
+initiatedName chat =
+    if chat.initiated.id == Id "cjed2224jh6a4019863siiw2e" then
+        "Me"
+    else
+        chat.initiated.name
+
+
+crushName : ChatModel.Chat -> String
+crushName chat =
+    if chat.initiated.id == Id "cjed2224jh6a4019863siiw2e" then
+        case chat.recipient of
+            Nothing ->
+                "Anonymous"
+
+            Just obj ->
+                obj.name
+    else
+        chat.initiated.name
 
 
 nameBar : ChatModel.Chat -> Html Types.Msg
@@ -90,10 +113,14 @@ nameBar chat =
         [ div [ class "flex items-center grow", onClick (Types.ChangeTo Types.GoUser) ]
             [ div [ class "bounceIn animated h3 ph3 pt3 overflow-visible" ]
                 [ div [ class "w3" ]
-                    [ div [ bgImg chat.userAvi, class "aspect-ratio--1x1 bg-white br-pill shadow-2 ba bw1 cover br-pill" ] []
+                    [ div
+                        [ {--bgImg chat.userAvi --}
+                          class "aspect-ratio--1x1 bg-white br-pill shadow-2 ba bw1 cover br-pill"
+                        ]
+                        []
                     ]
                 ]
-            , div [ class "f3 fw6" ] [ text "hannah" ]
+            , div [ class "f3 fw6" ] [ text (crushName chat) ]
             ]
         , div [ class "flex flex-auto justify-end items-center" ]
             [ div [ Assets.feather "more-vertical", class "grow pa3 pt2 contain mh2" ] []

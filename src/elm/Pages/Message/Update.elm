@@ -9,5 +9,5 @@ update : Msg -> Message -> Me -> ( Message, Cmd Msg )
 update msg model me =
     case msg of
         -- ( { model | input = newInput }, Cmd.none )
-        SendChatMessage ->
+        Temp ->
             ( model, Cmd.none )

@@ -82,8 +82,8 @@ render model =
 page : Types.Model -> List (Html Types.Msg)
 page model =
     case model.route of
-        Types.GoChats chat ->
-            case chat of
+        Types.GoChats chatModel ->
+            case chatModel of
                 Nothing ->
                     [ Chats.view model ]
 
