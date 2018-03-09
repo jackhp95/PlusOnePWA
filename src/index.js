@@ -5,12 +5,14 @@ import registerServiceWorker from './registerServiceWorker';
 registerServiceWorker();
 
 // Auth Ports
+const homeUri = window.location.href;
 var webAuth = new auth0.WebAuth({
     domain: 'plusonedatingapp.auth0.com', // e.g., you.auth0.com
     clientID: 'V9DXVz9ylA_oLNRcHimDzU-haA__LCKm',
     responseType: 'token',
     //redirectUri: 'http://localhost:8000/index.html',
-    redirectUri: 'http://plusone.dating/index.html'
+    // redirectUri: 'http://plusone.dating/index.html'
+    redirectUri: homeUri
 });
 var storedProfile = localStorage.getItem('profile');
 var storedToken = localStorage.getItem('token');
