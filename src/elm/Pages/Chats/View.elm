@@ -46,7 +46,6 @@ view model =
 
                 _ ->
                     " flex "
-        
         response =
             case chats of
                 NotAsked ->
@@ -68,7 +67,7 @@ view model =
                                 initiated =
                                     case user.initiated of
                                         Nothing ->
-                                           []
+                                            []
 
                                         Just chats ->
                                             chats
@@ -109,11 +108,12 @@ nameBar chat =
                     ( "No message yet. Say something.", "Unknow time" )
 
                 Just m ->
-                    case (maybeEventDate(stringDateTime m.createdAt)) of 
-                        Nothing -> ( "No message yet. Say something.", "Unknow time" )
+                    case maybeEventDate (stringDateTime m.createdAt) of
+                        Nothing ->
+                            ( "No message yet. Say something.", "Unknow time" )
+
                         Just datetime ->
-                        ( m.text, clockTime datetime )
-        
+                            ( m.text, clockTime datetime )
 
         crushName =
             if chat.initiated.id == Id "cjed2224jh6a4019863siiw2e" then
@@ -130,7 +130,11 @@ nameBar chat =
         [ class "flex items-center z-2 fadeIn animated pa3 grow hover-bg-black-20 lh-title"
         , onClick (Types.ViewChat (Types.GoChats (Just chat)))
         ]
-        [ div [ {--bgImg chat.userAvi--} class "pa4 mh2 bg-white br-pill shadow-2 ba cover br-pill" ] []
+        [ div
+            [ {--bgImg chat.userAvi--}
+              class "pa4 mh2 bg-white br-pill shadow-2 ba cover br-pill"
+            ]
+            []
         , div [ class "flex-auto mh2" ]
             [ div [ class "flex justify-between" ]
                 [ div [ class "nowrap" ]

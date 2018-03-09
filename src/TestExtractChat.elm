@@ -122,7 +122,7 @@ query =
     Query.selection Response
         -- |> with (Query.event ( \optionals -> { optionals | id = Present (Id "cjd171ftxbhmi0118pssihz2c")}) event)
         -- |> with (Query.allMessages (\optionals -> { optionals | filter = Present ( messageFilterIdList [ Id "cjd3nd13e1wv401643dwi1lxz", Id "cjd3ndc9m1yfo0135iq7frq3o"])}) message)
-        |> with (Query.allChats chat)
+        |> with (Query.allChats identity chat)
 
 -- messageFilterIdList : List Id -> MessageFilter
 -- messageFilterIdList idList = 
@@ -155,7 +155,7 @@ eventName =
 makeQueryRequest : Cmd Msg
 makeQueryRequest =
     query
-        |> Graphqelm.Http.queryRequest "https://api.graph.cool/simple/v1/OldPlusOne"
+        |> Graphqelm.Http.queryRequest "https://api.graph.cool/simple/v1/PlusOne"
         |> Graphqelm.Http.send (RemoteData.fromResult >> GotResponse)
 
 type Msg

@@ -1,9 +1,10 @@
 module Pages.Message.Model exposing (..)
 
-import Pages.Message.Messages exposing (..)
-import Graphqelm.Http exposing(..)
 import GraphCool.Scalar exposing (..)
-import RemoteData exposing(..)
+import Graphqelm.Http exposing (..)
+import Pages.Message.Messages exposing (..)
+import RemoteData exposing (..)
+
 
 type alias Message =
     { chat : Id
@@ -12,16 +13,26 @@ type alias Message =
     , id : Id
     , text : String
     }
-
-type alias SendResponseModel = 
-    RemoteData Graphqelm.Http.Error (Maybe Message)
-
+    
 -- Supposed to be the model of CreateMessage
 -- type alias Model =
 --     {
 --         message: Message
 --         , sendResponse : SendResponseModel   
 --     }  
+
+type alias SendResponseModel =
+    RemoteData Graphqelm.Http.Error (Maybe Message)
+
+
+
+-- Supposed to be the model of CreateMessage
+-- type alias Model =
+--     {
+--         message: Message
+--         , sendResponse : SendResponseModel
+--     }
+
 
 init : ( Message, Cmd Msg )
 init =

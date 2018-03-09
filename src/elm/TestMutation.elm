@@ -32,9 +32,6 @@ type alias Event =
     , nameFull : Maybe String
     , private : Bool
     , startsAt : DateTime
-    , usersAttending : Maybe (List Id)
-    , usersLiked : Maybe (List Id)
-    , usersViewed : Maybe (List Id)
     , venues : Maybe (List Id)
     }
 
@@ -65,9 +62,6 @@ event =
         |> with Event.nameFull
         |> with Event.private
         |> with Event.startsAt
-        |> with (Event.usersAttending identity userId)
-        |> with (Event.usersLiked identity userId)
-        |> with (Event.usersViewed identity userId)
         |> with (Event.venues identity venueId)
 
 

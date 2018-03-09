@@ -1,15 +1,18 @@
 module Main exposing (main)
 
+-- Try to reomve these?
+-- Try to reomve these?
+
 import Auth0.Auth0 as Auth0
 import Auth0.Authentication as Authentication
 import Date exposing (..)
 import Html exposing (..)
 import Mouse
+import Pages.Chats.Update as ChatsUpdate exposing (makeQueryRequest)
 import Pages.CreateEvent.Messages as CreateEventMsg
 import Pages.CreateEvent.Model as CreateEvent
 import Pages.CreateEvent.Update exposing (update)
 import Pages.Events.Update as EventsUpdate exposing (makeQueryRequest)
-import Pages.Chats.Update as ChatsUpdate exposing (makeQueryRequest)
 import Pages.Pool.Model as PoolModel
 import Pages.Pool.View exposing (determineTubers, getPosition)
 import Pages.User.Model exposing (..)
@@ -31,6 +34,7 @@ initCmd =
         , getDatetime
         , initWindow
         , initEventsQuery
+        , initChatsQuery 
         ]
 
 
@@ -40,7 +44,7 @@ initEventsQuery =
 
 initChatsQuery : Cmd Msg
 initChatsQuery = 
-    Cmd.map Types.ChatsMsg ChatsUpdate.makeQueryRequest
+    Cmd.map Types.ChatsMsg ChatsUpdate.makeQueryRequest 
 
 initWindow : Cmd Msg
 initWindow =

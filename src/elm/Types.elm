@@ -12,6 +12,7 @@ import Pages.Chat.Messages as ChatMsg
 import Pages.Chat.Model as ChatModel
 import Pages.Chats.Model as ChatsModel
 import Pages.Chats.Messages as ChatsMsg
+import Pages.Chats.Model as ChatsModel
 import Pages.CreateEvent.Messages as CreateEventMsg
 import Pages.CreateEvent.Model as CreateEventModel
 import Pages.CreateMessage.Messages as CreateMessageMsg
@@ -38,7 +39,7 @@ type alias Model =
     , pool : PoolModel.Pool
     , client : Client
     , createEvent : CreateEventModel.CreateEvent
-    , createMessage : CreateMessageModel.CreateMessage    
+    , createMessage : CreateMessageModel.CreateMessage
     , me : UserModel.Me
     }
 

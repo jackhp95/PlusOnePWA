@@ -1,14 +1,15 @@
 module Update exposing (..)
 
 -- import Auth0.Auth0 as Auth0
-import Auth0.Authentication as Authentication
 -- import GraphCool.Scalar exposing (..)
+
+import Auth0.Authentication as Authentication
 import Pages.Chat.Update exposing (..)
 import Pages.Chats.Update exposing (..)
 import Pages.CreateEvent.Update exposing (..)
 import Pages.CreateMessage.Messages as CreateMessageMsg
 import Pages.CreateMessage.Update exposing (makeSendRequest)
-import Pages.EditUser.Messages as EditUserMsg
+-- import Pages.EditUser.Messages as EditUserMsg
 import Pages.EditUser.Update exposing (..)
 import Pages.Events.Update
 import Pages.Pool.Model as PoolModel
@@ -152,7 +153,7 @@ update msg model =
                 | route = newRoute
                 , chat = newChat
                 , createMessage = newCM
-              }    
+              }
             , Cmd.none
             )
 

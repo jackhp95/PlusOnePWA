@@ -12,6 +12,8 @@
 
 module Pages.Chat.View exposing (..)
 
+-- import Pages.User.View exposing (userAvi)
+
 import Assets exposing (..)
 import GraphCool.Scalar exposing (..)
 import Html exposing (..)
@@ -20,7 +22,6 @@ import Html.Events exposing (..)
 import Pages.Chat.Model as ChatModel
 import Pages.CreateMessage.Messages exposing (..)
 import Pages.Message.View exposing (..)
--- import Pages.User.View exposing (userAvi)
 import TextArea exposing (auto)
 import Types
 
@@ -55,8 +56,9 @@ view x =
         , section [ class "flex-auto lh-copy overflow-auto ph3 pt5 z-1 inner-shadow-1" ]
             (toast ("conversation initiated by " ++ initiatedName chat) :: conversation)
         , text (Basics.toString x.createMessage.sendResponse)
-        , messageBar x chat client           
+        , messageBar x chat client
         ]
+
 
 messageBar : Types.Model -> ChatModel.Chat -> Types.Client -> Html Types.Msg
 messageBar model chat client =
@@ -90,6 +92,7 @@ initiatedName chat =
     else
         chat.initiated.name
 
+
 crushName : ChatModel.Chat -> String
 crushName chat =
     if chat.initiated.id == Id "cjed2224jh6a4019863siiw2e" then
@@ -102,13 +105,18 @@ crushName chat =
     else
         chat.initiated.name
 
+
 nameBar : ChatModel.Chat -> Html Types.Msg
 nameBar chat =
     div [ class "bg-black-90 flex items-stretch absolute w-100 measure-wide-l z-2 h3 fadeIn animated" ]
         [ div [ class "flex items-center grow", onClick (Types.ChangeTo Types.GoUser) ]
             [ div [ class "bounceIn animated h3 ph3 pt3 overflow-visible" ]
                 [ div [ class "w3" ]
-                    [ div [ {-- bgImg chat.userAvi --} class "aspect-ratio--1x1 bg-white br-pill shadow-2 ba bw1 cover br-pill" ] []
+                    [ div
+                        [ {--bgImg chat.userAvi --}
+                          class "aspect-ratio--1x1 bg-white br-pill shadow-2 ba bw1 cover br-pill"
+                        ]
+                        []
                     ]
                 ]
             , div [ class "f3 fw6" ] [ text (crushName chat) ]

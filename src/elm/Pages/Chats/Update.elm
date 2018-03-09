@@ -16,14 +16,15 @@ import Pages.Chat.Model exposing (Chat, Chatter)
 import Pages.Chats.Messages exposing (..)
 import Pages.Chats.Model exposing (..)
 import Pages.Message.Model exposing (Message)
-import RemoteData exposing (..)
 import Pages.User.Model exposing (Me)
+import RemoteData exposing (..)
+
 
 update : Msg -> Chats -> Me -> ( Chats, Cmd Msg )
 update msg model me =
     case msg of
         MakeQueryRequest ->
-           ( model, makeQueryRequest )
+            ( model, makeQueryRequest)
 
         GotQueryResponse response ->
             ( response, Cmd.none )
@@ -37,7 +38,11 @@ update msg model me =
 query : SelectionSet Response RootQuery
 query =
     Query.selection Response
-        |> with (Query.user {--(\optionals -> { optionals | id = Present (Id "cjed2224jh6a4019863siiw2e") })--} user)
+        |> with
+            (Query.user
+                (\optionals -> { optionals | id = Present (Id "cjed2224jh6a4019863siiw2e") })
+                user
+            )
 
 
 user : SelectionSet UserChats GraphCool.Object.User

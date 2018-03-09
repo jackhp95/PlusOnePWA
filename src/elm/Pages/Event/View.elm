@@ -95,7 +95,7 @@ eventName event =
 --             Just x ->
 --                 a [ href event.url, target "_blank", class "bg-white br1 pa2 mh1 flex items-center mh1 no-underline" ]
 --                     [ div
---                         [ style [ ( "background-image", "url('Assets/SeatGeekLogo.svg')" ) ]
+--                         [ style [ ( "background-image", "url('PUTURLHERE/SeatGeekLogo.svg')" ) ]
 --                         , class "h2 w2 mh1 contain bg-center"
 --                         ]
 --                         []
