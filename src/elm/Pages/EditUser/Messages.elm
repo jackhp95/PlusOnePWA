@@ -12,4 +12,3 @@ type Msg
     | ChangeBirthday String
     | MutateUser (RemoteData Graphqelm.Http.Error (Maybe User))
     | SaveEdit
-    | CreateUser

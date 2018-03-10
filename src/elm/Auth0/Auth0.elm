@@ -8,6 +8,7 @@ module Auth0.Auth0
         ( AuthenticationError
         , AuthenticationResult
         , AuthenticationState(..)
+        , IdToken
         , LoggedInUser
         , Options
         , RawAuthenticationResult
@@ -21,6 +22,7 @@ module Auth0.Auth0
 type alias LoggedInUser =
     { profile : UserProfile
     , token : Token
+    , idtoken : IdToken
     }
 
 
@@ -34,7 +36,8 @@ type alias Options =
 
 
 type alias UserProfile =
-    { email : String
+    { name : String
+    , email : String
     , email_verified : Bool
     , family_name : String
     , picture : String
@@ -42,6 +45,10 @@ type alias UserProfile =
 
 
 type alias Token =
+    String
+
+
+type alias IdToken =
     String
 
 

@@ -4,6 +4,8 @@ module Update exposing (..)
 -- import GraphCool.Scalar exposing (..)
 
 import Auth0.Authentication as Authentication
+import Debug exposing (log)
+import GraphCool.Scalar exposing (..)
 import Pages.Chat.Update exposing (..)
 import Pages.Chats.Update exposing (..)
 import Pages.CreateEvent.Update exposing (..)
@@ -37,14 +39,43 @@ update msg model =
 
         me =
             model.me
+
+        user =
+            model.me.user
+
+        user2 =
+            model.me.user.user
     in
     case msg of
         Types.AuthenticationMsg authMsg ->
             let
                 ( authModel, cmd ) =
                     Authentication.update authMsg model.me.authModel
+
+                newUser2 =
+                    { user2 | id = authModel.getUserId }
+
+                newUser =
+                    { user | user = newUser2 }
+
+                resultRoute =
+                    case authModel.getUserId of
+                        Id "0" ->
+                            Types.GoChats Nothing
+
+                        Id "1" ->
+                            Types.GoChats Nothing
+
+                        Id "2" ->
+                            Types.GoChats Nothing
+
+                        Id "3" ->
+                            Types.GoEditUser
+
+                        _ ->
+                            Types.GoCreateEvent
             in
-            ( { model | me = { me | authModel = authModel } }, Cmd.map Types.AuthenticationMsg cmd )
+            ( { model | me = { me | authModel = authModel, user = newUser }, route = resultRoute }, Cmd.map Types.AuthenticationMsg cmd )
 
         Types.ChangeTo newRoute ->
             ( { model | route = newRoute }, Cmd.none )
@@ -66,7 +97,7 @@ update msg model =
             ( { model | createEvent = createEventModel }
             , Cmd.map Types.CreateEventMsg createEventCmd
             )
-        
+
         Types.UpdateTextInput text ->
             let
                 ( createMessageModel, createMessageCmd ) =
@@ -88,7 +119,7 @@ update msg model =
         Types.EditUserMsg userMsg ->
             let
                 ( userModel, userCmd ) =
-                    Pages.EditUser.Update.update userMsg me.user
+                    Pages.EditUser.Update.update userMsg me.user me
             in
             ( { model | me = { me | user = userModel } }
             , Cmd.map Types.EditUserMsg userCmd
