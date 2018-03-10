@@ -85,6 +85,7 @@ messageBar model chat client =
             ]
         ]
 
+
 initiatedName : ChatModel.Chat -> String
 initiatedName chat =
     if chat.initiated.id == Id "cjed2224jh6a4019863siiw2e" then
@@ -104,6 +105,7 @@ crushName chat =
                 obj.name
     else
         chat.initiated.name
+
 
 nameBar : ChatModel.Chat -> Html Types.Msg
 nameBar chat =

@@ -72,6 +72,7 @@ chatter =
         |> with User.id
         |> with User.name
 
+
 message : SelectionSet Message GraphCool.Object.Message
 message =
     Message.selection Message
@@ -80,6 +81,7 @@ message =
         |> with (Message.from identity userId)
         |> with Message.id
         |> with Message.text
+
 
 chatId : SelectionSet Id GraphCool.Object.Chat
 chatId =

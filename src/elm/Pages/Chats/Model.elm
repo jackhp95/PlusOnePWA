@@ -4,6 +4,7 @@ import Graphqelm.Http exposing (..)
 import Pages.Chat.Model exposing (Chat)
 import RemoteData exposing (..)
 
+
 type alias Response =
     { user : Maybe UserChats
     }
@@ -17,6 +18,7 @@ type alias UserChats =
 
 type alias Chats =
     RemoteData Graphqelm.Http.Error Response
+
 
 initModel : Chats
 initModel =

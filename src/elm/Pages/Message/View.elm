@@ -8,10 +8,10 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Moment exposing (..)
 import Pages.Message.Model exposing (..)
-import Moment exposing (..)
-import GraphCool.Scalar exposing(..)
+
 
 -- VIEW
+
 
 received : Message -> Html msg
 received ms =
@@ -29,6 +29,7 @@ sent ms =
         , div [ class "measure-narrow bg-black-50 br2 ph3 pv2" ]
             [ text ms.text ]
         ]
+
 
 displayMessage : Message -> Html msg
 displayMessage ms =

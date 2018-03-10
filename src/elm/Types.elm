@@ -10,7 +10,6 @@ import Http exposing (Error)
 import Mouse exposing (Position)
 import Pages.Chat.Messages as ChatMsg
 import Pages.Chat.Model as ChatModel
-import Pages.Chats.Model as ChatsModel
 import Pages.Chats.Messages as ChatsMsg
 import Pages.Chats.Model as ChatsModel
 import Pages.CreateEvent.Messages as CreateEventMsg

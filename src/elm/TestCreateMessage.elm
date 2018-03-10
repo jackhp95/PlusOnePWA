@@ -1,5 +1,7 @@
 module TestCreateMessage exposing (main)
+
 import GraphCool.Enum.DateState exposing (DateState)
+import GraphCool.Mutation as Mutation
 import GraphCool.Object
 import GraphCool.Object.Chat as Chat
 import GraphCool.Object.Event as Event
@@ -12,12 +14,11 @@ import GraphCool.Query as Query
 import GraphCool.Scalar exposing (..)
 import Graphqelm.Document as Document
 import Graphqelm.Http exposing (..)
-import Graphqelm.Operation exposing (RootQuery,RootMutation)
+import Graphqelm.Operation exposing (RootMutation, RootQuery)
+import Graphqelm.OptionalArgument exposing (OptionalArgument(Absent, Null, Present))
 import Graphqelm.SelectionSet exposing (SelectionSet, with)
 import Html exposing (..)
 import RemoteData exposing (..)
-import GraphCool.Mutation as Mutation
-import Graphqelm.OptionalArgument exposing (OptionalArgument(Absent, Null, Present))
 
 
 -- type alias Event =
@@ -46,13 +47,18 @@ type alias Message =
     , text : String
     }
 
+
 mutation : SelectionSet (Maybe Message) RootMutation
 mutation =
-    Mutation.selection identity -- (Maybe Event)
-        |> with (Mutation.createMessage
-         --identity
-         (\optionals -> { optionals | chatId = Present (Id "cjd3n1uxs1uqc0148dt6739hl"), fromId = Present (Id "cjd15r1d1b3qh0123hjhf4r9c") })
-         { text = "OMG! Can't believe I'm sending my first message!"} message)
+    Mutation.selection identity
+        -- (Maybe Event)
+        |> with
+            (Mutation.createMessage
+                --identity
+                (\optionals -> { optionals | chatId = Present (Id "cjd3n1uxs1uqc0148dt6739hl"), fromId = Present (Id "cjd15r1d1b3qh0123hjhf4r9c") })
+                { text = "OMG! Can't believe I'm sending my first message!" }
+                message
+            )
 
 
 
@@ -74,6 +80,7 @@ mutation =
 --         |> with (Event.usersViewed identity userId)
 --         |> with (Event.venues identity venueId)
 
+
 message : SelectionSet Message GraphCool.Object.Message
 message =
     Message.selection Message
@@ -83,13 +90,16 @@ message =
         |> with Message.id
         |> with Message.text
 
+
 userId : SelectionSet Id GraphCool.Object.User
 userId =
     User.selection identity |> with User.id
 
+
 chatId : SelectionSet Id GraphCool.Object.Chat
 chatId =
     Chat.selection identity |> with Chat.id
+
 
 makeRequest : Cmd Msg
 makeRequest =
@@ -129,17 +139,17 @@ view model =
 
                 Success a ->
                     case a of
-                      Nothing ->
-                        div [][ text "Success. No response"]
-                      Just m ->
-                        div []
-                        [
-                         div []
-                            [ h5 [] [ text "Message" ]
-                            , div [] [ text "Text: ", text m.text ]
-                            , div [] [ text "Created At: ", text (Basics.toString m.createdAt) ]
-                            ]
-                        ]
+                        Nothing ->
+                            div [] [ text "Success. No response" ]
+
+                        Just m ->
+                            div []
+                                [ div []
+                                    [ h5 [] [ text "Message" ]
+                                    , div [] [ text "Text: ", text m.text ]
+                                    , div [] [ text "Created At: ", text (Basics.toString m.createdAt) ]
+                                    ]
+                                ]
     in
     div []
         [ div []
@@ -159,7 +169,7 @@ view model =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        MutateEvent response->
+        MutateEvent response ->
             ( response, Cmd.none )
 
 

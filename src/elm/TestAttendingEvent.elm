@@ -2,9 +2,9 @@ module TestAttendingEvent exposing (main)
 
 import GraphCool.Mutation as Mutation
 import GraphCool.Object
+import GraphCool.Object.AddToAttendingEventPayload as AddToAttendingEventPayload
 import GraphCool.Object.Pool as Pool
 import GraphCool.Object.User as User
-import GraphCool.Object.AddToAttendingEventPayload as AddToAttendingEventPayload
 import GraphCool.Scalar exposing (..)
 import Graphqelm.Document as Document
 import Graphqelm.Http exposing (..)
@@ -15,9 +15,8 @@ import RemoteData exposing (..)
 
 
 type alias AttendingEvent =
-    { 
-        attendingUserName : Maybe String
-        , attendingEventPoolId : Maybe Id
+    { attendingUserName : Maybe String
+    , attendingEventPoolId : Maybe Id
     }
 
 
@@ -28,16 +27,18 @@ mutation =
         |> with
             (Mutation.addToAttendingEvent
                 --identity
-                { attendingUserId = Id"cjdyzwxynmub701943xsjepmp",attendingEventPoolId = Id"cjedb15btjs2m018425xmd99d" }
+                { attendingUserId = Id "cjdyzwxynmub701943xsjepmp", attendingEventPoolId = Id "cjedb15btjs2m018425xmd99d" }
                 attendingEvent
             )
 
+
 attendingEvent : SelectionSet AttendingEvent GraphCool.Object.AddToAttendingEventPayload
-attendingEvent = 
+attendingEvent =
     AddToAttendingEventPayload.selection AttendingEvent
         |> with (AddToAttendingEventPayload.attendingUser userName)
         |> with (AddToAttendingEventPayload.attendingEventPool poolId)
-    
+
+
 type alias Pool =
     { chats : Maybe (List Id)
     , event : Maybe Id
@@ -47,14 +48,17 @@ type alias Pool =
     , usersLiked : Maybe (List Id)
     , usersViewed : Maybe (List Id)
     }
-    
+
+
 poolId : SelectionSet Id GraphCool.Object.Pool
 poolId =
     Pool.selection identity |> with Pool.id
 
+
 userName : SelectionSet String GraphCool.Object.User
 userName =
     User.selection identity |> with User.name
+
 
 makeRequest : Cmd Msg
 makeRequest =

@@ -13,14 +13,15 @@ type alias Message =
     , id : Id
     , text : String
     }
-    
+
+
+
 -- Supposed to be the model of CreateMessage
 -- type alias Model =
 --     {
 --         message: Message
---         , sendResponse : SendResponseModel   
---     }  
-
+--         , sendResponse : SendResponseModel
+--     }
 -- Supposed to be the model of CreateMessage
 -- type alias Model =
 --     {

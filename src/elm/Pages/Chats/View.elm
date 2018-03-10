@@ -46,6 +46,7 @@ view model =
 
                 _ ->
                     " flex "
+
         response =
             case chats of
                 NotAsked ->

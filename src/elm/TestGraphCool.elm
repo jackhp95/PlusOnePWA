@@ -1,7 +1,7 @@
 module TestGraphCool exposing (main)
 
 import GraphCool.Enum.DateState exposing (DateState)
-import GraphCool.InputObject as IO exposing (..)
+import GraphCool.InputObject as IO
 import GraphCool.Mutation as Mutation
 import GraphCool.Object
 import GraphCool.Object.Chat as Chat
@@ -15,9 +15,10 @@ import GraphCool.Object.Venue as Venue
 import GraphCool.Query as Query
 import GraphCool.Scalar exposing (..)
 import Graphqelm.Document as Document
+import Graphqelm.Field as Field
 import Graphqelm.Http exposing (..)
 import Graphqelm.Operation exposing (RootQuery)
-import Graphqelm.OptionalArgument exposing (OptionalArgument(Null, Present))
+import Graphqelm.OptionalArgument exposing (OptionalArgument(Absent, Null, Present))
 import Graphqelm.SelectionSet exposing (SelectionSet, with)
 import Html exposing (..)
 import RemoteData exposing (..)
@@ -164,10 +165,16 @@ queryEverything =
         |> with (Query.allUsers identity otheruser)
 
 
-mutation : SelectionSet (Maybe User) Graphqelm.Operation.RootMutation
-mutation =
+updateUserMutation : SelectionSet (Maybe User) Graphqelm.Operation.RootMutation
+updateUserMutation =
     Mutation.selection identity
-        |> with (Mutation.createUser identity { birthday = DateTime "1969-06-09", name = "elm", authProvider = IO.AuthProviderSignupData { auth0 = Null, email = Present (IO.AuthProviderEmail { email = "elm@elm.org", password = "elm" }) } } user)
+        |> with (Mutation.updateUser identity (Mutation.UpdateUserRequiredArguments (Id "FUCK")) user)
+
+
+createUserMutation : SelectionSet (Maybe User) Graphqelm.Operation.RootMutation
+createUserMutation =
+    Mutation.selection identity
+        |> with (Mutation.createUser identity { birthday = DateTime "1969-06-09", name = "elm", authProvider = { auth0 = Present { idToken = "fuck" }, email = Null } } user)
 
 
 hostId : SelectionSet Id GraphCool.Object.Host
@@ -345,7 +352,7 @@ makeQueryRequest =
 
 makeMutationRequest : Cmd Msg
 makeMutationRequest =
-    mutation
+    updateUserMutation
         |> Graphqelm.Http.mutationRequest "https://api.graph.cool/simple/v1/PlusOne"
         |> Graphqelm.Http.send (RemoteData.fromResult >> MutateUser)
 
@@ -422,7 +429,7 @@ view model =
             ]
         , div []
             [ h1 [] [ text "Generated Mutation" ]
-            , pre [] [ text (Document.serializeMutation mutation) ]
+            , pre [] [ text (Document.serializeMutation updateUserMutation) ]
             ]
         , div []
             [ h1 [] [ text "Response" ]

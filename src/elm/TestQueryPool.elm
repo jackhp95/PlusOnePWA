@@ -2,15 +2,15 @@ module TestGraphCool exposing (main)
 
 import GraphCool.Object
 import GraphCool.Object.Event as Event
-import GraphCool.Object.User as User
 import GraphCool.Object.Pool as Pool
+import GraphCool.Object.User as User
 import GraphCool.Query as Query
-import GraphCool.Scalar exposing(..)
+import GraphCool.Scalar exposing (..)
 import Graphqelm.Document as Document
 import Graphqelm.Http exposing (..)
 import Graphqelm.Operation exposing (RootQuery)
-import Graphqelm.SelectionSet exposing (SelectionSet, with)
 import Graphqelm.OptionalArgument exposing (OptionalArgument(Absent, Null, Present))
+import Graphqelm.SelectionSet exposing (SelectionSet, with)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import RemoteData exposing (..)
@@ -20,14 +20,16 @@ type alias Response =
     { pool : Maybe Pool
     }
 
+
 type alias Pool =
     { event : Maybe Id
     , id : Id
     , seatGeekId : Maybe String
     , attending : Maybe (List User)
     , liked : Maybe (List User)
-    , viewed : Maybe (List User)  
+    , viewed : Maybe (List User)
     }
+
 
 type alias User =
     { bio : Maybe String
@@ -36,10 +38,11 @@ type alias User =
     , nameFull : Maybe String
     }
 
+
 query : SelectionSet Response RootQuery
 query =
     Query.selection Response
-        |> with (Query.pool (\optionals -> {optionals | id = Present (Id "cjedb15btjs2m018425xmd99d")}) pool)
+        |> with (Query.pool (\optionals -> { optionals | id = Present (Id "cjedb15btjs2m018425xmd99d") }) pool)
 
 
 pool : SelectionSet Pool GraphCool.Object.Pool
@@ -52,6 +55,7 @@ pool =
         |> with (Pool.liked identity user)
         |> with (Pool.viewed identity user)
 
+
 user : SelectionSet User GraphCool.Object.User
 user =
     User.selection User
@@ -59,6 +63,7 @@ user =
         |> with User.birthday
         |> with User.name
         |> with User.nameFull
+
 
 eventId : SelectionSet Id GraphCool.Object.Event
 eventId =
@@ -93,9 +98,9 @@ view model =
         refineView pool =
             div []
                 [ h3 [] [ text "Pool" ]
-                , div [] [text (Basics.toString pool.id)]
-                , div [] [text (Basics.toString pool.event)]
-                , div [] [text (Basics.toString pool.attending)]  
+                , div [] [ text (Basics.toString pool.id) ]
+                , div [] [ text (Basics.toString pool.event) ]
+                , div [] [ text (Basics.toString pool.attending) ]
                 ]
 
         response =
@@ -110,9 +115,10 @@ view model =
                     text ("Shucks um, " ++ Basics.toString e)
 
                 Success a ->
-                    case a.pool of 
+                    case a.pool of
                         Nothing ->
                             text "Can't find such pool"
+
                         Just p ->
                             refineView p
     in

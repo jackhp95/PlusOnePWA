@@ -5,6 +5,7 @@ import GraphCool.Scalar exposing (..)
 import Pages.Chat.Messages exposing (..)
 import Pages.Message.Model exposing (Message)
 
+
 type alias Chat =
     { canceled : Maybe String
     , dateState : DateState
@@ -17,10 +18,12 @@ type alias Chat =
     , recipient : Maybe Chatter
     }
 
+
 type alias Chatter =
     { id : Id
     , name : String
     }
+
 
 init : ( Chat, Cmd Msg )
 init =

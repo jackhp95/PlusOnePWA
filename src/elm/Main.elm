@@ -34,7 +34,7 @@ initCmd =
         , getDatetime
         , initWindow
         , initEventsQuery
-        , initChatsQuery 
+        , initChatsQuery
         ]
 
 
@@ -42,9 +42,11 @@ initEventsQuery : Cmd Msg
 initEventsQuery =
     Cmd.map Types.EventsMsg EventsUpdate.makeQueryRequest
 
+
 initChatsQuery : Cmd Msg
-initChatsQuery = 
-    Cmd.map Types.ChatsMsg ChatsUpdate.makeQueryRequest 
+initChatsQuery =
+    Cmd.map Types.ChatsMsg ChatsUpdate.makeQueryRequest
+
 
 initWindow : Cmd Msg
 initWindow =

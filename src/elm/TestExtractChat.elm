@@ -1,27 +1,29 @@
-import GraphCool.Object
-import GraphCool.Object.Message as Message
-import GraphCool.Object.User as User
-import GraphCool.Object.Event as Event
+module Main exposing (..)
+
 -- import GraphCool.Object.Host as Host
 -- import GraphCool.Object.Venue as Venue
+-- import GraphCool.InputObject exposing (..)
+-- import Graphqelm.OptionalArgument exposing (OptionalArgument(Absent, Null, Present))
+
+import GraphCool.Enum.DateState exposing (DateState)
+import GraphCool.Object
 import GraphCool.Object.Chat as Chat
+import GraphCool.Object.Event as Event
+import GraphCool.Object.Message as Message
+import GraphCool.Object.User as User
 import GraphCool.Query as Query
 import GraphCool.Scalar exposing (..)
--- import GraphCool.InputObject exposing (..)
-import GraphCool.Enum.DateState exposing (DateState)
 import Graphqelm.Document as Document
 import Graphqelm.Http exposing (..)
 import Graphqelm.Operation exposing (RootQuery)
--- import Graphqelm.OptionalArgument exposing (OptionalArgument(Absent, Null, Present))
 import Graphqelm.SelectionSet exposing (SelectionSet, with)
 import Html exposing (..)
 import RemoteData exposing (..)
 
 
-
 -- query {
 --  	  allMessages(filter : {
---      id_in : [ 
+--      id_in : [
 --             "cjd3nd13e1wv401643dwi1lxz"
 --             , "cjd3ndc9m1yfo0135iq7frq3o"]
 --     }) {
@@ -36,12 +38,13 @@ import RemoteData exposing (..)
 --     text
 --   }
 -- }
-
 -- List Ids for messages [ Id "cjd3nd13e1wv401643dwi1lxz", Id "cjd3ndc9m1yfo0135iq7frq3o"]
+
+
 type alias Response =
-    {
-      chats : List Chat
+    { chats : List Chat
     }
+
 
 type alias Chat =
     { canceled : Maybe String
@@ -54,6 +57,8 @@ type alias Chat =
     , proposed : Maybe String
     , recipient : Maybe String
     }
+
+
 
 -- type alias Event =
 --     { chats : Maybe (List Id)
@@ -71,7 +76,6 @@ type alias Chat =
 --     , usersViewed : Maybe (List Id)
 --     , venues : Maybe (List Id)
 -- }
-
 -- type alias User =
 --     { auth0UserId : Maybe String
 --     , bio : Maybe String
@@ -95,7 +99,6 @@ type alias Chat =
 --     , sent : Maybe (List Id)
 --     , updatedAt : DateTime
 --     }
-
 -- type alias Message =
 --     { chat : Id
 --     , createdAt : DateTime
@@ -103,6 +106,7 @@ type alias Chat =
 --     , id : Id
 --     , text : String
 --     }
+
 
 chat : SelectionSet Chat GraphCool.Object.Chat
 chat =
@@ -117,6 +121,7 @@ chat =
         |> with (Chat.proposed identity userName)
         |> with (Chat.recipient identity userName)
 
+
 query : SelectionSet Response RootQuery
 query =
     Query.selection Response
@@ -124,13 +129,12 @@ query =
         -- |> with (Query.allMessages (\optionals -> { optionals | filter = Present ( messageFilterIdList [ Id "cjd3nd13e1wv401643dwi1lxz", Id "cjd3ndc9m1yfo0135iq7frq3o"])}) message)
         |> with (Query.allChats identity chat)
 
+
+
 -- messageFilterIdList : List Id -> MessageFilter
--- messageFilterIdList idList = 
+-- messageFilterIdList idList =
 --     MessageFilter { and = Absent, or = Absent, createdAt = Absent, createdAt_not = Absent, createdAt_in = Absent, createdAt_not_in = Absent, createdAt_lt = Absent, createdAt_lte = Absent, createdAt_gt = Absent, createdAt_gte = Absent, id = Absent, id_not = Absent, id_in = Present idList, id_not_in = Absent, id_lt = Absent, id_lte = Absent, id_gt = Absent, id_gte = Absent, id_contains = Absent, id_not_contains = Absent, id_starts_with = Absent, id_not_starts_with = Absent, id_ends_with = Absent, id_not_ends_with = Absent, text = Absent, text_not = Absent, text_in = Absent, text_not_in = Absent, text_lt = Absent, text_lte = Absent, text_gt = Absent, text_gte = Absent, text_contains = Absent, text_not_contains = Absent, text_starts_with = Absent, text_not_starts_with = Absent, text_ends_with = Absent, text_not_ends_with = Absent, chat = Absent, from = Absent }
-
-
 -- (\optionals -> { optionals | episode = Present Episode.Empire })
-
 -- message : SelectionSet Message GraphCool.Object.Message
 -- message =
 --     Message.selection Message
@@ -140,17 +144,21 @@ query =
 --         |> with Message.id
 --         |> with Message.text
 
+
 messageText : SelectionSet String GraphCool.Object.Message
 messageText =
     Message.selection identity |> with Message.text
+
 
 userName : SelectionSet String GraphCool.Object.User
 userName =
     User.selection identity |> with User.name
 
+
 eventName : SelectionSet String GraphCool.Object.Event
 eventName =
     Event.selection identity |> with Event.name
+
 
 makeQueryRequest : Cmd Msg
 makeQueryRequest =
@@ -158,11 +166,13 @@ makeQueryRequest =
         |> Graphqelm.Http.queryRequest "https://api.graph.cool/simple/v1/PlusOne"
         |> Graphqelm.Http.send (RemoteData.fromResult >> GotResponse)
 
+
 type Msg
     = GotResponse (RemoteData Graphqelm.Http.Error Response)
 
+
 type alias Model =
-    RemoteData Graphqelm.Http.Error Response 
+    RemoteData Graphqelm.Http.Error Response
 
 
 init : ( Model, Cmd Msg )
@@ -189,10 +199,10 @@ view model =
 
                 Success a ->
                     div []
-                        [div []
+                        [ div []
                             [ h5 [] [ text "Messages" ]
-                            , div [] 
-                              (List.map (\b -> div [] [ text (Basics.toString b.messages) ]) a.chats)
+                            , div []
+                                (List.map (\b -> div [] [ text (Basics.toString b.messages) ]) a.chats)
                             ]
                         ]
     in
@@ -216,6 +226,7 @@ update msg model =
     case msg of
         GotResponse response ->
             ( response, Cmd.none )
+
 
 main : Program Never Model Msg
 main =
