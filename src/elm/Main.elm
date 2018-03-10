@@ -6,6 +6,7 @@ module Main exposing (main)
 import Auth0.Auth0 as Auth0
 import Auth0.Authentication as Authentication
 import Date exposing (..)
+import Debug exposing (log)
 import Html exposing (..)
 import Mouse
 import Pages.Chats.Update as ChatsUpdate exposing (makeQueryRequest)
@@ -27,24 +28,46 @@ import WebSocket
 import Window exposing (size)
 
 
-initCmd : Cmd Msg
-initCmd =
+initCmd : Maybe Auth0.LoggedInUser -> Cmd Msg
+initCmd initialUserData =
+    let
+        shouldHaveLogin =
+            case initialUserData of
+                Just user ->
+                    log "user" <|
+                        False
+
+                Nothing ->
+                    log "here" <|
+                        True
+    in
     Cmd.batch
         [ SeatGeek.Query.askQuery SG.initQuery
         , getDatetime
         , initWindow
         , initEventsQuery
-        , initChatsQuery 
+        , initChatsQuery
+        , initLogIn shouldHaveLogin
         ]
+
+
+initLogIn : Bool -> Cmd Msg
+initLogIn shouldHaveLogin =
+    if False then
+        auth0authorize Auth0.defaultOpts
+    else
+        Cmd.none
 
 
 initEventsQuery : Cmd Msg
 initEventsQuery =
     Cmd.map Types.EventsMsg EventsUpdate.makeQueryRequest
 
+
 initChatsQuery : Cmd Msg
-initChatsQuery = 
-    Cmd.map Types.ChatsMsg ChatsUpdate.makeQueryRequest 
+initChatsQuery =
+    Cmd.map Types.ChatsMsg ChatsUpdate.makeQueryRequest
+
 
 initWindow : Cmd Msg
 initWindow =
@@ -63,7 +86,8 @@ getDatetime =
 
 init : Maybe Auth0.LoggedInUser -> ( Model, Cmd Msg )
 init initialUser =
-    ( Types.initModel initialUser, initCmd )
+    log (toString initialUser) <|
+        ( Types.initModel initialUser, initCmd initialUser )
 
 
 

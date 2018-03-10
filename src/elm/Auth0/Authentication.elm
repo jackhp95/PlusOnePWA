@@ -50,10 +50,12 @@ init authorize logOut initialData =
     { state =
         case initialData of
             Just user ->
-                Auth0.LoggedIn user
+                log "logged in" <|
+                    Auth0.LoggedIn user
 
             Nothing ->
-                Auth0.LoggedOut
+                log "logged out" <|
+                    Auth0.LoggedOut
     , lastError = Nothing
     , authorize = authorize
     , logOut = logOut

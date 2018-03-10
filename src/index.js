@@ -6,7 +6,6 @@ registerServiceWorker();
 
 // Auth Ports
 const homeUri = window.location.href;
-console.log(homeUri);
 var webAuth = new auth0.WebAuth({
     domain: 'plusonedatingapp.auth0.com', // e.g., you.auth0.com
     clientID: 'V9DXVz9ylA_oLNRcHimDzU-haA__LCKm',
@@ -18,6 +17,8 @@ var webAuth = new auth0.WebAuth({
 var storedProfile = localStorage.getItem('profile');
 var storedToken = localStorage.getItem('token');
 var storedIdToken = localStorage.getItem('idtoken');
+console.log("*******************GET*******************");
+console.log(storedProfile);
 var authData = storedProfile && storedToken && storedIdToken ? { profile: JSON.parse(storedProfile), token: storedToken, idtoken: storedIdToken } : null;
 
 //Removes splash and starts elm app.
@@ -66,6 +67,7 @@ webAuth.parseHash({ hash: window.location.hash }, function (err, authResult) {
                 localStorage.setItem('profile', JSON.stringify(profile));
                 localStorage.setItem('token', token);
                 localStorage.setItem('idtoken', sub);
+                console.log("*******************SET*******************");
             }
             elmApp.ports.auth0authResult.send(result);
         });
