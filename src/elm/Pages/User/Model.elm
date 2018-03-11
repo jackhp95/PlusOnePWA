@@ -48,6 +48,12 @@ type alias User =
     , updatedAt : DateTime
     }
 
+type alias UserProfile =
+    { bio : Maybe String
+    , birthday : DateTime
+    , name : String
+    , nameFull : Maybe String
+    }
 
 type alias UserModel =
     { user : User

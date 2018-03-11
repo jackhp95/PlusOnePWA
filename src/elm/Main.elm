@@ -14,7 +14,7 @@ import Pages.CreateEvent.Model as CreateEvent
 import Pages.CreateEvent.Update exposing (update)
 import Pages.Events.Update as EventsUpdate exposing (makeQueryRequest)
 import Pages.Pool.Model as PoolModel
-import Pages.Pool.View exposing (determineTubers, getPosition)
+-- import Pages.Pool.View exposing (determineTubers, getPosition)
 import Pages.User.Model exposing (..)
 import SeatGeek.Decode
 import SeatGeek.Query
@@ -32,7 +32,7 @@ initCmd =
     Cmd.batch
         [ SeatGeek.Query.askQuery SG.initQuery
         , getDatetime
-        , initWindow
+        -- , initWindow
         , initEventsQuery
         , initChatsQuery 
         ]
@@ -46,9 +46,9 @@ initChatsQuery : Cmd Msg
 initChatsQuery = 
     Cmd.map Types.ChatsMsg ChatsUpdate.makeQueryRequest 
 
-initWindow : Cmd Msg
-initWindow =
-    Task.perform InitialWindow Window.size
+-- initWindow : Cmd Msg
+-- initWindow =
+--     Task.perform InitialWindow Window.size
 
 
 getDatetime : Cmd Msg
@@ -81,17 +81,17 @@ view model =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.batch [ Window.resizes ResizePool, mouseMoveSubs model, auth0authResult (Authentication.handleAuthResult >> AuthenticationMsg) ]
+    Sub.batch [ {--Window.resizes ResizePool, mouseMoveSubs model,--} auth0authResult (Authentication.handleAuthResult >> AuthenticationMsg) ]
 
 
-mouseMoveSubs : Model -> Sub Msg
-mouseMoveSubs model =
-    case model.pool.move of
-        Nothing ->
-            Sub.none
+-- mouseMoveSubs : Model -> Sub Msg
+-- mouseMoveSubs model =
+--     case model.pool.move of
+--         Nothing ->
+--             Sub.none
 
-        Just _ ->
-            Sub.batch [ Mouse.moves MouseMove, Mouse.ups MouseEnd ]
+--         Just _ ->
+--             Sub.batch [ Mouse.moves MouseMove, Mouse.ups MouseEnd ]
 
 
 

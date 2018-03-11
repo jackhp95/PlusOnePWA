@@ -120,9 +120,9 @@ type
     | GetReply (Result Http.Error SG.Reply)
     | TextAreaResizer Int
       -- Pool
-    | MouseStart Position
-    | MouseMove Position
-    | MouseEnd Position
-    | ResizePool Size
-    | InitialWindow Size
+    -- | MouseStart Position
+    -- | MouseMove Position
+    -- | MouseEnd Position
+    -- | ResizePool Size
+    -- | InitialWindow Size
     | AuthenticationMsg Authentication.Msg

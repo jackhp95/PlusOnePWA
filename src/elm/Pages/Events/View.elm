@@ -6,6 +6,7 @@ module Pages.Events.View exposing (..)
 
 import Assets exposing (feather)
 import Date exposing (..)
+import Graphqelm.Document as Document
 import GraphCool.Scalar exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -13,6 +14,7 @@ import Html.Events exposing (..)
 import Http exposing (..)
 import Moment exposing (..)
 import Pages.Event.Model exposing (Event, initEvent)
+import Pages.Events.Update exposing (query)
 import RemoteData exposing (..)
 import SeatGeek.Decode exposing (decodeReply)
 import SeatGeek.Query exposing (composeRequest)
@@ -91,7 +93,10 @@ view model =
                     text "Gimme a Sec"
 
                 Failure e ->
-                    text ("Shucks um, " ++ Basics.toString e)
+                    div []
+                        [ text ("Shucks um, " ++ Basics.toString e)
+                        , pre [][text (Document.serializeQuery query)]   
+                        ]
 
                 Success a ->
                     refineView a

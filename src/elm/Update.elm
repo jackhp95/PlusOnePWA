@@ -13,7 +13,7 @@ import Pages.CreateMessage.Update exposing (makeSendRequest)
 import Pages.EditUser.Update exposing (..)
 import Pages.Events.Update
 import Pages.Pool.Model as PoolModel
-import Pages.Pool.View exposing (determineTubers, getPosition)
+-- import Pages.Pool.View exposing (determineTubers, getPosition)
 import Pages.User.Model exposing (..)
 import Pages.User.Update exposing (..)
 import SeatGeek.Types as SG
@@ -158,9 +158,23 @@ update msg model =
             )
 
         -- EVENTS
-        Types.ViewEvent event ->
+        Types.ViewEvent newEventRoute ->
+            let
+                toPool =
+                    case newEventRoute of
+                        Types.GoEvents maybeEvent ->
+                            case maybeEvent of
+                                Nothing ->
+                                    model.pool
+                                Just event ->
+                                    event.pool
+                        _ ->
+                            model.pool
+            in
+                
             ( { model
-                | route = event
+                | route = newEventRoute
+                , pool = toPool
               }
             , Cmd.none
             )
@@ -197,59 +211,59 @@ update msg model =
             , Cmd.none
             )
 
-        -- POOL
-        Types.MouseStart xy ->
-            ( { model
-                | pool =
-                    { pool
-                        | move = Just (PoolModel.Move xy xy)
-                    }
-              }
-            , Cmd.none
-            )
+        -- -- POOL
+        -- Types.MouseStart xy ->
+        --     ( { model
+        --         | pool =
+        --             { pool
+        --                 | move = Just (PoolModel.Move xy xy)
+        --             }
+        --       }
+        --     , Cmd.none
+        --     )
 
-        Types.MouseMove xy ->
-            ( { model
-                | pool =
-                    { pool
-                        | move = Maybe.map (\{ start } -> PoolModel.Move start xy) pool.move
-                    }
-              }
-            , Cmd.none
-            )
+        -- Types.MouseMove xy ->
+        --     ( { model
+        --         | pool =
+        --             { pool
+        --                 | move = Maybe.map (\{ start } -> PoolModel.Move start xy) pool.move
+        --             }
+        --       }
+        --     , Cmd.none
+        --     )
 
-        Types.MouseEnd _ ->
-            ( { model
-                | pool =
-                    { pool
-                        | position = getPosition pool
-                        , move = Nothing
-                    }
-              }
-            , Cmd.none
-            )
+        -- Types.MouseEnd _ ->
+        --     ( { model
+        --         | pool =
+        --             { pool
+        --                 | position = getPosition pool
+        --                 , move = Nothing
+        --             }
+        --       }
+        --     , Cmd.none
+        --     )
 
-        Types.ResizePool windowSize ->
-            ( { model
-                | pool =
-                    { pool
-                        | windowSize = windowSize
-                        , tubers = determineTubers pool windowSize
-                    }
-              }
-            , Cmd.none
-            )
+        -- Types.ResizePool windowSize ->
+        --     ( { model
+        --         | pool =
+        --             { pool
+        --                 | windowSize = windowSize
+        --                 , tubers = determineTubers pool windowSize
+        --             }
+        --       }
+        --     , Cmd.none
+        --     )
 
-        Types.InitialWindow windowSize ->
-            ( { model
-                | pool =
-                    { pool
-                        | windowSize = windowSize
-                        , tubers = determineTubers pool windowSize
-                    }
-              }
-            , Cmd.none
-            )
+        -- Types.InitialWindow windowSize ->
+        --     ( { model
+        --         | pool =
+        --             { pool
+        --                 | windowSize = windowSize
+        --                 , tubers = determineTubers pool windowSize
+        --             }
+        --       }
+        --     , Cmd.none
+        --     )
 
         -- Discover ->
         --     ( model, SeatGeek.askQuery SG.initQuery )
