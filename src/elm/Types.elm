@@ -18,6 +18,7 @@ import Pages.CreateEvent.Model as CreateEventModel
 import Pages.CreateMessage.Messages as CreateMessageMsg
 import Pages.CreateMessage.Model as CreateMessageModel
 import Pages.EditUser.Messages as EditUserMsg
+import Pages.Event.Messages as EventPoolMsg
 import Pages.Event.Model as EventModel
 import Pages.Events.Messages as EventsMsg
 import Pages.Events.Model as EventsModel
@@ -36,7 +37,7 @@ type alias Model =
     , chat : ChatModel.Chat
     , chats : ChatsModel.Chats
     , events : EventsModel.Events
-    , pool : PoolModel.Pool
+    , pool : PoolModel.PoolModel
     , client : Client
     , createEvent : CreateEventModel.CreateEvent
     , createMessage : CreateMessageModel.CreateMessage
@@ -115,6 +116,8 @@ type
     | ViewChat Route
       -- Events
     | ViewEvent Route
+    | ViewPool Route
+    | EventPoolMsg EventPoolMsg.Msg 
     | OnDatetime Date
       -- SeatGeek
     | GetReply (Result Http.Error SG.Reply)

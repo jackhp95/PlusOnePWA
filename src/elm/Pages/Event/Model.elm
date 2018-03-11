@@ -10,7 +10,7 @@ import GraphCool.Scalar exposing (..)
 import Graphqelm.Http exposing (..)
 import Pages.Event.Messages exposing (..)
 import RemoteData exposing (..)
-import Pages.Pool.Model exposing(Pool)
+import Pages.Pool.Model exposing (..)
 
 
 -- type alias Event =
@@ -99,7 +99,7 @@ initEvent =
         False
         (GraphCool.Scalar.DateTime "10/11/10")
         Nothing
-        Pages.Pool.Model.initModel
+        Pages.Pool.Model.initPool
 
 initModel : EventModel
 initModel =

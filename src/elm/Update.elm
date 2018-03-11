@@ -12,6 +12,8 @@ import Pages.CreateMessage.Update exposing (makeSendRequest)
 -- import Pages.EditUser.Messages as EditUserMsg
 import Pages.EditUser.Update exposing (..)
 import Pages.Events.Update
+import Pages.Event.Update
+import Pages.Event.Messages as EventMsg
 import Pages.Pool.Model as PoolModel
 -- import Pages.Pool.View exposing (determineTubers, getPosition)
 import Pages.User.Model exposing (..)
@@ -167,7 +169,11 @@ update msg model =
                                 Nothing ->
                                     model.pool
                                 Just event ->
-                                    event.pool
+                                    let
+                                        poolModel = model.pool
+                                    in
+                                        { poolModel | pool = event.pool}
+                                        
                         _ ->
                             model.pool
             in
@@ -178,6 +184,19 @@ update msg model =
               }
             , Cmd.none
             )
+
+        Types.ViewPool newPoolRoute ->
+                { model | route = newPoolRoute }
+                    |> update (Types.EventPoolMsg EventMsg.AddToPool) 
+
+        Types.EventPoolMsg eventMsg ->
+            let
+                ( updatedPool, updatePoolCmd ) =
+                    Pages.Event.Update.update eventMsg model.pool me
+            in
+            ( { model | pool = updatedPool }
+            , Cmd.map Types.EventPoolMsg updatePoolCmd
+            )                
 
         Types.OnDatetime now ->
             ( { model

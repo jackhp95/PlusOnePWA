@@ -204,17 +204,14 @@ eventPool pool =
             [ div [ Assets.feather "info", class "h2 w2 contain bg-center" ] []
             ]
         , a
-            [ onClick (Types.ChangeTo Types.GoPool)
+            [ onClick (Types.ViewPool Types.GoPool)
             , class "white link lg-breathe-50 br1 pa2 mh1 flex items-center mh1 grow"
             ]
             [ div [ Assets.feather "life-buoy", class "h2 w2 mh1 contain bg-center" ] []
             , div [ class "mh2 f4 fw4 ttn" ] [ text "join pool" ]
             ]
         , div
-            [ class "mr3 f2"
-            , onClick (Types.ChangeTo Types.GoPool)
-            ]
-            [ text "🏊" ]
+            [ class "mr3 f2"] [ text "🏊" ]
         ]
 
 

@@ -1,5 +1,7 @@
 module Pages.Event.Messages exposing (..)
 
+import Pages.Pool.Model exposing (AttendModel)
 
 type Msg
-    = Temp
+    = AddToPool
+    | GotAttendResponse AttendModel

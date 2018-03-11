@@ -15,6 +15,8 @@ import Random exposing (..)
 import Task exposing (..)
 import Types exposing (..)
 import Window exposing (..)
+import GraphCool.Scalar exposing (..)
+import RemoteData exposing (..)
 
 
 -- VIEW
@@ -24,19 +26,52 @@ import Window exposing (..)
     (,)
 
 
-view : PoolModel.Pool -> Html Msg
-view pool =
-    div [] (List.map showUser (Maybe.withDefault [] pool.attending))
+view : PoolModel.PoolModel -> Html Msg
+view poolModel =
+    let
+        response =
+            case poolModel.attendConfirm of
+                NotAsked ->
+                    text "Hold up, Lemme Check"
+
+                Loading ->
+                    text "Gimme a Sec"
+
+                Failure e ->
+                    text ("Shucks um, " ++ Basics.toString e)
+
+                Success a ->
+                    case a of
+                        Nothing ->
+                            div [] [ text "Success. No response" ]
+
+                        Just e ->
+                            case e.attendingUserName of
+                                Nothing ->
+                                    h4 [] [text "You now joined the pool, but you need to have a username."]
+                                Just userName ->
+                                    h4 [] 
+                                       [ text ("Congrats, " ++ userName ++ "! You now joined the pool.") ]
+                                
+    in
+    div [] 
+        [ response    
+        , div [] (List.map showUser (Maybe.withDefault [] poolModel.pool.attending))
+        ]
 
 showUser : UserProfile -> Html Msg
 showUser profile =
-    div []
-        [ h3 [][text profile.name]
-        , text ("nameFull: " ++ (Maybe.withDefault "NA" profile.nameFull))
-        , text ("bio: " ++ (Maybe.withDefault "NA" profile.bio))
-        , text ("id: " ++ Basics.toString profile.id)
-        , text ("birthday: " ++ (Basics.toString profile.birthday))
-        ]
+    if profile.id == (Id "cjed2224jh6a4019863siiw2e") then
+        text ""
+    else
+        div []
+            [ h3 [][text profile.name]
+            , p [] [text ("nameFull: " ++ (Maybe.withDefault "NA" profile.nameFull))]
+            , p [] [text ("bio: " ++ (Maybe.withDefault "NA" profile.bio))]
+            , p [] [text ("id: " ++ Basics.toString profile.id)]
+            , p [] [text ("birthday: " ++ (Basics.toString profile.birthday))]
+            , button [] [ text ("Start chatting with "++ profile.name)]
+            ]
 --     div [ class "overflow-hidden bg-black-80 flex-auto" ]
 --         [ div
 --             [ onMouseDown
