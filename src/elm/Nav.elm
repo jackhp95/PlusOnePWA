@@ -4,12 +4,52 @@
 
 module Nav exposing (bar)
 
+-- import Auth0.Auth0 as Auth0
+
 import Assets exposing (..)
+import Auth0.Authentication as Authentication
 import Html exposing (..)
 import Html.Attributes exposing (class, style)
 import Html.Events exposing (onClick)
 import List exposing (map)
 import Types exposing (..)
+
+
+auth0view : Model -> Html Msg
+auth0view model =
+    div []
+        [ div []
+            [ div []
+                (case Authentication.tryGetUserProfile model.me.authModel of
+                    Nothing ->
+                        [ p [] [ text "Please log in" ] ]
+
+                    Just user ->
+                        [ p [] [ text ("Hello, " ++ user.email ++ "! " ++ toString user.family_name) ]
+                        , div [ class "pa3 cover br-pill", style [ ( "background", "url('" ++ toString user.picture ++ "')" ) ] ] []
+                        ]
+                )
+            , p []
+                [ button
+                    [ onClick
+                        (Types.AuthenticationMsg
+                            (if Authentication.isLoggedIn model.me.authModel then
+                                Authentication.LogOut
+                             else
+                                Authentication.ShowLogIn
+                            )
+                        )
+                    ]
+                    [ text
+                        (if Authentication.isLoggedIn model.me.authModel then
+                            "Log Out"
+                         else
+                            "Log In"
+                        )
+                    ]
+                ]
+            ]
+        ]
 
 
 selections : List Page
@@ -22,12 +62,11 @@ selections =
         [ ( "discover", "compass", GoEvents Nothing )
         , ( "add", "plus-square", GoCreateEvent )
         , ( "chats", "message-square", GoChats Nothing )
-        , ( "user", "user", GoUser )
         ]
 
 
-bar : Html Msg
-bar =
+bar : Model -> Html Msg
+bar model =
     let
         mobileBack =
             li [ class "flex dn-ns flex-column-reverse items-stretch hide-child glow w-20" ]
@@ -37,20 +76,35 @@ bar =
                     ]
                 , div [ class "b--white ba child" ] []
                 ]
+
+        userTab model =
+            case Authentication.tryGetUserProfile model.me.authModel of
+                Nothing ->
+                    tab <| Page "login" "user" GoAuth
+
+                Just user ->
+                    li
+                        [ class "flex flex-column-l flex-row-m flex-column-reverse items-stretch hide-child ph3-l glow w-20 w-auto-ns"
+                        , onClick (ChangeTo GoUser)
+                        ]
+                        [ span [ class "grow flex-auto flex flex-column flex-row-ns items-center pv3-ns pv2 pv4-l ph2-l mv1-m pl3-m pr4-m w-auto-ns" ]
+                            [ div [ class "br-pill mr3-ns mr0 mb1 mb0-ns pa2-ns pl3 pt3 pr2 pb2 contain", bgImg user.picture ] []
+                            , text user.family_name
+                            ]
+                        , div [ class "b--white ba child" ] []
+                        ]
     in
     nav [ class "f5-ns f7 fw4 flex-none pv3-m ph4-l pa0 z-max flex flex-column-l bg-black-40" ]
-        [ ul [ class "flex flex-column-m list ma0 pa0 overflow-visible-ns overflow-hidden w-100 w-auto-ns" ]
-            (home
-                :: mobileBack
-                :: List.map tab selections
-            )
+        [ ul [ class "flex flex-column-m list ma0 pa0 overflow-visible-ns overflow-hidden w-100 w-auto-ns" ] <|
+            List.concat
+                [ [ home ], [ mobileBack ], List.map tab selections, [ userTab model ] ]
         ]
 
 
 home : Html Msg
 home =
     div [ class "dn flex-auto-l flex-ns items-center justify-center-m" ]
-        [ div [ class "grow-large flex flex-column-m ph4-l pa3-m" ]
+        [ div [ class "grow-large flex flex-column-m ph4-l pa3-m", onClick (ChangeTo <| GoEvents Nothing) ]
             [ div
                 [ bgImg "logo/svg/oColor.svg"
                 , class "animated bounceIn pb4-m pr4-m pl3 pt3 pr2 pb2 contain bg-center"

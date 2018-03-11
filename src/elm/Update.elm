@@ -19,6 +19,7 @@ import Pages.Events.Model exposing (EventAPI(GraphCool, SeatGeek))
 import Pages.Events.Update
 import Pages.Pool.Model as PoolModel
 import Pages.Pool.View exposing (determineTubers, getPosition)
+import Pages.User.Model exposing (initMe)
 import Pages.User.Update exposing (..)
 import SeatGeek.Types as SG
 import Types
@@ -69,6 +70,12 @@ update msg model =
                             Types.GoEvents Nothing
             in
             ( { model | me = { me | authModel = authModel, user = newUser }, route = resultRoute }, Cmd.map Types.AuthenticationMsg cmd )
+
+        Types.ChangeTo Types.GoAuth ->
+            if Authentication.isLoggedIn model.me.authModel then
+                ( { model | me = initMe Nothing }, Cmd.map Types.AuthenticationMsg (model.me.authModel.logOut ()) )
+            else
+                ( model, Cmd.map Types.AuthenticationMsg (model.me.authModel.authorize {}) )
 
         Types.ChangeTo newRoute ->
             ( { model | route = newRoute }

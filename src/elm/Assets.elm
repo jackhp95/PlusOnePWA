@@ -16,7 +16,7 @@ bgImg imgPath =
 
 feather : String -> Html.Attribute msg
 feather icon =
-    bgImg ("https://icongr.am/feather/" ++ icon ++ ".svg?size=20&color=ffffff")
+    bgImg ("https://icongr.am/feather/" ++ icon ++ ".svg?color=ffffff")
 
 
 discoverToolsView : Html msg

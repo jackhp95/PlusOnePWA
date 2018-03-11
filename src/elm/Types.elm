@@ -74,6 +74,7 @@ type Route
     | GoCreateEvent
     | GoPool
     | GoEditUser
+    | GoAuth
 
 
 

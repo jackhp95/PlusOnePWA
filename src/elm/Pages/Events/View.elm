@@ -91,7 +91,7 @@ view model =
             , div [ class "f2 lh-solid fw7 ma0 pa0" ]
                 [ text "discover events" ]
             ]
-        , div [] (List.map eventAPItoListView events)
+        , section [ class "overflow-auto w-100 flex-grow-1 animated fadeInLeft mw6-l flex-shrink-0 bg-black-50 shadow-2-l" ] (List.map eventAPItoListView events)
         ]
 
 

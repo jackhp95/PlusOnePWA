@@ -80,16 +80,16 @@ pastEvents model =
 
 userToolsView : Html Msg
 userToolsView =
-    let
-        icon newText =
-            --onClick (Types.ChangeTo Types.GoUser)  // ChangeTo return UserMsg
-            div [ class "animated bounceIn pointer hover-bg-black-50 br-2 pa3 flex items-center", onClick (Types.ChangeTo Types.GoEditUser) ]
-                [ div [ Assets.feather newText, class "contain bg-center grow pt3 pb2 pl3 pr2" ] []
-                , div [ class "pa2" ] [ text newText ]
-                ]
-    in
     div [ class "flex justify-end" ]
-        (List.map icon [ "settings", "edit" ])
+        [ div [ class "animated bounceIn pointer hover-bg-black-50 br-2 pa3 flex items-center", onClick (Types.ChangeTo GoEditUser) ]
+            [ div [ Assets.feather "edit", class "contain bg-center grow pt3 pb2 pl3 pr2" ] []
+            , div [ class "pa2" ] [ text "edit" ]
+            ]
+        , div [ class "animated bounceIn pointer hover-bg-black-50 br-2 pa3 flex items-center", onClick (Types.ChangeTo GoAuth) ]
+            [ div [ Assets.feather "log-out", class "contain bg-center grow pt3 pb2 pl3 pr2" ] []
+            , div [ class "pa2" ] [ text "log out" ]
+            ]
+        ]
 
 
 stringToEmoji : String -> String
