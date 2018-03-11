@@ -69,10 +69,11 @@ graphCoolView event =
 seatGeekView : SG.Event -> List (Html Msg)
 seatGeekView event =
     [ eventBanner event
-    , eventName event.short_title
+    , eventTitle event
     , eventEmojis event
 
     -- , eventTime event.datetime_local
+    , eventTickets event
     , eventPool
     , eventPopularity event
     , yetToBeAdded
@@ -124,7 +125,7 @@ eventTickets event =
         Just x ->
             a [ href event.url, target "_blank", class "bg-white br1 pa2 mh1 flex items-center mh1 no-underline" ]
                 [ div
-                    [ style [ ( "background-image", "url('PUTURLHERE/SeatGeekLogo.svg')" ) ]
+                    [ style [ ( "background-image", "url('./seatgeek/Symbol_Blue.svg')" ) ]
                     , class "h2 w2 mh1 contain bg-center"
                     ]
                     []
