@@ -1,11 +1,11 @@
 module Types exposing (..)
 
 -- Events
+-- import GraphCool.Scalar exposing (..)
+-- import Date exposing (Date)
 
 import Auth0.Auth0 as Auth0
 import Auth0.Authentication as Authentication
-import Date exposing (Date)
-import GraphCool.Scalar exposing (..)
 import Http exposing (Error)
 import Mouse exposing (Position)
 import Pages.Chat.Messages as ChatMsg
@@ -34,12 +34,13 @@ type alias Model =
     { route : Route
     , chat : ChatModel.Chat
     , chats : ChatsModel.Chats
-    , events : EventsModel.Events
+    , events : List EventsModel.EventAPI
     , pool : PoolModel.Pool
     , client : Client
     , createEvent : CreateEventModel.CreateEvent
     , createMessage : CreateMessageModel.CreateMessage
     , me : UserModel.Me
+    , errors : List String
     }
 
 
@@ -50,12 +51,13 @@ initModel initialAuthUser =
         -- (GoChats Nothing)
         ChatModel.initModel
         ChatsModel.initModel
-        EventsModel.initModel
+        []
         PoolModel.initModel
         initClient
         EventModel.initModel
         CreateMessageModel.initModel
         (UserModel.initMe initialAuthUser)
+        []
 
 
 type alias Page =
@@ -68,7 +70,7 @@ type alias Page =
 type Route
     = GoChats (Maybe ChatModel.Chat)
     | GoUser
-    | GoEvents (Maybe EventModel.Event)
+    | GoEvents (Maybe EventsModel.EventAPI)
     | GoCreateEvent
     | GoPool
     | GoEditUser
@@ -114,7 +116,7 @@ type
     | ViewChat Route
       -- Events
     | ViewEvent Route
-    | OnDatetime Date
+      -- | OnDatetime Date
       -- SeatGeek
     | GetReply (Result Http.Error SG.Reply)
     | TextAreaResizer Int

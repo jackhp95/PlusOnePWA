@@ -4,16 +4,17 @@
 
 module Pages.Event.View exposing (..)
 
+-- import Date exposing (..)
+
 import Assets exposing (feather)
-import Date exposing (..)
 import GraphCool.Scalar exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Http exposing (..)
 import Moment exposing (..)
-import Pages.Event.Model exposing (Event)
-import Pages.Events.Model exposing (Events)
+import Pages.Event.Model exposing (..)
+import Pages.Events.Model exposing (EventAPI(GraphCool, SeatGeek))
 import SeatGeek.Decode exposing (decodeReply)
 import SeatGeek.Query exposing (composeRequest)
 import SeatGeek.Types as SG
@@ -36,19 +37,38 @@ askQuery query =
 -- VIEW
 
 
-view : Event -> Maybe Date -> Html Msg
-view event now =
+view : EventAPI -> Html Msg
+view api =
+    let
+        apiToEvent api =
+            case api of
+                SeatGeek x ->
+                    seatGeekView x
+
+                GraphCool y ->
+                    graphCoolView y
+    in
     section [ class "overflow-auto w-100 flex-grow-1 animated fadeInLeft mw6-l flex-shrink-0 bg-black-70 shadow-2-l" ]
-        [ -- eventBanner event
-          eventName event
+        (apiToEvent api)
 
-        -- , eventEmojis event
-        , eventTime event now
-        , eventPool
 
-        -- , eventPopularity event
-        -- , yetToBeAdded
-        ]
+graphCoolView : Event -> List (Html Msg)
+graphCoolView event =
+    [ -- eventBanner event
+      eventName event
+
+    -- , eventEmojis event
+    , eventTime event
+    , eventPool
+
+    -- , eventPopularity event
+    -- , yetToBeAdded
+    ]
+
+
+seatGeekView : SG.Event -> List (Html msg)
+seatGeekView event =
+    [ text "SEATGEEK BITCH" ]
 
 
 eventName : Event -> Html Msg
@@ -105,8 +125,8 @@ eventName event =
 --                 text ""
 
 
-eventTime : Event -> Maybe Date -> Html msg
-eventTime event maybeNow =
+eventTime : Event -> Html msg
+eventTime event =
     let
         viewDate =
             case maybeEventDate (stringDateTime event.startsAt) of
@@ -341,13 +361,3 @@ eventPool =
 --             "🎤"
 --         _ ->
 --             "\x1F937"
--- SUBSCRIPTIONS
-
-
-subscriptions : Events -> Sub Msg
-subscriptions model =
-    Sub.none
-
-
-
--- HTTP

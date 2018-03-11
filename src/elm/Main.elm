@@ -2,28 +2,29 @@ module Main exposing (main)
 
 -- Try to reomve these?
 -- Try to reomve these?
+-- import Date exposing (..)
+-- import Navigation exposing (..)
+-- import Pages.CreateEvent.Messages as CreateEventMsg
+-- import Pages.CreateEvent.Model as CreateEvent
+-- import Pages.CreateEvent.Update exposing (update)
+-- import Pages.Pool.Model as PoolModel
+-- import Pages.Pool.View exposing (determineTubers, getPosition)
+-- import SeatGeek.Decode
+-- import WebSocket
 
 import Auth0.Auth0 as Auth0
 import Auth0.Authentication as Authentication
-import Date exposing (..)
 import Html exposing (..)
 import Mouse
 import Pages.Chats.Update as ChatsUpdate exposing (makeQueryRequest)
-import Pages.CreateEvent.Messages as CreateEventMsg
-import Pages.CreateEvent.Model as CreateEvent
-import Pages.CreateEvent.Update exposing (update)
 import Pages.Events.Update as EventsUpdate exposing (makeQueryRequest)
-import Pages.Pool.Model as PoolModel
-import Pages.Pool.View exposing (determineTubers, getPosition)
 import Pages.User.Model exposing (..)
-import SeatGeek.Decode
 import SeatGeek.Query
 import SeatGeek.Types as SG
 import Task exposing (..)
 import Types exposing (..)
 import Update exposing (..)
 import View exposing (render)
-import WebSocket
 import Window exposing (size)
 
 
@@ -31,7 +32,8 @@ initCmd : Cmd Msg
 initCmd =
     Cmd.batch
         [ SeatGeek.Query.askQuery SG.initQuery
-        , getDatetime
+
+        -- , getDatetime
         , initWindow
         , initEventsQuery
         , initChatsQuery
@@ -53,13 +55,11 @@ initWindow =
     Task.perform InitialWindow Window.size
 
 
-getDatetime : Cmd Msg
-getDatetime =
-    Date.now
-        |> Task.perform OnDatetime
 
-
-
+-- getDatetime : Cmd Msg
+-- getDatetime =
+--     Date.now
+--         |> Task.perform OnDatetime
 -- INIT --
 
 

@@ -1,7 +1,5 @@
 module Route exposing (Route(..), fromLocation, href, modifyUrl)
 
-import Data.Article as Article
-import Data.User as User exposing (Username)
 import Html exposing (Attribute)
 import Html.Attributes as Attr
 import Navigation exposing (Location)
@@ -11,30 +9,28 @@ import UrlParser as Url exposing ((</>), Parser, oneOf, parseHash, s, string)
 -- ROUTING --
 
 
+type alias Id =
+    String
+
+
 type Route
-    = Home
-    | Login
-    | Logout
-    | Register
-    | Settings
-    | Article Article.Slug
-    | User Username
-    | NewArticle
-    | EditArticle Article.Slug
+    = Chats (Maybe Id)
+    | User (Maybe Id)
+    | Events (Maybe Id)
+    | CreateEvent
+    | Pool (Maybe Id)
+    | EditUser Id
 
 
 route : Parser (Route -> a) a
 route =
     oneOf
-        [ Url.map Home (s "")
-        , Url.map Login (s "login")
-        , Url.map Logout (s "logout")
-        , Url.map Settings (s "settings")
-        , Url.map User (s "user" </> User.usernameParser)
-        , Url.map Register (s "register")
-        , Url.map Article (s "article" </> Article.slugParser)
-        , Url.map NewArticle (s "editor")
-        , Url.map EditArticle (s "editor" </> Article.slugParser)
+        [ Url.map Chats (s "Chats" </> User.usernameParser)
+        , Url.map User (s "User" </> User.usernameParser)
+        , Url.map Events (s "Events" </> User.usernameParser)
+        , Url.map CreateEvent (s "CreateEvent" </> User.usernameParser)
+        , Url.map Pool (s "Events" </> User.usernameParser </> "Pool")
+        , Url.map EditUser (s "User" </> User.usernameParser </> "Edit")
         ]
 
 
@@ -50,29 +46,23 @@ routeToString page =
                 Home ->
                     []
 
-                Login ->
-                    [ "login" ]
+                Chats ->
+                    [ "Chats" ]
 
-                Logout ->
-                    [ "logout" ]
+                User ->
+                    [ "User" ]
 
-                Register ->
-                    [ "register" ]
+                Events ->
+                    [ "Events" ]
 
-                Settings ->
-                    [ "settings" ]
+                CreateEvent ->
+                    [ "CreateEvent" ]
 
-                Article slug ->
-                    [ "article", Article.slugToString slug ]
+                Events slug ->
+                    [ "Events", Article.slugToString slug ]
 
                 User username ->
-                    [ "user", User.usernameToString username ]
-
-                NewArticle ->
-                    [ "editor" ]
-
-                EditArticle slug ->
-                    [ "editor", Article.slugToString slug ]
+                    [ "User", User.usernameToString username ]
     in
     "#/" ++ String.join "/" pieces
 

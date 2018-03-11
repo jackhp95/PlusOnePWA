@@ -9,29 +9,30 @@ module Auth0.Authentication
         , update
         )
 
+-- import Debug exposing (log)
+-- import GraphCool.Enum.DateState exposing (DateState)
+-- import GraphCool.Enum.MessageOrderBy exposing (..)
+-- import GraphCool.InputObject as IO exposing (..)
+-- import GraphCool.Mutation as Mutation
+-- import GraphCool.Object.Location as Location
+-- import GraphCool.Object.Venue as Venue
+-- import Graphqelm.Document as Document
+-- import Pages.Event.Model exposing (Event, Response)
+
 import Auth0.Auth0 as Auth0
-import Debug exposing (log)
-import GraphCool.Enum.DateState exposing (DateState)
-import GraphCool.Enum.MessageOrderBy exposing (..)
-import GraphCool.InputObject as IO exposing (..)
-import GraphCool.Mutation as Mutation
 import GraphCool.Object
 import GraphCool.Object.Chat as Chat
 import GraphCool.Object.Event as Event
 import GraphCool.Object.Host as Host
-import GraphCool.Object.Location as Location
 import GraphCool.Object.Message as Message
 import GraphCool.Object.Pool as Pool
 import GraphCool.Object.User as UserObj
-import GraphCool.Object.Venue as Venue
 import GraphCool.Query as Query
 import GraphCool.Scalar exposing (..)
-import Graphqelm.Document as Document
 import Graphqelm.Http exposing (..)
 import Graphqelm.Operation exposing (RootMutation, RootQuery)
 import Graphqelm.OptionalArgument exposing (OptionalArgument(Absent, Null, Present))
 import Graphqelm.SelectionSet exposing (SelectionSet, with)
-import Pages.Event.Model exposing (Event, Response)
 import RemoteData exposing (..)
 
 

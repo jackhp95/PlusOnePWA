@@ -52,7 +52,7 @@ home =
     div [ class "dn flex-auto-l flex-ns items-center justify-center-m" ]
         [ div [ class "grow-large flex flex-column-m ph4-l pa3-m" ]
             [ div
-                [ bgImg "logo/svg/bWhite.svg"
+                [ bgImg "logo/svg/oColor.svg"
                 , class "animated bounceIn pb4-m pr4-m pl3 pt3 pr2 pb2 contain bg-center"
                 ]
                 []

@@ -1,34 +1,32 @@
 module Pages.EditUser.Update exposing (..)
 
+-- import Date.Extra.Core exposing (monthToInt)
+-- import GraphCool.Enum.DateState exposing (DateState)
+-- import GraphCool.Object.Location as Location
+-- import GraphCool.Object.Venue as Venue
+-- import GraphCool.Query as Query
+-- import Graphqelm.Document as Document
+-- import Json.Decode as Decode exposing (Decoder)
+-- import List exposing (..)
+
 import Auth0.Auth0 as Auth0 exposing (..)
 import Date exposing (..)
-import Date.Extra.Core exposing (monthToInt)
 import Date.Extra.Format exposing (..)
 import Debug exposing (log)
-import GraphCool.Enum.DateState exposing (DateState)
 import GraphCool.InputObject as IO exposing (..)
 import GraphCool.Mutation as Mutation
 import GraphCool.Object
 import GraphCool.Object.Chat as Chat
 import GraphCool.Object.Event as Event
 import GraphCool.Object.Host as Host
-import GraphCool.Object.Location as Location
 import GraphCool.Object.Message as Message
 import GraphCool.Object.Pool as Pool
 import GraphCool.Object.User as UserObj
-import GraphCool.Object.Venue as Venue
-import GraphCool.Query as Query
 import GraphCool.Scalar exposing (..)
-import Graphqelm.Document as Document
 import Graphqelm.Http exposing (..)
-import Graphqelm.Internal.Builder.Argument as Argument exposing (Argument)
-import Graphqelm.Internal.Builder.Object as Object
-import Graphqelm.Internal.Encode as Encode exposing (Value)
 import Graphqelm.Operation exposing (RootMutation, RootQuery)
 import Graphqelm.OptionalArgument exposing (OptionalArgument(Absent, Null, Present))
 import Graphqelm.SelectionSet exposing (SelectionSet, with)
-import Json.Decode as Decode exposing (Decoder)
-import List exposing (..)
 import Maybe
 import Pages.EditUser.Messages exposing (..)
 import Pages.User.Model exposing (..)

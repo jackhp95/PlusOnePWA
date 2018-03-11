@@ -2,8 +2,6 @@ import './main.css';
 import { Main } from './elm/Main.elm';
 import registerServiceWorker from './registerServiceWorker';
 
-registerServiceWorker();
-
 // Auth Ports
 const homeUri = window.location.href;
 console.log(homeUri);
@@ -72,3 +70,5 @@ webAuth.parseHash({ hash: window.location.hash }, function (err, authResult) {
         window.location.hash = '';
     }
 });
+
+registerServiceWorker();

@@ -1,22 +1,24 @@
 module Update exposing (..)
 
--- import Auth0.Auth0 as Auth0
+-- import GraphCool.Scalar exposing (..)
+-- import Pages.EditUser.Messages as EditUserMsg
+-- import Pages.User.Model exposing (..)
 -- import GraphCool.Scalar exposing (..)
 
+import Auth0.Auth0 as Auth0
 import Auth0.Authentication as Authentication
 import Debug exposing (log)
-import GraphCool.Scalar exposing (..)
+import Navigation as Nav
 import Pages.Chat.Update exposing (..)
 import Pages.Chats.Update exposing (..)
 import Pages.CreateEvent.Update exposing (..)
 import Pages.CreateMessage.Messages as CreateMessageMsg
 import Pages.CreateMessage.Update exposing (makeSendRequest)
-import Pages.EditUser.Messages as EditUserMsg
 import Pages.EditUser.Update exposing (..)
+import Pages.Events.Model exposing (EventAPI(GraphCool, SeatGeek))
 import Pages.Events.Update
 import Pages.Pool.Model as PoolModel
 import Pages.Pool.View exposing (determineTubers, getPosition)
-import Pages.User.Model exposing (..)
 import Pages.User.Update exposing (..)
 import SeatGeek.Types as SG
 import Types
@@ -59,26 +61,19 @@ update msg model =
                     { user | user = newUser2 }
 
                 resultRoute =
-                    case authModel.getUserId of
-                        Id "0" ->
+                    case authModel.state of
+                        Auth0.LoggedIn _ ->
                             Types.GoChats Nothing
 
-                        Id "1" ->
-                            Types.GoChats Nothing
-
-                        Id "2" ->
-                            Types.GoChats Nothing
-
-                        Id "3" ->
-                            Types.GoEditUser
-
-                        _ ->
-                            Types.GoCreateEvent
+                        Auth0.LoggedOut ->
+                            Types.GoEvents Nothing
             in
             ( { model | me = { me | authModel = authModel, user = newUser }, route = resultRoute }, Cmd.map Types.AuthenticationMsg cmd )
 
         Types.ChangeTo newRoute ->
-            ( { model | route = newRoute }, Cmd.none )
+            ( { model | route = newRoute }
+            , Nav.newUrl (toString newRoute)
+            )
 
         Types.ChatsMsg chatsMsg ->
             let
@@ -196,23 +191,19 @@ update msg model =
             , Cmd.none
             )
 
-        Types.OnDatetime now ->
-            ( { model
-                | events =
-                    { events
-                        | currentDatetime = Just now
-                    }
-              }
-            , Cmd.none
-            )
-
+        -- Types.OnDatetime now ->
+        --     ( { model
+        --         | events =
+        --             { events
+        --                 | currentDatetime = Just now
+        --             }
+        --       }
+        --     , Cmd.none
+        --     )
         -- SeatGeek
         Types.GetReply (Ok recieved) ->
             ( { model
-                | events =
-                    { events
-                        | seatgeek = Just (SG.Reply recieved.meta recieved.events)
-                    }
+                | events = List.map SeatGeek recieved.events
               }
             , Cmd.none
             )

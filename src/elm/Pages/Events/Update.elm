@@ -17,17 +17,24 @@ import Pages.Events.Messages exposing (..)
 import Pages.Events.Model exposing (..)
 import Pages.User.Model exposing (Me)
 import RemoteData exposing (..)
-import SeatGeek.Types as SG
 
 
-update : Msg -> Events -> Me -> ( Events, Cmd Msg )
+-- import SeatGeek.Types as SG
+
+
+update : Msg -> List EventAPI -> Me -> ( List EventAPI, Cmd Msg )
 update msg model me =
     case msg of
         MakeRequest ->
             ( model, makeQueryRequest )
 
         GotResponse responseModel ->
-            ( { model | eventResponse = responseModel }, Cmd.none )
+            case responseModel of
+                Success list ->
+                    ( List.append model (List.map GraphCool list.events), Cmd.none )
+
+                _ ->
+                    ( model, Cmd.none )
 
 
 query : SelectionSet Response RootQuery
