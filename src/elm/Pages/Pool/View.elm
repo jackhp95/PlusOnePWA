@@ -10,6 +10,7 @@ import Html.Events exposing (on)
 import Json.Decode as Decode
 import Mouse exposing (Position)
 import Pages.Pool.Model as PoolModel
+import Pages.User.Model exposing (UserProfile)
 import Random exposing (..)
 import Task exposing (..)
 import Types exposing (..)
@@ -25,8 +26,17 @@ import Window exposing (..)
 
 view : PoolModel.Pool -> Html Msg
 view pool =
-    text ""
+    div [] (List.map showUser (Maybe.withDefault [] pool.attending))
 
+showUser : UserProfile -> Html Msg
+showUser profile =
+    div []
+        [ h3 [][text profile.name]
+        , text ("nameFull: " ++ (Maybe.withDefault "NA" profile.nameFull))
+        , text ("bio: " ++ (Maybe.withDefault "NA" profile.bio))
+        , text ("id: " ++ Basics.toString profile.id)
+        , text ("birthday: " ++ (Basics.toString profile.birthday))
+        ]
 --     div [ class "overflow-hidden bg-black-80 flex-auto" ]
 --         [ div
 --             [ onMouseDown

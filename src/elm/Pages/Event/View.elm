@@ -13,6 +13,7 @@ import Html.Events exposing (..)
 import Http exposing (..)
 import Moment exposing (..)
 import Pages.Event.Model exposing (Event)
+import Pages.Pool.Model exposing (Pool)
 import Pages.Events.Model exposing (Events)
 import SeatGeek.Decode exposing (decodeReply)
 import SeatGeek.Query exposing (composeRequest)
@@ -44,7 +45,7 @@ view event now =
 
         -- , eventEmojis event
         , eventTime event now
-        , eventPool
+        , eventPool event.pool
 
         -- , eventPopularity event
         -- , yetToBeAdded
@@ -196,8 +197,8 @@ stringDateTime datetime =
 --         ]
 
 
-eventPool : Html Msg
-eventPool =
+eventPool : Pool -> Html Msg
+eventPool pool =
     div [ class "flex items-center justify-around mh4 pv4 bb b--white-20" ]
         [ a [ href "Pool.html", class "white link br-pill pa2 mh1 flex items-center mh1 grow" ]
             [ div [ Assets.feather "info", class "h2 w2 contain bg-center" ] []

@@ -63,6 +63,7 @@ user =
     User.selection UserProfile
         |> with User.bio
         |> with User.birthday
+        |> with User.id
         |> with User.name
         |> with User.nameFull
 

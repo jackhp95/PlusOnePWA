@@ -51,6 +51,7 @@ type alias User =
 type alias UserProfile =
     { bio : Maybe String
     , birthday : DateTime
+    , id : Id
     , name : String
     , nameFull : Maybe String
     }
