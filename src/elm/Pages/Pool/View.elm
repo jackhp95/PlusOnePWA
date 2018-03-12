@@ -6,10 +6,11 @@ module Pages.Pool.View exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Html.Events exposing (on)
+import Html.Events exposing (on,onClick)
 import Json.Decode as Decode
 import Mouse exposing (Position)
-import Pages.Pool.Model as PoolModel
+import Pages.Pool.Model exposing (Pool)
+import Pages.CreateChat.Model exposing (CreateChat)
 import Pages.User.Model exposing (UserProfile)
 import Random exposing (..)
 import Task exposing (..)
@@ -26,9 +27,10 @@ import RemoteData exposing (..)
     (,)
 
 
-view : PoolModel.PoolModel -> Html Msg
-view poolModel =
+view : Types.Model -> Html Msg
+view model =
     let
+        poolModel = model.pool
         response =
             case poolModel.attendConfirm of
                 NotAsked ->
@@ -56,22 +58,28 @@ view poolModel =
     in
     div [] 
         [ response    
-        , div [] (List.map showUser (Maybe.withDefault [] poolModel.pool.attending))
+        , div [] (List.map (showUser poolModel.pool model.createChat) (Maybe.withDefault [] poolModel.pool.attending))
         ]
 
-showUser : UserProfile -> Html Msg
-showUser profile =
+showUser : Pool -> CreateChat -> UserProfile -> Html Msg
+showUser pool cc profile =
     if profile.id == (Id "cjed2224jh6a4019863siiw2e") then
         text ""
     else
-        div []
-            [ h3 [][text profile.name]
-            , p [] [text ("nameFull: " ++ (Maybe.withDefault "NA" profile.nameFull))]
-            , p [] [text ("bio: " ++ (Maybe.withDefault "NA" profile.bio))]
-            , p [] [text ("id: " ++ Basics.toString profile.id)]
-            , p [] [text ("birthday: " ++ (Basics.toString profile.birthday))]
-            , button [] [ text ("Start chatting with "++ profile.name)]
-            ]
+        let
+            newChat = {cc | eventId = Maybe.withDefault (Id "") pool.event 
+                          , initiatedId = (Id "cjed2224jh6a4019863siiw2e")
+                          , recipientId = profile.id
+                           }
+        in    
+            div []
+                [ h3 [][text profile.name]
+                , p [] [text ("nameFull: " ++ (Maybe.withDefault "NA" profile.nameFull))]
+                , p [] [text ("bio: " ++ (Maybe.withDefault "NA" profile.bio))]
+                , p [] [text ("id: " ++ Basics.toString profile.id)]
+                , p [] [text ("birthday: " ++ (Basics.toString profile.birthday))]
+                , button [ onClick (Types.UpdateChats (Types.GoChats Nothing) newChat )] [ text ("Start chatting with "++ profile.name)]
+                ]
 --     div [ class "overflow-hidden bg-black-80 flex-auto" ]
 --         [ div
 --             [ onMouseDown

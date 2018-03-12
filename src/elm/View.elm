@@ -86,7 +86,7 @@ page model =
             [ User.view model.me.user ]
 
         Types.GoPool ->
-            [ Pool.view model.pool ]
+            [ Pool.view model ]
 
         Types.GoEditUser ->
             [ Html.map Types.EditUserMsg (EditUser.view model.me.user) ]

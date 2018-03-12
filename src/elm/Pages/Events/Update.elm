@@ -56,6 +56,7 @@ pool : SelectionSet Pool GraphCool.Object.Pool
 pool = 
     Pool.selection Pool
         |> with Pool.id
+        |> with (Pool.event identity eventId)
         |> with (Pool.attending identity user)
 
 user : SelectionSet UserProfile GraphCool.Object.User
@@ -71,6 +72,9 @@ chatId : SelectionSet Id GraphCool.Object.Chat
 chatId =
     Chat.selection identity |> with Chat.id
 
+eventId : SelectionSet Id GraphCool.Object.Event
+eventId =
+    Event.selection identity |> with Event.id
 
 userId : SelectionSet Id GraphCool.Object.User
 userId =

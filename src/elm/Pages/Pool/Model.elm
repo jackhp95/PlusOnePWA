@@ -13,6 +13,7 @@ import Graphqelm.Http exposing (..)
 
 type alias Pool =
     { id : Id
+    , event : Maybe Id
     , attending : Maybe (List UserProfile)
     }
 
@@ -48,6 +49,7 @@ initModel =
 initPool : Pool
 initPool =
     { id = Id "123"
+    , event = Nothing
     , attending = Nothing
     }
 

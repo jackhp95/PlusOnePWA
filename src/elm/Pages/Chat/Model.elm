@@ -2,8 +2,10 @@ module Pages.Chat.Model exposing (..)
 
 import GraphCool.Enum.DateState exposing (DateState)
 import GraphCool.Scalar exposing (..)
+import Graphqelm.Http exposing (..)
 import Pages.Chat.Messages exposing (..)
 import Pages.Message.Model exposing (Message)
+import RemoteData exposing (..)
 
 type alias Chat =
     { canceled : Maybe String
@@ -16,6 +18,15 @@ type alias Chat =
     , proposed : Maybe String
     , recipient : Maybe Chatter
     }
+
+type alias NewChat =
+    { event : Id
+    , initiated : String
+    , recipient : Maybe String
+    }
+
+type alias CreateResponseModel =
+    RemoteData Graphqelm.Http.Error (Maybe NewChat)
 
 type alias Chatter =
     { id : Id

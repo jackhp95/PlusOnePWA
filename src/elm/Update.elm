@@ -6,9 +6,12 @@ module Update exposing (..)
 import Auth0.Authentication as Authentication
 import Pages.Chat.Update exposing (..)
 import Pages.Chats.Update exposing (..)
+import Pages.Chats.Messages as ChatsMsg
 import Pages.CreateEvent.Update exposing (..)
 import Pages.CreateMessage.Messages as CreateMessageMsg
 import Pages.CreateMessage.Update exposing (makeSendRequest)
+import Pages.CreateChat.Messages as CreateChatMsg
+import Pages.CreateChat.Update 
 -- import Pages.EditUser.Messages as EditUserMsg
 import Pages.EditUser.Update exposing (..)
 import Pages.Events.Update
@@ -86,6 +89,22 @@ update msg model =
             ( { model | createMessage = createMsgModel }
             , Cmd.map Types.CreateMessageMsg createMessageCmd
             )
+
+        Types.CreateChatMsg createChatMsg ->
+            let
+                ( createChatModel, createChatCmd ) =
+                    Pages.CreateChat.Update.update createChatMsg model.createChat
+            in
+            ( { model | createChat = createChatModel }
+            , Cmd.map Types.CreateChatMsg createChatCmd
+            )
+
+        Types.UpdateChats newChatsRoute newChat ->
+            { model 
+                | route = newChatsRoute
+                , createChat = newChat
+            }
+                |> update (Types.CreateChatMsg CreateChatMsg.MutateCreateChat)
 
         Types.EditUserMsg userMsg ->
             let

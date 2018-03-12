@@ -94,7 +94,7 @@ chatId =
 makeRequest : Cmd Msg
 makeRequest =
     mutation
-        |> Graphqelm.Http.mutationRequest "https://api.graph.cool/simple/v1/OldPlusOne"
+        |> Graphqelm.Http.mutationRequest "https://api.graph.cool/simple/v1/PlusOne"
         |> Graphqelm.Http.send (RemoteData.fromResult >> MutateEvent)
 
 

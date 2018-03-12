@@ -17,6 +17,8 @@ import Pages.CreateEvent.Messages as CreateEventMsg
 import Pages.CreateEvent.Model as CreateEventModel
 import Pages.CreateMessage.Messages as CreateMessageMsg
 import Pages.CreateMessage.Model as CreateMessageModel
+import Pages.CreateChat.Messages as CreateChatMsg
+import Pages.CreateChat.Model as CreateChatModel
 import Pages.EditUser.Messages as EditUserMsg
 import Pages.Event.Messages as EventPoolMsg
 import Pages.Event.Model as EventModel
@@ -41,6 +43,7 @@ type alias Model =
     , client : Client
     , createEvent : CreateEventModel.CreateEvent
     , createMessage : CreateMessageModel.CreateMessage
+    , createChat : CreateChatModel.CreateChat
     , me : UserModel.Me
     }
 
@@ -57,6 +60,7 @@ initModel initialAuthUser =
         initClient
         EventModel.initModel
         CreateMessageModel.initModel
+        CreateChatModel.initModel
         (UserModel.initMe initialAuthUser)
 
 
@@ -108,6 +112,7 @@ type
     | UserMsg UserMsg.Msg
     | UpdateTextInput String
     | CreateMessageMsg CreateMessageMsg.Msg
+    | CreateChatMsg CreateChatMsg.Msg
     | ChatMsg ChatMsg.Msg
     | ChatsMsg ChatsMsg.Msg
       -- Chat
@@ -117,6 +122,7 @@ type
       -- Events
     | ViewEvent Route
     | ViewPool Route
+    | UpdateChats Route CreateChatModel.CreateChat
     | EventPoolMsg EventPoolMsg.Msg 
     | OnDatetime Date
       -- SeatGeek
