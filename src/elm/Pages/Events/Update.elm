@@ -15,7 +15,8 @@ import Graphqelm.SelectionSet exposing (SelectionSet, with)
 import Pages.Event.Model exposing (Event, Response)
 import Pages.Events.Messages exposing (..)
 import Pages.Events.Model exposing (..)
-import Pages.User.Model exposing (Me)
+import Pages.Pool.Model exposing (Pool)
+import Pages.User.Model exposing (Me,UserProfile)
 import RemoteData exposing (..)
 
 
@@ -42,12 +43,6 @@ query =
     Query.selection Response
         |> with (Query.allEvents identity event)
 
-
-poolId : SelectionSet Id GraphCool.Object.Pool
-poolId =
-    Pool.selection identity |> with Pool.id
-
-
 event : SelectionSet Event GraphCool.Object.Event
 event =
     Event.selection Event
@@ -62,12 +57,31 @@ event =
         |> with Event.private
         |> with Event.startsAt
         |> with (Event.venues identity venueId)
+        |> with (Event.pool identity pool)
 
+pool : SelectionSet Pool GraphCool.Object.Pool
+pool = 
+    Pool.selection Pool
+        |> with Pool.id
+        |> with (Pool.event identity eventId)
+        |> with (Pool.attending identity user)
+
+user : SelectionSet UserProfile GraphCool.Object.User
+user =
+    User.selection UserProfile
+        |> with User.bio
+        |> with User.birthday
+        |> with User.id
+        |> with User.name
+        |> with User.nameFull
 
 chatId : SelectionSet Id GraphCool.Object.Chat
 chatId =
     Chat.selection identity |> with Chat.id
 
+eventId : SelectionSet Id GraphCool.Object.Event
+eventId =
+    Event.selection identity |> with Event.id
 
 userId : SelectionSet Id GraphCool.Object.User
 userId =
@@ -87,5 +101,5 @@ venueId =
 makeQueryRequest : Cmd Msg
 makeQueryRequest =
     query
-        |> Graphqelm.Http.queryRequest "https://api.graph.cool/simple/v1/OldPlusOne"
+        |> Graphqelm.Http.queryRequest "https://api.graph.cool/simple/v1/PlusOne"
         |> Graphqelm.Http.send (RemoteData.fromResult >> GotResponse)

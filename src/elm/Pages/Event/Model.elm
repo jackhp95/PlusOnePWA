@@ -10,6 +10,7 @@ import GraphCool.Scalar exposing (..)
 import Graphqelm.Http exposing (..)
 import Pages.Event.Messages exposing (..)
 import RemoteData exposing (..)
+import Pages.Pool.Model exposing (..)
 
 
 -- type alias Event =
@@ -48,12 +49,20 @@ type alias Event =
     , private : Bool
     , startsAt : DateTime
     , venues : Maybe (List Id)
+    , pool : Pool
+    }
+
+type alias NewEvent =
+    { createdBy : Id
+    , endsAt : Maybe DateTime
+    , name : String
+    , nameFull : Maybe String
+    , startsAt : DateTime
     }
 
 
 type alias EventModel =
     { event : Event
-    , eventResponse : ResponseModel
     , createdEvent : SubmitResponseModel
     }
 
@@ -63,7 +72,7 @@ type alias ResponseModel =
 
 
 type alias SubmitResponseModel =
-    RemoteData Graphqelm.Http.Error (Maybe Event)
+    RemoteData Graphqelm.Http.Error (Maybe NewEvent)
 
 
 init : ( EventModel, Cmd Msg )
@@ -90,11 +99,10 @@ initEvent =
         False
         (GraphCool.Scalar.DateTime "10/11/10")
         Nothing
-
+        Pages.Pool.Model.initPool
 
 initModel : EventModel
 initModel =
     EventModel
         initEvent
-        RemoteData.Loading
         RemoteData.Loading

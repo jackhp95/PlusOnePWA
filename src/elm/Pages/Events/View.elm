@@ -6,6 +6,7 @@ module Pages.Events.View exposing (..)
 
 import Assets exposing (feather)
 import Date exposing (..)
+import Graphqelm.Document as Document
 import GraphCool.Scalar exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)

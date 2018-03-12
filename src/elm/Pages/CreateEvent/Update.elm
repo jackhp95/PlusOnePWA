@@ -7,6 +7,7 @@ import GraphCool.Object.Event as Event
 import GraphCool.Object.Host as Host
 import GraphCool.Object.User as User
 import GraphCool.Object.Venue as Venue
+import GraphCool.Object.Pool as Pool
 import GraphCool.Query as Query
 import GraphCool.Scalar exposing (..)
 import Graphqelm.Http exposing (..)
@@ -16,16 +17,10 @@ import Graphqelm.SelectionSet exposing (SelectionSet, with)
 import Pages.CreateEvent.Messages exposing (..)
 import Pages.CreateEvent.Model exposing (..)
 import Pages.Event.Model exposing (..)
+import Pages.Pool.Model exposing (..)
 import RemoteData exposing (..)
 
-
-query : SelectionSet Response RootQuery
-query =
-    Query.selection Response
-        |> with (Query.allEvents identity event)
-
-
-mutation : Event -> SelectionSet (Maybe Event) RootMutation
+mutation : Event -> SelectionSet (Maybe NewEvent) RootMutation
 mutation model =
     let
         endDate =
@@ -51,55 +46,34 @@ mutation model =
                 --identity
                 (\optionals -> { optionals | nameFull = fullName, endsAt = endDate, createdById = Present (Id "cje07e7y7e227015745hh81m3") })
                 { name = model.name, startsAt = model.startsAt }
-                event
+                newEvent
             )
 
 
-event : SelectionSet Event GraphCool.Object.Event
-event =
-    Event.selection Event
-        |> with (Event.chats identity chatId)
-        |> with Event.createdAt
+newEvent : SelectionSet NewEvent GraphCool.Object.Event
+newEvent =
+    Event.selection NewEvent
         |> with (Event.createdBy identity userId)
         |> with Event.endsAt
-        |> with (Event.hosts identity hostId)
-        |> with Event.id
         |> with Event.name
         |> with Event.nameFull
-        |> with Event.private
         |> with Event.startsAt
-        |> with (Event.venues identity venueId)
-
-
-chatId : SelectionSet Id GraphCool.Object.Chat
-chatId =
-    Chat.selection identity |> with Chat.id
-
 
 userId : SelectionSet Id GraphCool.Object.User
 userId =
     User.selection identity |> with User.id
 
-
-hostId : SelectionSet Id GraphCool.Object.Host
-hostId =
-    Host.selection identity |> with Host.id
-
-
-venueId : SelectionSet Id GraphCool.Object.Venue
-venueId =
-    Venue.selection identity |> with Venue.id
-
-
-makeRequest : Cmd Msg
-makeRequest =
-    query
-        |> Graphqelm.Http.queryRequest "https://api.graph.cool/simple/v1/PlusOne"
-        |> Graphqelm.Http.send (RemoteData.fromResult >> GotResponse)
-
-
 makeMutationRequest : EventModel -> Cmd Msg
 makeMutationRequest model =
+    -- let
+    --     newEvent = 
+    --         NewEvent 
+    --             model.createdBy 
+    --             model.endsAt 
+    --             model.name 
+    --             model.nameFull
+    --             model.startsAt
+    -- in
     mutation model.event
         |> Graphqelm.Http.mutationRequest "https://api.graph.cool/simple/v1/PlusOne"
         |> Graphqelm.Http.send (RemoteData.fromResult >> GotSubmitResponse)
@@ -108,17 +82,11 @@ makeMutationRequest model =
 update : Msg -> CreateEvent -> ( CreateEvent, Cmd Msg )
 update msg model =
     case msg of
-        MakeRequest ->
-            ( model, makeRequest )
-
         SubmitEvent ->
             ( model, makeMutationRequest model )
 
         GotSubmitResponse responseModel ->
             ( { model | createdEvent = responseModel }, Cmd.none )
-
-        GotResponse responseModel ->
-            ( { model | eventResponse = responseModel }, Cmd.none )
 
         ChangeName newName ->
             let

@@ -42,10 +42,10 @@ view event me =
                 , div [ class "pt1 bt b--white child" ] []
                 ]
 
-        submitInput =
-            div []
-                [ input [ type_ "button" ] [ text "Submit" ]
-                ]
+        -- submitInput =
+        --     div []
+        --         [ input [ type_ "button" ] [ text "Submit" ]
+        --         ]
 
         -- Show the reponse of the "allEvents" query
         refineView a =
@@ -53,20 +53,6 @@ view event me =
                 [ h3 [] [ text "Events" ]
                 , div [] (List.map (\b -> ul [ style [ ( "background", "#eeeeee" ) ] ] [ h4 [] [ text b.name ], p [] [ text (Basics.toString b.id) ] ]) a.events)
                 ]
-
-        response =
-            case event.eventResponse of
-                NotAsked ->
-                    text "Hold up, Lemme Check"
-
-                Loading ->
-                    text "Gimme a Sec"
-
-                Failure e ->
-                    text ("Shucks um, " ++ Basics.toString e)
-
-                Success a ->
-                    refineView a
 
         submission =
             case event.createdEvent of
@@ -87,8 +73,8 @@ view event me =
                         Just e ->
                             div []
                                 [ div []
-                                    [ h5 [] [ text "Events" ]
-                                    , div [] [ text "ID: ", text (Basics.toString e.id) ]
+                                    [ h5 [] [ text "Event" ]
+                                    , div [] [ text "createdBy: ", text (Basics.toString e.createdBy) ]
                                     , div [] [ text "Name: ", text (Basics.toString e.name) ]
                                     , div [] [ text "Full Name: ", text (Basics.toString e.nameFull) ]
                                     , div [] [ text "Start Date: ", text (Basics.toString e.startsAt) ]
@@ -107,7 +93,6 @@ view event me =
                 , dateInput "End Date" "📆" "what day is it?" ChangeEndDate
                 ]
             , button [ onClick SubmitEvent ] [ text "Create An Event" ]
-            , button [ onClick MakeRequest ] [ text "Show Events" ]
             ]
         , div [ style [ ( "color", "#000000" ) ] ]
             [ h1 [] [ text "Submission Response " ]
@@ -115,12 +100,5 @@ view event me =
             , Html.text (Basics.toString event.createdEvent)
             , h2 [] [ text "Refined" ]
             , submission
-            ]
-        , div [ style [ ( "color", "#000000" ) ] ]
-            [ h1 [] [ text "AllEvents Query Response" ]
-            , h2 [] [ text "Raw" ]
-            , Html.text (Basics.toString event.eventResponse)
-            , h2 [] [ text "Refined" ]
-            , response
             ]
         ]

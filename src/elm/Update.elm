@@ -11,15 +11,21 @@ import Debug exposing (log)
 import Navigation as Nav
 import Pages.Chat.Update exposing (..)
 import Pages.Chats.Update exposing (..)
+import Pages.Chats.Messages as ChatsMsg
 import Pages.CreateEvent.Update exposing (..)
 import Pages.CreateMessage.Messages as CreateMessageMsg
 import Pages.CreateMessage.Update exposing (makeSendRequest)
+import Pages.CreateChat.Messages as CreateChatMsg
+import Pages.CreateChat.Update 
+-- import Pages.EditUser.Messages as EditUserMsg
 import Pages.EditUser.Update exposing (..)
 import Pages.Events.Model exposing (EventAPI(GraphCool, SeatGeek))
 import Pages.Events.Update
+import Pages.Event.Update
+import Pages.Event.Messages as EventMsg
 import Pages.Pool.Model as PoolModel
-import Pages.Pool.View exposing (determineTubers, getPosition)
-import Pages.User.Model exposing (initMe)
+-- import Pages.Pool.View exposing (determineTubers, getPosition)
+import Pages.User.Model exposing (..)
 import Pages.User.Update exposing (..)
 import SeatGeek.Types as SG
 import Types
@@ -118,6 +124,22 @@ update msg model =
             , Cmd.map Types.CreateMessageMsg createMessageCmd
             )
 
+        Types.CreateChatMsg createChatMsg ->
+            let
+                ( createChatModel, createChatCmd ) =
+                    Pages.CreateChat.Update.update createChatMsg model.createChat
+            in
+            ( { model | createChat = createChatModel }
+            , Cmd.map Types.CreateChatMsg createChatCmd
+            )
+
+        Types.UpdateChats newChatsRoute newChat ->
+            { model 
+                | route = newChatsRoute
+                , createChat = newChat
+            }
+                |> update (Types.CreateChatMsg CreateChatMsg.MutateCreateChat)
+
         Types.EditUserMsg userMsg ->
             let
                 ( userModel, userCmd ) =
@@ -191,22 +213,48 @@ update msg model =
             )
 
         -- EVENTS
-        Types.ViewEvent event ->
+        Types.ViewEvent newEventRoute ->
+            let
+                toPool =
+                    case newEventRoute of
+                        Types.GoEvents maybeEvent ->
+                            case maybeEvent of
+                                Nothing ->
+                                    model.pool
+                                Just eventAPI ->
+                                    case eventAPI of
+                                        SeatGeek sgEvent ->
+                                            model.pool 
+                                        GraphCool event ->
+                                            let
+                                                poolModel = model.pool
+                                            in
+                                                { poolModel | pool = event.pool}
+                                        
+                        _ ->
+                            model.pool
+            in
+                
             ( { model
-                | route = event
+                | route = newEventRoute
+                , pool = toPool
               }
             , Cmd.none
             )
 
-        -- Types.OnDatetime now ->
-        --     ( { model
-        --         | events =
-        --             { events
-        --                 | currentDatetime = Just now
-        --             }
-        --       }
-        --     , Cmd.none
-        --     )
+        Types.ViewPool newPoolRoute ->
+                { model | route = newPoolRoute }
+                    |> update (Types.EventPoolMsg EventMsg.AddToPool) 
+
+        Types.EventPoolMsg eventMsg ->
+            let
+                ( updatedPool, updatePoolCmd ) =
+                    Pages.Event.Update.update eventMsg model.pool me
+            in
+            ( { model | pool = updatedPool }
+            , Cmd.map Types.EventPoolMsg updatePoolCmd
+            )                
+
         -- SeatGeek
         Types.GetReply (Ok recieved) ->
             ( { model
@@ -226,59 +274,59 @@ update msg model =
             , Cmd.none
             )
 
-        -- POOL
-        Types.MouseStart xy ->
-            ( { model
-                | pool =
-                    { pool
-                        | move = Just (PoolModel.Move xy xy)
-                    }
-              }
-            , Cmd.none
-            )
+        -- -- POOL
+        -- Types.MouseStart xy ->
+        --     ( { model
+        --         | pool =
+        --             { pool
+        --                 | move = Just (PoolModel.Move xy xy)
+        --             }
+        --       }
+        --     , Cmd.none
+        --     )
 
-        Types.MouseMove xy ->
-            ( { model
-                | pool =
-                    { pool
-                        | move = Maybe.map (\{ start } -> PoolModel.Move start xy) pool.move
-                    }
-              }
-            , Cmd.none
-            )
+        -- Types.MouseMove xy ->
+        --     ( { model
+        --         | pool =
+        --             { pool
+        --                 | move = Maybe.map (\{ start } -> PoolModel.Move start xy) pool.move
+        --             }
+        --       }
+        --     , Cmd.none
+        --     )
 
-        Types.MouseEnd _ ->
-            ( { model
-                | pool =
-                    { pool
-                        | position = getPosition pool
-                        , move = Nothing
-                    }
-              }
-            , Cmd.none
-            )
+        -- Types.MouseEnd _ ->
+        --     ( { model
+        --         | pool =
+        --             { pool
+        --                 | position = getPosition pool
+        --                 , move = Nothing
+        --             }
+        --       }
+        --     , Cmd.none
+        --     )
 
-        Types.ResizePool windowSize ->
-            ( { model
-                | pool =
-                    { pool
-                        | windowSize = windowSize
-                        , tubers = determineTubers pool windowSize
-                    }
-              }
-            , Cmd.none
-            )
+        -- Types.ResizePool windowSize ->
+        --     ( { model
+        --         | pool =
+        --             { pool
+        --                 | windowSize = windowSize
+        --                 , tubers = determineTubers pool windowSize
+        --             }
+        --       }
+        --     , Cmd.none
+        --     )
 
-        Types.InitialWindow windowSize ->
-            ( { model
-                | pool =
-                    { pool
-                        | windowSize = windowSize
-                        , tubers = determineTubers pool windowSize
-                    }
-              }
-            , Cmd.none
-            )
+        -- Types.InitialWindow windowSize ->
+        --     ( { model
+        --         | pool =
+        --             { pool
+        --                 | windowSize = windowSize
+        --                 , tubers = determineTubers pool windowSize
+        --             }
+        --       }
+        --     , Cmd.none
+        --     )
 
         -- Discover ->
         --     ( model, SeatGeek.askQuery SG.initQuery )

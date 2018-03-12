@@ -34,7 +34,7 @@ initCmd =
         [ SeatGeek.Query.askQuery SG.initQuery
 
         -- , getDatetime
-        , initWindow
+        -- , initWindow
         , initEventsQuery
         , initChatsQuery
         ]
@@ -50,9 +50,9 @@ initChatsQuery =
     Cmd.map Types.ChatsMsg ChatsUpdate.makeQueryRequest
 
 
-initWindow : Cmd Msg
-initWindow =
-    Task.perform InitialWindow Window.size
+-- initWindow : Cmd Msg
+-- initWindow =
+--     Task.perform InitialWindow Window.size
 
 
 
@@ -83,17 +83,17 @@ view model =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.batch [ Window.resizes ResizePool, mouseMoveSubs model, auth0authResult (Authentication.handleAuthResult >> AuthenticationMsg) ]
+    Sub.batch [ {--Window.resizes ResizePool, mouseMoveSubs model,--} auth0authResult (Authentication.handleAuthResult >> AuthenticationMsg) ]
 
 
-mouseMoveSubs : Model -> Sub Msg
-mouseMoveSubs model =
-    case model.pool.move of
-        Nothing ->
-            Sub.none
+-- mouseMoveSubs : Model -> Sub Msg
+-- mouseMoveSubs model =
+--     case model.pool.move of
+--         Nothing ->
+--             Sub.none
 
-        Just _ ->
-            Sub.batch [ Mouse.moves MouseMove, Mouse.ups MouseEnd ]
+--         Just _ ->
+--             Sub.batch [ Mouse.moves MouseMove, Mouse.ups MouseEnd ]
 
 
 

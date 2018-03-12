@@ -13,8 +13,9 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Http exposing (..)
 import Moment exposing (..)
-import Pages.Event.Model exposing (..)
-import Pages.Events.Model exposing (EventAPI(GraphCool, SeatGeek))
+import Pages.Event.Model exposing (Event)
+import Pages.Pool.Model exposing (Pool)
+import Pages.Events.Model exposing (Events,EventAPI)
 import SeatGeek.Decode exposing (decodeReply)
 import SeatGeek.Query exposing (composeRequest)
 import SeatGeek.Types as SG
@@ -42,10 +43,10 @@ view api =
     let
         apiToEvent api =
             case api of
-                SeatGeek x ->
+                Pages.Events.Model.SeatGeek x ->
                     seatGeekView x
 
-                GraphCool y ->
+                Pages.Events.Model.GraphCool y ->
                     graphCoolView y
     in
     section [ class "overflow-auto w-100 flex-grow-1 animated fadeInLeft mw6-l flex-shrink-0 bg-black-70 shadow-2-l" ]
@@ -59,7 +60,7 @@ graphCoolView event =
 
     -- , eventEmojis event
     -- , eventTime event.startsAt
-    , eventPool
+    , eventPool event.pool 
 
     -- , eventPopularity event
     -- , yetToBeAdded
@@ -74,7 +75,6 @@ seatGeekView event =
 
     -- , eventTime event.datetime_local
     , eventTickets event
-    , eventPool
     , eventPopularity event
     , yetToBeAdded
     ]
@@ -209,24 +209,21 @@ yetToBeAdded =
         ]
 
 
-eventPool : Html Msg
-eventPool =
+eventPool : Pool -> Html Msg
+eventPool pool =
     div [ class "flex items-center justify-around mh4 pv4 bb b--white-20" ]
         [ a [ href "Pool.html", class "white link br-pill pa2 mh1 flex items-center mh1 grow" ]
             [ div [ Assets.feather "info", class "h2 w2 contain bg-center" ] []
             ]
         , a
-            [ onClick (Types.ChangeTo Types.GoPool)
+            [ onClick (Types.ViewPool Types.GoPool)
             , class "white link lg-breathe-50 br1 pa2 mh1 flex items-center mh1 grow"
             ]
             [ div [ Assets.feather "life-buoy", class "h2 w2 mh1 contain bg-center" ] []
             , div [ class "mh2 f4 fw4 ttn" ] [ text "join pool" ]
             ]
         , div
-            [ class "mr3 f2"
-            , onClick (Types.ChangeTo Types.GoPool)
-            ]
-            [ text "🏊" ]
+            [ class "mr3 f2"] [ text "🏊" ]
         ]
 
 

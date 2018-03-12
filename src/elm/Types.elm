@@ -16,7 +16,10 @@ import Pages.CreateEvent.Messages as CreateEventMsg
 import Pages.CreateEvent.Model as CreateEventModel
 import Pages.CreateMessage.Messages as CreateMessageMsg
 import Pages.CreateMessage.Model as CreateMessageModel
+import Pages.CreateChat.Messages as CreateChatMsg
+import Pages.CreateChat.Model as CreateChatModel
 import Pages.EditUser.Messages as EditUserMsg
+import Pages.Event.Messages as EventPoolMsg
 import Pages.Event.Model as EventModel
 import Pages.Events.Messages as EventsMsg
 import Pages.Events.Model as EventsModel
@@ -35,10 +38,11 @@ type alias Model =
     , chat : ChatModel.Chat
     , chats : ChatsModel.Chats
     , events : List EventsModel.EventAPI
-    , pool : PoolModel.Pool
+    , pool : PoolModel.PoolModel
     , client : Client
     , createEvent : CreateEventModel.CreateEvent
     , createMessage : CreateMessageModel.CreateMessage
+    , createChat : CreateChatModel.CreateChat
     , me : UserModel.Me
     , errors : List String
     }
@@ -56,6 +60,7 @@ initModel initialAuthUser =
         initClient
         EventModel.initModel
         CreateMessageModel.initModel
+        CreateChatModel.initModel
         (UserModel.initMe initialAuthUser)
         []
 
@@ -109,6 +114,7 @@ type
     | UserMsg UserMsg.Msg
     | UpdateTextInput String
     | CreateMessageMsg CreateMessageMsg.Msg
+    | CreateChatMsg CreateChatMsg.Msg
     | ChatMsg ChatMsg.Msg
     | ChatsMsg ChatsMsg.Msg
       -- Chat
@@ -117,14 +123,16 @@ type
     | ViewChat Route
       -- Events
     | ViewEvent Route
-      -- | OnDatetime Date
+    | ViewPool Route
+    | UpdateChats Route CreateChatModel.CreateChat
+    | EventPoolMsg EventPoolMsg.Msg 
       -- SeatGeek
     | GetReply (Result Http.Error SG.Reply)
     | TextAreaResizer Int
       -- Pool
-    | MouseStart Position
-    | MouseMove Position
-    | MouseEnd Position
-    | ResizePool Size
-    | InitialWindow Size
+    -- | MouseStart Position
+    -- | MouseMove Position
+    -- | MouseEnd Position
+    -- | ResizePool Size
+    -- | InitialWindow Size
     | AuthenticationMsg Authentication.Msg
