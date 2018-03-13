@@ -9,8 +9,8 @@ module Pages.Event.Model exposing (..)
 import GraphCool.Scalar exposing (..)
 import Graphqelm.Http exposing (..)
 import Pages.Event.Messages exposing (..)
-import RemoteData exposing (..)
 import Pages.Pool.Model exposing (..)
+import RemoteData exposing (..)
 
 
 -- type alias Event =
@@ -38,8 +38,7 @@ type alias Response =
 
 
 type alias Event =
-    { chats : Maybe (List Id)
-    , createdAt : DateTime
+    { createdAt : DateTime
     , createdBy : Id
     , endsAt : Maybe DateTime
     , hosts : Maybe (List Id)
@@ -51,6 +50,7 @@ type alias Event =
     , venues : Maybe (List Id)
     , pool : Pool
     }
+
 
 type alias NewEvent =
     { createdBy : Id
@@ -88,7 +88,6 @@ initCmd =
 initEvent : Event
 initEvent =
     Event
-        Nothing
         (GraphCool.Scalar.DateTime "10/10/10")
         (Id "")
         Nothing
@@ -100,6 +99,7 @@ initEvent =
         (GraphCool.Scalar.DateTime "10/11/10")
         Nothing
         Pages.Pool.Model.initPool
+
 
 initModel : EventModel
 initModel =

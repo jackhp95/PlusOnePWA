@@ -4,7 +4,6 @@
 
 module GraphCool.Object.Event exposing (..)
 
-import GraphCool.Enum.ChatOrderBy
 import GraphCool.Enum.HostOrderBy
 import GraphCool.Enum.VenueOrderBy
 import GraphCool.InputObject
@@ -26,28 +25,6 @@ import Json.Decode as Decode
 selection : (a -> constructor) -> SelectionSet (a -> constructor) GraphCool.Object.Event
 selection constructor =
     Object.selection constructor
-
-
-type alias ChatsOptionalArguments =
-    { filter : OptionalArgument GraphCool.InputObject.ChatFilter, orderBy : OptionalArgument GraphCool.Enum.ChatOrderBy.ChatOrderBy, skip : OptionalArgument Int, after : OptionalArgument String, before : OptionalArgument String, first : OptionalArgument Int, last : OptionalArgument Int }
-
-
-{-|
-
-  - filter -
-
--}
-chats : (ChatsOptionalArguments -> ChatsOptionalArguments) -> SelectionSet decodesTo GraphCool.Object.Chat -> Field (Maybe (List decodesTo)) GraphCool.Object.Event
-chats fillInOptionals object =
-    let
-        filledInOptionals =
-            fillInOptionals { filter = Absent, orderBy = Absent, skip = Absent, after = Absent, before = Absent, first = Absent, last = Absent }
-
-        optionalArgs =
-            [ Argument.optional "filter" filledInOptionals.filter GraphCool.InputObject.encodeChatFilter, Argument.optional "orderBy" filledInOptionals.orderBy (Encode.enum GraphCool.Enum.ChatOrderBy.toString), Argument.optional "skip" filledInOptionals.skip Encode.int, Argument.optional "after" filledInOptionals.after Encode.string, Argument.optional "before" filledInOptionals.before Encode.string, Argument.optional "first" filledInOptionals.first Encode.int, Argument.optional "last" filledInOptionals.last Encode.int ]
-                |> List.filterMap identity
-    in
-    Object.selectionField "chats" optionalArgs object (identity >> Decode.list >> Decode.nullable)
 
 
 createdAt : Field GraphCool.Scalar.DateTime GraphCool.Object.Event
@@ -171,28 +148,6 @@ venues fillInOptionals object =
                 |> List.filterMap identity
     in
     Object.selectionField "venues" optionalArgs object (identity >> Decode.list >> Decode.nullable)
-
-
-type alias ChatsMetaOptionalArguments =
-    { filter : OptionalArgument GraphCool.InputObject.ChatFilter, orderBy : OptionalArgument GraphCool.Enum.ChatOrderBy.ChatOrderBy, skip : OptionalArgument Int, after : OptionalArgument String, before : OptionalArgument String, first : OptionalArgument Int, last : OptionalArgument Int }
-
-
-{-| Meta information about the query.
-
-  - filter -
-
--}
-chatsMeta_ : (ChatsMetaOptionalArguments -> ChatsMetaOptionalArguments) -> SelectionSet decodesTo GraphCool.Object.QueryMeta_ -> Field decodesTo GraphCool.Object.Event
-chatsMeta_ fillInOptionals object =
-    let
-        filledInOptionals =
-            fillInOptionals { filter = Absent, orderBy = Absent, skip = Absent, after = Absent, before = Absent, first = Absent, last = Absent }
-
-        optionalArgs =
-            [ Argument.optional "filter" filledInOptionals.filter GraphCool.InputObject.encodeChatFilter, Argument.optional "orderBy" filledInOptionals.orderBy (Encode.enum GraphCool.Enum.ChatOrderBy.toString), Argument.optional "skip" filledInOptionals.skip Encode.int, Argument.optional "after" filledInOptionals.after Encode.string, Argument.optional "before" filledInOptionals.before Encode.string, Argument.optional "first" filledInOptionals.first Encode.int, Argument.optional "last" filledInOptionals.last Encode.int ]
-                |> List.filterMap identity
-    in
-    Object.selectionField "_chatsMeta" optionalArgs object identity
 
 
 type alias HostsMetaOptionalArguments =

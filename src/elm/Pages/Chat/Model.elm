@@ -9,16 +9,17 @@ import RemoteData exposing (..)
 
 
 type alias Chat =
-    { canceled : Maybe String
+    { canceled : Maybe Id
     , dateState : DateState
-    , event : String
+    , pool : Id
     , id : Id
-    , initiated : Chatter
+    , initiated : Id
     , messages : Maybe (List Message)
-    , passed : Maybe String
-    , proposed : Maybe String
-    , recipient : Maybe Chatter
+    , passed : Maybe Id
+    , proposed : Maybe Id
+    , recipient : Maybe Id
     }
+
 
 type alias NewChat =
     { event : Id
@@ -26,8 +27,10 @@ type alias NewChat =
     , recipient : Maybe String
     }
 
+
 type alias CreateResponseModel =
     RemoteData Graphqelm.Http.Error (Maybe NewChat)
+
 
 type alias Chatter =
     { id : Id
@@ -50,9 +53,9 @@ initModel =
     Chat
         Nothing
         GraphCool.Enum.DateState.Active
-        "Loading Event..."
         (Id "123")
-        (Chatter (Id "123") "Initiator")
+        (Id "123")
+        (Id "123")
         Nothing
         Nothing
         Nothing

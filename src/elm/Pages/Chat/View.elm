@@ -88,23 +88,23 @@ messageBar model chat client =
 
 initiatedName : ChatModel.Chat -> String
 initiatedName chat =
-    if chat.initiated.id == Id "cjed2224jh6a4019863siiw2e" then
+    if chat.initiated == Id "cjed2224jh6a4019863siiw2e" then
         "Me"
     else
-        chat.initiated.name
+        toString chat.initiated
 
 
 crushName : ChatModel.Chat -> String
 crushName chat =
-    if chat.initiated.id == Id "cjed2224jh6a4019863siiw2e" then
+    if chat.initiated == Id "cjed2224jh6a4019863siiw2e" then
         case chat.recipient of
             Nothing ->
                 "Anonymous"
 
             Just obj ->
-                obj.name
+                toString obj
     else
-        chat.initiated.name
+        toString chat.initiated
 
 
 nameBar : ChatModel.Chat -> Html Types.Msg

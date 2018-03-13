@@ -117,15 +117,15 @@ nameBar chat =
                             ( m.text, clockTime datetime )
 
         crushName =
-            if chat.initiated.id == Id "cjed2224jh6a4019863siiw2e" then
+            if chat.initiated == Id "cjed2224jh6a4019863siiw2e" then
                 case chat.recipient of
                     Nothing ->
                         "Anonymous"
 
                     Just obj ->
-                        obj.name
+                        toString obj
             else
-                chat.initiated.name
+                toString chat.initiated
     in
     div
         [ class "flex items-center z-2 fadeIn animated pa3 grow hover-bg-black-20 lh-title"
@@ -140,7 +140,7 @@ nameBar chat =
             [ div [ class "flex justify-between" ]
                 [ div [ class "nowrap" ]
                     [ div [ class "f5 fw6" ] [ text crushName ]
-                    , div [ class "f5 fw4 o-60" ] [ text chat.event ]
+                    , div [ class "f5 fw4 o-60" ] [ text <| toString chat ]
                     ]
                 , div [ class "mh2 self-start f7 tr o-80 flex-shrink-0" ]
                     [ div [] [ text headTime ]

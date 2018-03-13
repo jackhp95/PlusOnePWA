@@ -1,13 +1,13 @@
 module Pages.CreateChat.Model exposing (..)
 
 import GraphCool.Scalar exposing (..)
-import Pages.CreateChat.Messages exposing (..)
 import Pages.Chat.Model exposing (..)
+import Pages.CreateChat.Messages exposing (..)
 import RemoteData exposing (..)
 
 
 type alias CreateChat =
-    { eventId : Id
+    { poolId : Id
     , initiatedId : Id
     , recipientId : Id
     , createResponse : CreateResponseModel

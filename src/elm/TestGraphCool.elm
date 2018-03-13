@@ -1,7 +1,10 @@
 module TestGraphCool exposing (main)
 
+-- import GraphCool.InputObject as IO
+-- import Graphqelm.Field as Field
+-- import Dict exposing (..)
+
 import GraphCool.Enum.DateState exposing (DateState)
-import GraphCool.InputObject as IO
 import GraphCool.Mutation as Mutation
 import GraphCool.Object
 import GraphCool.Object.Chat as Chat
@@ -15,7 +18,6 @@ import GraphCool.Object.Venue as Venue
 import GraphCool.Query as Query
 import GraphCool.Scalar exposing (..)
 import Graphqelm.Document as Document
-import Graphqelm.Field as Field
 import Graphqelm.Http exposing (..)
 import Graphqelm.Operation exposing (RootQuery)
 import Graphqelm.OptionalArgument exposing (OptionalArgument(Absent, Null, Present))
@@ -24,7 +26,7 @@ import Html exposing (..)
 import RemoteData exposing (..)
 
 
-type alias Response =
+type alias Everything =
     { hosts : List Host
     , venues : List Venue
     , locations : List Location
@@ -32,7 +34,8 @@ type alias Response =
     , pools : List Pool
     , messages : List Message
     , chats : List Chat
-    , users : List OtherUser
+    , users : List User
+    , me : Maybe Me
     }
 
 
@@ -73,7 +76,7 @@ type alias Location =
 
 
 type alias Event =
-    { chats : Maybe (List Id)
+    { pool : Id
     , createdAt : DateTime
     , createdBy : Id
     , endsAt : Maybe DateTime
@@ -110,7 +113,7 @@ type alias Message =
 type alias Chat =
     { canceled : Maybe Id
     , dateState : DateState
-    , event : Id
+    , pool : Id
     , id : Id
     , initiated : Id
     , messages : Maybe (List Message)
@@ -121,6 +124,22 @@ type alias Chat =
 
 
 type alias User =
+    { bio : Maybe String
+    , birthday : DateTime
+    , createdAt : DateTime
+    , createdEvents : Maybe (List Id)
+    , email : Maybe String
+    , attendingEvent : Maybe (List Id)
+    , likedEvent : Maybe (List Id)
+    , hosts : Maybe (List Id)
+    , id : Id
+    , name : String
+    , nameFull : Maybe String
+    , updatedAt : DateTime
+    }
+
+
+type alias Me =
     { auth0UserId : Maybe String
     , bio : Maybe String
     , birthday : DateTime
@@ -145,16 +164,9 @@ type alias User =
     }
 
 
-type alias OtherUser =
-    { bio : Maybe String
-    , birthday : DateTime
-    , id : Id
-    }
-
-
-queryEverything : SelectionSet Response RootQuery
+queryEverything : SelectionSet Everything RootQuery
 queryEverything =
-    Query.selection Response
+    Query.selection Everything
         |> with (Query.allHosts identity host)
         |> with (Query.allVenues identity venue)
         |> with (Query.allLocations identity location)
@@ -162,19 +174,20 @@ queryEverything =
         |> with (Query.allPools identity pool)
         |> with (Query.allMessages identity message)
         |> with (Query.allChats identity chat)
-        |> with (Query.allUsers identity otheruser)
+        |> with (Query.allUsers identity user)
+        |> with (Query.me me)
 
 
 updateUserMutation : SelectionSet (Maybe User) Graphqelm.Operation.RootMutation
 updateUserMutation =
     Mutation.selection identity
-        |> with (Mutation.updateUser identity (Mutation.UpdateUserRequiredArguments (Id "FUCK")) user)
+        |> with (Mutation.updateUser identity (Mutation.UpdateUserRequiredArguments (Id "id")) user)
 
 
 createUserMutation : SelectionSet (Maybe User) Graphqelm.Operation.RootMutation
 createUserMutation =
     Mutation.selection identity
-        |> with (Mutation.createUser identity { birthday = DateTime "1969-06-09", name = "elm", authProvider = { auth0 = Present { idToken = "fuck" }, email = Null } } user)
+        |> with (Mutation.createUser identity { birthday = DateTime "1969-06-09", name = "elm", authProvider = { auth0 = Present { idToken = "id" }, email = Null } } user)
 
 
 hostId : SelectionSet Id GraphCool.Object.Host
@@ -239,7 +252,7 @@ eventId =
 event : SelectionSet Event GraphCool.Object.Event
 event =
     Event.selection Event
-        |> with (Event.chats identity chatId)
+        |> with (Event.pool identity poolId)
         |> with Event.createdAt
         |> with (Event.createdBy identity userId)
         |> with Event.endsAt
@@ -295,7 +308,7 @@ chat =
     Chat.selection Chat
         |> with (Chat.canceled identity userId)
         |> with Chat.dateState
-        |> with (Chat.event identity eventId)
+        |> with (Chat.pool identity poolId)
         |> with Chat.id
         |> with (Chat.initiated identity userId)
         |> with (Chat.messages identity message)
@@ -312,6 +325,28 @@ userId =
 user : SelectionSet User GraphCool.Object.User
 user =
     User.selection User
+        |> with User.bio
+        |> with User.birthday
+        |> with User.createdAt
+        |> with (User.createdEvents identity eventId)
+        |> with User.email
+        |> with (User.attendingEvent identity poolId)
+        |> with (User.likedEvent identity poolId)
+        |> with (User.hosts identity hostId)
+        |> with User.id
+        |> with User.name
+        |> with User.nameFull
+        |> with User.updatedAt
+
+
+meId : SelectionSet Id GraphCool.Object.User
+meId =
+    User.selection identity |> with User.id
+
+
+me : SelectionSet Me GraphCool.Object.User
+me =
+    User.selection Me
         |> with User.auth0UserId
         |> with User.bio
         |> with User.birthday
@@ -335,95 +370,443 @@ user =
         |> with User.updatedAt
 
 
-otheruser : SelectionSet OtherUser GraphCool.Object.User
-otheruser =
-    User.selection OtherUser
-        |> with User.bio
-        |> with User.birthday
-        |> with User.id
+queryHosts : (Query.AllHostsOptionalArguments -> Query.AllHostsOptionalArguments) -> SelectionSet (List Host) RootQuery
+queryHosts optArgs =
+    Query.selection identity
+        |> with (Query.allHosts optArgs host)
 
 
-makeQueryRequest : Cmd Msg
-makeQueryRequest =
-    queryEverything
+queryVenues : (Query.AllVenuesOptionalArguments -> Query.AllVenuesOptionalArguments) -> SelectionSet (List Venue) RootQuery
+queryVenues optArgs =
+    Query.selection identity
+        |> with (Query.allVenues optArgs venue)
+
+
+queryLocations : (Query.AllLocationsOptionalArguments -> Query.AllLocationsOptionalArguments) -> SelectionSet (List Location) RootQuery
+queryLocations optArgs =
+    Query.selection identity
+        |> with (Query.allLocations optArgs location)
+
+
+queryEvents : (Query.AllEventsOptionalArguments -> Query.AllEventsOptionalArguments) -> SelectionSet (List Event) RootQuery
+queryEvents optArgs =
+    Query.selection identity
+        |> with (Query.allEvents optArgs event)
+
+
+queryPools : (Query.AllPoolsOptionalArguments -> Query.AllPoolsOptionalArguments) -> SelectionSet (List Pool) RootQuery
+queryPools optArgs =
+    Query.selection identity
+        |> with (Query.allPools optArgs pool)
+
+
+queryMessages : (Query.AllMessagesOptionalArguments -> Query.AllMessagesOptionalArguments) -> SelectionSet (List Message) RootQuery
+queryMessages optArgs =
+    Query.selection identity
+        |> with (Query.allMessages optArgs message)
+
+
+queryChats : (Query.AllChatsOptionalArguments -> Query.AllChatsOptionalArguments) -> SelectionSet (List Chat) RootQuery
+queryChats optArgs =
+    Query.selection identity
+        |> with (Query.allChats optArgs chat)
+
+
+queryUsers : (Query.AllUsersOptionalArguments -> Query.AllUsersOptionalArguments) -> SelectionSet (List User) RootQuery
+queryUsers optArgs =
+    Query.selection identity
+        |> with (Query.allUsers optArgs user)
+
+
+queryMe : SelectionSet (Maybe Me) RootQuery
+queryMe =
+    Query.selection identity
+        |> with (Query.me me)
+
+
+requestHosts : (Query.AllHostsOptionalArguments -> Query.AllHostsOptionalArguments) -> Cmd Msg
+requestHosts optArgs =
+    queryHosts optArgs
         |> Graphqelm.Http.queryRequest "https://api.graph.cool/simple/v1/PlusOne"
-        |> Graphqelm.Http.send (RemoteData.fromResult >> GotResponse)
+        |> Graphqelm.Http.send (RemoteData.fromResult >> ReturnHosts)
 
 
-makeMutationRequest : Cmd Msg
-makeMutationRequest =
-    updateUserMutation
-        |> Graphqelm.Http.mutationRequest "https://api.graph.cool/simple/v1/PlusOne"
-        |> Graphqelm.Http.send (RemoteData.fromResult >> MutateUser)
+requestVenues : (Query.AllVenuesOptionalArguments -> Query.AllVenuesOptionalArguments) -> Cmd Msg
+requestVenues optArgs =
+    queryVenues optArgs
+        |> Graphqelm.Http.queryRequest "https://api.graph.cool/simple/v1/PlusOne"
+        |> Graphqelm.Http.send (RemoteData.fromResult >> ReturnVenues)
 
 
-type Msg
-    = GotResponse (RemoteData Graphqelm.Http.Error Response)
-    | MutateUser (RemoteData Graphqelm.Http.Error (Maybe User))
+requestLocations : (Query.AllLocationsOptionalArguments -> Query.AllLocationsOptionalArguments) -> Cmd Msg
+requestLocations optArgs =
+    queryLocations optArgs
+        |> Graphqelm.Http.queryRequest "https://api.graph.cool/simple/v1/PlusOne"
+        |> Graphqelm.Http.send (RemoteData.fromResult >> ReturnLocations)
+
+
+requestEvents : (Query.AllEventsOptionalArguments -> Query.AllEventsOptionalArguments) -> Cmd Msg
+requestEvents optArgs =
+    queryEvents optArgs
+        |> Graphqelm.Http.queryRequest "https://api.graph.cool/simple/v1/PlusOne"
+        |> Graphqelm.Http.send (RemoteData.fromResult >> ReturnEvents)
+
+
+requestPools : (Query.AllPoolsOptionalArguments -> Query.AllPoolsOptionalArguments) -> Cmd Msg
+requestPools optArgs =
+    queryPools optArgs
+        |> Graphqelm.Http.queryRequest "https://api.graph.cool/simple/v1/PlusOne"
+        |> Graphqelm.Http.send (RemoteData.fromResult >> ReturnPools)
+
+
+requestMessages : (Query.AllMessagesOptionalArguments -> Query.AllMessagesOptionalArguments) -> Cmd Msg
+requestMessages optArgs =
+    queryMessages optArgs
+        |> Graphqelm.Http.queryRequest "https://api.graph.cool/simple/v1/PlusOne"
+        |> Graphqelm.Http.send (RemoteData.fromResult >> ReturnMessages)
+
+
+requestChats : (Query.AllChatsOptionalArguments -> Query.AllChatsOptionalArguments) -> Cmd Msg
+requestChats optArgs =
+    queryChats optArgs
+        |> Graphqelm.Http.queryRequest "https://api.graph.cool/simple/v1/PlusOne"
+        |> Graphqelm.Http.send (RemoteData.fromResult >> ReturnChats)
+
+
+requestUsers : (Query.AllUsersOptionalArguments -> Query.AllUsersOptionalArguments) -> Cmd Msg
+requestUsers optArgs =
+    queryUsers optArgs
+        |> Graphqelm.Http.queryRequest "https://api.graph.cool/simple/v1/PlusOne"
+        |> Graphqelm.Http.send (RemoteData.fromResult >> ReturnUsers)
+
+
+
+-- makeMutationRequest : Cmd Msg
+-- makeMutationRequest =
+--     updateUserMutation
+--         |> Graphqelm.Http.mutationRequest "https://api.graph.cool/simple/v1/PlusOne"
+--         |> Graphqelm.Http.send (RemoteData.fromResult >> MutateUser)
 
 
 type alias Model =
-    { query : RemoteData Graphqelm.Http.Error Response
-    , mutation : RemoteData Graphqelm.Http.Error (Maybe User)
+    { hosts : List Host
+    , venues : List Venue
+    , locations : List Location
+    , events : List Event
+    , pools : List Pool
+    , messages : List Message
+    , chats : List Chat
+    , users : List User
+    , me : Maybe Me
+    , errors : List String
     }
+
+
+emptyModel : Model
+emptyModel =
+    Model
+        -- hosts
+        []
+        -- venues
+        []
+        -- locations
+        []
+        -- events
+        []
+        -- pools
+        []
+        -- messages
+        []
+        -- chats
+        []
+        -- users
+        []
+        -- me
+        Nothing
+        -- errors
+        []
 
 
 init : ( Model, Cmd Msg )
 init =
-    ( Model RemoteData.Loading RemoteData.Loading
-    , makeQueryRequest
+    ( emptyModel
+    , requestUsers identity
       -- change this to MakeMutationRequest if you want to test a mutation.
     )
+
+
+type Msg
+    = ReturnHosts (RemoteData Graphqelm.Http.Error (List Host))
+    | ReturnVenues (RemoteData Graphqelm.Http.Error (List Venue))
+    | ReturnLocations (RemoteData Graphqelm.Http.Error (List Location))
+    | ReturnEvents (RemoteData Graphqelm.Http.Error (List Event))
+    | ReturnPools (RemoteData Graphqelm.Http.Error (List Pool))
+    | ReturnMessages (RemoteData Graphqelm.Http.Error (List Message))
+    | ReturnChats (RemoteData Graphqelm.Http.Error (List Chat))
+    | ReturnUsers (RemoteData Graphqelm.Http.Error (List User))
+    | ReturnMe (RemoteData Graphqelm.Http.Error Me)
+    | ReturnHost (RemoteData Graphqelm.Http.Error Host)
+    | ReturnVenue (RemoteData Graphqelm.Http.Error Venue)
+    | ReturnLocation (RemoteData Graphqelm.Http.Error Location)
+    | ReturnEvent (RemoteData Graphqelm.Http.Error Event)
+    | ReturnPool (RemoteData Graphqelm.Http.Error Pool)
+    | ReturnMessage (RemoteData Graphqelm.Http.Error Message)
+    | ReturnChat (RemoteData Graphqelm.Http.Error Chat)
+    | ReturnUser (RemoteData Graphqelm.Http.Error User)
+
+
+
+-- | MutateUser (WebData (Maybe User))
+
+
+update : Msg -> Model -> ( Model, Cmd Msg )
+update msg model =
+    case msg of
+        -- MutateUser response ->
+        --     ( { model | mutation = response }, Cmd.none )
+        ReturnHosts response ->
+            case response of
+                Success x ->
+                    ( { model | hosts = List.append x model.hosts }, Cmd.none )
+
+                Failure y ->
+                    ( { model | errors = toString y :: model.errors }, Cmd.none )
+
+                _ ->
+                    ( { model | errors = "RemoteData is running an update?" :: model.errors }, Cmd.none )
+
+        ReturnVenues response ->
+            case response of
+                Success x ->
+                    ( { model | venues = List.append x model.venues }, Cmd.none )
+
+                Failure y ->
+                    ( { model | errors = toString y :: model.errors }, Cmd.none )
+
+                _ ->
+                    ( { model | errors = "RemoteData is running an update?" :: model.errors }, Cmd.none )
+
+        ReturnLocations response ->
+            case response of
+                Success x ->
+                    ( { model | locations = List.append x model.locations }, Cmd.none )
+
+                Failure y ->
+                    ( { model | errors = toString y :: model.errors }, Cmd.none )
+
+                _ ->
+                    ( { model | errors = "RemoteData is running an update?" :: model.errors }, Cmd.none )
+
+        ReturnEvents response ->
+            case response of
+                Success x ->
+                    ( { model | events = List.append x model.events }, Cmd.none )
+
+                Failure y ->
+                    ( { model | errors = toString y :: model.errors }, Cmd.none )
+
+                _ ->
+                    ( { model | errors = "RemoteData is running an update?" :: model.errors }, Cmd.none )
+
+        ReturnPools response ->
+            case response of
+                Success x ->
+                    ( { model | pools = List.append x model.pools }, Cmd.none )
+
+                Failure y ->
+                    ( { model | errors = toString y :: model.errors }, Cmd.none )
+
+                _ ->
+                    ( { model | errors = "RemoteData is running an update?" :: model.errors }, Cmd.none )
+
+        ReturnMessages response ->
+            case response of
+                Success x ->
+                    ( { model | messages = List.append x model.messages }, Cmd.none )
+
+                Failure y ->
+                    ( { model | errors = toString y :: model.errors }, Cmd.none )
+
+                _ ->
+                    ( { model | errors = "RemoteData is running an update?" :: model.errors }, Cmd.none )
+
+        ReturnChats response ->
+            case response of
+                Success x ->
+                    ( { model | chats = List.append x model.chats }, Cmd.none )
+
+                Failure y ->
+                    ( { model | errors = toString y :: model.errors }, Cmd.none )
+
+                _ ->
+                    ( { model | errors = "RemoteData is running an update?" :: model.errors }, Cmd.none )
+
+        ReturnUsers response ->
+            case response of
+                Success x ->
+                    ( { model | users = List.append x model.users }, Cmd.none )
+
+                Failure y ->
+                    ( { model | errors = toString y :: model.errors }, Cmd.none )
+
+                _ ->
+                    ( { model | errors = "RemoteData is running an update?" :: model.errors }, Cmd.none )
+
+        ReturnMe response ->
+            case response of
+                Success x ->
+                    ( { model | me = RemoteData.toMaybe response }, Cmd.none )
+
+                Failure y ->
+                    ( { model | errors = toString y :: model.errors }, Cmd.none )
+
+                _ ->
+                    ( { model | errors = "RemoteData is running an update?" :: model.errors }, Cmd.none )
+
+        ReturnHost response ->
+            case response of
+                Success x ->
+                    ( { model | hosts = x :: model.hosts }, Cmd.none )
+
+                Failure y ->
+                    ( { model | errors = toString y :: model.errors }, Cmd.none )
+
+                _ ->
+                    ( { model | errors = "RemoteData is running an update?" :: model.errors }, Cmd.none )
+
+        ReturnVenue response ->
+            case response of
+                Success x ->
+                    ( { model | venues = x :: model.venues }, Cmd.none )
+
+                Failure y ->
+                    ( { model | errors = toString y :: model.errors }, Cmd.none )
+
+                _ ->
+                    ( { model | errors = "RemoteData is running an update?" :: model.errors }, Cmd.none )
+
+        ReturnLocation response ->
+            case response of
+                Success x ->
+                    ( { model | locations = x :: model.locations }, Cmd.none )
+
+                Failure y ->
+                    ( { model | errors = toString y :: model.errors }, Cmd.none )
+
+                _ ->
+                    ( { model | errors = "RemoteData is running an update?" :: model.errors }, Cmd.none )
+
+        ReturnEvent response ->
+            case response of
+                Success x ->
+                    ( { model | events = x :: model.events }, Cmd.none )
+
+                Failure y ->
+                    ( { model | errors = toString y :: model.errors }, Cmd.none )
+
+                _ ->
+                    ( { model | errors = "RemoteData is running an update?" :: model.errors }, Cmd.none )
+
+        ReturnPool response ->
+            case response of
+                Success x ->
+                    ( { model | pools = x :: model.pools }, Cmd.none )
+
+                Failure y ->
+                    ( { model | errors = toString y :: model.errors }, Cmd.none )
+
+                _ ->
+                    ( { model | errors = "RemoteData is running an update?" :: model.errors }, Cmd.none )
+
+        ReturnMessage response ->
+            case response of
+                Success x ->
+                    ( { model | messages = x :: model.messages }, Cmd.none )
+
+                Failure y ->
+                    ( { model | errors = toString y :: model.errors }, Cmd.none )
+
+                _ ->
+                    ( { model | errors = "RemoteData is running an update?" :: model.errors }, Cmd.none )
+
+        ReturnChat response ->
+            case response of
+                Success x ->
+                    ( { model | chats = x :: model.chats }, Cmd.none )
+
+                Failure y ->
+                    ( { model | errors = toString y :: model.errors }, Cmd.none )
+
+                _ ->
+                    ( { model | errors = "RemoteData is running an update?" :: model.errors }, Cmd.none )
+
+        ReturnUser response ->
+            case response of
+                Success x ->
+                    ( { model | users = x :: model.users }, Cmd.none )
+
+                Failure y ->
+                    ( { model | errors = toString y :: model.errors }, Cmd.none )
+
+                _ ->
+                    ( { model | errors = "RemoteData is running an update?" :: model.errors }, Cmd.none )
 
 
 view : Model -> Html.Html Msg
 view model =
     let
+        buttons =
+            div []
+                [ h4 [] [ text "Get allHosts" ]
+                , h4 [] [ text "Get allVenues" ]
+                , h4 [] [ text "Get allLocations" ]
+                , h4 [] [ text "Get allEvents" ]
+                , h4 [] [ text "Get allPools" ]
+                , h4 [] [ text "Get allMessages" ]
+                , h4 [] [ text "Get allChats" ]
+                , h4 [] [ text "Get allUsers" ]
+                , h4 [] [ text "Get me" ]
+                ]
+
         response =
-            case model.query of
-                NotAsked ->
-                    text "Hold up, Lemme Check"
-
-                Loading ->
-                    text "Gimme a Sec"
-
-                Failure e ->
-                    text ("Shucks um, " ++ Basics.toString e)
-
-                Success a ->
-                    div []
-                        [ div []
-                            [ h5 [] [ text "Host" ]
-                            , div [] [ text (Basics.toString a.hosts) ]
-                            ]
-                        , div []
-                            [ h5 [] [ text "Venues" ]
-                            , div [] [ text (Basics.toString a.venues) ]
-                            ]
-                        , div []
-                            [ h5 [] [ text "Locations" ]
-                            , div [] [ text (Basics.toString a.locations) ]
-                            ]
-                        , div []
-                            [ h5 [] [ text "Events" ]
-                            , div [] [ text (Basics.toString a.events) ]
-                            ]
-                        , div []
-                            [ h5 [] [ text "Messages" ]
-                            , div [] [ text (Basics.toString a.messages) ]
-                            ]
-                        , div []
-                            [ h5 [] [ text "Chats" ]
-                            , div [] [ text (Basics.toString a.chats) ]
-                            ]
-                        , div []
-                            [ h5 [] [ text "Users" ]
-                            , div [] [ text (Basics.toString a.users) ]
-                            ]
-                        ]
+            div []
+                [ div []
+                    [ h5 [] [ text "Host" ]
+                    , div [] [ text (Basics.toString model.hosts) ]
+                    ]
+                , div []
+                    [ h5 [] [ text "Venues" ]
+                    , div [] [ text (Basics.toString model.venues) ]
+                    ]
+                , div []
+                    [ h5 [] [ text "Locations" ]
+                    , div [] [ text (Basics.toString model.locations) ]
+                    ]
+                , div []
+                    [ h5 [] [ text "Events" ]
+                    , div [] [ text (Basics.toString model.events) ]
+                    ]
+                , div []
+                    [ h5 [] [ text "Messages" ]
+                    , div [] [ text (Basics.toString model.messages) ]
+                    ]
+                , div []
+                    [ h5 [] [ text "Chats" ]
+                    , div [] [ text (Basics.toString model.chats) ]
+                    ]
+                , div []
+                    [ h5 [] [ text "Users" ]
+                    , div [] [ text (Basics.toString model.users) ]
+                    ]
+                , div []
+                    [ h5 [] [ text "Me" ]
+                    , div [] [ text (Basics.toString model.me) ]
+                    ]
+                ]
     in
     div []
-        [ div []
+        [ div [] [ buttons ]
+        , div []
             [ h1 [] [ text "Generated Query" ]
             , pre [] [ text (Document.serializeQuery queryEverything) ]
             ]
@@ -432,23 +815,13 @@ view model =
             , pre [] [ text (Document.serializeMutation updateUserMutation) ]
             ]
         , div []
-            [ h1 [] [ text "Response" ]
+            [ h1 [] [ text "Everything" ]
             , h2 [] [ text "Raw" ]
             , Html.text (Basics.toString model)
             , h2 [] [ text "Refined" ]
             , response
             ]
         ]
-
-
-update : Msg -> Model -> ( Model, Cmd Msg )
-update msg model =
-    case msg of
-        GotResponse response ->
-            ( { model | query = response }, Cmd.none )
-
-        MutateUser response ->
-            ( { model | mutation = response }, Cmd.none )
 
 
 main : Program Never Model Msg

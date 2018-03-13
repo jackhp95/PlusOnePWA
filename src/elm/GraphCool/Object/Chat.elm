@@ -54,28 +54,6 @@ dateState =
     Object.fieldDecoder "dateState" [] GraphCool.Enum.DateState.decoder
 
 
-type alias EventOptionalArguments =
-    { filter : OptionalArgument GraphCool.InputObject.EventFilter }
-
-
-{-|
-
-  - filter -
-
--}
-event : (EventOptionalArguments -> EventOptionalArguments) -> SelectionSet decodesTo GraphCool.Object.Event -> Field decodesTo GraphCool.Object.Chat
-event fillInOptionals object =
-    let
-        filledInOptionals =
-            fillInOptionals { filter = Absent }
-
-        optionalArgs =
-            [ Argument.optional "filter" filledInOptionals.filter GraphCool.InputObject.encodeEventFilter ]
-                |> List.filterMap identity
-    in
-    Object.selectionField "event" optionalArgs object identity
-
-
 id : Field GraphCool.Scalar.Id GraphCool.Object.Chat
 id =
     Object.fieldDecoder "id" [] (Decode.oneOf [ Decode.string, Decode.float |> Decode.map toString, Decode.int |> Decode.map toString, Decode.bool |> Decode.map toString ] |> Decode.map GraphCool.Scalar.Id)
@@ -156,7 +134,7 @@ type alias PoolOptionalArguments =
   - filter -
 
 -}
-pool : (PoolOptionalArguments -> PoolOptionalArguments) -> SelectionSet decodesTo GraphCool.Object.Pool -> Field (Maybe decodesTo) GraphCool.Object.Chat
+pool : (PoolOptionalArguments -> PoolOptionalArguments) -> SelectionSet decodesTo GraphCool.Object.Pool -> Field decodesTo GraphCool.Object.Chat
 pool fillInOptionals object =
     let
         filledInOptionals =
@@ -166,7 +144,7 @@ pool fillInOptionals object =
             [ Argument.optional "filter" filledInOptionals.filter GraphCool.InputObject.encodePoolFilter ]
                 |> List.filterMap identity
     in
-    Object.selectionField "pool" optionalArgs object (identity >> Decode.nullable)
+    Object.selectionField "pool" optionalArgs object identity
 
 
 type alias ProposedOptionalArguments =

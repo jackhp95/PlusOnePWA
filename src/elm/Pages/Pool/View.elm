@@ -4,20 +4,21 @@
 
 module Pages.Pool.View exposing (..)
 
-import Html exposing (..)
-import Html.Attributes exposing (..)
-import Html.Events exposing (on,onClick)
-import Json.Decode as Decode
-import Mouse exposing (Position)
-import Pages.Pool.Model exposing (Pool)
-import Pages.CreateChat.Model exposing (CreateChat)
-import Pages.User.Model exposing (UserProfile)
-import Random exposing (..)
-import Task exposing (..)
-import Types exposing (..)
-import Window exposing (..)
+-- import Json.Decode as Decode
+-- import Mouse exposing (Position)
+-- import Random exposing (..)
+-- import Task exposing (..)
+-- import Window exposing (..)
+-- import Html.Attributes exposing (..)
+
 import GraphCool.Scalar exposing (..)
+import Html exposing (..)
+import Html.Events exposing (on, onClick)
+import Pages.CreateChat.Model exposing (CreateChat)
+import Pages.Pool.Model exposing (Pool)
+import Pages.User.Model exposing (UserProfile)
 import RemoteData exposing (..)
+import Types exposing (..)
 
 
 -- VIEW
@@ -30,7 +31,9 @@ import RemoteData exposing (..)
 view : Types.Model -> Html Msg
 view model =
     let
-        poolModel = model.pool
+        poolModel =
+            model.pool
+
         response =
             case poolModel.attendConfirm of
                 NotAsked ->
@@ -50,36 +53,42 @@ view model =
                         Just e ->
                             case e.attendingUserName of
                                 Nothing ->
-                                    h4 [] [text "You now joined the pool, but you need to have a username."]
+                                    h4 [] [ text "You now joined the pool, but you need to have a username." ]
+
                                 Just userName ->
-                                    h4 [] 
-                                       [ text ("Congrats, " ++ userName ++ "! You now joined the pool.") ]
-                                
+                                    h4 []
+                                        [ text ("Congrats, " ++ userName ++ "! You now joined the pool.") ]
     in
-    div [] 
-        [ response    
+    div []
+        [ response
         , div [] (List.map (showUser poolModel.pool model.createChat) (Maybe.withDefault [] poolModel.pool.attending))
         ]
 
+
 showUser : Pool -> CreateChat -> UserProfile -> Html Msg
 showUser pool cc profile =
-    if profile.id == (Id "cjed2224jh6a4019863siiw2e") then
+    if profile.id == Id "cjed2224jh6a4019863siiw2e" then
         text ""
     else
         let
-            newChat = {cc | eventId = Maybe.withDefault (Id "") pool.event 
-                          , initiatedId = (Id "cjed2224jh6a4019863siiw2e")
-                          , recipientId = profile.id
-                           }
-        in    
-            div []
-                [ h3 [][text profile.name]
-                , p [] [text ("nameFull: " ++ (Maybe.withDefault "NA" profile.nameFull))]
-                , p [] [text ("bio: " ++ (Maybe.withDefault "NA" profile.bio))]
-                , p [] [text ("id: " ++ Basics.toString profile.id)]
-                , p [] [text ("birthday: " ++ (Basics.toString profile.birthday))]
-                , button [ onClick (Types.UpdateChats (Types.GoChats Nothing) newChat )] [ text ("Start chatting with "++ profile.name)]
-                ]
+            newChat =
+                { cc
+                    | poolId = Maybe.withDefault (Id "") pool.event
+                    , initiatedId = Id "cjed2224jh6a4019863siiw2e"
+                    , recipientId = profile.id
+                }
+        in
+        div []
+            [ h3 [] [ text profile.name ]
+            , p [] [ text ("nameFull: " ++ Maybe.withDefault "NA" profile.nameFull) ]
+            , p [] [ text ("bio: " ++ Maybe.withDefault "NA" profile.bio) ]
+            , p [] [ text ("id: " ++ Basics.toString profile.id) ]
+            , p [] [ text ("birthday: " ++ Basics.toString profile.birthday) ]
+            , button [ onClick (Types.UpdateChats (Types.GoChats Nothing) newChat) ] [ text ("Start chatting with " ++ profile.name) ]
+            ]
+
+
+
 --     div [ class "overflow-hidden bg-black-80 flex-auto" ]
 --         [ div
 --             [ onMouseDown
@@ -88,34 +97,25 @@ showUser pool cc profile =
 --             ]
 --             (populateTubes pool)
 --         ]
-
-
 -- poolSize : PoolModel.Pool -> Size -> Size
 -- poolSize model windowSize =
 --     let
 --         spacingX =
 --             model.tube.spacing
-
 --         spacingY =
 --             spaceY model.tube.spacing * 2
-
 --         paddedWidth =
 --             toFloat (windowSize.width + model.tube.diameter)
-
 --         paddedHeight =
 --             toFloat (windowSize.height + model.tube.diameter)
 --     in
 --     Size
 --         (ceiling (paddedWidth / toFloat spacingX) * spacingX)
 --         (ceiling (paddedHeight / toFloat spacingY) * spacingY)
-
-
 -- spaceY : Int -> Int
 -- spaceY spacing =
 --     -- this makes sure that an offset of half spacing will create an equalateral triangle between all points
 --     round ((*) (sin (degrees 30)) (toFloat spacing) / 2)
-
-
 -- determineTubers : PoolModel.Pool -> Size -> List PoolModel.Tuber
 -- determineTubers model windowSize =
 --     let
@@ -125,7 +125,6 @@ showUser pool cc profile =
 --                     (poolSize model windowSize)
 --                     // model.tube.spacing
 --                 )
-
 --         poolCols =
 --             List.range 0
 --                 (.height
@@ -141,8 +140,6 @@ showUser pool cc profile =
 --             )
 --             (List.map ((*) model.tube.spacing) poolRows)
 --         )
-
-
 -- staggerTubes : Int -> Int -> Int -> Position
 -- staggerTubes x y spacing =
 --     let
@@ -152,21 +149,14 @@ showUser pool cc profile =
 --     case otherRow of
 --         1 ->
 --             Position (x + (spacing // 2)) y
-
 --         _ ->
 --             Position x y
-
-
 -- tubePop : PoolModel.Tube -> PoolModel.Tube
 -- tubePop tube =
 --     PoolModel.Tube tube.pop tube.ring tube.spacing tube.diameter
-
-
 -- populateTubes : PoolModel.Pool -> List (Html Msg)
 -- populateTubes model =
 --     List.map (modelTube model) model.tubers
-
-
 -- modelTube : PoolModel.Pool -> PoolModel.Tuber -> Html Msg
 -- modelTube model tuber =
 --     let
@@ -177,7 +167,6 @@ showUser pool cc profile =
 --                 )
 --                 (.width (poolSize model model.windowSize))
 --                 - (model.tube.diameter // 2)
-
 --         y =
 --             (%)
 --                 (tuber.offset.y
@@ -209,8 +198,6 @@ showUser pool cc profile =
 --             ]
 --             [ tubeUser (List.head model.users) ]
 --         ]
-
-
 -- tubeUser : Maybe PoolModel.User -> Html Msg
 -- tubeUser user =
 --     div
@@ -222,31 +209,21 @@ showUser pool cc profile =
 --             ]
 --         ]
 --         []
-
-
 -- px : Int -> String
 -- px number =
 --     toString number ++ "px"
-
-
 -- getPosition : PoolModel.Pool -> Position
 -- getPosition model =
 --     case model.move of
 --         Nothing ->
 --             model.position
-
 --         Just { start, current } ->
 --             Position
 --                 (model.position.x + current.x - start.x)
 --                 (model.position.y + current.y - start.y)
-
-
 -- onMouseDown : Attribute Msg
 -- onMouseDown =
 --     on "mousedown" (Decode.map MouseStart Mouse.position)
-
-
-
 -- MODEL
 -- windowSize = window.size + tubeSize ( or greater for margin)
 -- if ( windowSize < tubeOffset ) {tubeOffset - poolsize}

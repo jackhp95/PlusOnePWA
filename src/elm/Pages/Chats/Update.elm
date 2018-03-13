@@ -5,6 +5,7 @@ import GraphCool.Object
 import GraphCool.Object.Chat as Chat
 import GraphCool.Object.Event as Event
 import GraphCool.Object.Message as Message
+import GraphCool.Object.Pool as Pool
 import GraphCool.Object.User as User
 import GraphCool.Query as Query
 import GraphCool.Scalar exposing (..)
@@ -55,15 +56,15 @@ user =
 chat : SelectionSet Chat GraphCool.Object.Chat
 chat =
     Chat.selection Chat
-        |> with (Chat.canceled identity userName)
+        |> with (Chat.canceled identity userId)
         |> with Chat.dateState
-        |> with (Chat.event identity eventName)
+        |> with (Chat.pool identity poolId)
         |> with Chat.id
-        |> with (Chat.initiated identity chatter)
+        |> with (Chat.initiated identity userId)
         |> with (Chat.messages (\optionals -> { optionals | orderBy = Present CreatedAt_ASC }) message)
-        |> with (Chat.passed identity userName)
-        |> with (Chat.proposed identity userName)
-        |> with (Chat.recipient identity chatter)
+        |> with (Chat.passed identity userId)
+        |> with (Chat.proposed identity userId)
+        |> with (Chat.recipient identity userId)
 
 
 chatter : SelectionSet Chatter GraphCool.Object.User
@@ -98,9 +99,9 @@ userName =
     User.selection identity |> with User.name
 
 
-eventName : SelectionSet String GraphCool.Object.Event
-eventName =
-    Event.selection identity |> with Event.name
+poolId : SelectionSet Id GraphCool.Object.Pool
+poolId =
+    Pool.selection identity |> with Pool.id
 
 
 makeQueryRequest : Cmd Msg

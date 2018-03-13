@@ -13,10 +13,6 @@ type AddToChatInitByPayload
     = AddToChatInitByPayload
 
 
-type AddToChatOfEventPayload
-    = AddToChatOfEventPayload
-
-
 type AddToChatPassedPayload
     = AddToChatPassedPayload
 
@@ -191,10 +187,6 @@ type RemoveFromLikedEventPayload
 
 type RemoveFromMessageFromUserPayload
     = RemoveFromMessageFromUserPayload
-
-
-type RemoveFromPoolOnChatPayload
-    = RemoveFromPoolOnChatPayload
 
 
 type RemoveFromPoolOnUserPayload
