@@ -12,6 +12,10 @@
 
 module Pages.Chats.View exposing (..)
 
+-- import Pages.Chat.Model as ChatModel
+-- import Pages.Chat.View exposing (..)
+-- import Pages.User.View exposing (userAvi)
+
 import Assets exposing (..)
 import GraphCool.Enum.DateState as DateState
 import GraphCool.Scalar exposing (..)
@@ -19,11 +23,6 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Moment exposing (..)
-import Pages.Chat.Model as ChatModel
-import Pages.Chat.View exposing (..)
-import Pages.User.View exposing (userAvi)
-import RemoteData exposing (..)
-import TextArea exposing (auto)
 import Types
 
 
@@ -36,9 +35,6 @@ view model =
         chats =
             model.chats
 
-        client =
-            model.client
-
         mobileHide =
             case model.route of
                 Types.GoChats (Just _) ->
@@ -47,52 +43,45 @@ view model =
                 _ ->
                     " flex "
 
-        response =
-            case chats of
-                NotAsked ->
-                    text "Hold up, Lemme Check"
-
-                Loading ->
-                    text "Gimme a Sec"
-
-                Failure e ->
-                    text ("Shucks um, " ++ Basics.toString e)
-
-                Success a ->
-                    case a.user of
-                        Nothing ->
-                            text ""
-
-                        Just user ->
-                            let
-                                initiated =
-                                    case user.initiated of
-                                        Nothing ->
-                                            []
-
-                                        Just chats ->
-                                            chats
-
-                                recipient =
-                                    case user.recipient of
-                                        Nothing ->
-                                            []
-
-                                        Just chats ->
-                                            chats
-
-                                list =
-                                    initiated ++ recipient
-                            in
-                            div [ class "flex-shrink-1 flex-grow-0 bg-black-70 overflow-auto" ] (List.map nameBar list)
+        -- response =
+        --     case chats of
+        --         NotAsked ->
+        --             text "Hold up, Lemme Check"
+        --         Loading ->
+        --             text "Gimme a Sec"
+        --         Failure e ->
+        --             text ("Shucks um, " ++ Basics.toString e)
+        --         Success a ->
+        --             case a.user of
+        --                 Nothing ->
+        --                     text ""
+        --                 Just user ->
+        --                     let
+        --                         initiated =
+        --                             case user.initiated of
+        --                                 Nothing ->
+        --                                     []
+        --                                 Just chats ->
+        --                                     chats
+        --                         recipient =
+        --                             case user.recipient of
+        --                                 Nothing ->
+        --                                     []
+        --                                 Just chats ->
+        --                                     chats
+        --                         list =
+        --                             initiated ++ recipient
+        --                     in
+        --                     div [ class "flex-shrink-1 flex-grow-0 bg-black-70 overflow-auto" ] (List.map nameBar list)
     in
     section [ class ("animated fadeInUp flex-column items-stretch flex-auto pa0 ma0 measure-ns shadow-2-ns" ++ mobileHide) ]
         [ Assets.banner "chats"
-        , response
+
+        --, response
         ]
 
 
-nameBar : ChatModel.Chat -> Html Types.Msg
+nameBar : Types.Chat -> Html Types.Msg
 nameBar chat =
     let
         messages =
@@ -129,7 +118,7 @@ nameBar chat =
     in
     div
         [ class "flex items-center z-2 fadeIn animated pa3 grow hover-bg-black-20 lh-title"
-        , onClick (Types.ViewChat (Types.GoChats (Just chat)))
+        , onClick (Types.RouteTo (Types.GoChats (Just chat.id)))
         ]
         [ div
             [ {--bgImg chat.userAvi--}

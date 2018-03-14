@@ -33,8 +33,8 @@ render model =
 page : Types.Model -> List (Html Types.Msg)
 page model =
     case model.route of
-        Types.GoChats chatModel ->
-            case chatModel of
+        Types.GoChats maybe ->
+            case maybe of
                 Nothing ->
                     [ Chats.view model ]
 
@@ -43,17 +43,17 @@ page model =
                     , Chat.view model
                     ]
 
-        Types.GoUser ->
-            [ User.view model.me.user ]
+        Types.GoUser initId ->
+            [ User.view model ]
 
-        Types.GoPool ->
+        Types.GoPool initId ->
             [ Pool.view model ]
 
-        Types.GoEditUser ->
-            [ Html.map Types.EditUserMsg (EditUser.view model.me.user) ]
+        Types.GoEditUser initId ->
+            [ EditUser.view model ]
 
         Types.GoCreateEvent ->
-            [ Html.map Types.CreateEventMsg (CreateEvent.view model.createEvent model.me) ]
+            [ CreateEvent.view model ]
 
         Types.GoEvents event ->
             case event of
@@ -62,7 +62,7 @@ page model =
 
                 Just x ->
                     [ Events.view model
-                    , Event.view x
+                    , Event.view model
                     ]
 
         _ ->

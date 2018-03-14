@@ -488,45 +488,6 @@ requestUsers optArgs =
 --         |> Graphqelm.Http.send (RemoteData.fromResult >> MutateUser)
 
 
-type alias Model =
-    { hosts : List Host
-    , venues : List Venue
-    , locations : List Location
-    , events : List Event
-    , pools : List Pool
-    , messages : List Message
-    , chats : List Chat
-    , users : List User
-    , me : Maybe Me
-    , errors : List String
-    }
-
-
-emptyModel : Model
-emptyModel =
-    Model
-        -- hosts
-        []
-        -- venues
-        []
-        -- locations
-        []
-        -- events
-        []
-        -- pools
-        []
-        -- messages
-        []
-        -- chats
-        []
-        -- users
-        []
-        -- me
-        Nothing
-        -- errors
-        []
-
-
 init : ( Model, Cmd Msg )
 init =
     ( emptyModel
@@ -553,6 +514,15 @@ type Msg
     | ReturnMessage (RemoteData Graphqelm.Http.Error Message)
     | ReturnChat (RemoteData Graphqelm.Http.Error Chat)
     | ReturnUser (RemoteData Graphqelm.Http.Error User)
+    | ReturnMaybeMe (RemoteData Graphqelm.Http.Error (Maybe Me))
+    | ReturnMaybeHost (RemoteData Graphqelm.Http.Error (Maybe Host))
+    | ReturnMaybeVenue (RemoteData Graphqelm.Http.Error (Maybe Venue))
+    | ReturnMaybeLocation (RemoteData Graphqelm.Http.Error (Maybe Location))
+    | ReturnMaybeEvent (RemoteData Graphqelm.Http.Error (Maybe Event))
+    | ReturnMaybePool (RemoteData Graphqelm.Http.Error (Maybe Pool))
+    | ReturnMaybeMessage (RemoteData Graphqelm.Http.Error (Maybe Message))
+    | ReturnMaybeChat (RemoteData Graphqelm.Http.Error (Maybe Chat))
+    | ReturnMaybeUser (RemoteData Graphqelm.Http.Error (Maybe User))
 
 
 
@@ -744,6 +714,150 @@ update msg model =
             case response of
                 Success x ->
                     ( { model | users = x :: model.users }, Cmd.none )
+
+                Failure y ->
+                    ( { model | errors = toString y :: model.errors }, Cmd.none )
+
+                _ ->
+                    ( { model | errors = "RemoteData is running an update?" :: model.errors }, Cmd.none )
+
+        ReturnMaybeMe response ->
+            case response of
+                Success maybe ->
+                    case maybe of
+                        Just x ->
+                            ( { model | me = Just x }, Cmd.none )
+
+                        Nothing ->
+                            ( { model | me = Nothing }, Cmd.none )
+
+                Failure y ->
+                    ( { model | errors = toString y :: model.errors }, Cmd.none )
+
+                _ ->
+                    ( { model | errors = "RemoteData is running an update?" :: model.errors }, Cmd.none )
+
+        ReturnMaybeHost response ->
+            case response of
+                Success maybe ->
+                    case maybe of
+                        Just x ->
+                            ( { model | hosts = x :: model.hosts }, Cmd.none )
+
+                        Nothing ->
+                            ( model, Cmd.none )
+
+                Failure y ->
+                    ( { model | errors = toString y :: model.errors }, Cmd.none )
+
+                _ ->
+                    ( { model | errors = "RemoteData is running an update?" :: model.errors }, Cmd.none )
+
+        ReturnMaybeVenue response ->
+            case response of
+                Success maybe ->
+                    case maybe of
+                        Just x ->
+                            ( { model | venues = x :: model.venues }, Cmd.none )
+
+                        Nothing ->
+                            ( model, Cmd.none )
+
+                Failure y ->
+                    ( { model | errors = toString y :: model.errors }, Cmd.none )
+
+                _ ->
+                    ( { model | errors = "RemoteData is running an update?" :: model.errors }, Cmd.none )
+
+        ReturnMaybeLocation response ->
+            case response of
+                Success maybe ->
+                    case maybe of
+                        Just x ->
+                            ( { model | locations = x :: model.locations }, Cmd.none )
+
+                        Nothing ->
+                            ( model, Cmd.none )
+
+                Failure y ->
+                    ( { model | errors = toString y :: model.errors }, Cmd.none )
+
+                _ ->
+                    ( { model | errors = "RemoteData is running an update?" :: model.errors }, Cmd.none )
+
+        ReturnMaybeEvent response ->
+            case response of
+                Success maybe ->
+                    case maybe of
+                        Just x ->
+                            ( { model | events = x :: model.events }, Cmd.none )
+
+                        Nothing ->
+                            ( model, Cmd.none )
+
+                Failure y ->
+                    ( { model | errors = toString y :: model.errors }, Cmd.none )
+
+                _ ->
+                    ( { model | errors = "RemoteData is running an update?" :: model.errors }, Cmd.none )
+
+        ReturnMaybePool response ->
+            case response of
+                Success maybe ->
+                    case maybe of
+                        Just x ->
+                            ( { model | pools = x :: model.pools }, Cmd.none )
+
+                        Nothing ->
+                            ( model, Cmd.none )
+
+                Failure y ->
+                    ( { model | errors = toString y :: model.errors }, Cmd.none )
+
+                _ ->
+                    ( { model | errors = "RemoteData is running an update?" :: model.errors }, Cmd.none )
+
+        ReturnMaybeMessage response ->
+            case response of
+                Success maybe ->
+                    case maybe of
+                        Just x ->
+                            ( { model | messages = x :: model.messages }, Cmd.none )
+
+                        Nothing ->
+                            ( model, Cmd.none )
+
+                Failure y ->
+                    ( { model | errors = toString y :: model.errors }, Cmd.none )
+
+                _ ->
+                    ( { model | errors = "RemoteData is running an update?" :: model.errors }, Cmd.none )
+
+        ReturnMaybeChat response ->
+            case response of
+                Success maybe ->
+                    case maybe of
+                        Just x ->
+                            ( { model | chats = x :: model.chats }, Cmd.none )
+
+                        Nothing ->
+                            ( model, Cmd.none )
+
+                Failure y ->
+                    ( { model | errors = toString y :: model.errors }, Cmd.none )
+
+                _ ->
+                    ( { model | errors = "RemoteData is running an update?" :: model.errors }, Cmd.none )
+
+        ReturnMaybeUser response ->
+            case response of
+                Success maybe ->
+                    case maybe of
+                        Just x ->
+                            ( { model | users = x :: model.users }, Cmd.none )
+
+                        Nothing ->
+                            ( model, Cmd.none )
 
                 Failure y ->
                     ( { model | errors = toString y :: model.errors }, Cmd.none )

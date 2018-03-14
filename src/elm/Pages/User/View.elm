@@ -1,31 +1,28 @@
 module Pages.User.View exposing (..)
 
+-- import Pages.User.Model as UserModel
+
 import Assets exposing (bgImg, feather)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Nav exposing (bar)
-import Pages.User.Model as UserModel
 import Types exposing (..)
 
 
-view : UserModel.UserModel -> Html Msg
-view x =
-    let
-        model =
-            x.user
-    in
+view : Model -> Html Msg
+view model =
     section [ class "w-100 mw7-l overflow-auto shadow-2-l" ]
         [ div [ class "flex h5 ph3 ph4-m ph5-l pt6 items-center" ]
             [ userAvi
-            , div [ class "f2 fw7 ml3 fadeInUp animated" ] [ text model.name ]
+            , div [ class "f2 fw7 ml3 fadeInUp animated" ] [ text <| .name initMe ]
             ]
         , div
             [ class "bg-black-70" ]
             [ div [ class "ph3 bg-black-30 w-100" ]
                 [ userToolsView ]
-            , userBio model
-            , pastEvents model
+            , userBio initMe
+            , pastEvents initMe
             ]
         ]
 
@@ -41,16 +38,16 @@ userAvi =
         ]
 
 
-userBio : UserModel.User -> Html Msg
-userBio model =
+userBio : Me -> Html Msg
+userBio me =
     div [ class "mv0 mh4 ph2 pv4 bb b--white-20" ]
         [ div [ class "fw7 pv2 f4" ] [ text "bio" ]
-        , div [ class "pv2 lh-copy measure" ] [ text (Maybe.withDefault "" model.bio) ]
+        , div [ class "pv2 lh-copy measure" ] [ text (Maybe.withDefault "" me.bio) ]
         ]
 
 
-pastEvents : UserModel.User -> Html Msg
-pastEvents model =
+pastEvents : Me -> Html Msg
+pastEvents me =
     let
         prevEvents =
             [ ( "Kanye West", "Rose Music Hall" )
@@ -81,11 +78,11 @@ pastEvents model =
 userToolsView : Html Msg
 userToolsView =
     div [ class "flex justify-end" ]
-        [ div [ class "animated bounceIn pointer hover-bg-black-50 br-2 pa3 flex items-center", onClick (Types.ChangeTo GoEditUser) ]
+        [ div [ class "animated bounceIn pointer hover-bg-black-50 br-2 pa3 flex items-center", onClick (Types.RouteTo <| GoEditUser initId) ]
             [ div [ Assets.feather "edit", class "contain bg-center grow pt3 pb2 pl3 pr2" ] []
             , div [ class "pa2" ] [ text "edit" ]
             ]
-        , div [ class "animated bounceIn pointer hover-bg-black-50 br-2 pa3 flex items-center", onClick (Types.ChangeTo GoAuth) ]
+        , div [ class "animated bounceIn pointer hover-bg-black-50 br-2 pa3 flex items-center", onClick (Types.RouteTo GoAuth) ]
             [ div [ Assets.feather "log-out", class "contain bg-center grow pt3 pb2 pl3 pr2" ] []
             , div [ class "pa2" ] [ text "log out" ]
             ]

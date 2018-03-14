@@ -4,51 +4,43 @@
 
 module Pages.Events.View exposing (..)
 
+-- import Pages.Event.Model exposing (Event, initEvent)
+-- import Pages.Events.Model exposing (EventAPI(GraphCool, SeatGeek))
+-- import SeatGeek.Query exposing (composeRequest)
+-- import SeatGeek.Decode exposing (decodeReply)
+
 import Assets exposing (feather)
 import Date exposing (..)
-import Graphqelm.Document as Document
 import GraphCool.Scalar exposing (..)
+import Graphqelm.Document as Document
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Http exposing (..)
 import Moment exposing (..)
-import Pages.Event.Model exposing (Event, initEvent)
-import Pages.Events.Model exposing (EventAPI(GraphCool, SeatGeek))
 import RemoteData exposing (..)
-import SeatGeek.Decode exposing (decodeReply)
-import SeatGeek.Query exposing (composeRequest)
 import SeatGeek.Types as SG
-import Types exposing (Msg)
+import Types exposing (..)
 
 
 -- HTTP
-
-
-askQuery : SG.Query -> Cmd Msg
-askQuery query =
-    let
-        url =
-            composeRequest query
-
-        request =
-            Http.get url decodeReply
-    in
-    Http.send Types.GetReply request
-
-
-
+-- askQuery : SG.Query -> Cmd Msg
+-- askQuery query =
+--     let
+--         url =
+--             composeRequest query
+--         request =
+--             Http.get url decodeReply
+--     in
+--     Http.send Types.GetReply request
 -- VIEW
-
-
-eventAPItoListView : EventAPI -> Html Msg
-eventAPItoListView api =
-    case api of
-        SeatGeek sgEvent ->
-            seatGeekListView sgEvent
-
-        GraphCool gcEvent ->
-            graphCoolListView gcEvent
+-- eventAPItoListView : EventAPI -> Html Msg
+-- eventAPItoListView api =
+--     case api of
+--         SeatGeek sgEvent ->
+--             seatGeekListView sgEvent
+--         GraphCool gcEvent ->
+--             graphCoolListView gcEvent
 
 
 view : Types.Model -> Html Msg
@@ -59,7 +51,7 @@ view model =
 
         mobileHide =
             case model.route of
-                Types.GoEvents (Just _) ->
+                Types.GoEvents _ ->
                     " dn db-l "
 
                 _ ->
@@ -92,7 +84,7 @@ view model =
             , div [ class "f2 lh-solid fw7 ma0 pa0" ]
                 [ text "discover events" ]
             ]
-        , section [ class "overflow-auto w-100 flex-grow-1 animated fadeInLeft mw6-l flex-shrink-0 bg-black-60 shadow-2-l" ] (List.map eventAPItoListView events)
+        , section [ class "overflow-auto w-100 flex-grow-1 animated fadeInLeft mw6-l flex-shrink-0 bg-black-60 shadow-2-l" ] (List.map graphCoolListView events)
         ]
 
 
@@ -174,7 +166,7 @@ graphCoolListView event =
     in
     div
         [ class "animated fadeInUp ph3 pt3 ph4-m pt4-m hover-bg-black-30"
-        , onClick (Types.ViewEvent (Types.GoEvents (Just <| GraphCool event)))
+        , onClick (Types.RouteTo (GoEvents (Just <| .id initEvent)))
         ]
         [ div [ class "pb3 pb4-m bb b--white-20" ]
             [ div [ class "pb1 f5 f4-m pt3-m pt2" ]
@@ -224,7 +216,8 @@ seatGeekListView event =
     in
     div
         [ class "animated fadeInUp ph3 pt3 ph4-m pt4-m hover-bg-black-30"
-        , onClick (Types.ViewEvent (Types.GoEvents (Just <| SeatGeek event)))
+
+        -- , onClick (Types.ViewEvent (Route.Events (Just <| SeatGeek event)))
         ]
         [ cardImage
         , div [ class "pb3 pb4-m bb b--white-20" ]

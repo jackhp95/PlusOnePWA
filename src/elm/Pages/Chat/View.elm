@@ -13,17 +13,17 @@
 module Pages.Chat.View exposing (..)
 
 -- import Pages.User.View exposing (userAvi)
+-- import TextArea exposing (auto)
+-- import Pages.Chat.Model as ChatModel
+-- import Pages.CreateMessage.Messages exposing (..)
 
 import Assets exposing (..)
 import GraphCool.Scalar exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
-import Pages.Chat.Model as ChatModel
-import Pages.CreateMessage.Messages exposing (..)
 import Pages.Message.View exposing (..)
-import TextArea exposing (auto)
-import Types
+import Types exposing (..)
 
 
 -- VIEW
@@ -35,13 +35,16 @@ viewMessage msg =
 
 
 view : Types.Model -> Html Types.Msg
-view x =
+view model =
     let
         chat =
-            x.chat
+            case model.route of
+                Types.GoChats id ->
+                    Maybe.withDefault initChat <| List.head <| model.chats
 
-        client =
-            x.client
+                -- List.filter (id == ) (.id model.chats)
+                _ ->
+                    initChat
 
         conversation =
             case chat.messages of
@@ -55,38 +58,33 @@ view x =
         [ nameBar chat
         , section [ class "flex-auto lh-copy overflow-auto ph3 pt5 z-1 inner-shadow-1" ]
             (toast ("conversation initiated by " ++ initiatedName chat) :: conversation)
-        , text (Basics.toString x.createMessage.sendResponse)
-        , messageBar x chat client
+
+        -- , text (Basics.toString model.createMessage.sendResponse)
+        , messageBar model chat
         ]
 
 
-messageBar : Types.Model -> ChatModel.Chat -> Types.Client -> Html Types.Msg
-messageBar model chat client =
+messageBar : Types.Model -> Types.Chat -> Html Types.Msg
+messageBar model chat =
     let
         content =
-            if model.createMessage.text == "" then
-                ""
-            else
-                model.createMessage.text
+            initMessage.text
     in
     div [ class "bg-black-40 flex flex-none z-2 items-stretch overflow-hidden pl2 slideInUp animated" ]
         [ textarea
-            (TextArea.auto client
-                ++ [ class "white bg-transparent overflow-visible pa3 self-center flex-auto bn outline-0"
-                   , placeholder "strike up a convo"
-                   , autofocus True
-                   , value content
-                   , onInput Types.UpdateTextInput
-                   ]
-            )
+            [ class "white bg-transparent overflow-visible pa3 self-center flex-auto bn outline-0"
+            , placeholder "strike up a convo"
+            , autofocus True
+            , value content
+            ]
             []
         , div [ class "bg-black-60 pa2 flex items-center hover-bg-blue grow" ]
-            [ div [ onClick (Types.CreateMessageMsg SendMessage), Assets.feather "chevron-right", class "w2 h2 contain" ] []
+            [-- div [ onClick (Types.CreateMessageMsg SendMessage), Assets.feather "chevron-right", class "w2 h2 contain" ] []
             ]
         ]
 
 
-initiatedName : ChatModel.Chat -> String
+initiatedName : Types.Chat -> String
 initiatedName chat =
     if chat.initiated == Id "cjed2224jh6a4019863siiw2e" then
         "Me"
@@ -94,7 +92,7 @@ initiatedName chat =
         toString chat.initiated
 
 
-crushName : ChatModel.Chat -> String
+crushName : Types.Chat -> String
 crushName chat =
     if chat.initiated == Id "cjed2224jh6a4019863siiw2e" then
         case chat.recipient of
@@ -107,10 +105,10 @@ crushName chat =
         toString chat.initiated
 
 
-nameBar : ChatModel.Chat -> Html Types.Msg
+nameBar : Types.Chat -> Html Types.Msg
 nameBar chat =
     div [ class "bg-black-90 flex items-stretch absolute w-100 measure-wide-l z-2 h3 fadeIn animated" ]
-        [ div [ class "flex items-center grow", onClick (Types.ChangeTo Types.GoUser) ]
+        [ div [ class "flex items-center grow", onClick (Types.RouteTo <| Types.GoUser (Just chat.id)) ]
             [ div [ class "bounceIn animated h3 ph3 pt3 overflow-visible" ]
                 [ div [ class "w3" ]
                     [ div

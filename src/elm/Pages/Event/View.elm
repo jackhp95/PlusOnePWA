@@ -5,66 +5,54 @@
 module Pages.Event.View exposing (..)
 
 -- import Date exposing (..)
+-- import Pages.Pool.Model exposing (Pool)
+-- import Pages.Event.Model exposing (Event)
+-- import Pages.Events.Model exposing (EventAPI, Events)
+-- import SeatGeek.Query exposing (composeRequest)
+-- import Http exposing (..)
+-- import Moment exposing (..)
+-- import SeatGeek.Decode exposing (decodeReply)
 
 import Assets exposing (feather)
 import GraphCool.Scalar exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
-import Http exposing (..)
-import Moment exposing (..)
-import Pages.Event.Model exposing (Event)
-import Pages.Pool.Model exposing (Pool)
-import Pages.Events.Model exposing (Events,EventAPI)
-import SeatGeek.Decode exposing (decodeReply)
-import SeatGeek.Query exposing (composeRequest)
 import SeatGeek.Types as SG
-import Types exposing (Msg)
+import Types exposing (..)
 
 
-askQuery : SG.Query -> Cmd Msg
-askQuery query =
-    let
-        url =
-            composeRequest query
-
-        request =
-            Http.get url decodeReply
-    in
-    Http.send Types.GetReply request
-
-
-
+-- askQuery : SG.Query -> Cmd Msg
+-- askQuery query =
+--     let
+--         url =
+--             composeRequest query
+--         request =
+--             Http.get url decodeReply
+--     in
+--     Http.send Types.GetReply request
 -- VIEW
 
 
-view : EventAPI -> Html Msg
-view api =
-    let
-        apiToEvent api =
-            case api of
-                Pages.Events.Model.SeatGeek x ->
-                    seatGeekView x
-
-                Pages.Events.Model.GraphCool y ->
-                    graphCoolView y
-    in
+view : Model -> Html Msg
+view model =
     section [ class "overflow-auto w-100 flex-grow-1 animated fadeInLeft mw6-l flex-shrink-0 bg-black-70 shadow-2-l" ]
-        (apiToEvent api)
+        (List.map graphCoolView model.events)
 
 
-graphCoolView : Event -> List (Html Msg)
+graphCoolView : Event -> Html Msg
 graphCoolView event =
-    [ -- eventBanner event
-      eventName event.name
+    div []
+        [ -- eventBanner event
+          eventName event.name
 
-    -- , eventEmojis event
-    -- , eventTime event.startsAt
-    , eventPool event.pool 
+        -- , eventEmojis event
+        -- , eventTime event.startsAt
+        , eventPool initPool
 
-    -- , eventPopularity event
-    -- , yetToBeAdded
-    ]
+        -- , eventPopularity event
+        -- , yetToBeAdded
+        ]
 
 
 seatGeekView : SG.Event -> List (Html Msg)
@@ -216,14 +204,15 @@ eventPool pool =
             [ div [ Assets.feather "info", class "h2 w2 contain bg-center" ] []
             ]
         , a
-            [ onClick (Types.ViewPool Types.GoPool)
+            [ onClick (Types.RouteTo <| GoPool Nothing)
             , class "white link lg-breathe-50 br1 pa2 mh1 flex items-center mh1 grow"
             ]
             [ div [ Assets.feather "life-buoy", class "h2 w2 mh1 contain bg-center" ] []
             , div [ class "mh2 f4 fw4 ttn" ] [ text "join pool" ]
             ]
         , div
-            [ class "mr3 f2"] [ text "🏊" ]
+            [ class "mr3 f2" ]
+            [ text "🏊" ]
         ]
 
 
@@ -281,7 +270,7 @@ eventBanner event =
             , div [ class "pa3 lg-breathe-50 br-pill relative top-2 right-1 flex grow justify-center items-center" ]
                 [ div
                     [ Assets.feather "life-buoy"
-                    , onClick (Types.ChangeTo Types.GoPool)
+                    , onClick (Types.RouteTo <| GoPool Nothing)
                     , class "h3 w3 contain"
                     ]
                     []

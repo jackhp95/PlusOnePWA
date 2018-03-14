@@ -10,13 +10,13 @@ module Pages.Pool.View exposing (..)
 -- import Task exposing (..)
 -- import Window exposing (..)
 -- import Html.Attributes exposing (..)
+-- import Pages.CreateChat.Model exposing (CreateChat)
+-- import Pages.Pool.Model exposing (Pool)
+-- import Pages.User.Model exposing (UserProfile)
 
 import GraphCool.Scalar exposing (..)
 import Html exposing (..)
 import Html.Events exposing (on, onClick)
-import Pages.CreateChat.Model exposing (CreateChat)
-import Pages.Pool.Model exposing (Pool)
-import Pages.User.Model exposing (UserProfile)
 import RemoteData exposing (..)
 import Types exposing (..)
 
@@ -31,60 +31,61 @@ import Types exposing (..)
 view : Types.Model -> Html Msg
 view model =
     let
-        poolModel =
-            model.pool
+        pool =
+            initPool
 
-        response =
-            case poolModel.attendConfirm of
-                NotAsked ->
-                    text "Hold up, Lemme Check"
-
-                Loading ->
-                    text "Gimme a Sec"
-
-                Failure e ->
-                    text ("Shucks um, " ++ Basics.toString e)
-
-                Success a ->
-                    case a of
-                        Nothing ->
-                            div [] [ text "Success. No response" ]
-
-                        Just e ->
-                            case e.attendingUserName of
-                                Nothing ->
-                                    h4 [] [ text "You now joined the pool, but you need to have a username." ]
-
-                                Just userName ->
-                                    h4 []
-                                        [ text ("Congrats, " ++ userName ++ "! You now joined the pool.") ]
+        -- case model.route of
+        --     Types.GoPool id ->
+        --         Maybe.withDefault initPool <| List.head <| List.filter (id == .id) model.pools
+        --     _ ->
+        --         initPool
+        -- response =
+        --     case pool.attendConfirm of
+        --         NotAsked ->
+        --             text "Hold up, Lemme Check"
+        --         Loading ->
+        --             text "Gimme a Sec"
+        --         Failure e ->
+        --             text ("Shucks um, " ++ Basics.toString e)
+        --         Success a ->
+        --             case a of
+        --                 Nothing ->
+        --                     div [] [ text "Success. No response" ]
+        --                 Just e ->
+        --                     case e.attendingUserName of
+        --                         Nothing ->
+        --                             h4 [] [ text "You now joined the pool, but you need to have a username." ]
+        --                         Just userName ->
+        --                             h4 []
+        --                                 [ text ("Congrats, " ++ userName ++ "! You now joined the pool.") ]
     in
     div []
-        [ response
-        , div [] (List.map (showUser poolModel.pool model.createChat) (Maybe.withDefault [] poolModel.pool.attending))
+        [ -- response,
+          div [] [ showUser initPool initChat initUser, showUser initPool initChat initUser ] -- (List.map (showUser pool.chats (Maybe.withDefault initChat <| List.head model.chats)) (Maybe.withDefault [] pool.pool.attending))
         ]
 
 
-showUser : Pool -> CreateChat -> UserProfile -> Html Msg
-showUser pool cc profile =
-    if profile.id == Id "cjed2224jh6a4019863siiw2e" then
+showUser : Pool -> Chat -> User -> Html Msg
+showUser pool chat user =
+    if user.id == Id "cjed2224jh6a4019863siiw2e" then
         text ""
     else
-        let
-            newChat =
-                { cc
-                    | poolId = Maybe.withDefault (Id "") pool.event
-                    , initiatedId = Id "cjed2224jh6a4019863siiw2e"
-                    , recipientId = profile.id
-                }
-        in
+        -- let
+        --     newChat =
+        --         { chat
+        --             | poolId = Maybe.withDefault (Id "") pool.event
+        --             , initiatedId = Id "cjed2224jh6a4019863siiw2e"
+        --             , recipientId = user.id
+        --         }
+        -- in
         div []
-            [ h3 [] [ text profile.name ]
-            , p [] [ text ("nameFull: " ++ Maybe.withDefault "NA" profile.nameFull) ]
-            , p [] [ text ("bio: " ++ Maybe.withDefault "NA" profile.bio) ]
-            , p [] [ text ("id: " ++ Basics.toString profile.id) ]
-            , p [] [ text ("birthday: " ++ Basics.toString profile.birthday) ]
-            , button [ onClick (Types.UpdateChats (Types.GoChats Nothing) newChat) ] [ text ("Start chatting with " ++ profile.name) ]
+            [ h3 [] [ text user.name ]
+            , p [] [ text ("nameFull: " ++ Maybe.withDefault "NA" user.nameFull) ]
+            , p [] [ text ("bio: " ++ Maybe.withDefault "NA" user.bio) ]
+            , p [] [ text ("id: " ++ Basics.toString user.id) ]
+            , p [] [ text ("birthday: " ++ Basics.toString user.birthday) ]
+
+            -- , button [ onClick (Types.UpdateChats (Route.Chats Nothing) newChat) ] [ text ("Start chatting with " ++ user.name) ]
             ]
 
 
