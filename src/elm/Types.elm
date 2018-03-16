@@ -24,6 +24,7 @@ module Types exposing (..)
 -- import Auth0.Auth0 as Auth0
 
 import Auth0.Authentication as Authentication
+import Dict exposing (..)
 import GraphCool.Enum.DateState as DateState exposing (DateState)
 import GraphCool.Scalar exposing (..)
 import Graphqelm.Http exposing (Error)
@@ -45,12 +46,12 @@ type Route
 
 initId : Id
 initId =
-    Id "init"
+    Id "initId"
 
 
 initDateTime : DateTime
 initDateTime =
-    DateTime "init"
+    DateTime "initDateTime"
 
 
 type alias Everything =
@@ -119,7 +120,7 @@ type alias Event =
 
 initEvent : Event
 initEvent =
-    Event initId initDateTime initId Nothing Nothing initId "initName" Nothing True initDateTime Nothing
+    Event initId initDateTime initId Nothing Nothing initId "initEventName" Nothing True initDateTime Nothing
 
 
 type alias Pool =
@@ -149,7 +150,7 @@ type alias Message =
 
 initMessage : Message
 initMessage =
-    Message initId initDateTime Nothing initId "initText"
+    Message initId initDateTime Nothing initId "initMessageText"
 
 
 type alias Chat =
@@ -161,13 +162,13 @@ type alias Chat =
     , messages : Maybe (List Message)
     , passed : Maybe Id
     , proposed : Maybe Id
-    , recipient : Maybe Id
+    , recipient : Id
     }
 
 
 initChat : Chat
 initChat =
-    Chat Nothing DateState.Active initId initId initId Nothing Nothing Nothing Nothing
+    Chat Nothing DateState.Active initId initId initId Nothing Nothing Nothing initId
 
 
 type alias User =
@@ -188,7 +189,7 @@ type alias User =
 
 initUser : User
 initUser =
-    User Nothing initDateTime initDateTime Nothing Nothing Nothing Nothing Nothing initId "initName" Nothing initDateTime
+    User Nothing initDateTime initDateTime Nothing Nothing Nothing Nothing Nothing initId "initUserName" Nothing initDateTime
 
 
 type alias Me =
@@ -218,7 +219,7 @@ type alias Me =
 
 initMe : Me
 initMe =
-    Me Nothing Nothing initDateTime initDateTime Nothing Nothing Nothing Nothing Nothing Nothing Nothing initId Nothing "initName" Nothing Nothing Nothing Nothing Nothing Nothing initDateTime
+    Me Nothing Nothing initDateTime initDateTime Nothing Nothing Nothing Nothing Nothing Nothing Nothing initId Nothing "initMeName" Nothing Nothing Nothing Nothing Nothing Nothing initDateTime
 
 
 
@@ -241,14 +242,14 @@ initMe =
 
 type alias Model =
     { route : Route
-    , hosts : List Host
-    , venues : List Venue
-    , locations : List Location
-    , events : List Event
-    , pools : List Pool
-    , messages : List Message
-    , chats : List Chat
-    , users : List User
+    , hosts : Dict String Host
+    , venues : Dict String Venue
+    , locations : Dict String Location
+    , events : Dict String Event
+    , pools : Dict String Pool
+    , messages : Dict String Message
+    , chats : Dict String Chat
+    , users : Dict String User
     , me : Maybe Me
     , errors : List String
     }
@@ -260,21 +261,21 @@ emptyModel =
         -- route
         (GoEvents Nothing)
         -- hosts
-        []
+        Dict.empty
         -- venues
-        []
+        Dict.empty
         -- locations
-        []
+        Dict.empty
         -- events
-        []
+        Dict.empty
         -- pools
-        []
+        Dict.empty
         -- messages
-        []
+        Dict.empty
         -- chats
-        []
+        Dict.empty
         -- users
-        []
+        Dict.empty
         -- me
         Nothing
         -- errors

@@ -11,6 +11,7 @@ module Pages.Events.View exposing (..)
 
 import Assets exposing (feather)
 import Date exposing (..)
+import Dict exposing (..)
 import GraphCool.Scalar exposing (..)
 import Graphqelm.Document as Document
 import Html exposing (..)
@@ -84,7 +85,7 @@ view model =
             , div [ class "f2 lh-solid fw7 ma0 pa0" ]
                 [ text "discover events" ]
             ]
-        , section [ class "overflow-auto w-100 flex-grow-1 animated fadeInLeft mw6-l flex-shrink-0 bg-black-60 shadow-2-l" ] (List.map graphCoolListView events)
+        , section [ class "overflow-auto w-100 flex-grow-1 animated fadeInLeft mw6-l flex-shrink-0 bg-black-60 shadow-2-l" ] (List.map graphCoolListView <| Dict.values events)
         ]
 
 
@@ -166,7 +167,11 @@ graphCoolListView event =
     in
     div
         [ class "animated fadeInUp ph3 pt3 ph4-m pt4-m hover-bg-black-30"
-        , onClick (Types.RouteTo (GoEvents (Just <| .id initEvent)))
+        , .id initEvent
+            |> Just
+            |> GoEvents
+            |> Types.RouteTo
+            |> onClick
         ]
         [ div [ class "pb3 pb4-m bb b--white-20" ]
             [ div [ class "pb1 f5 f4-m pt3-m pt2" ]

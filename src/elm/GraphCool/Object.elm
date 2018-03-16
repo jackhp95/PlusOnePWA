@@ -193,10 +193,6 @@ type RemoveFromPoolOnUserPayload
     = RemoveFromPoolOnUserPayload
 
 
-type RemoveFromRecipientOfChatPayload
-    = RemoveFromRecipientOfChatPayload
-
-
 type RemoveFromUserIsHostPayload
     = RemoveFromUserIsHostPayload
 

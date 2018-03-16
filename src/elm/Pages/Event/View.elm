@@ -14,6 +14,7 @@ module Pages.Event.View exposing (..)
 -- import SeatGeek.Decode exposing (decodeReply)
 
 import Assets exposing (feather)
+import Dict exposing (..)
 import GraphCool.Scalar exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -37,7 +38,7 @@ import Types exposing (..)
 view : Model -> Html Msg
 view model =
     section [ class "overflow-auto w-100 flex-grow-1 animated fadeInLeft mw6-l flex-shrink-0 bg-black-70 shadow-2-l" ]
-        (List.map graphCoolView model.events)
+        (Dict.values model.events |> List.map graphCoolView)
 
 
 graphCoolView : Event -> Html Msg

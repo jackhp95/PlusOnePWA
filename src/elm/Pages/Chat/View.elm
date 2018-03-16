@@ -18,6 +18,8 @@ module Pages.Chat.View exposing (..)
 -- import Pages.CreateMessage.Messages exposing (..)
 
 import Assets exposing (..)
+import Debug exposing (log)
+import Dict exposing (..)
 import GraphCool.Scalar exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -27,6 +29,47 @@ import Types exposing (..)
 
 
 -- VIEW
+-- HOLY SHIT THIS IS HACKY AS FUCK, IF YOU CAN THINK OF A BETTER WAY TO DO THIS PLEASE FIX THIS HELL
+
+
+chattingWith : Model -> User
+chattingWith model =
+    case model.route of
+        GoChats maybeChatId ->
+            case maybeChatId of
+                Just chatId ->
+                    case Dict.get (toString chatId) model.chats of
+                        Just chat ->
+                            case model.me of
+                                Just me ->
+                                    case me.id == chat.initiated of
+                                        True ->
+                                            -- True if Me is the initiator
+                                            Dict.get (toString chat.recipient) model.users
+                                                -- Fails if Client can't find User you're chatting with
+                                                |> Maybe.withDefault { initUser | name = "Finding User" }
+
+                                        False ->
+                                            -- False if Me is the recipient
+                                            Dict.get (toString chat.initiated) model.users
+                                                -- Fails if Client doesn't have the User
+                                                |> Maybe.withDefault { initUser | name = "Loading User" }
+
+                                Nothing ->
+                                    -- Fails if Me isn't authenticated
+                                    { initUser | name = "Please Sign In" }
+
+                        Nothing ->
+                            -- Fails if Client doesn't have the chat
+                            { initUser | name = "Unknown Chat" }
+
+                Nothing ->
+                    -- Fails if the route is in GoChats, but Doesn't have a chatId
+                    { initUser | name = "Finding Chat" }
+
+        _ ->
+            -- Fails if route isn't a GoChat
+            { initUser | name = "Loading Chat" }
 
 
 viewMessage : String -> Html msg
@@ -37,10 +80,15 @@ viewMessage msg =
 view : Types.Model -> Html Types.Msg
 view model =
     let
+        with =
+            chattingWith model
+
         chat =
             case model.route of
                 Types.GoChats id ->
-                    Maybe.withDefault initChat <| List.head <| model.chats
+                    Dict.values model.chats
+                        |> List.head
+                        |> Maybe.withDefault initChat
 
                 -- List.filter (id == ) (.id model.chats)
                 _ ->
@@ -55,9 +103,9 @@ view model =
                     List.map displayMessage msgs
     in
     div [ class "animated fadeInLeft bg-black-70 flex flex-column flex-auto measure-wide-l pa0 ma0 shadow-2-l" ]
-        [ nameBar chat
+        [ nameBar with
         , section [ class "flex-auto lh-copy overflow-auto ph3 pt5 z-1 inner-shadow-1" ]
-            (toast ("conversation initiated by " ++ initiatedName chat) :: conversation)
+            (toast ("conversation initiated by " ++ with.name) :: conversation)
 
         -- , text (Basics.toString model.createMessage.sendResponse)
         , messageBar model chat
@@ -84,31 +132,16 @@ messageBar model chat =
         ]
 
 
-initiatedName : Types.Chat -> String
-initiatedName chat =
-    if chat.initiated == Id "cjed2224jh6a4019863siiw2e" then
-        "Me"
-    else
-        toString chat.initiated
-
-
-crushName : Types.Chat -> String
-crushName chat =
-    if chat.initiated == Id "cjed2224jh6a4019863siiw2e" then
-        case chat.recipient of
-            Nothing ->
-                "Anonymous"
-
-            Just obj ->
-                toString obj
-    else
-        toString chat.initiated
-
-
-nameBar : Types.Chat -> Html Types.Msg
-nameBar chat =
+nameBar : User -> Html Types.Msg
+nameBar withUser =
     div [ class "bg-black-90 flex items-stretch absolute w-100 measure-wide-l z-2 h3 fadeIn animated" ]
-        [ div [ class "flex items-center grow", onClick (Types.RouteTo <| Types.GoUser (Just chat.id)) ]
+        [ div
+            [ class "flex items-center grow"
+            , Just withUser.id
+                |> Types.GoUser
+                |> Types.RouteTo
+                |> onClick
+            ]
             [ div [ class "bounceIn animated h3 ph3 pt3 overflow-visible" ]
                 [ div [ class "w3" ]
                     [ div
@@ -118,7 +151,7 @@ nameBar chat =
                         []
                     ]
                 ]
-            , div [ class "f3 fw6" ] [ text (crushName chat) ]
+            , div [ class "f3 fw6" ] [ text withUser.name ]
             ]
         , div [ class "flex flex-auto justify-end items-center" ]
             [ div [ Assets.feather "more-vertical", class "grow pa3 pt2 contain mh2" ] []

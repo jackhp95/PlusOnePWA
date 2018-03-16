@@ -39,6 +39,8 @@ initCmd =
           -- , initWindow,
           DB.requestEvents identity
         , DB.requestChats identity
+        , DB.requestUsers identity
+        , DB.requestPools identity
 
         -- , initEventsQuery
         -- , initChatsQuery

@@ -1,9 +1,7 @@
 module Update exposing (..)
 
--- import GraphCool.Scalar exposing (..)
 -- import Pages.EditUser.Messages as EditUserMsg
 -- -- import Pages.User.Model exposing (..)
--- import GraphCool.Scalar exposing (..)
 -- import Pages.EditUser.Messages as EditUserMsg
 -- import Pages.Pool.View exposing (determineTubers, getPosition)
 -- import Pages.Chat.Update exposing (..)
@@ -27,7 +25,32 @@ module Update exposing (..)
 -- import SeatGeek.Types as SG
 -- import Debug exposing (log)
 -- import Navigation as Nav
+-- -----------------------------
+-- PRE FUNCTIONAL IMPORTS ABOVE
+-- -----------------------------
+-- import GraphCool.Enum.DateState exposing (DateState)
+-- import GraphCool.Object
+-- import GraphCool.Object.Chat as Chat
+-- import GraphCool.Object.Event as Event
+-- import GraphCool.Object.Host as Host
+-- import GraphCool.Object.Location as Location
+-- import GraphCool.Object.Message as Message
+-- import GraphCool.Object.Pool as Pool
+-- import GraphCool.Object.User as User
+-- import GraphCool.Object.Venue as Venue
+-- import GraphCool.Query as Query
+-- import Graphqelm.Document as Document
+-- import Graphqelm.Operation exposing (RootQuery)
+-- import GraphCool.InputObject as IO exposing (..)
 
+import Dict exposing (..)
+import DictFrom exposing (..)
+import GraphCool.Mutation as Mutation exposing (..)
+import GraphCool.Scalar exposing (..)
+import Graphqelm.Http exposing (..)
+import Graphqelm.OptionalArgument exposing (OptionalArgument(Absent, Null, Present))
+import Graphqelm.SelectionSet as SelectionSet exposing (SelectionSet, with)
+import KissDB as DB exposing (..)
 import RemoteData exposing (..)
 import Types exposing (..)
 
@@ -87,127 +110,172 @@ update msg model =
             )
 
         UpdateValue input ->
+            let
+                eventKey =
+                    "Create event key found in Update.elm"
+
+                eventValue =
+                    Maybe.withDefault initEvent <| Dict.get eventKey events
+            in
             case input of
                 --User
                 UserName val ->
-                    ( { model | errors = val :: errors }, Cmd.none )
+                    ( model, Cmd.none )
 
                 UserFullName val ->
-                    ( { model | errors = val :: errors }, Cmd.none )
+                    ( model, Cmd.none )
 
                 UserBio val ->
-                    ( { model | errors = val :: errors }, Cmd.none )
+                    ( model, Cmd.none )
 
                 UserBirthday val ->
-                    ( { model | errors = val :: errors }, Cmd.none )
+                    ( model, Cmd.none )
 
                 UserSubmit ->
                     ( model, Cmd.none )
 
                 -- Event
                 EventName val ->
-                    ( { model | errors = val :: errors }, Cmd.none )
+                    ( { model | events = Dict.insert eventKey { eventValue | name = val } events }, Cmd.none )
 
                 EventNameFull val ->
-                    ( { model | errors = val :: errors }, Cmd.none )
+                    ( { model | events = Dict.insert eventKey { eventValue | nameFull = Just val } events }, Cmd.none )
 
                 EventStartDate val ->
-                    ( { model | errors = val :: errors }, Cmd.none )
+                    ( { model | events = Dict.insert eventKey { eventValue | startsAt = DateTime val } events }, Cmd.none )
 
                 EventEndDate val ->
-                    ( { model | errors = val :: errors }, Cmd.none )
+                    ( { model | events = Dict.insert eventKey { eventValue | endsAt = Just <| DateTime val } events }, Cmd.none )
 
                 EventSubmit ->
-                    ( model, Cmd.none )
+                    let
+                        meId =
+                            case me of
+                                Nothing ->
+                                    Id "unauthenticatedUser"
 
+                                Just me ->
+                                    me.id
+
+                        -- composeEvent =
+                        --     Mutation.selection identity
+                        --         |> with
+                        --             (Mutation.createEvent
+                        --                 (\optionals ->
+                        --                     { optionals
+                        --                         | createdById = Present meId
+                        --                         , pool =
+                        --                             Present
+                        --                                 (Mutation.selection identity
+                        --                                     |> with
+                        --                                         (\optionals ->
+                        --                                             { optionals
+                        --                                                 | viewedIds = meId
+                        --                                             }
+                        --                                         )
+                        --                                         SelectionSet.empty
+                        --                                 )
+                        --                     }
+                        --                 )
+                        --                 { name = eventValue.name, startsAt = eventValue.startsAt }
+                        --                 DB.event
+                        --             )
+                        -- sendCreateEventRequest =
+                        --     composeEvent
+                        --         |> Graphqelm.Http.mutationRequest "https://api.graph.cool/simple/v1/PlusOne"
+                        --         |> Graphqelm.Http.send (RemoteData.fromResult >> ReturnMaybeEvent)
+                    in
+                    ( { model | events = Dict.remove eventKey model.events }, Cmd.none )
+
+        --sendCreateEventRequest )
         -- MANY
         ReturnHosts response ->
             case response of
                 Success x ->
-                    ( { model | hosts = List.append x model.hosts }, Cmd.none )
+                    ( { model | hosts = Dict.union (DictFrom.listHost x) hosts }, Cmd.none )
 
                 Failure y ->
-                    ( { model | errors = toString y :: model.errors }, Cmd.none )
+                    ( { model | errors = toString y :: errors }, Cmd.none )
 
                 _ ->
-                    ( { model | errors = "RemoteData is running an update?" :: model.errors }, Cmd.none )
+                    ( { model | errors = "RemoteData is running an update?" :: errors }, Cmd.none )
 
         ReturnVenues response ->
             case response of
                 Success x ->
-                    ( { model | venues = List.append x model.venues }, Cmd.none )
+                    ( { model | venues = Dict.union (DictFrom.listVenue x) venues }, Cmd.none )
 
                 Failure y ->
-                    ( { model | errors = toString y :: model.errors }, Cmd.none )
+                    ( { model | errors = toString y :: errors }, Cmd.none )
 
                 _ ->
-                    ( { model | errors = "RemoteData is running an update?" :: model.errors }, Cmd.none )
+                    ( { model | errors = "RemoteData is running an update?" :: errors }, Cmd.none )
 
         ReturnLocations response ->
             case response of
                 Success x ->
-                    ( { model | locations = List.append x model.locations }, Cmd.none )
+                    ( { model | locations = Dict.union (DictFrom.listLocation x) locations }, Cmd.none )
 
                 Failure y ->
-                    ( { model | errors = toString y :: model.errors }, Cmd.none )
+                    ( { model | errors = toString y :: errors }, Cmd.none )
 
                 _ ->
-                    ( { model | errors = "RemoteData is running an update?" :: model.errors }, Cmd.none )
+                    ( { model | errors = "RemoteData is running an update?" :: errors }, Cmd.none )
 
         ReturnEvents response ->
             case response of
                 Success x ->
-                    ( { model | events = List.append x model.events }, Cmd.none )
+                    ( { model | events = Dict.union (DictFrom.listEvent x) events }, Cmd.none )
 
                 Failure y ->
-                    ( { model | errors = toString y :: model.errors }, Cmd.none )
+                    ( { model | errors = toString y :: errors }, Cmd.none )
 
                 _ ->
-                    ( { model | errors = "RemoteData is running an update?" :: model.errors }, Cmd.none )
+                    ( { model | errors = "RemoteData is running an update?" :: errors }, Cmd.none )
 
         ReturnPools response ->
             case response of
                 Success x ->
-                    ( { model | pools = List.append x model.pools }, Cmd.none )
+                    ( { model | pools = Dict.union (DictFrom.listPool x) pools }, Cmd.none )
 
                 Failure y ->
-                    ( { model | errors = toString y :: model.errors }, Cmd.none )
+                    ( { model | errors = toString y :: errors }, Cmd.none )
 
                 _ ->
-                    ( { model | errors = "RemoteData is running an update?" :: model.errors }, Cmd.none )
+                    ( { model | errors = "RemoteData is running an update?" :: errors }, Cmd.none )
 
         ReturnMessages response ->
             case response of
                 Success x ->
-                    ( { model | messages = List.append x model.messages }, Cmd.none )
+                    ( { model | messages = Dict.union (DictFrom.listMessage x) messages }, Cmd.none )
 
                 Failure y ->
-                    ( { model | errors = toString y :: model.errors }, Cmd.none )
+                    ( { model | errors = toString y :: errors }, Cmd.none )
 
                 _ ->
-                    ( { model | errors = "RemoteData is running an update?" :: model.errors }, Cmd.none )
+                    ( { model | errors = "RemoteData is running an update?" :: errors }, Cmd.none )
 
         ReturnChats response ->
             case response of
                 Success x ->
-                    ( { model | chats = List.append x model.chats }, Cmd.none )
+                    ( { model | chats = Dict.union (DictFrom.listChat x) chats }, Cmd.none )
 
                 Failure y ->
-                    ( { model | errors = toString y :: model.errors }, Cmd.none )
+                    ( { model | errors = toString y :: errors }, Cmd.none )
 
                 _ ->
-                    ( { model | errors = "RemoteData is running an update?" :: model.errors }, Cmd.none )
+                    ( { model | errors = "RemoteData is running an update?" :: errors }, Cmd.none )
 
         ReturnUsers response ->
             case response of
                 Success x ->
-                    ( { model | users = List.append x model.users }, Cmd.none )
+                    ( { model | users = Dict.union (DictFrom.listUser x) users }, Cmd.none )
 
                 Failure y ->
-                    ( { model | errors = toString y :: model.errors }, Cmd.none )
+                    ( { model | errors = toString y :: errors }, Cmd.none )
 
                 _ ->
-                    ( { model | errors = "RemoteData is running an update?" :: model.errors }, Cmd.none )
+                    ( { model | errors = "RemoteData is running an update?" :: errors }, Cmd.none )
 
         -- ONE
         ReturnMe response ->
@@ -216,98 +284,98 @@ update msg model =
                     ( { model | me = RemoteData.toMaybe response }, Cmd.none )
 
                 Failure y ->
-                    ( { model | errors = toString y :: model.errors }, Cmd.none )
+                    ( { model | errors = toString y :: errors }, Cmd.none )
 
                 _ ->
-                    ( { model | errors = "RemoteData is running an update?" :: model.errors }, Cmd.none )
+                    ( { model | errors = "RemoteData is running an update?" :: errors }, Cmd.none )
 
         ReturnHost response ->
             case response of
                 Success x ->
-                    ( { model | hosts = x :: model.hosts }, Cmd.none )
+                    ( { model | hosts = Dict.insert (toString x.id) x hosts }, Cmd.none )
 
                 Failure y ->
-                    ( { model | errors = toString y :: model.errors }, Cmd.none )
+                    ( { model | errors = toString y :: errors }, Cmd.none )
 
                 _ ->
-                    ( { model | errors = "RemoteData is running an update?" :: model.errors }, Cmd.none )
+                    ( { model | errors = "RemoteData is running an update?" :: errors }, Cmd.none )
 
         ReturnVenue response ->
             case response of
                 Success x ->
-                    ( { model | venues = x :: model.venues }, Cmd.none )
+                    ( { model | venues = Dict.insert (toString x.id) x venues }, Cmd.none )
 
                 Failure y ->
-                    ( { model | errors = toString y :: model.errors }, Cmd.none )
+                    ( { model | errors = toString y :: errors }, Cmd.none )
 
                 _ ->
-                    ( { model | errors = "RemoteData is running an update?" :: model.errors }, Cmd.none )
+                    ( { model | errors = "RemoteData is running an update?" :: errors }, Cmd.none )
 
         ReturnLocation response ->
             case response of
                 Success x ->
-                    ( { model | locations = x :: model.locations }, Cmd.none )
+                    ( { model | locations = Dict.insert (toString x.id) x locations }, Cmd.none )
 
                 Failure y ->
-                    ( { model | errors = toString y :: model.errors }, Cmd.none )
+                    ( { model | errors = toString y :: errors }, Cmd.none )
 
                 _ ->
-                    ( { model | errors = "RemoteData is running an update?" :: model.errors }, Cmd.none )
+                    ( { model | errors = "RemoteData is running an update?" :: errors }, Cmd.none )
 
         ReturnEvent response ->
             case response of
                 Success x ->
-                    ( { model | events = x :: model.events }, Cmd.none )
+                    ( { model | events = Dict.insert (toString x.id) x events }, Cmd.none )
 
                 Failure y ->
-                    ( { model | errors = toString y :: model.errors }, Cmd.none )
+                    ( { model | errors = toString y :: errors }, Cmd.none )
 
                 _ ->
-                    ( { model | errors = "RemoteData is running an update?" :: model.errors }, Cmd.none )
+                    ( { model | errors = "RemoteData is running an update?" :: errors }, Cmd.none )
 
         ReturnPool response ->
             case response of
                 Success x ->
-                    ( { model | pools = x :: model.pools }, Cmd.none )
+                    ( { model | pools = Dict.insert (toString x.id) x pools }, Cmd.none )
 
                 Failure y ->
-                    ( { model | errors = toString y :: model.errors }, Cmd.none )
+                    ( { model | errors = toString y :: errors }, Cmd.none )
 
                 _ ->
-                    ( { model | errors = "RemoteData is running an update?" :: model.errors }, Cmd.none )
+                    ( { model | errors = "RemoteData is running an update?" :: errors }, Cmd.none )
 
         ReturnMessage response ->
             case response of
                 Success x ->
-                    ( { model | messages = x :: model.messages }, Cmd.none )
+                    ( { model | messages = Dict.insert (toString x.id) x messages }, Cmd.none )
 
                 Failure y ->
-                    ( { model | errors = toString y :: model.errors }, Cmd.none )
+                    ( { model | errors = toString y :: errors }, Cmd.none )
 
                 _ ->
-                    ( { model | errors = "RemoteData is running an update?" :: model.errors }, Cmd.none )
+                    ( { model | errors = "RemoteData is running an update?" :: errors }, Cmd.none )
 
         ReturnChat response ->
             case response of
                 Success x ->
-                    ( { model | chats = x :: model.chats }, Cmd.none )
+                    ( { model | chats = Dict.insert (toString x.id) x chats }, Cmd.none )
 
                 Failure y ->
-                    ( { model | errors = toString y :: model.errors }, Cmd.none )
+                    ( { model | errors = toString y :: errors }, Cmd.none )
 
                 _ ->
-                    ( { model | errors = "RemoteData is running an update?" :: model.errors }, Cmd.none )
+                    ( { model | errors = "RemoteData is running an update?" :: errors }, Cmd.none )
 
         ReturnUser response ->
             case response of
                 Success x ->
-                    ( { model | users = x :: model.users }, Cmd.none )
+                    ( { model | users = Dict.insert (toString x.id) x users }, Cmd.none )
 
                 Failure y ->
-                    ( { model | errors = toString y :: model.errors }, Cmd.none )
+                    ( { model | errors = toString y :: errors }, Cmd.none )
 
                 _ ->
-                    ( { model | errors = "RemoteData is running an update?" :: model.errors }, Cmd.none )
+                    ( { model | errors = "RemoteData is running an update?" :: errors }, Cmd.none )
 
         -- MAYBE ONE
         ReturnMaybeMe response ->
@@ -321,138 +389,138 @@ update msg model =
                             ( { model | me = Nothing }, Cmd.none )
 
                 Failure y ->
-                    ( { model | errors = toString y :: model.errors }, Cmd.none )
+                    ( { model | errors = toString y :: errors }, Cmd.none )
 
                 _ ->
-                    ( { model | errors = "RemoteData is running an update?" :: model.errors }, Cmd.none )
+                    ( { model | errors = "RemoteData is running an update?" :: errors }, Cmd.none )
 
         ReturnMaybeHost response ->
             case response of
                 Success maybe ->
                     case maybe of
                         Just x ->
-                            ( { model | hosts = x :: model.hosts }, Cmd.none )
+                            ( { model | hosts = Dict.insert (toString x.id) x hosts }, Cmd.none )
 
                         Nothing ->
                             ( model, Cmd.none )
 
                 Failure y ->
-                    ( { model | errors = toString y :: model.errors }, Cmd.none )
+                    ( { model | errors = toString y :: errors }, Cmd.none )
 
                 _ ->
-                    ( { model | errors = "RemoteData is running an update?" :: model.errors }, Cmd.none )
+                    ( { model | errors = "RemoteData is running an update?" :: errors }, Cmd.none )
 
         ReturnMaybeVenue response ->
             case response of
                 Success maybe ->
                     case maybe of
                         Just x ->
-                            ( { model | venues = x :: model.venues }, Cmd.none )
+                            ( { model | venues = Dict.insert (toString x.id) x venues }, Cmd.none )
 
                         Nothing ->
                             ( model, Cmd.none )
 
                 Failure y ->
-                    ( { model | errors = toString y :: model.errors }, Cmd.none )
+                    ( { model | errors = toString y :: errors }, Cmd.none )
 
                 _ ->
-                    ( { model | errors = "RemoteData is running an update?" :: model.errors }, Cmd.none )
+                    ( { model | errors = "RemoteData is running an update?" :: errors }, Cmd.none )
 
         ReturnMaybeLocation response ->
             case response of
                 Success maybe ->
                     case maybe of
                         Just x ->
-                            ( { model | locations = x :: model.locations }, Cmd.none )
+                            ( { model | locations = Dict.insert (toString x.id) x locations }, Cmd.none )
 
                         Nothing ->
                             ( model, Cmd.none )
 
                 Failure y ->
-                    ( { model | errors = toString y :: model.errors }, Cmd.none )
+                    ( { model | errors = toString y :: errors }, Cmd.none )
 
                 _ ->
-                    ( { model | errors = "RemoteData is running an update?" :: model.errors }, Cmd.none )
+                    ( { model | errors = "RemoteData is running an update?" :: errors }, Cmd.none )
 
         ReturnMaybeEvent response ->
             case response of
                 Success maybe ->
                     case maybe of
                         Just x ->
-                            ( { model | events = x :: model.events }, Cmd.none )
+                            ( { model | events = Dict.insert (toString x.id) x events }, Cmd.none )
 
                         Nothing ->
                             ( model, Cmd.none )
 
                 Failure y ->
-                    ( { model | errors = toString y :: model.errors }, Cmd.none )
+                    ( { model | errors = toString y :: errors }, Cmd.none )
 
                 _ ->
-                    ( { model | errors = "RemoteData is running an update?" :: model.errors }, Cmd.none )
+                    ( { model | errors = "RemoteData is running an update?" :: errors }, Cmd.none )
 
         ReturnMaybePool response ->
             case response of
                 Success maybe ->
                     case maybe of
                         Just x ->
-                            ( { model | pools = x :: model.pools }, Cmd.none )
+                            ( { model | pools = Dict.insert (toString x.id) x pools }, Cmd.none )
 
                         Nothing ->
                             ( model, Cmd.none )
 
                 Failure y ->
-                    ( { model | errors = toString y :: model.errors }, Cmd.none )
+                    ( { model | errors = toString y :: errors }, Cmd.none )
 
                 _ ->
-                    ( { model | errors = "RemoteData is running an update?" :: model.errors }, Cmd.none )
+                    ( { model | errors = "RemoteData is running an update?" :: errors }, Cmd.none )
 
         ReturnMaybeMessage response ->
             case response of
                 Success maybe ->
                     case maybe of
                         Just x ->
-                            ( { model | messages = x :: model.messages }, Cmd.none )
+                            ( { model | messages = Dict.insert (toString x.id) x messages }, Cmd.none )
 
                         Nothing ->
                             ( model, Cmd.none )
 
                 Failure y ->
-                    ( { model | errors = toString y :: model.errors }, Cmd.none )
+                    ( { model | errors = toString y :: errors }, Cmd.none )
 
                 _ ->
-                    ( { model | errors = "RemoteData is running an update?" :: model.errors }, Cmd.none )
+                    ( { model | errors = "RemoteData is running an update?" :: errors }, Cmd.none )
 
         ReturnMaybeChat response ->
             case response of
                 Success maybe ->
                     case maybe of
                         Just x ->
-                            ( { model | chats = x :: model.chats }, Cmd.none )
+                            ( { model | chats = Dict.insert (toString x.id) x chats }, Cmd.none )
 
                         Nothing ->
                             ( model, Cmd.none )
 
                 Failure y ->
-                    ( { model | errors = toString y :: model.errors }, Cmd.none )
+                    ( { model | errors = toString y :: errors }, Cmd.none )
 
                 _ ->
-                    ( { model | errors = "RemoteData is running an update?" :: model.errors }, Cmd.none )
+                    ( { model | errors = "RemoteData is running an update?" :: errors }, Cmd.none )
 
         ReturnMaybeUser response ->
             case response of
                 Success maybe ->
                     case maybe of
                         Just x ->
-                            ( { model | users = x :: model.users }, Cmd.none )
+                            ( { model | users = Dict.insert (toString x.id) x users }, Cmd.none )
 
                         Nothing ->
                             ( model, Cmd.none )
 
                 Failure y ->
-                    ( { model | errors = toString y :: model.errors }, Cmd.none )
+                    ( { model | errors = toString y :: errors }, Cmd.none )
 
                 _ ->
-                    ( { model | errors = "RemoteData is running an update?" :: model.errors }, Cmd.none )
+                    ( { model | errors = "RemoteData is running an update?" :: errors }, Cmd.none )
 
 
 
@@ -472,7 +540,7 @@ update msg model =
 -- Types.AuthenticationMsg authMsg ->
 --     let
 --         ( authModel, cmd ) =
---             Authentication.update authMsg model.me.authModel
+--             Authentication.update authMsg me.authModel
 --         newUser2 =
 --             { user2 | id = authModel.getUserId }
 --         newUser =
@@ -488,7 +556,7 @@ update msg model =
 -- Types.ChatsMsg chatsMsg ->
 --     let
 --         ( chatsModel, chatsCmd ) =
---             Pages.Chats.Update.update chatsMsg model.chats me
+--             Pages.Chats.Update.update chatsMsg chats me
 --     in
 --     ( { model | chats = chatsModel }
 --     , Cmd.map Types.ChatsMsg chatsCmd

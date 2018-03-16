@@ -96,6 +96,7 @@ view model =
                 ]
             , button [ onClick <| UpdateValue EventSubmit ] [ text "Create An Event" ]
             ]
+        , text (toString model.errors)
         , div [ style [ ( "color", "#000000" ) ] ]
             [ h1 [] [ text "Submission Response " ]
             , h2 [] [ text "Raw" ]

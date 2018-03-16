@@ -67,7 +67,12 @@ bar model =
 home : Html Msg
 home =
     div [ class "dn flex-auto-l flex-ns items-center justify-center-m" ]
-        [ div [ class "grow-large flex flex-column-m ph4-l pa3-m", onClick (RouteTo <| Types.GoEvents Nothing) ]
+        [ div
+            [ class "grow-large flex flex-column-m ph4-l pa3-m"
+            , Types.GoEvents Nothing
+                |> RouteTo
+                |> onClick
+            ]
             [ div
                 [ bgImg "logo/svg/oColor.svg"
                 , class "animated bounceIn pb4-m pr4-m pl3 pt3 pr2 pb2 contain bg-center"
