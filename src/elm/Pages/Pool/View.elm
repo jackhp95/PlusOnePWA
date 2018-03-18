@@ -14,6 +14,7 @@ module Pages.Pool.View exposing (..)
 -- import Pages.Pool.Model exposing (Pool)
 -- import Pages.User.Model exposing (UserProfile)
 
+import Dict exposing (..)
 import GraphCool.Scalar exposing (..)
 import Html exposing (..)
 import Html.Events exposing (on, onClick)
@@ -28,11 +29,11 @@ import Types exposing (..)
     (,)
 
 
-view : Types.Model -> Html Msg
-view model =
+view : Id -> Types.Model -> Html Msg
+view poolId model =
     let
         pool =
-            initPool
+            Maybe.withDefault initPool <| Dict.get (toString poolId) model.pools
 
         -- case model.route of
         --     Types.GoPool id ->

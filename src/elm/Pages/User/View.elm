@@ -3,15 +3,15 @@ module Pages.User.View exposing (..)
 -- import Pages.User.Model as UserModel
 
 import Assets exposing (bgImg, feather)
+import GraphCool.Scalar exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
-import Nav exposing (bar)
 import Types exposing (..)
 
 
-view : Model -> Html Msg
-view model =
+view : Id -> Model -> Html Msg
+view userId model =
     section [ class "w-100 mw7-l overflow-auto shadow-2-l" ]
         [ div [ class "flex h5 ph3 ph4-m ph5-l pt6 items-center" ]
             [ userAvi
@@ -78,7 +78,7 @@ pastEvents me =
 userToolsView : Html Msg
 userToolsView =
     div [ class "flex justify-end" ]
-        [ div [ class "animated bounceIn pointer hover-bg-black-50 br-2 pa3 flex items-center", onClick (Types.RouteTo <| GoEditUser initId) ]
+        [ div [ class "animated bounceIn pointer hover-bg-black-50 br-2 pa3 flex items-center", onClick (Types.RouteTo GoEditMe) ]
             [ div [ Assets.feather "edit", class "contain bg-center grow pt3 pb2 pl3 pr2" ] []
             , div [ class "pa2" ] [ text "edit" ]
             ]

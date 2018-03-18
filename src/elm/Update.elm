@@ -25,11 +25,10 @@ module Update exposing (..)
 -- import SeatGeek.Types as SG
 -- import Debug exposing (log)
 -- import Navigation as Nav
--- -----------------------------
--- PRE FUNCTIONAL IMPORTS ABOVE
--- -----------------------------
+-- ---------------------------- --
+-- PRE FUNCTIONAL IMPORTS ABOVE --
+-- ---------------------------- --
 -- import GraphCool.Enum.DateState exposing (DateState)
--- import GraphCool.Object
 -- import GraphCool.Object.Chat as Chat
 -- import GraphCool.Object.Event as Event
 -- import GraphCool.Object.Host as Host
@@ -45,10 +44,11 @@ module Update exposing (..)
 
 import Dict exposing (..)
 import DictFrom exposing (..)
+import GraphCool.InputObject exposing (..)
 import GraphCool.Mutation as Mutation exposing (..)
 import GraphCool.Scalar exposing (..)
 import Graphqelm.Http exposing (..)
-import Graphqelm.OptionalArgument exposing (OptionalArgument(Absent, Null, Present))
+import Graphqelm.OptionalArgument exposing (OptionalArgument(Absent, Null, Present), fromMaybe)
 import Graphqelm.SelectionSet as SelectionSet exposing (SelectionSet, with)
 import KissDB as DB exposing (..)
 import RemoteData exposing (..)
@@ -111,83 +111,95 @@ update msg model =
 
         UpdateValue input ->
             let
-                eventKey =
-                    "Create event key found in Update.elm"
+                forms =
+                    model.forms
 
-                eventValue =
-                    Maybe.withDefault initEvent <| Dict.get eventKey events
+                event =
+                    forms.event
+
+                me =
+                    forms.me
             in
             case input of
-                --User
-                UserName val ->
+                -- Me
+                MeName val ->
+                    ( { model | forms = { forms | me = { me | name = val } } }, Cmd.none )
+
+                MeNameFull val ->
+                    ( { model | forms = { forms | me = { me | nameFull = Just val } } }, Cmd.none )
+
+                MeBio val ->
+                    ( { model | forms = { forms | me = { me | bio = Just val } } }, Cmd.none )
+
+                MeBirthday val ->
+                    ( { model | forms = { forms | me = { me | birthday = DateTime val } } }, Cmd.none )
+
+                MeSubmit ->
                     ( model, Cmd.none )
 
-                UserFullName val ->
-                    ( model, Cmd.none )
+                -- Message
+                MessageText id val ->
+                    case val == "" of
+                        False ->
+                            ( { model | messages = Dict.insert (toString id) { initMessage | text = val } model.messages }, Cmd.none )
 
-                UserBio val ->
-                    ( model, Cmd.none )
+                        True ->
+                            ( { model | messages = Dict.remove (toString id) model.messages }, Cmd.none )
 
-                UserBirthday val ->
-                    ( model, Cmd.none )
-
-                UserSubmit ->
-                    ( model, Cmd.none )
+                MessageSend id ->
+                    ( { model | messages = Dict.remove (toString id) model.messages }, Cmd.none )
 
                 -- Event
                 EventName val ->
-                    ( { model | events = Dict.insert eventKey { eventValue | name = val } events }, Cmd.none )
+                    ( { model | forms = { forms | event = { event | name = val } } }, Cmd.none )
 
                 EventNameFull val ->
-                    ( { model | events = Dict.insert eventKey { eventValue | nameFull = Just val } events }, Cmd.none )
+                    ( { model | forms = { forms | event = { event | nameFull = Just val } } }, Cmd.none )
 
                 EventStartDate val ->
-                    ( { model | events = Dict.insert eventKey { eventValue | startsAt = DateTime val } events }, Cmd.none )
+                    ( { model | forms = { forms | event = { event | startsAt = DateTime val } } }, Cmd.none )
 
                 EventEndDate val ->
-                    ( { model | events = Dict.insert eventKey { eventValue | endsAt = Just <| DateTime val } events }, Cmd.none )
+                    ( { model | forms = { forms | event = { event | endsAt = Just <| DateTime val } } }, Cmd.none )
 
                 EventSubmit ->
                     let
-                        meId =
-                            case me of
-                                Nothing ->
-                                    Id "unauthenticatedUser"
+                        composeEvent =
+                            Mutation.selection identity
+                                |> with
+                                    (Mutation.createEvent
+                                        (\eventOptionals ->
+                                            { eventOptionals
+                                                | endsAt = fromMaybe event.endsAt
+                                                , nameFull = fromMaybe event.nameFull
+                                                , private = Present event.private
+                                                , createdById = Present <| Id "cjepixltacwzz0153vxgep8pb"
+                                                , pool =
+                                                    Present <|
+                                                        EventpoolPool
+                                                            { attendingIds = Present [ Id "cjepixltacwzz0153vxgep8pb" ]
+                                                            , chats = Absent
+                                                            , chatsIds = Absent
+                                                            , likedIds = Absent
+                                                            , seatGeekId = Absent
+                                                            , viewedIds = Absent
+                                                            }
+                                                , hostsIds = fromMaybe event.hosts
+                                                , venuesIds = fromMaybe event.venues
+                                            }
+                                        )
+                                        { name = event.name, startsAt = event.startsAt }
+                                        DB.event
+                                    )
 
-                                Just me ->
-                                    me.id
-
-                        -- composeEvent =
-                        --     Mutation.selection identity
-                        --         |> with
-                        --             (Mutation.createEvent
-                        --                 (\optionals ->
-                        --                     { optionals
-                        --                         | createdById = Present meId
-                        --                         , pool =
-                        --                             Present
-                        --                                 (Mutation.selection identity
-                        --                                     |> with
-                        --                                         (\optionals ->
-                        --                                             { optionals
-                        --                                                 | viewedIds = meId
-                        --                                             }
-                        --                                         )
-                        --                                         SelectionSet.empty
-                        --                                 )
-                        --                     }
-                        --                 )
-                        --                 { name = eventValue.name, startsAt = eventValue.startsAt }
-                        --                 DB.event
-                        --             )
-                        -- sendCreateEventRequest =
-                        --     composeEvent
-                        --         |> Graphqelm.Http.mutationRequest "https://api.graph.cool/simple/v1/PlusOne"
-                        --         |> Graphqelm.Http.send (RemoteData.fromResult >> ReturnMaybeEvent)
+                        sendCreateEventRequest =
+                            composeEvent
+                                |> Graphqelm.Http.mutationRequest "https://api.graph.cool/simple/v1/PlusOne"
+                                |> Graphqelm.Http.send
+                                    (RemoteData.fromResult >> ReturnMaybeEvent)
                     in
-                    ( { model | events = Dict.remove eventKey model.events }, Cmd.none )
+                    ( { model | forms = { forms | event = initEvent } }, sendCreateEventRequest )
 
-        --sendCreateEventRequest )
         -- MANY
         ReturnHosts response ->
             case response of
@@ -227,6 +239,7 @@ update msg model =
                 Success x ->
                     ( { model | events = Dict.union (DictFrom.listEvent x) events }, Cmd.none )
 
+                -- API of GraphCool is hardcoded into listEvent
                 Failure y ->
                     ( { model | errors = toString y :: errors }, Cmd.none )
 
@@ -325,7 +338,7 @@ update msg model =
         ReturnEvent response ->
             case response of
                 Success x ->
-                    ( { model | events = Dict.insert (toString x.id) x events }, Cmd.none )
+                    ( { model | events = Dict.insert (toString x.id) (GraphCool x) events }, Cmd.none )
 
                 Failure y ->
                     ( { model | errors = toString y :: errors }, Cmd.none )
@@ -447,7 +460,7 @@ update msg model =
                 Success maybe ->
                     case maybe of
                         Just x ->
-                            ( { model | events = Dict.insert (toString x.id) x events }, Cmd.none )
+                            ( { model | events = Dict.insert (toString x.id) (GraphCool x) events }, Cmd.none )
 
                         Nothing ->
                             ( model, Cmd.none )
@@ -522,21 +535,26 @@ update msg model =
                 _ ->
                     ( { model | errors = "RemoteData is running an update?" :: errors }, Cmd.none )
 
+        -- SeatGeek
+        Types.GetReply reply ->
+            case reply of
+                Success reply ->
+                    let
+                        listToDict events =
+                            events
+                                |> List.map (\event -> ( toString event.id, SeatGeek event ))
+                                |> Dict.fromList
+                    in
+                    ( { model | events = Dict.union (listToDict reply.events) events }, Cmd.none )
+
+                Failure e ->
+                    ( { model | errors = toString e :: errors }, Cmd.none )
+
+                _ ->
+                    ( { model | errors = "RemoteData is running an update?" :: errors }, Cmd.none )
 
 
--- SeatGeek
--- Types.GetReply reply ->
---     case reply of
---         Ok recieved ->
---             ( { model
---                 | events = List.map SeatGeek recieved.events
---               }
---             , Cmd.none
---             )
---         Err e ->
---             Debug.log "err"
---                 e
---                 ( model, Cmd.none )
+
 -- Types.AuthenticationMsg authMsg ->
 --     let
 --         ( authModel, cmd ) =

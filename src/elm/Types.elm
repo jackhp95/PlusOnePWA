@@ -35,11 +35,11 @@ import SeatGeek.Types as SG
 
 type Route
     = GoChats (Maybe Id)
-    | GoUser (Maybe Id)
+    | GoUser Id
     | GoEvents (Maybe Id)
     | GoCreateEvent
-    | GoPool (Maybe Id)
-    | GoEditUser Id
+    | GoPool Id
+    | GoEditMe
     | GoAuth
     | GoMe Me
 
@@ -103,6 +103,11 @@ type alias Location =
     }
 
 
+type API
+    = GraphCool Event
+    | SeatGeek SG.Event
+
+
 type alias Event =
     { pool : Id
     , createdAt : DateTime
@@ -150,7 +155,7 @@ type alias Message =
 
 initMessage : Message
 initMessage =
-    Message initId initDateTime Nothing initId "initMessageText"
+    Message initId initDateTime Nothing initId ""
 
 
 type alias Chat =
@@ -245,13 +250,14 @@ type alias Model =
     , hosts : Dict String Host
     , venues : Dict String Venue
     , locations : Dict String Location
-    , events : Dict String Event
+    , events : Dict String API
     , pools : Dict String Pool
     , messages : Dict String Message
     , chats : Dict String Chat
     , users : Dict String User
     , me : Maybe Me
     , errors : List String
+    , forms : Forms
     }
 
 
@@ -280,6 +286,19 @@ emptyModel =
         Nothing
         -- errors
         []
+        -- forms
+        initForms
+
+
+type alias Forms =
+    { event : Event
+    , me : Me
+    }
+
+
+initForms : Forms
+initForms =
+    Forms initEvent initMe
 
 
 
@@ -336,7 +355,7 @@ type
       -- | AuthenticationMsg Authentication.Msg
       -- | TextAreaResizer Int
       -- SeatGeek
-      -- | GetReply (Result Http.Error SG.Reply)
+    | GetReply (WebData SG.Reply)
       -- From TestGraphCool
       -- Query Many
     | ReturnHosts (RemoteData Graphqelm.Http.Error (List Host))
@@ -374,11 +393,14 @@ type
 type
     InputValue
     -- User
-    = UserName String
-    | UserFullName String
-    | UserBio String
-    | UserBirthday String
-    | UserSubmit
+    = MeName String
+    | MeNameFull String
+    | MeBio String
+    | MeBirthday String
+    | MeSubmit
+      -- Message
+    | MessageText Id String
+    | MessageSend Id
       -- Event
     | EventName String
     | EventNameFull String

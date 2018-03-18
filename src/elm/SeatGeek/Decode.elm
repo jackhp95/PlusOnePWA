@@ -4,6 +4,7 @@
 
 module SeatGeek.Decode exposing (..)
 
+import GraphCool.Scalar exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
@@ -122,7 +123,7 @@ decodeEvent =
         |: Json.Decode.Extra.withDefault 0.0 ("score" := Json.Decode.float)
         |: ("short_title" := Json.Decode.string)
         |: ("venue" := decodeVenue)
-        |: ("id" := Json.Decode.int)
+        |: ("id" := Json.Decode.int |> Json.Decode.map (\int -> Id (toString int)))
         |: ("stats" := decodeTickets)
         |: ("date_tbd" := Json.Decode.bool)
         |: ("title" := Json.Decode.string)

@@ -31,7 +31,7 @@ import Types exposing (..)
 -- VIEW
 
 
-view : Types.Model -> Html Types.Msg
+view : Model -> Html Msg
 view model =
     let
         chats =
@@ -56,25 +56,20 @@ view model =
 
 
 -- Ideally, this String value should be an Id value, because that's what it really is, but Dict won't allow for that.
+-- Perhaps we can look into switching to all-dict, I'm not sure about the performance tho
 
 
 nameBar : Model -> String -> Html Types.Msg
-nameBar model chatId =
+nameBar model chatKey =
     let
         chat =
-            case Dict.get chatId model.chats of
+            case Dict.get chatKey model.chats of
                 Just chat ->
                     chat
 
                 Nothing ->
                     Debug.log "Chats.nameBar Fucked up at chat"
                         initChat
-
-        messages =
-            model.messages
-
-        users =
-            model.users
 
         pool =
             case Dict.get (toString chat.pool) model.pools of
@@ -92,10 +87,18 @@ nameBar model chatId =
 
                 Nothing ->
                     Debug.log "Chats.nameBar Fucked up at event"
-                        initEvent
+                        (GraphCool initEvent)
+
+        titleOf event =
+            case event of
+                SeatGeek event ->
+                    event.title
+
+                GraphCool event ->
+                    event.name
 
         initiator =
-            case Dict.get (toString chat.initiated) users of
+            case Dict.get (toString chat.initiated) model.users of
                 Just initiator ->
                     initiator
 
@@ -104,7 +107,7 @@ nameBar model chatId =
                         initUser
 
         recipient =
-            case Dict.get (toString chat.recipient) users of
+            case Dict.get (toString chat.recipient) model.users of
                 Just recipient ->
                     recipient
 
@@ -112,13 +115,24 @@ nameBar model chatId =
                     Debug.log "Chats.nameBar Fucked up at recipient"
                         initUser
 
-        ( headMessage, headTime ) =
-            case List.head (Dict.values messages) of
-                Nothing ->
-                    ( "No message yet. Say something.", "" )
+        -- This sorting code is kinda bad, we should fix it.
+        mostRecentMessage =
+            Maybe.withDefault [] chat.messages
+                |> List.reverse
+                |> List.head
 
+        ( headMessage, headTime ) =
+            case Dict.get chatKey model.messages of
                 Just message ->
-                    ( message.text, getTime message.createdAt )
+                    ( message.text, "Draft" )
+
+                Nothing ->
+                    case mostRecentMessage of
+                        Nothing ->
+                            ( "No message yet. Say something.", "" )
+
+                        Just message ->
+                            ( message.text, getTime message.createdAt )
     in
     div
         [ class "flex items-center z-2 fadeIn animated pa3 grow hover-bg-black-20 lh-title"
@@ -138,7 +152,7 @@ nameBar model chatId =
                 [ div [ class "nowrap" ]
                     [ div [ class "f5 fw6" ] [ text initiator.name ]
                     , div [ class "f5 fw4 o-60" ]
-                        [ text event.name ]
+                        [ text <| titleOf event ]
                     ]
                 , div [ class "mh2 self-start f7 tr o-80 flex-shrink-0" ]
                     [ div [] [ text headTime ]

@@ -29,47 +29,6 @@ import Types exposing (..)
 
 
 -- VIEW
--- HOLY SHIT THIS IS HACKY AS FUCK, IF YOU CAN THINK OF A BETTER WAY TO DO THIS PLEASE FIX THIS HELL
-
-
-chattingWith : Model -> User
-chattingWith model =
-    case model.route of
-        GoChats maybeChatId ->
-            case maybeChatId of
-                Just chatId ->
-                    case Dict.get (toString chatId) model.chats of
-                        Just chat ->
-                            case model.me of
-                                Just me ->
-                                    case me.id == chat.initiated of
-                                        True ->
-                                            -- True if Me is the initiator
-                                            Dict.get (toString chat.recipient) model.users
-                                                -- Fails if Client can't find User you're chatting with
-                                                |> Maybe.withDefault { initUser | name = "Finding User" }
-
-                                        False ->
-                                            -- False if Me is the recipient
-                                            Dict.get (toString chat.initiated) model.users
-                                                -- Fails if Client doesn't have the User
-                                                |> Maybe.withDefault { initUser | name = "Loading User" }
-
-                                Nothing ->
-                                    -- Fails if Me isn't authenticated
-                                    { initUser | name = "Please Sign In" }
-
-                        Nothing ->
-                            -- Fails if Client doesn't have the chat
-                            { initUser | name = "Unknown Chat" }
-
-                Nothing ->
-                    -- Fails if the route is in GoChats, but Doesn't have a chatId
-                    { initUser | name = "Finding Chat" }
-
-        _ ->
-            -- Fails if route isn't a GoChat
-            { initUser | name = "Loading Chat" }
 
 
 viewMessage : String -> Html msg
@@ -77,23 +36,32 @@ viewMessage msg =
     div [ class "dib pa2 mv1 mh2 bg-light-blue br3 measure-narrow shadow-1" ] [ text msg ]
 
 
-view : Types.Model -> Html Types.Msg
-view model =
+view : Chat -> Id -> Model -> Html Types.Msg
+view chat meId model =
     let
         with =
-            chattingWith model
+            case meId == chat.initiated of
+                True ->
+                    -- True if Me is the initiator
+                    Dict.get (toString chat.recipient) model.users
+                        -- Fails if Client can't find User you're chatting with
+                        |> Maybe.withDefault { initUser | name = "Finding User" }
 
-        chat =
-            case model.route of
-                Types.GoChats id ->
-                    Dict.values model.chats
-                        |> List.head
-                        |> Maybe.withDefault initChat
+                False ->
+                    -- False if Me is the recipient
+                    Dict.get (toString chat.initiated) model.users
+                        -- Fails if Client doesn't have the User
+                        |> Maybe.withDefault { initUser | name = "Loading User" }
 
-                -- List.filter (id == ) (.id model.chats)
-                _ ->
-                    initChat
-
+        -- chat =
+        --     case model.route of
+        --         Types.GoChats id ->
+        --             Dict.values model.chats
+        --                 |> List.head
+        --                 |> Maybe.withDefault initChat
+        --         -- List.filter (id == ) (.id model.chats)
+        --         _ ->
+        --             initChat
         conversation =
             case chat.messages of
                 Nothing ->
@@ -115,19 +83,35 @@ view model =
 messageBar : Types.Model -> Types.Chat -> Html Types.Msg
 messageBar model chat =
     let
-        content =
-            initMessage.text
+        -- Use the ChatId for the key of the message you're composing.
+        -- This allows you to have mutliple different message states, not just one.
+        -- Switching between chats should keep the message you're composing separate with this tactic.
+        chatKey =
+            toString chat.id
+
+        composing =
+            Maybe.withDefault initMessage <| Dict.get chatKey model.messages
     in
-    div [ class "bg-black-40 flex flex-none z-2 items-stretch overflow-hidden pl2 slideInUp animated" ]
-        [ textarea
+    div [ class "bg-black-40 flex flex-none z-2 items-stretch overflow-hidden pl2 slideInUp animated lh-copy" ]
+        [ input
             [ class "white bg-transparent overflow-visible pa3 self-center flex-auto bn outline-0"
             , placeholder "strike up a convo"
             , autofocus True
-            , value content
+            , value composing.text
+            , onInput <| UpdateValue << MessageText chat.id
             ]
             []
-        , div [ class "bg-black-60 pa2 flex items-center hover-bg-blue grow" ]
-            [-- div [ onClick (Types.CreateMessageMsg SendMessage), Assets.feather "chevron-right", class "w2 h2 contain" ] []
+
+        -- div
+        -- , contenteditable True
+        -- text composing.text
+        , div [ class "bg-black-60 pa2 flex-none flex items-center hover-bg-blue grow" ]
+            [ div
+                [ Assets.feather "chevron-right"
+                , class "w2 h2 contain"
+                , onClick <| UpdateValue <| MessageSend chat.id
+                ]
+                []
             ]
         ]
 
@@ -137,7 +121,7 @@ nameBar withUser =
     div [ class "bg-black-90 flex items-stretch absolute w-100 measure-wide-l z-2 h3 fadeIn animated" ]
         [ div
             [ class "flex items-center grow"
-            , Just withUser.id
+            , withUser.id
                 |> Types.GoUser
                 |> Types.RouteTo
                 |> onClick
@@ -157,3 +141,40 @@ nameBar withUser =
             [ div [ Assets.feather "more-vertical", class "grow pa3 pt2 contain mh2" ] []
             ]
         ]
+
+
+
+-- HOLY SHIT THIS IS HACKY AS FUCK, IF YOU CAN THINK OF A BETTER WAY TO DO THIS PLEASE FIX THIS HELL
+-- chattingWith : Chat -> Id -> Model -> User
+-- chattingWith chat meId model =
+--     case model.route of
+--         GoChats maybeChatId ->
+--             case maybeChatId of
+--                 Just chatId ->
+--                     case Dict.get (toString chatId) model.chats of
+--                         Just chat ->
+--                             case model.me of
+--                                 Just me ->
+--                                     case me.id == chat.initiated of
+--                                         True ->
+--                                             -- True if Me is the initiator
+--                                             Dict.get (toString chat.recipient) model.users
+--                                                 -- Fails if Client can't find User you're chatting with
+--                                                 |> Maybe.withDefault { initUser | name = "Finding User" }
+--                                         False ->
+--                                             -- False if Me is the recipient
+--                                             Dict.get (toString chat.initiated) model.users
+--                                                 -- Fails if Client doesn't have the User
+--                                                 |> Maybe.withDefault { initUser | name = "Loading User" }
+--                                 Nothing ->
+--                                     -- Fails if Me isn't authenticated
+--                                     { initUser | name = "Please Sign In" }
+--                         Nothing ->
+--                             -- Fails if Client doesn't have the chat
+--                             { initUser | name = "Unknown Chat" }
+--                 Nothing ->
+--                     -- Fails if the route is in GoChats, but Doesn't have a chatId
+--                     { initUser | name = "Finding Chat" }
+--         _ ->
+--             -- Fails if route isn't a GoChat
+--             { initUser | name = "Loading Chat" }

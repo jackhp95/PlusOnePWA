@@ -6,21 +6,22 @@ module View exposing (render)
 -- SUBVIEWS --
 -- import Html.Events exposing (..)
 
+import Dict exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Nav exposing (..)
 import Pages.Chat.View as Chat
 import Pages.Chats.View as Chats
 import Pages.CreateEvent.View as CreateEvent
-import Pages.EditUser.View as EditUser
+import Pages.EditMe.View as EditMe
 import Pages.Event.View as Event
 import Pages.Events.View as Events
 import Pages.Pool.View as Pool
 import Pages.User.View as User
-import Types
+import Types exposing (..)
 
 
-render : Types.Model -> Html Types.Msg
+render : Model -> Html Msg
 render model =
     div
         [ class "animated fadeIn f6 fw3 flex flex-column-l flex-row-m flex-column-reverse items-stretch vh-100 white" ]
@@ -30,32 +31,45 @@ render model =
         ]
 
 
-page : Types.Model -> List (Html Types.Msg)
+page : Model -> List (Html Msg)
 page model =
+    let
+        me =
+            case model.me of
+                Nothing ->
+                    initMe
+
+                Just me ->
+                    me
+    in
     case model.route of
-        Types.GoChats maybe ->
-            case maybe of
+        GoChats chatId ->
+            case chatId of
                 Nothing ->
                     [ Chats.view model ]
 
-                Just x ->
+                Just chatId ->
+                    let
+                        chat =
+                            Maybe.withDefault initChat <| Dict.get (toString chatId) model.chats
+                    in
                     [ Chats.view model
-                    , Chat.view model
+                    , Chat.view chat me.id model
                     ]
 
-        Types.GoUser initId ->
-            [ User.view model ]
+        GoUser userId ->
+            [ User.view userId model ]
 
-        Types.GoPool initId ->
-            [ Pool.view model ]
+        GoPool poolId ->
+            [ Pool.view poolId model ]
 
-        Types.GoEditUser initId ->
-            [ EditUser.view model ]
+        GoEditMe ->
+            [ EditMe.view model ]
 
-        Types.GoCreateEvent ->
+        GoCreateEvent ->
             [ CreateEvent.view model ]
 
-        Types.GoEvents event ->
+        GoEvents event ->
             case event of
                 Nothing ->
                     [ Events.view model ]

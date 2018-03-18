@@ -47,6 +47,14 @@ import Types exposing (..)
 view : Types.Model -> Html Msg
 view model =
     let
+        apiToListView api =
+            case api of
+                SeatGeek event ->
+                    seatGeekListView event
+
+                GraphCool event ->
+                    graphCoolListView event
+
         events =
             model.events
 
@@ -85,7 +93,7 @@ view model =
             , div [ class "f2 lh-solid fw7 ma0 pa0" ]
                 [ text "discover events" ]
             ]
-        , section [ class "overflow-auto w-100 flex-grow-1 animated fadeInLeft mw6-l flex-shrink-0 bg-black-60 shadow-2-l" ] (List.map graphCoolListView <| Dict.values events)
+        , section [ class "overflow-auto w-100 flex-grow-1 animated fadeInLeft mw6-l flex-shrink-0 bg-black-60 shadow-2-l" ] (List.map apiToListView <| Dict.values events)
         ]
 
 
@@ -167,7 +175,7 @@ graphCoolListView event =
     in
     div
         [ class "animated fadeInUp ph3 pt3 ph4-m pt4-m hover-bg-black-30"
-        , .id initEvent
+        , .id event
             |> Just
             |> GoEvents
             |> Types.RouteTo
@@ -221,8 +229,11 @@ seatGeekListView event =
     in
     div
         [ class "animated fadeInUp ph3 pt3 ph4-m pt4-m hover-bg-black-30"
-
-        -- , onClick (Types.ViewEvent (Route.Events (Just <| SeatGeek event)))
+        , .id event
+            |> Just
+            |> GoEvents
+            |> Types.RouteTo
+            |> onClick
         ]
         [ cardImage
         , div [ class "pb3 pb4-m bb b--white-20" ]

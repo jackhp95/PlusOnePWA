@@ -14,15 +14,15 @@ module Main exposing (main)
 -- import Pages.User.Model exposing (..)
 -- import Pages.Chats.Update as ChatsUpdate exposing (makeQueryRequest)
 -- import Pages.Events.Update as EventsUpdate exposing (makeQueryRequest)
--- import SeatGeek.Query
 -- import Auth0.Authentication as Authentication
 -- import Mouse
--- import SeatGeek.Types as SG
 -- import Task exposing (..)
 
 import Auth0.Auth0 as Auth0
 import Html exposing (..)
 import KissDB as DB exposing (..)
+import SeatGeek.Query
+import SeatGeek.Types as SG
 import Types exposing (..)
 import Update exposing (..)
 import View exposing (render)
@@ -34,13 +34,15 @@ import View exposing (render)
 initCmd : Cmd Msg
 initCmd =
     Cmd.batch
-        [ -- SeatGeek.Query.askQuery SG.initQuery
-          -- , getDatetime
-          -- , initWindow,
-          DB.requestEvents identity
+        [ SeatGeek.Query.askQuery SG.initQuery
+
+        -- , getDatetime
+        -- , initWindow
+        , DB.requestEvents identity
         , DB.requestChats identity
         , DB.requestUsers identity
         , DB.requestPools identity
+        , DB.requestMessages identity
 
         -- , initEventsQuery
         -- , initChatsQuery
