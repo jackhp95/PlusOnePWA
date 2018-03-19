@@ -7,9 +7,10 @@ import GraphCool.Scalar exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Moment exposing (..)
-import Pages.Message.Model exposing (..)
+import Types exposing (..)
 
 
+-- import Pages.Message.Model exposing (..)
 -- VIEW
 
 

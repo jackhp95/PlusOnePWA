@@ -779,15 +779,6 @@ removeFromPoolOnUser requiredArgs object =
     Object.selectionField "removeFromPoolOnUser" [ Argument.required "viewedUserId" requiredArgs.viewedUserId (\(GraphCool.Scalar.Id raw) -> Encode.string raw), Argument.required "viewedEventPoolId" requiredArgs.viewedEventPoolId (\(GraphCool.Scalar.Id raw) -> Encode.string raw) ] object (identity >> Decode.nullable)
 
 
-type alias RemoveFromRecipientOfChatRequiredArguments =
-    { recipientUserId : GraphCool.Scalar.Id, recipientChatId : GraphCool.Scalar.Id }
-
-
-removeFromRecipientOfChat : RemoveFromRecipientOfChatRequiredArguments -> SelectionSet decodesTo GraphCool.Object.RemoveFromRecipientOfChatPayload -> Field (Maybe decodesTo) RootMutation
-removeFromRecipientOfChat requiredArgs object =
-    Object.selectionField "removeFromRecipientOfChat" [ Argument.required "recipientUserId" requiredArgs.recipientUserId (\(GraphCool.Scalar.Id raw) -> Encode.string raw), Argument.required "recipientChatId" requiredArgs.recipientChatId (\(GraphCool.Scalar.Id raw) -> Encode.string raw) ] object (identity >> Decode.nullable)
-
-
 type alias RemoveFromUserIsHostRequiredArguments =
     { usersUserId : GraphCool.Scalar.Id, hostsHostId : GraphCool.Scalar.Id }
 

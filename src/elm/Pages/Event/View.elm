@@ -5,52 +5,67 @@
 module Pages.Event.View exposing (..)
 
 -- import Date exposing (..)
+-- import Pages.Pool.Model exposing (Pool)
+-- import Pages.Event.Model exposing (Event)
+-- import Pages.Events.Model exposing (EventAPI, Events)
+-- import SeatGeek.Query exposing (composeRequest)
+-- import Http exposing (..)
+-- import Moment exposing (..)
+-- import SeatGeek.Decode exposing (decodeReply)
 
 import Assets exposing (feather)
+import Dict exposing (..)
 import GraphCool.Scalar exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
-import Http exposing (..)
-import Moment exposing (..)
-import Pages.Event.Model exposing (Event)
-import Pages.Pool.Model exposing (Pool)
-import Pages.Events.Model exposing (Events,EventAPI)
-import SeatGeek.Decode exposing (decodeReply)
-import SeatGeek.Query exposing (composeRequest)
 import SeatGeek.Types as SG
-import Types exposing (Msg)
+import Types exposing (..)
 
 
-askQuery : SG.Query -> Cmd Msg
-askQuery query =
-    let
-        url =
-            composeRequest query
-
-        request =
-            Http.get url decodeReply
-    in
-    Http.send Types.GetReply request
-
-
-
+-- askQuery : SG.Query -> Cmd Msg
+-- askQuery query =
+--     let
+--         url =
+--             composeRequest query
+--         request =
+--             Http.get url decodeReply
+--     in
+--     Http.send Types.GetReply request
 -- VIEW
 
 
-view : EventAPI -> Html Msg
-view api =
+view : Model -> Html Msg
+view model =
     let
-        apiToEvent api =
+        apiToView api =
             case api of
-                Pages.Events.Model.SeatGeek x ->
-                    seatGeekView x
+                SeatGeek event ->
+                    seatGeekView event
 
-                Pages.Events.Model.GraphCool y ->
-                    graphCoolView y
+                GraphCool event ->
+                    graphCoolView event
+
+        displayEvent =
+            case model.route of
+                GoEvents maybe ->
+                    case maybe of
+                        Just eventId ->
+                            case Dict.get (toString eventId) model.events of
+                                Just api ->
+                                    apiToView api
+
+                                Nothing ->
+                                    [ text "I can't seem to find the event?!?!" ]
+
+                        Nothing ->
+                            [ text "I forgot which event you wanted me to find...awk" ]
+
+                _ ->
+                    [ text "uh, well, it seems you're not actually on this page?" ]
     in
     section [ class "overflow-auto w-100 flex-grow-1 animated fadeInLeft mw6-l flex-shrink-0 bg-black-70 shadow-2-l" ]
-        (apiToEvent api)
+        displayEvent
 
 
 graphCoolView : Event -> List (Html Msg)
@@ -60,7 +75,7 @@ graphCoolView event =
 
     -- , eventEmojis event
     -- , eventTime event.startsAt
-    , eventPool event.pool 
+    , eventPool event.pool
 
     -- , eventPopularity event
     -- , yetToBeAdded
@@ -72,6 +87,7 @@ seatGeekView event =
     [ eventBanner event
     , eventTitle event
     , eventEmojis event
+    , eventPool initId
 
     -- , eventTime event.datetime_local
     , eventTickets event
@@ -209,21 +225,22 @@ yetToBeAdded =
         ]
 
 
-eventPool : Pool -> Html Msg
-eventPool pool =
+eventPool : Id -> Html Msg
+eventPool poolId =
     div [ class "flex items-center justify-around mh4 pv4 bb b--white-20" ]
         [ a [ href "Pool.html", class "white link br-pill pa2 mh1 flex items-center mh1 grow" ]
             [ div [ Assets.feather "info", class "h2 w2 contain bg-center" ] []
             ]
         , a
-            [ onClick (Types.ViewPool Types.GoPool)
+            [ onClick (Types.RouteTo <| GoPool poolId)
             , class "white link lg-breathe-50 br1 pa2 mh1 flex items-center mh1 grow"
             ]
             [ div [ Assets.feather "life-buoy", class "h2 w2 mh1 contain bg-center" ] []
             , div [ class "mh2 f4 fw4 ttn" ] [ text "join pool" ]
             ]
         , div
-            [ class "mr3 f2"] [ text "🏊" ]
+            [ class "mr3 f2" ]
+            [ text "🏊" ]
         ]
 
 
@@ -258,36 +275,28 @@ eventEmojis event =
 
 eventBanner : SG.Event -> Html Msg
 eventBanner event =
-    let
-        heroImg =
-            case maybeImage event.performers of
-                Nothing ->
-                    let
-                        seed =
-                            String.length event.title * String.length event.url
-                    in
-                    class (Assets.randomGradient seed)
+    case maybeImage event.performers of
+        Nothing ->
+            text ""
 
-                Just image ->
-                    style [ ( "background-image", "url(" ++ image ++ ")" ) ]
-    in
-    div
-        [ heroImg, class "bg-center cover aspect-ratio aspect-ratio--16x9 bb b--white-20" ]
-        [ div
-            [ style [ ( "background-image", "linear-gradient( rgba(0,0,0,0.3), transparent)" ) ]
-            , class "aspect-ratio--object cover bg-center flex flex-column items-end justify-between pa3"
-            ]
-            [ Assets.discoverToolsView
-            , div [ class "pa3 lg-breathe-50 br-pill relative top-2 right-1 flex grow justify-center items-center" ]
+        Just image ->
+            div
+                [ style [ ( "background-image", "url(" ++ image ++ ")" ) ], class "bg-center cover aspect-ratio aspect-ratio--16x9 bb b--white-20" ]
                 [ div
-                    [ Assets.feather "life-buoy"
-                    , onClick (Types.ChangeTo Types.GoPool)
-                    , class "h3 w3 contain"
+                    [ style [ ( "background-image", "linear-gradient( rgba(0,0,0,0.3), transparent)" ) ]
+                    , class "aspect-ratio--object cover bg-center flex flex-column items-end justify-between pa3"
                     ]
-                    []
+                    [ Assets.discoverToolsView
+                    , div [ class "pa3 lg-breathe-50 br-pill relative top-2 right-1 flex grow justify-center items-center" ]
+                        [ div
+                            [ Assets.feather "life-buoy"
+                            , onClick (Types.RouteTo <| GoPool initId)
+                            , class "h3 w3 contain"
+                            ]
+                            []
+                        ]
+                    ]
                 ]
-            ]
-        ]
 
 
 maybeImage : List SG.Performer -> Maybe String

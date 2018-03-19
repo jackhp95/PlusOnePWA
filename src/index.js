@@ -25,50 +25,51 @@ while (document.getElementById('splash')) {
     }
 }
 var root = document.getElementById('root');
-var elmApp = Main.embed(root, authData);
+var elmApp = Main.embed(root);
+// var elmApp = Main.embed(root, authData);
 
 
-// Auth0 authorize subscription
-elmApp.ports.auth0authorize.subscribe(function (opts) {
-    webAuth.authorize();
-});
+// // Auth0 authorize subscription
+// elmApp.ports.auth0authorize.subscribe(function (opts) {
+//     webAuth.authorize();
+// });
 
 
-// Log out of Auth0 subscription
-elmApp.ports.auth0logout.subscribe(function (opts) {
-    localStorage.removeItem('profile');
-    localStorage.removeItem('token');
-    localStorage.removeItem('idtoken');
-});
+// // Log out of Auth0 subscription
+// elmApp.ports.auth0logout.subscribe(function (opts) {
+//     localStorage.removeItem('profile');
+//     localStorage.removeItem('token');
+//     localStorage.removeItem('idtoken');
+// });
 
-// Watching for hash after redirect
-webAuth.parseHash({ hash: window.location.hash }, function (err, authResult) {
-    if (err) {
-        return console.error(err);
-    }
-    if (authResult) {
-        webAuth.client.userInfo(authResult.accessToken, function (err, profile) {
-            var result = { err: null, ok: null };
-            var token = authResult.accessToken;
-            var sub = authResult.idTokenPayload.sub;
+// // Watching for hash after redirect
+// webAuth.parseHash({ hash: window.location.hash }, function (err, authResult) {
+//     if (err) {
+//         return console.error(err);
+//     }
+//     if (authResult) {
+//         webAuth.client.userInfo(authResult.accessToken, function (err, profile) {
+//             var result = { err: null, ok: null };
+//             var token = authResult.accessToken;
+//             var sub = authResult.idTokenPayload.sub;
 
-            if (err) {
-                result.err = err.details;
-                // Ensure that optional fields are on the object
-                result.err.name = result.err.name ? result.err.name : null;
-                result.err.code = result.err.code ? result.err.code : null;
-                result.err.statusCode = result.err.statusCode ? result.err.statusCode : null;
-            }
-            if (authResult) {
-                result.ok = { profile: profile, token: token, idtoken: sub };
-                localStorage.setItem('profile', JSON.stringify(profile));
-                localStorage.setItem('token', token);
-                localStorage.setItem('idtoken', sub);
-            }
-            elmApp.ports.auth0authResult.send(result);
-        });
-        window.location.hash = '';
-    }
-});
+//             if (err) {
+//                 result.err = err.details;
+//                 // Ensure that optional fields are on the object
+//                 result.err.name = result.err.name ? result.err.name : null;
+//                 result.err.code = result.err.code ? result.err.code : null;
+//                 result.err.statusCode = result.err.statusCode ? result.err.statusCode : null;
+//             }
+//             if (authResult) {
+//                 result.ok = { profile: profile, token: token, idtoken: sub };
+//                 localStorage.setItem('profile', JSON.stringify(profile));
+//                 localStorage.setItem('token', token);
+//                 localStorage.setItem('idtoken', sub);
+//             }
+//             elmApp.ports.auth0authResult.send(result);
+//         });
+//         window.location.hash = '';
+//     }
+// });
 
 registerServiceWorker();

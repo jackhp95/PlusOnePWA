@@ -15,43 +15,6 @@ import List exposing (map)
 import Types exposing (..)
 
 
-auth0view : Model -> Html Msg
-auth0view model =
-    div []
-        [ div []
-            [ div []
-                (case Authentication.tryGetUserProfile model.me.authModel of
-                    Nothing ->
-                        [ p [] [ text "Please log in" ] ]
-
-                    Just user ->
-                        [ p [] [ text ("Hello, " ++ user.email ++ "! " ++ toString user.family_name) ]
-                        , div [ class "pa3 cover br-pill", style [ ( "background", "url('" ++ toString user.picture ++ "')" ) ] ] []
-                        ]
-                )
-            , p []
-                [ button
-                    [ onClick
-                        (Types.AuthenticationMsg
-                            (if Authentication.isLoggedIn model.me.authModel then
-                                Authentication.LogOut
-                             else
-                                Authentication.ShowLogIn
-                            )
-                        )
-                    ]
-                    [ text
-                        (if Authentication.isLoggedIn model.me.authModel then
-                            "Log Out"
-                         else
-                            "Log In"
-                        )
-                    ]
-                ]
-            ]
-        ]
-
-
 selections : List Page
 selections =
     let
@@ -59,9 +22,9 @@ selections =
             Page x y z
     in
     List.map makePage
-        [ ( "discover", "compass", GoEvents Nothing )
-        , ( "add", "plus-square", GoCreateEvent )
-        , ( "chats", "message-square", GoChats Nothing )
+        [ ( "discover", "compass", Types.GoEvents Nothing )
+        , ( "add", "plus-square", Types.GoCreateEvent )
+        , ( "chats", "message-square", Types.GoChats Nothing )
         ]
 
 
@@ -78,21 +41,21 @@ bar model =
                 ]
 
         userTab model =
-            case Authentication.tryGetUserProfile model.me.authModel of
-                Nothing ->
-                    tab <| Page "login" "user" GoAuth
+            -- case Nothing of
+            --     Nothing ->
+            tab <| Page "login" "user" Types.GoAuth
 
-                Just user ->
-                    li
-                        [ class "flex flex-column-l flex-row-m flex-column-reverse items-stretch hide-child ph3-l glow w-20 w-auto-ns"
-                        , onClick (ChangeTo GoUser)
-                        ]
-                        [ span [ class "grow flex-auto flex flex-column flex-row-ns items-center pv3-ns pv2 pv4-l ph2-l mv1-m pl3-m pr4-m w-auto-ns" ]
-                            [ div [ class "br-pill mr3-ns mr0 mb1 mb0-ns pa2-ns pl3 pt3 pr2 pb2 contain", bgImg user.picture ] []
-                            , text user.family_name
-                            ]
-                        , div [ class "b--white ba child" ] []
-                        ]
+        -- Just user ->
+        --     li
+        --         [ class "flex flex-column-l flex-row-m flex-column-reverse items-stretch hide-child ph3-l glow w-20 w-auto-ns"
+        --         , onClick (RouteTo Types.GoUser)
+        --         ]
+        --         [ span [ class "grow flex-auto flex flex-column flex-row-ns items-center pv3-ns pv2 pv4-l ph2-l mv1-m pl3-m pr4-m w-auto-ns" ]
+        --             [ div [ class "br-pill mr3-ns mr0 mb1 mb0-ns pa2-ns pl3 pt3 pr2 pb2 contain", bgImg user.picture ] []
+        --             , text user.family_name
+        --             ]
+        --         , div [ class "b--white ba child" ] []
+        --         ]
     in
     nav [ class "f5-ns f7 fw4 flex-none pv3-m ph4-l pa0 z-max flex flex-column-l bg-black-40" ]
         [ ul [ class "flex flex-column-m list ma0 pa0 overflow-visible-ns overflow-hidden w-100 w-auto-ns" ] <|
@@ -104,7 +67,12 @@ bar model =
 home : Html Msg
 home =
     div [ class "dn flex-auto-l flex-ns items-center justify-center-m" ]
-        [ div [ class "grow-large flex flex-column-m ph4-l pa3-m", onClick (ChangeTo <| GoEvents Nothing) ]
+        [ div
+            [ class "grow-large flex flex-column-m ph4-l pa3-m"
+            , Types.GoEvents Nothing
+                |> RouteTo
+                |> onClick
+            ]
             [ div
                 [ bgImg "logo/svg/oColor.svg"
                 , class "animated bounceIn pb4-m pr4-m pl3 pt3 pr2 pb2 contain bg-center"
@@ -129,7 +97,7 @@ tab x =
         route =
             x.route
     in
-    li [ class "flex flex-column-l flex-row-m flex-column-reverse items-stretch hide-child ph3-l glow w-20 w-auto-ns", onClick (ChangeTo route) ]
+    li [ class "flex flex-column-l flex-row-m flex-column-reverse items-stretch hide-child ph3-l glow w-20 w-auto-ns", onClick (RouteTo route) ]
         [ span [ class "grow flex-auto flex flex-column flex-row-ns items-center pv3-ns pv2 pv4-l ph2-l mv1-m pl3-m pr4-m w-auto-ns" ]
             [ div [ class "mr3-ns mr0 mb1 mb0-ns pa2-ns pl3 pt3 pr2 pb2 contain", Assets.feather icon ] []
             , text name

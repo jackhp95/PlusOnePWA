@@ -6,21 +6,22 @@ module View exposing (render)
 -- SUBVIEWS --
 -- import Html.Events exposing (..)
 
+import Dict exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Nav exposing (..)
 import Pages.Chat.View as Chat
 import Pages.Chats.View as Chats
 import Pages.CreateEvent.View as CreateEvent
-import Pages.EditUser.View as EditUser
+import Pages.EditMe.View as EditMe
 import Pages.Event.View as Event
 import Pages.Events.View as Events
 import Pages.Pool.View as Pool
 import Pages.User.View as User
-import Types
+import Types exposing (..)
 
 
-render : Types.Model -> Html Types.Msg
+render : Model -> Html Msg
 render model =
     div
         [ class "animated fadeIn f6 fw3 flex flex-column-l flex-row-m flex-column-reverse items-stretch vh-100 white" ]
@@ -30,39 +31,57 @@ render model =
         ]
 
 
-page : Types.Model -> List (Html Types.Msg)
+page : Model -> List (Html Msg)
 page model =
+    let
+        me =
+            case model.me of
+                Nothing ->
+                    initMe
+
+                Just me ->
+                    me
+    in
     case model.route of
-        Types.GoChats chatModel ->
-            case chatModel of
+        GoChats chatId ->
+            case chatId of
                 Nothing ->
                     [ Chats.view model ]
 
-                Just x ->
+                Just chatId ->
+                    let
+                        chat =
+                            Maybe.withDefault initChat <| Dict.get (toString chatId) model.chats
+                    in
                     [ Chats.view model
-                    , Chat.view model
+                    , Chat.view chat me.id model
                     ]
 
-        Types.GoUser ->
-            [ User.view model.me.user ]
+        GoUser userId ->
+            [ User.view userId model ]
 
-        Types.GoPool ->
-            [ Pool.view model ]
+        GoPool poolId ->
+            case Dict.get (toString poolId) model.pools of
+                Just pool ->
+                    [ Pool.view pool model ]
 
-        Types.GoEditUser ->
-            [ Html.map Types.EditUserMsg (EditUser.view model.me.user) ]
+                Nothing ->
+                    [ text "I can't find the pool!" ]
 
-        Types.GoCreateEvent ->
-            [ Html.map Types.CreateEventMsg (CreateEvent.view model.createEvent model.me) ]
+        GoEditMe ->
+            [ EditMe.view model ]
 
-        Types.GoEvents event ->
+        GoCreateEvent ->
+            [ CreateEvent.view model ]
+
+        GoEvents event ->
             case event of
                 Nothing ->
                     [ Events.view model ]
 
                 Just x ->
                     [ Events.view model
-                    , Event.view x
+                    , Event.view model
                     ]
 
         _ ->

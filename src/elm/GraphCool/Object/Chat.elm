@@ -178,7 +178,7 @@ type alias RecipientOptionalArguments =
   - filter -
 
 -}
-recipient : (RecipientOptionalArguments -> RecipientOptionalArguments) -> SelectionSet decodesTo GraphCool.Object.User -> Field (Maybe decodesTo) GraphCool.Object.Chat
+recipient : (RecipientOptionalArguments -> RecipientOptionalArguments) -> SelectionSet decodesTo GraphCool.Object.User -> Field decodesTo GraphCool.Object.Chat
 recipient fillInOptionals object =
     let
         filledInOptionals =
@@ -188,7 +188,7 @@ recipient fillInOptionals object =
             [ Argument.optional "filter" filledInOptionals.filter GraphCool.InputObject.encodeUserFilter ]
                 |> List.filterMap identity
     in
-    Object.selectionField "recipient" optionalArgs object (identity >> Decode.nullable)
+    Object.selectionField "recipient" optionalArgs object identity
 
 
 type alias MessagesMetaOptionalArguments =

@@ -1,6 +1,7 @@
 module SeatGeek.Query exposing (..)
 
 import Http exposing (..)
+import RemoteData exposing (..)
 import SeatGeek.Decode exposing (decodeReply)
 import SeatGeek.Types as SG
 import Types
@@ -74,4 +75,5 @@ askQuery query =
         request =
             Http.get url decodeReply
     in
-    Http.send Types.GetReply request
+    request
+        |> Http.send (RemoteData.fromResult >> Types.GetReply)
