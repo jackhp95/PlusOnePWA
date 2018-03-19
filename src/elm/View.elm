@@ -61,7 +61,12 @@ page model =
             [ User.view userId model ]
 
         GoPool poolId ->
-            [ Pool.view poolId model ]
+            case Dict.get (toString poolId) model.pools of
+                Just pool ->
+                    [ Pool.view pool model ]
+
+                Nothing ->
+                    [ text "I can't find the pool!" ]
 
         GoEditMe ->
             [ EditMe.view model ]

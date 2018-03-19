@@ -18,12 +18,12 @@ module Pages.Chat.View exposing (..)
 -- import Pages.CreateMessage.Messages exposing (..)
 
 import Assets exposing (..)
-import Debug exposing (log)
 import Dict exposing (..)
 import GraphCool.Scalar exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
+import Maybe.Extra
 import Pages.Message.View exposing (..)
 import Types exposing (..)
 
@@ -63,12 +63,7 @@ view chat meId model =
         --         _ ->
         --             initChat
         conversation =
-            case chat.messages of
-                Nothing ->
-                    []
-
-                Just msgs ->
-                    List.map displayMessage msgs
+            List.map displayMessage <| Maybe.Extra.values <| List.map (\msgId -> Dict.get (toString msgId) model.messages) <| chat.messages
     in
     div [ class "animated fadeInLeft bg-black-70 flex flex-column flex-auto measure-wide-l pa0 ma0 shadow-2-l" ]
         [ nameBar with

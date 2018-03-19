@@ -24,6 +24,7 @@ import GraphCool.Scalar exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
+import Maybe.Extra exposing (..)
 import Moment exposing (..)
 import Types exposing (..)
 
@@ -115,9 +116,12 @@ nameBar model chatKey =
                     Debug.log "Chats.nameBar Fucked up at recipient"
                         initUser
 
+        messages =
+            Maybe.Extra.values <| List.map (\msgId -> Dict.get (toString msgId) model.messages) chat.messages
+
         -- This sorting code is kinda bad, we should fix it.
         mostRecentMessage =
-            Maybe.withDefault [] chat.messages
+            messages
                 |> List.reverse
                 |> List.head
 

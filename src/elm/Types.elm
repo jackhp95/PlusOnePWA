@@ -70,12 +70,12 @@ type alias Everything =
 type alias Host =
     { createdAt : DateTime
     , description : Maybe String
-    , events : Maybe (List Event)
+    , events : List Id
     , id : Id
     , name : String
     , nameFull : Maybe String
-    , users : Maybe (List Id)
-    , venues : Maybe (List Id)
+    , users : List Id
+    , venues : List Id
     }
 
 
@@ -103,45 +103,30 @@ type alias Location =
     }
 
 
-type API
-    = GraphCool Event
-    | SeatGeek SG.Event
-
-
 type alias Event =
     { pool : Id
     , createdAt : DateTime
     , createdBy : Id
     , endsAt : Maybe DateTime
-    , hosts : Maybe (List Id)
+    , hosts : List Id
     , id : Id
     , name : String
     , nameFull : Maybe String
     , private : Bool
     , startsAt : DateTime
-    , venues : Maybe (List Id)
+    , venues : List Id
     }
-
-
-initEvent : Event
-initEvent =
-    Event initId initDateTime initId Nothing Nothing initId "initEventName" Nothing True initDateTime Nothing
 
 
 type alias Pool =
-    { chats : Maybe (List Id)
+    { chats : List Id
     , event : Maybe Id
     , id : Id
     , seatGeekId : Maybe String
-    , usersAttending : Maybe (List Id)
-    , usersLiked : Maybe (List Id)
-    , usersViewed : Maybe (List Id)
+    , usersAttending : List Id
+    , usersLiked : List Id
+    , usersViewed : List Id
     }
-
-
-initPool : Pool
-initPool =
-    Pool Nothing Nothing initId Nothing Nothing Nothing Nothing
 
 
 type alias Message =
@@ -153,48 +138,33 @@ type alias Message =
     }
 
 
-initMessage : Message
-initMessage =
-    Message initId initDateTime Nothing initId ""
-
-
 type alias Chat =
     { canceled : Maybe Id
     , dateState : DateState
     , pool : Id
     , id : Id
     , initiated : Id
-    , messages : Maybe (List Message)
+    , messages : List Id
     , passed : Maybe Id
     , proposed : Maybe Id
     , recipient : Id
     }
 
 
-initChat : Chat
-initChat =
-    Chat Nothing DateState.Active initId initId initId Nothing Nothing Nothing initId
-
-
 type alias User =
     { bio : Maybe String
     , birthday : DateTime
     , createdAt : DateTime
-    , createdEvents : Maybe (List Id)
+    , createdEvents : List Id
     , email : Maybe String
-    , attendingEvent : Maybe (List Id)
-    , likedEvent : Maybe (List Id)
-    , hosts : Maybe (List Id)
+    , attendingEvent : List Id
+    , likedEvent : List Id
+    , hosts : List Id
     , id : Id
     , name : String
     , nameFull : Maybe String
     , updatedAt : DateTime
     }
-
-
-initUser : User
-initUser =
-    User Nothing initDateTime initDateTime Nothing Nothing Nothing Nothing Nothing initId "initUserName" Nothing initDateTime
 
 
 type alias Me =
@@ -202,29 +172,80 @@ type alias Me =
     , bio : Maybe String
     , birthday : DateTime
     , createdAt : DateTime
-    , createdEvents : Maybe (List Id)
-    , datesCanceled : Maybe (List Id)
+    , createdEvents : List Id
+    , datesCanceled : List Id
     , email : Maybe String
-    , attendingEvent : Maybe (List Id)
-    , likedEvent : Maybe (List Id)
-    , viewedEvent : Maybe (List Id)
-    , hosts : Maybe (List Id)
+    , attendingEvent : List Id
+    , likedEvent : List Id
+    , viewedEvent : List Id
+    , hosts : List Id
     , id : Id
-    , initiated : Maybe (List Id)
+    , initiated : List Id
     , name : String
     , nameFull : Maybe String
-    , passed : Maybe (List Id)
+    , passed : List Id
     , password : Maybe String
-    , proposed : Maybe (List Id)
-    , recipient : Maybe (List Id)
-    , sent : Maybe (List Id)
+    , proposed : List Id
+    , recipient : List Id
+    , sent : List Id
     , updatedAt : DateTime
     }
 
 
+type API
+    = GraphCool Event
+    | SeatGeek SG.Event
+
+
+initEvent : Event
+initEvent =
+    Event initId initDateTime initId Nothing [] initId "initEventName" Nothing True initDateTime []
+
+
+initPool : Pool
+initPool =
+    Pool [] Nothing initId Nothing [] [] []
+
+
+initMessage : Message
+initMessage =
+    Message initId initDateTime Nothing initId ""
+
+
+initChat : Chat
+initChat =
+    Chat Nothing DateState.Active initId initId initId [] Nothing Nothing initId
+
+
+initUser : User
+initUser =
+    User Nothing initDateTime initDateTime [] Nothing [] [] [] initId "initUserName" Nothing initDateTime
+
+
 initMe : Me
 initMe =
-    Me Nothing Nothing initDateTime initDateTime Nothing Nothing Nothing Nothing Nothing Nothing Nothing initId Nothing "initMeName" Nothing Nothing Nothing Nothing Nothing Nothing initDateTime
+    { auth0UserId = Nothing
+    , bio = Nothing
+    , birthday = initDateTime
+    , createdAt = initDateTime
+    , createdEvents = []
+    , datesCanceled = []
+    , email = Nothing
+    , attendingEvent = []
+    , likedEvent = []
+    , viewedEvent = []
+    , hosts = []
+    , id = initId
+    , initiated = []
+    , name = "initMe"
+    , nameFull = Nothing
+    , passed = []
+    , password = Nothing
+    , proposed = []
+    , recipient = []
+    , sent = []
+    , updatedAt = initDateTime
+    }
 
 
 

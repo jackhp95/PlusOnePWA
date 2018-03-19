@@ -12,6 +12,7 @@ import GraphCool.Object.User as User
 import GraphCool.Object.Venue as Venue
 import GraphCool.Query as Query
 import GraphCool.Scalar exposing (..)
+import Graphqelm.Field exposing (..)
 import Graphqelm.Http exposing (..)
 import Graphqelm.Operation exposing (RootQuery)
 import Graphqelm.OptionalArgument exposing (OptionalArgument(Absent, Null, Present))
@@ -20,8 +21,22 @@ import RemoteData exposing (..)
 import Types exposing (..)
 
 
-queryEverything : SelectionSet Everything RootQuery
-queryEverything =
+everythingQuery : SelectionSet Everything RootQuery
+everythingQuery =
+    Query.selection Everything
+        |> with (Query.allHosts identity host)
+        |> with (Query.allVenues identity venue)
+        |> with (Query.allLocations identity location)
+        |> with (Query.allEvents identity event)
+        |> with (Query.allPools identity pool)
+        |> with (Query.allMessages identity message)
+        |> with (Query.allChats identity chat)
+        |> with (Query.allUsers identity user)
+        |> with (Query.me me)
+
+
+initQuery : SelectionSet Everything RootQuery
+initQuery =
     Query.selection Everything
         |> with (Query.allHosts identity host)
         |> with (Query.allVenues identity venue)
@@ -56,12 +71,12 @@ host =
     Host.selection Host
         |> with Host.createdAt
         |> with Host.description
-        |> with (Host.events identity event)
+        |> with (Host.events identity eventId |> nonNullOrFail)
         |> with Host.id
         |> with Host.name
         |> with Host.nameFull
-        |> with (Host.users identity userId)
-        |> with (Host.venues identity venueId)
+        |> with (Host.users identity userId |> nonNullOrFail)
+        |> with (Host.venues identity venueId |> nonNullOrFail)
 
 
 venueId : SelectionSet Id GraphCool.Object.Venue
@@ -112,13 +127,13 @@ event =
         |> with Event.createdAt
         |> with (Event.createdBy identity userId)
         |> with Event.endsAt
-        |> with (Event.hosts identity hostId)
+        |> with (Event.hosts identity hostId |> nonNullOrFail)
         |> with Event.id
         |> with Event.name
         |> with Event.nameFull
         |> with Event.private
         |> with Event.startsAt
-        |> with (Event.venues identity venueId)
+        |> with (Event.venues identity venueId |> nonNullOrFail)
 
 
 poolId : SelectionSet Id GraphCool.Object.Pool
@@ -129,13 +144,13 @@ poolId =
 pool : SelectionSet Pool GraphCool.Object.Pool
 pool =
     Pool.selection Pool
-        |> with (Pool.chats identity chatId)
+        |> with (Pool.chats identity chatId |> nonNullOrFail)
         |> with (Pool.event identity eventId)
         |> with Pool.id
         |> with Pool.seatGeekId
-        |> with (Pool.attending identity userId)
-        |> with (Pool.liked identity userId)
-        |> with (Pool.viewed identity userId)
+        |> with (Pool.attending identity userId |> nonNullOrFail)
+        |> with (Pool.liked identity userId |> nonNullOrFail)
+        |> with (Pool.viewed identity userId |> nonNullOrFail)
 
 
 messageId : SelectionSet Id GraphCool.Object.Message
@@ -167,7 +182,7 @@ chat =
         |> with (Chat.pool identity poolId)
         |> with Chat.id
         |> with (Chat.initiated identity userId)
-        |> with (Chat.messages identity message)
+        |> with (Chat.messages identity messageId |> nonNullOrFail)
         |> with (Chat.passed identity userId)
         |> with (Chat.proposed identity userId)
         |> with (Chat.recipient identity userId)
@@ -184,11 +199,11 @@ user =
         |> with User.bio
         |> with User.birthday
         |> with User.createdAt
-        |> with (User.createdEvents identity eventId)
+        |> with (User.createdEvents identity eventId |> nonNullOrFail)
         |> with User.email
-        |> with (User.attendingEvent identity poolId)
-        |> with (User.likedEvent identity poolId)
-        |> with (User.hosts identity hostId)
+        |> with (User.attendingEvent identity poolId |> nonNullOrFail)
+        |> with (User.likedEvent identity poolId |> nonNullOrFail)
+        |> with (User.hosts identity hostId |> nonNullOrFail)
         |> with User.id
         |> with User.name
         |> with User.nameFull
@@ -207,130 +222,130 @@ me =
         |> with User.bio
         |> with User.birthday
         |> with User.createdAt
-        |> with (User.createdEvents identity eventId)
-        |> with (User.datesCanceled identity chatId)
+        |> with (User.createdEvents identity eventId |> nonNullOrFail)
+        |> with (User.datesCanceled identity chatId |> nonNullOrFail)
         |> with User.email
-        |> with (User.attendingEvent identity poolId)
-        |> with (User.likedEvent identity poolId)
-        |> with (User.viewedEvent identity poolId)
-        |> with (User.hosts identity hostId)
+        |> with (User.attendingEvent identity poolId |> nonNullOrFail)
+        |> with (User.likedEvent identity poolId |> nonNullOrFail)
+        |> with (User.viewedEvent identity poolId |> nonNullOrFail)
+        |> with (User.hosts identity hostId |> nonNullOrFail)
         |> with User.id
-        |> with (User.initiated identity chatId)
+        |> with (User.initiated identity chatId |> nonNullOrFail)
         |> with User.name
         |> with User.nameFull
-        |> with (User.passed identity chatId)
+        |> with (User.passed identity chatId |> nonNullOrFail)
         |> with User.password
-        |> with (User.proposed identity chatId)
-        |> with (User.recipient identity chatId)
-        |> with (User.sent identity messageId)
+        |> with (User.proposed identity chatId |> nonNullOrFail)
+        |> with (User.recipient identity chatId |> nonNullOrFail)
+        |> with (User.sent identity messageId |> nonNullOrFail)
         |> with User.updatedAt
 
 
-queryHosts : (Query.AllHostsOptionalArguments -> Query.AllHostsOptionalArguments) -> SelectionSet (List Host) RootQuery
-queryHosts optArgs =
+hostsQuery : (Query.AllHostsOptionalArguments -> Query.AllHostsOptionalArguments) -> SelectionSet (List Host) RootQuery
+hostsQuery optArgs =
     Query.selection identity
         |> with (Query.allHosts optArgs host)
 
 
-queryVenues : (Query.AllVenuesOptionalArguments -> Query.AllVenuesOptionalArguments) -> SelectionSet (List Venue) RootQuery
-queryVenues optArgs =
+venuesQuery : (Query.AllVenuesOptionalArguments -> Query.AllVenuesOptionalArguments) -> SelectionSet (List Venue) RootQuery
+venuesQuery optArgs =
     Query.selection identity
         |> with (Query.allVenues optArgs venue)
 
 
-queryLocations : (Query.AllLocationsOptionalArguments -> Query.AllLocationsOptionalArguments) -> SelectionSet (List Location) RootQuery
-queryLocations optArgs =
+locationsQuery : (Query.AllLocationsOptionalArguments -> Query.AllLocationsOptionalArguments) -> SelectionSet (List Location) RootQuery
+locationsQuery optArgs =
     Query.selection identity
         |> with (Query.allLocations optArgs location)
 
 
-queryEvents : (Query.AllEventsOptionalArguments -> Query.AllEventsOptionalArguments) -> SelectionSet (List Event) RootQuery
-queryEvents optArgs =
+eventsQuery : (Query.AllEventsOptionalArguments -> Query.AllEventsOptionalArguments) -> SelectionSet (List Event) RootQuery
+eventsQuery optArgs =
     Query.selection identity
         |> with (Query.allEvents optArgs event)
 
 
-queryPools : (Query.AllPoolsOptionalArguments -> Query.AllPoolsOptionalArguments) -> SelectionSet (List Pool) RootQuery
-queryPools optArgs =
+poolsQuery : (Query.AllPoolsOptionalArguments -> Query.AllPoolsOptionalArguments) -> SelectionSet (List Pool) RootQuery
+poolsQuery optArgs =
     Query.selection identity
         |> with (Query.allPools optArgs pool)
 
 
-queryMessages : (Query.AllMessagesOptionalArguments -> Query.AllMessagesOptionalArguments) -> SelectionSet (List Message) RootQuery
-queryMessages optArgs =
+messagesQuery : (Query.AllMessagesOptionalArguments -> Query.AllMessagesOptionalArguments) -> SelectionSet (List Message) RootQuery
+messagesQuery optArgs =
     Query.selection identity
         |> with (Query.allMessages optArgs message)
 
 
-queryChats : (Query.AllChatsOptionalArguments -> Query.AllChatsOptionalArguments) -> SelectionSet (List Chat) RootQuery
-queryChats optArgs =
+chatsQuery : (Query.AllChatsOptionalArguments -> Query.AllChatsOptionalArguments) -> SelectionSet (List Chat) RootQuery
+chatsQuery optArgs =
     Query.selection identity
         |> with (Query.allChats optArgs chat)
 
 
-queryUsers : (Query.AllUsersOptionalArguments -> Query.AllUsersOptionalArguments) -> SelectionSet (List User) RootQuery
-queryUsers optArgs =
+usersQuery : (Query.AllUsersOptionalArguments -> Query.AllUsersOptionalArguments) -> SelectionSet (List User) RootQuery
+usersQuery optArgs =
     Query.selection identity
         |> with (Query.allUsers optArgs user)
 
 
-queryMe : SelectionSet (Maybe Me) RootQuery
-queryMe =
+meQuery : SelectionSet (Maybe Me) RootQuery
+meQuery =
     Query.selection identity
         |> with (Query.me me)
 
 
 requestHosts : (Query.AllHostsOptionalArguments -> Query.AllHostsOptionalArguments) -> Cmd Msg
 requestHosts optArgs =
-    queryHosts optArgs
+    hostsQuery optArgs
         |> Graphqelm.Http.queryRequest "https://api.graph.cool/simple/v1/PlusOne"
         |> Graphqelm.Http.send (RemoteData.fromResult >> ReturnHosts)
 
 
 requestVenues : (Query.AllVenuesOptionalArguments -> Query.AllVenuesOptionalArguments) -> Cmd Msg
 requestVenues optArgs =
-    queryVenues optArgs
+    venuesQuery optArgs
         |> Graphqelm.Http.queryRequest "https://api.graph.cool/simple/v1/PlusOne"
         |> Graphqelm.Http.send (RemoteData.fromResult >> ReturnVenues)
 
 
 requestLocations : (Query.AllLocationsOptionalArguments -> Query.AllLocationsOptionalArguments) -> Cmd Msg
 requestLocations optArgs =
-    queryLocations optArgs
+    locationsQuery optArgs
         |> Graphqelm.Http.queryRequest "https://api.graph.cool/simple/v1/PlusOne"
         |> Graphqelm.Http.send (RemoteData.fromResult >> ReturnLocations)
 
 
 requestEvents : (Query.AllEventsOptionalArguments -> Query.AllEventsOptionalArguments) -> Cmd Msg
 requestEvents optArgs =
-    queryEvents optArgs
+    eventsQuery optArgs
         |> Graphqelm.Http.queryRequest "https://api.graph.cool/simple/v1/PlusOne"
         |> Graphqelm.Http.send (RemoteData.fromResult >> ReturnEvents)
 
 
 requestPools : (Query.AllPoolsOptionalArguments -> Query.AllPoolsOptionalArguments) -> Cmd Msg
 requestPools optArgs =
-    queryPools optArgs
+    poolsQuery optArgs
         |> Graphqelm.Http.queryRequest "https://api.graph.cool/simple/v1/PlusOne"
         |> Graphqelm.Http.send (RemoteData.fromResult >> ReturnPools)
 
 
 requestMessages : (Query.AllMessagesOptionalArguments -> Query.AllMessagesOptionalArguments) -> Cmd Msg
 requestMessages optArgs =
-    queryMessages optArgs
+    messagesQuery optArgs
         |> Graphqelm.Http.queryRequest "https://api.graph.cool/simple/v1/PlusOne"
         |> Graphqelm.Http.send (RemoteData.fromResult >> ReturnMessages)
 
 
 requestChats : (Query.AllChatsOptionalArguments -> Query.AllChatsOptionalArguments) -> Cmd Msg
 requestChats optArgs =
-    queryChats optArgs
+    chatsQuery optArgs
         |> Graphqelm.Http.queryRequest "https://api.graph.cool/simple/v1/PlusOne"
         |> Graphqelm.Http.send (RemoteData.fromResult >> ReturnChats)
 
 
 requestUsers : (Query.AllUsersOptionalArguments -> Query.AllUsersOptionalArguments) -> Cmd Msg
 requestUsers optArgs =
-    queryUsers optArgs
+    usersQuery optArgs
         |> Graphqelm.Http.queryRequest "https://api.graph.cool/simple/v1/PlusOne"
         |> Graphqelm.Http.send (RemoteData.fromResult >> ReturnUsers)

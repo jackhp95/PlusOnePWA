@@ -96,19 +96,31 @@ update msg model =
     in
     case msg of
         RouteTo newRoute ->
-            -- case newRoute of
-            --     Types.GoAuth ->
-            --         case me of
-            --             Nothing ->
-            --                 ( model, Cmd.map Types.AuthenticationMsg (model.me.authModel.authorize {}) )
-            --             Just x ->
-            --                 ( { model | me = Nothing }, Cmd.map Types.AuthenticationMsg (model.me.authModel.logOut ()) )
-            --     _ ->
-            ( { model | route = newRoute }
-            , Cmd.none
-              -- Nav.newUrl (toString newRoute)
-            )
+            let
+                basicRoute =
+                    ( { model | route = newRoute }, Cmd.none )
+            in
+            case newRoute of
+                GoEvents maybe ->
+                    case maybe of
+                        Nothing ->
+                            basicRoute
 
+                        Just eventId ->
+                            basicRoute
+
+                --     Types.GoAuth ->
+                --         case me of
+                --             Nothing ->
+                --                 ( model, Cmd.map Types.AuthenticationMsg (model.me.authModel.authorize {}) )
+                --             Just x ->
+                --                 ( { model | me = Nothing }, Cmd.map Types.AuthenticationMsg (model.me.authModel.logOut ()) )
+                _ ->
+                    basicRoute
+
+        -- ( { model | route = newRoute }
+        -- , Nav.newUrl (toString newRoute)
+        -- )
         UpdateValue input ->
             let
                 forms =
@@ -184,8 +196,8 @@ update msg model =
                                                             , seatGeekId = Absent
                                                             , viewedIds = Absent
                                                             }
-                                                , hostsIds = fromMaybe event.hosts
-                                                , venuesIds = fromMaybe event.venues
+                                                , hostsIds = Absent
+                                                , venuesIds = Absent
                                             }
                                         )
                                         { name = event.name, startsAt = event.startsAt }
