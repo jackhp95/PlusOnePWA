@@ -8,19 +8,20 @@ module Pages.Events.View exposing (..)
 -- import Pages.Events.Model exposing (EventAPI(GraphCool, SeatGeek))
 -- import SeatGeek.Query exposing (composeRequest)
 -- import SeatGeek.Decode exposing (decodeReply)
+-- import Graphqelm.Document as Document
+-- import Http exposing (..)
+-- import RemoteData exposing (..)
 
 import Assets exposing (feather)
 import Date exposing (..)
-import Dict exposing (..)
+import EveryDict exposing (..)
 import GraphCool.Scalar exposing (..)
-import Graphqelm.Document as Document
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
-import Http exposing (..)
 import Moment exposing (..)
-import RemoteData exposing (..)
 import SeatGeek.Types as SG
+import Time exposing (Time)
 import Types exposing (..)
 
 
@@ -47,6 +48,9 @@ import Types exposing (..)
 view : Types.Model -> Html Msg
 view model =
     let
+        sortedListAPI =
+            apiListSortByDateTime <| EveryDict.values events
+
         apiToListView api =
             case api of
                 SeatGeek event ->
@@ -70,7 +74,7 @@ view model =
         -- refineView a =
         --     let
         --         sortedEvents =
-        --             sortListByDT (mergeLists a.events eventsUnlessError)
+        --             apiListSortByDateTime (mergeLists a.events eventsUnlessError)
         --     in
         --     div [ class "bg-black-70" ]
         --         -- (List.map (\ b -> ul[ style [("background", "#000000")]][h4[][text b.name],p[][text (stringDateTime b.startsAt)]]) sortedEvents)
@@ -93,41 +97,29 @@ view model =
             , div [ class "f2 lh-solid fw7 ma0 pa0" ]
                 [ text "discover events" ]
             ]
-        , section [ class "overflow-auto w-100 flex-grow-1 animated fadeInLeft mw6-l flex-shrink-0 bg-black-60 shadow-2-l" ] (List.map apiToListView <| Dict.values events)
+        , section [ class "overflow-auto w-100 flex-grow-1 animated fadeInLeft mw6-l flex-shrink-0 bg-black-60 shadow-2-l" ] (List.map apiToListView sortedListAPI)
         ]
 
 
 
--- Convert SeatGeek Event into Database Event
--- Maybe convert SG.Venue to Database Venue too
-
-
-convertEvent : Event -> SG.Event -> Event
-convertEvent dbEvent sgEvent =
-    { dbEvent | name = sgEvent.title, id = Id (Basics.toString sgEvent.id), startsAt = DateTime sgEvent.datetime_local }
-
-
-convertList : List SG.Event -> List Event
-convertList events =
-    List.map (convertEvent initEvent) events
-
-
-
--- Merge Lists -- Append SeatGeek events to database event list
-
-
-mergeLists : List Event -> List Event -> List Event
-mergeLists list1 list2 =
-    List.append list1 list2
-
-
-
+-- -- Convert SeatGeek Event into Database Event
+-- -- Maybe convert SG.Venue to Database Venue too
+-- convertEvent : Event -> SG.Event -> Event
+-- convertEvent dbEvent sgEvent =
+--     { dbEvent | name = sgEvent.title, id = Id (Basics.toString sgEvent.id), startsAt = DateTime sgEvent.datetime_local }
+-- convertList : List SG.Event -> List Event
+-- convertList events =
+--     List.map (convertEvent initEvent) events
+-- -- Merge Lists -- Append SeatGeek events to database event list
+-- mergeLists : List Event -> List Event -> List Event
+-- mergeLists list1 list2 =
+--     List.append list1 list2
 -- Sort list by datetime
 
 
-sortListByDT : List Event -> List Event
-sortListByDT list =
-    List.sortWith compareEventDateTime list
+apiListSortByDateTime : List API -> List API
+apiListSortByDateTime apiList =
+    List.sortWith compareEventDateTime apiList
 
 
 
@@ -135,22 +127,30 @@ sortListByDT list =
 -- Use String.dropLeft, Date.fromString, Date.Extra.compare, List.sortWith
 
 
-compareEventDateTime : Event -> Event -> Order
-compareEventDateTime event1 event2 =
+compareEventDateTime : API -> API -> Order
+compareEventDateTime api1 api2 =
     let
-        dt1 =
-            event1.startsAt
+        stringFromDateTime dateTime =
+            case dateTime of
+                DateTime string ->
+                    string
 
-        dt2 =
-            event2.startsAt
+        epoch =
+            Date.fromTime <| Time.second
+
+        dateFromAPI api =
+            case api of
+                SeatGeek event ->
+                    Result.withDefault epoch <| Date.fromString <| event.datetime_local
+
+                GraphCool event ->
+                    Result.withDefault epoch <| Date.fromString <| stringFromDateTime event.startsAt
 
         date1 =
-            Date.fromString (stringDateTime dt1)
-                |> Result.withDefault defaultDate
+            dateFromAPI api1
 
         date2 =
-            Date.fromString (stringDateTime dt2)
-                |> Result.withDefault defaultDate
+            dateFromAPI api2
     in
     compareDateTime date1 date2
 
@@ -213,23 +213,24 @@ seatGeekListView event =
                 []
 
         cardImage =
-            let
-                seed =
-                    String.length event.title * String.length event.url
-            in
-            case maybeImage event.performers of
-                Just image ->
-                    div [ class ("w-100 mb2 mt1 " ++ Assets.randomGradient seed) ]
-                        [ div [ style [ ( "background-image", "url(" ++ image ++ ")" ) ], class "aspect-ratio--8x5 cover" ]
-                            []
-                        ]
+            case List.head event.performers of
+                Just performer ->
+                    case performer.image of
+                        Just image ->
+                            div [ class "w-100 mb2 mt1" ]
+                                [ div [ style [ ( "background-image", "url(" ++ image ++ ")" ) ], class "aspect-ratio--8x5 cover" ]
+                                    []
+                                ]
+
+                        Nothing ->
+                            text ""
 
                 Nothing ->
                     text ""
     in
     div
         [ class "animated fadeInUp ph3 pt3 ph4-m pt4-m hover-bg-black-30"
-        , .id event
+        , event.id
             |> Just
             |> GoEvents
             |> Types.RouteTo
@@ -250,16 +251,6 @@ seatGeekListView event =
                 ]
             ]
         ]
-
-
-maybeImage : List SG.Performer -> Maybe String
-maybeImage performers =
-    case List.head performers of
-        Just performer ->
-            performer.image
-
-        Nothing ->
-            Nothing
 
 
 

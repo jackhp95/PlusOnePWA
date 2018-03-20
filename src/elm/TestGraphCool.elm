@@ -3,8 +3,8 @@ module TestGraphCool exposing (main)
 -- import Graphqelm.Field as Field
 -- import Types exposing (..)
 
-import Dict exposing (..)
-import DictFrom exposing (..)
+import EveryDict exposing (..)
+import EveryDictFrom exposing (..)
 import GraphCool.Enum.DateState as DateState exposing (DateState)
 import GraphCool.InputObject as IO
 import GraphCool.Mutation as Mutation
@@ -31,14 +31,14 @@ import RemoteData exposing (..)
 
 
 type alias Model =
-    { hosts : Dict String Host
-    , venues : Dict String Venue
-    , locations : Dict String Location
-    , events : Dict String Event
-    , pools : Dict String Pool
-    , messages : Dict String Message
-    , chats : Dict String Chat
-    , users : Dict String User
+    { hosts : EveryDict String Host
+    , venues : EveryDict String Venue
+    , locations : EveryDict String Location
+    , events : EveryDict String Event
+    , pools : EveryDict String Pool
+    , messages : EveryDict String Message
+    , chats : EveryDict String Chat
+    , users : EveryDict String User
     , me : Maybe Me
     , errors : List String
     }
@@ -544,7 +544,7 @@ requestEverything =
 
 init : ( Model, Cmd Msg )
 init =
-    ( Model Dict.empty Dict.empty Dict.empty Dict.empty Dict.empty Dict.empty Dict.empty Dict.empty Nothing []
+    ( Model EveryDict.empty EveryDict.empty EveryDict.empty EveryDict.empty EveryDict.empty EveryDict.empty EveryDict.empty EveryDict.empty Nothing []
     , requestEverything
       -- change this to MakeMutationRequest if you want to test a mutation.
     )
@@ -591,14 +591,14 @@ update msg model =
             case response of
                 Success x ->
                     ( { model
-                        | hosts = Dict.union (DictFrom.listHost x.hosts) model.hosts
-                        , venues = Dict.union (DictFrom.listVenue x.venues) model.venues
-                        , locations = Dict.union (DictFrom.listLocation x.locations) model.locations
-                        , events = Dict.union (x.events |> List.map (\event -> ( toString event.id, event )) |> Dict.fromList) model.events
-                        , pools = Dict.union (DictFrom.listPool x.pools) model.pools
-                        , messages = Dict.union (DictFrom.listMessage x.messages) model.messages
-                        , chats = Dict.union (DictFrom.listChat x.chats) model.chats
-                        , users = Dict.union (DictFrom.listUser x.users) model.users
+                        | hosts = EveryDict.union (DictFrom.listHost x.hosts) model.hosts
+                        , venues = EveryDict.union (DictFrom.listVenue x.venues) model.venues
+                        , locations = EveryDict.union (DictFrom.listLocation x.locations) model.locations
+                        , events = EveryDict.union (x.events |> List.map (\event -> ( toString event.id, event )) |> EveryDict.fromList) model.events
+                        , pools = EveryDict.union (DictFrom.listPool x.pools) model.pools
+                        , messages = EveryDict.union (DictFrom.listMessage x.messages) model.messages
+                        , chats = EveryDict.union (DictFrom.listChat x.chats) model.chats
+                        , users = EveryDict.union (DictFrom.listUser x.users) model.users
                         , me = x.me
                       }
                     , Cmd.none
@@ -614,7 +614,7 @@ update msg model =
         ReturnHosts response ->
             case response of
                 Success x ->
-                    ( { model | hosts = Dict.union (DictFrom.listHost x) model.hosts }, Cmd.none )
+                    ( { model | hosts = EveryDict.union (DictFrom.listHost x) model.hosts }, Cmd.none )
 
                 Failure y ->
                     ( { model | errors = toString y :: model.errors }, Cmd.none )
@@ -625,7 +625,7 @@ update msg model =
         ReturnVenues response ->
             case response of
                 Success x ->
-                    ( { model | venues = Dict.union (DictFrom.listVenue x) model.venues }, Cmd.none )
+                    ( { model | venues = EveryDict.union (DictFrom.listVenue x) model.venues }, Cmd.none )
 
                 Failure y ->
                     ( { model | errors = toString y :: model.errors }, Cmd.none )
@@ -636,7 +636,7 @@ update msg model =
         ReturnLocations response ->
             case response of
                 Success x ->
-                    ( { model | locations = Dict.union (DictFrom.listLocation x) model.locations }, Cmd.none )
+                    ( { model | locations = EveryDict.union (DictFrom.listLocation x) model.locations }, Cmd.none )
 
                 Failure y ->
                     ( { model | errors = toString y :: model.errors }, Cmd.none )
@@ -649,10 +649,10 @@ update msg model =
                 Success x ->
                     ( { model
                         | events =
-                            Dict.union
+                            EveryDict.union
                                 (x
                                     |> List.map (\event -> ( toString event.id, event ))
-                                    |> Dict.fromList
+                                    |> EveryDict.fromList
                                 )
                                 model.events
                       }
@@ -669,7 +669,7 @@ update msg model =
         ReturnPools response ->
             case response of
                 Success x ->
-                    ( { model | pools = Dict.union (DictFrom.listPool x) model.pools }, Cmd.none )
+                    ( { model | pools = EveryDict.union (DictFrom.listPool x) model.pools }, Cmd.none )
 
                 Failure y ->
                     ( { model | errors = toString y :: model.errors }, Cmd.none )
@@ -680,7 +680,7 @@ update msg model =
         ReturnMessages response ->
             case response of
                 Success x ->
-                    ( { model | messages = Dict.union (DictFrom.listMessage x) model.messages }, Cmd.none )
+                    ( { model | messages = EveryDict.union (DictFrom.listMessage x) model.messages }, Cmd.none )
 
                 Failure y ->
                     ( { model | errors = toString y :: model.errors }, Cmd.none )
@@ -691,7 +691,7 @@ update msg model =
         ReturnChats response ->
             case response of
                 Success x ->
-                    ( { model | chats = Dict.union (DictFrom.listChat x) model.chats }, Cmd.none )
+                    ( { model | chats = EveryDict.union (DictFrom.listChat x) model.chats }, Cmd.none )
 
                 Failure y ->
                     ( { model | errors = toString y :: model.errors }, Cmd.none )
@@ -702,7 +702,7 @@ update msg model =
         ReturnUsers response ->
             case response of
                 Success x ->
-                    ( { model | users = Dict.union (DictFrom.listUser x) model.users }, Cmd.none )
+                    ( { model | users = EveryDict.union (DictFrom.listUser x) model.users }, Cmd.none )
 
                 Failure y ->
                     ( { model | errors = toString y :: model.errors }, Cmd.none )
@@ -725,7 +725,7 @@ update msg model =
         ReturnHost response ->
             case response of
                 Success x ->
-                    ( { model | hosts = Dict.insert (toString x.id) x model.hosts }, Cmd.none )
+                    ( { model | hosts = EveryDict.insert x.id x model.hosts }, Cmd.none )
 
                 Failure y ->
                     ( { model | errors = toString y :: model.errors }, Cmd.none )
@@ -736,7 +736,7 @@ update msg model =
         ReturnVenue response ->
             case response of
                 Success x ->
-                    ( { model | venues = Dict.insert (toString x.id) x model.venues }, Cmd.none )
+                    ( { model | venues = EveryDict.insert x.id x model.venues }, Cmd.none )
 
                 Failure y ->
                     ( { model | errors = toString y :: model.errors }, Cmd.none )
@@ -747,7 +747,7 @@ update msg model =
         ReturnLocation response ->
             case response of
                 Success x ->
-                    ( { model | locations = Dict.insert (toString x.id) x model.locations }, Cmd.none )
+                    ( { model | locations = EveryDict.insert x.id x model.locations }, Cmd.none )
 
                 Failure y ->
                     ( { model | errors = toString y :: model.errors }, Cmd.none )
@@ -758,7 +758,7 @@ update msg model =
         ReturnEvent response ->
             case response of
                 Success x ->
-                    ( { model | events = Dict.insert (toString x.id) x model.events }, Cmd.none )
+                    ( { model | events = EveryDict.insert x.id x model.events }, Cmd.none )
 
                 Failure y ->
                     ( { model | errors = toString y :: model.errors }, Cmd.none )
@@ -769,7 +769,7 @@ update msg model =
         ReturnPool response ->
             case response of
                 Success x ->
-                    ( { model | pools = Dict.insert (toString x.id) x model.pools }, Cmd.none )
+                    ( { model | pools = EveryDict.insert x.id x model.pools }, Cmd.none )
 
                 Failure y ->
                     ( { model | errors = toString y :: model.errors }, Cmd.none )
@@ -780,7 +780,7 @@ update msg model =
         ReturnMessage response ->
             case response of
                 Success x ->
-                    ( { model | messages = Dict.insert (toString x.id) x model.messages }, Cmd.none )
+                    ( { model | messages = EveryDict.insert x.id x model.messages }, Cmd.none )
 
                 Failure y ->
                     ( { model | errors = toString y :: model.errors }, Cmd.none )
@@ -791,7 +791,7 @@ update msg model =
         ReturnChat response ->
             case response of
                 Success x ->
-                    ( { model | chats = Dict.insert (toString x.id) x model.chats }, Cmd.none )
+                    ( { model | chats = EveryDict.insert x.id x model.chats }, Cmd.none )
 
                 Failure y ->
                     ( { model | errors = toString y :: model.errors }, Cmd.none )
@@ -802,7 +802,7 @@ update msg model =
         ReturnUser response ->
             case response of
                 Success x ->
-                    ( { model | users = Dict.insert (toString x.id) x model.users }, Cmd.none )
+                    ( { model | users = EveryDict.insert x.id x model.users }, Cmd.none )
 
                 Failure y ->
                     ( { model | errors = toString y :: model.errors }, Cmd.none )
@@ -832,7 +832,7 @@ update msg model =
                 Success maybe ->
                     case maybe of
                         Just x ->
-                            ( { model | hosts = Dict.insert (toString x.id) x model.hosts }, Cmd.none )
+                            ( { model | hosts = EveryDict.insert x.id x model.hosts }, Cmd.none )
 
                         Nothing ->
                             ( model, Cmd.none )
@@ -848,7 +848,7 @@ update msg model =
                 Success maybe ->
                     case maybe of
                         Just x ->
-                            ( { model | venues = Dict.insert (toString x.id) x model.venues }, Cmd.none )
+                            ( { model | venues = EveryDict.insert x.id x model.venues }, Cmd.none )
 
                         Nothing ->
                             ( model, Cmd.none )
@@ -864,7 +864,7 @@ update msg model =
                 Success maybe ->
                     case maybe of
                         Just x ->
-                            ( { model | locations = Dict.insert (toString x.id) x model.locations }, Cmd.none )
+                            ( { model | locations = EveryDict.insert x.id x model.locations }, Cmd.none )
 
                         Nothing ->
                             ( model, Cmd.none )
@@ -880,7 +880,7 @@ update msg model =
                 Success maybe ->
                     case maybe of
                         Just x ->
-                            ( { model | events = Dict.insert (toString x.id) x model.events }, Cmd.none )
+                            ( { model | events = EveryDict.insert x.id x model.events }, Cmd.none )
 
                         Nothing ->
                             ( model, Cmd.none )
@@ -896,7 +896,7 @@ update msg model =
                 Success maybe ->
                     case maybe of
                         Just x ->
-                            ( { model | pools = Dict.insert (toString x.id) x model.pools }, Cmd.none )
+                            ( { model | pools = EveryDict.insert x.id x model.pools }, Cmd.none )
 
                         Nothing ->
                             ( model, Cmd.none )
@@ -912,7 +912,7 @@ update msg model =
                 Success maybe ->
                     case maybe of
                         Just x ->
-                            ( { model | messages = Dict.insert (toString x.id) x model.messages }, Cmd.none )
+                            ( { model | messages = EveryDict.insert x.id x model.messages }, Cmd.none )
 
                         Nothing ->
                             ( model, Cmd.none )
@@ -928,7 +928,7 @@ update msg model =
                 Success maybe ->
                     case maybe of
                         Just x ->
-                            ( { model | chats = Dict.insert (toString x.id) x model.chats }, Cmd.none )
+                            ( { model | chats = EveryDict.insert x.id x model.chats }, Cmd.none )
 
                         Nothing ->
                             ( model, Cmd.none )
@@ -944,7 +944,7 @@ update msg model =
                 Success maybe ->
                     case maybe of
                         Just x ->
-                            ( { model | users = Dict.insert (toString x.id) x model.users }, Cmd.none )
+                            ( { model | users = EveryDict.insert x.id x model.users }, Cmd.none )
 
                         Nothing ->
                             ( model, Cmd.none )
@@ -966,31 +966,31 @@ view model =
             div []
                 [ div []
                     [ h5 [] [ text "Host" ]
-                    , div [] (List.map toDiv <| Dict.values model.hosts)
+                    , div [] (List.map toDiv <| EveryDict.values model.hosts)
                     ]
                 , div []
                     [ h5 [] [ text "Venues" ]
-                    , div [] (List.map toDiv <| Dict.values model.venues)
+                    , div [] (List.map toDiv <| EveryDict.values model.venues)
                     ]
                 , div []
                     [ h5 [] [ text "Locations" ]
-                    , div [] (List.map toDiv <| Dict.values model.locations)
+                    , div [] (List.map toDiv <| EveryDict.values model.locations)
                     ]
                 , div []
                     [ h5 [] [ text "Events" ]
-                    , div [] (List.map toDiv <| Dict.values model.events)
+                    , div [] (List.map toDiv <| EveryDict.values model.events)
                     ]
                 , div []
                     [ h5 [] [ text "Messages" ]
-                    , div [] (List.map toDiv <| Dict.values model.messages)
+                    , div [] (List.map toDiv <| EveryDict.values model.messages)
                     ]
                 , div []
                     [ h5 [] [ text "Chats" ]
-                    , div [] (List.map toDiv <| Dict.values model.chats)
+                    , div [] (List.map toDiv <| EveryDict.values model.chats)
                     ]
                 , div []
                     [ h5 [] [ text "Users" ]
-                    , div [] (List.map toDiv <| Dict.values model.users)
+                    , div [] (List.map toDiv <| EveryDict.values model.users)
                     ]
                 , div []
                     [ h5 [] [ text "Me" ]

@@ -18,7 +18,7 @@ module Pages.Chat.View exposing (..)
 -- import Pages.CreateMessage.Messages exposing (..)
 
 import Assets exposing (..)
-import Dict exposing (..)
+import EveryDict exposing (..)
 import GraphCool.Scalar exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -43,27 +43,27 @@ view chat meId model =
             case meId == chat.initiated of
                 True ->
                     -- True if Me is the initiator
-                    Dict.get (toString chat.recipient) model.users
+                    EveryDict.get chat.recipient model.users
                         -- Fails if Client can't find User you're chatting with
                         |> Maybe.withDefault { initUser | name = "Finding User" }
 
                 False ->
                     -- False if Me is the recipient
-                    Dict.get (toString chat.initiated) model.users
+                    EveryDict.get chat.initiated model.users
                         -- Fails if Client doesn't have the User
                         |> Maybe.withDefault { initUser | name = "Loading User" }
 
         -- chat =
         --     case model.route of
         --         Types.GoChats id ->
-        --             Dict.values model.chats
+        --             EveryDict.values model.chats
         --                 |> List.head
         --                 |> Maybe.withDefault initChat
         --         -- List.filter (id == ) (.id model.chats)
         --         _ ->
         --             initChat
         conversation =
-            List.map displayMessage <| Maybe.Extra.values <| List.map (\msgId -> Dict.get (toString msgId) model.messages) <| chat.messages
+            List.map displayMessage <| Maybe.Extra.values <| List.map (\msgId -> EveryDict.get msgId model.messages) <| chat.messages
     in
     div [ class "animated fadeInLeft bg-black-70 flex flex-column flex-auto measure-wide-l pa0 ma0 shadow-2-l" ]
         [ nameBar with
@@ -81,11 +81,8 @@ messageBar model chat =
         -- Use the ChatId for the key of the message you're composing.
         -- This allows you to have mutliple different message states, not just one.
         -- Switching between chats should keep the message you're composing separate with this tactic.
-        chatKey =
-            toString chat.id
-
         composing =
-            Maybe.withDefault initMessage <| Dict.get chatKey model.messages
+            Maybe.withDefault initMessage <| EveryDict.get chat.id model.messages
     in
     div [ class "bg-black-40 flex flex-none z-2 items-stretch overflow-hidden pl2 slideInUp animated lh-copy" ]
         [ input
@@ -146,19 +143,19 @@ nameBar withUser =
 --         GoChats maybeChatId ->
 --             case maybeChatId of
 --                 Just chatId ->
---                     case Dict.get (toString chatId) model.chats of
+--                     case EveryDict.get chatId model.chats of
 --                         Just chat ->
 --                             case model.me of
 --                                 Just me ->
 --                                     case me.id == chat.initiated of
 --                                         True ->
 --                                             -- True if Me is the initiator
---                                             Dict.get (toString chat.recipient) model.users
+--                                             EveryDict.get chat.recipient model.users
 --                                                 -- Fails if Client can't find User you're chatting with
 --                                                 |> Maybe.withDefault { initUser | name = "Finding User" }
 --                                         False ->
 --                                             -- False if Me is the recipient
---                                             Dict.get (toString chat.initiated) model.users
+--                                             EveryDict.get chat.initiated model.users
 --                                                 -- Fails if Client doesn't have the User
 --                                                 |> Maybe.withDefault { initUser | name = "Loading User" }
 --                                 Nothing ->

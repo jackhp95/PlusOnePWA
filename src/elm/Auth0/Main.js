@@ -1310,7 +1310,7 @@ function eqHelp(x, y, depth, stack)
 		return true;
 	}
 
-	// convert Dicts and Sets to lists
+	// convert EveryDicts and Sets to lists
 	if (x.ctor === 'RBNode_elm_builtin' || x.ctor === 'RBEmpty_elm_builtin')
 	{
 		x = _elm_lang$core$Dict$toList(x);
@@ -3345,10 +3345,10 @@ var _elm_lang$core$Dict$toList = function (dict) {
 		dict);
 };
 var _elm_lang$core$Dict$foldl = F3(
-	function (f, acc, dict) {
+	function (f, acc, EveryDict) {
 		foldl:
 		while (true) {
-			var _p1 = dict;
+			var _p1 = EveryDict;
 			if (_p1.ctor === 'RBEmpty_elm_builtin') {
 				return acc;
 			} else {
@@ -3480,7 +3480,7 @@ var _elm_lang$core$Dict$reportRemBug = F4(
 				}));
 	});
 var _elm_lang$core$Dict$isBBlack = function (dict) {
-	var _p13 = dict;
+	var _p13 = EveryDict;
 	_v14_2:
 	do {
 		if (_p13.ctor === 'RBNode_elm_builtin') {
@@ -3500,10 +3500,10 @@ var _elm_lang$core$Dict$isBBlack = function (dict) {
 	return false;
 };
 var _elm_lang$core$Dict$sizeHelp = F2(
-	function (n, dict) {
+	function (n, EveryDict) {
 		sizeHelp:
 		while (true) {
-			var _p14 = dict;
+			var _p14 = EveryDict;
 			if (_p14.ctor === 'RBEmpty_elm_builtin') {
 				return n;
 			} else {
@@ -3516,13 +3516,13 @@ var _elm_lang$core$Dict$sizeHelp = F2(
 		}
 	});
 var _elm_lang$core$Dict$size = function (dict) {
-	return A2(_elm_lang$core$Dict$sizeHelp, 0, dict);
+	return A2(_elm_lang$core$Dict$sizeHelp, 0, EveryDict);
 };
 var _elm_lang$core$Dict$get = F2(
-	function (targetKey, dict) {
+	function (targetKey, EveryDict) {
 		get:
 		while (true) {
-			var _p15 = dict;
+			var _p15 = EveryDict;
 			if (_p15.ctor === 'RBEmpty_elm_builtin') {
 				return _elm_lang$core$Maybe$Nothing;
 			} else {
@@ -3547,8 +3547,8 @@ var _elm_lang$core$Dict$get = F2(
 		}
 	});
 var _elm_lang$core$Dict$member = F2(
-	function (key, dict) {
-		var _p17 = A2(_elm_lang$core$Dict$get, key, dict);
+	function (key, EveryDict) {
+		var _p17 = A2(_elm_lang$core$Dict$get, key, EveryDict);
 		if (_p17.ctor === 'Just') {
 			return true;
 		} else {
@@ -3626,15 +3626,15 @@ var _elm_lang$core$Dict$RBNode_elm_builtin = F5(
 		return {ctor: 'RBNode_elm_builtin', _0: a, _1: b, _2: c, _3: d, _4: e};
 	});
 var _elm_lang$core$Dict$ensureBlackRoot = function (dict) {
-	var _p23 = dict;
+	var _p23 = EveryDict;
 	if ((_p23.ctor === 'RBNode_elm_builtin') && (_p23._0.ctor === 'Red')) {
 		return A5(_elm_lang$core$Dict$RBNode_elm_builtin, _elm_lang$core$Dict$Black, _p23._1, _p23._2, _p23._3, _p23._4);
 	} else {
-		return dict;
+		return EveryDict;
 	}
 };
 var _elm_lang$core$Dict$lessBlackTree = function (dict) {
-	var _p24 = dict;
+	var _p24 = EveryDict;
 	if (_p24.ctor === 'RBNode_elm_builtin') {
 		return A5(
 			_elm_lang$core$Dict$RBNode_elm_builtin,
@@ -3993,8 +3993,8 @@ var _elm_lang$core$Dict$rem = F3(
 		}
 	});
 var _elm_lang$core$Dict$map = F2(
-	function (f, dict) {
-		var _p41 = dict;
+	function (f, EveryDict) {
+		var _p41 = EveryDict;
 		if (_p41.ctor === 'RBEmpty_elm_builtin') {
 			return _elm_lang$core$Dict$RBEmpty_elm_builtin(_elm_lang$core$Dict$LBlack);
 		} else {
@@ -4012,9 +4012,9 @@ var _elm_lang$core$Dict$Same = {ctor: 'Same'};
 var _elm_lang$core$Dict$Remove = {ctor: 'Remove'};
 var _elm_lang$core$Dict$Insert = {ctor: 'Insert'};
 var _elm_lang$core$Dict$update = F3(
-	function (k, alter, dict) {
+	function (k, alter, EveryDict) {
 		var up = function (dict) {
-			var _p43 = dict;
+			var _p43 = EveryDict;
 			if (_p43.ctor === 'RBEmpty_elm_builtin') {
 				var _p44 = alter(_elm_lang$core$Maybe$Nothing);
 				if (_p44.ctor === 'Nothing') {
@@ -4117,7 +4117,7 @@ var _elm_lang$core$Dict$update = F3(
 		}
 	});
 var _elm_lang$core$Dict$insert = F3(
-	function (key, value, dict) {
+	function (key, value, EveryDict) {
 		return A3(
 			_elm_lang$core$Dict$update,
 			key,
@@ -4134,12 +4134,12 @@ var _elm_lang$core$Dict$union = F2(
 		return A3(_elm_lang$core$Dict$foldl, _elm_lang$core$Dict$insert, t2, t1);
 	});
 var _elm_lang$core$Dict$filter = F2(
-	function (predicate, dictionary) {
+	function (predicate, EveryDictionary) {
 		var add = F3(
-			function (key, value, dict) {
-				return A2(predicate, key, value) ? A3(_elm_lang$core$Dict$insert, key, value, dict) : dict;
+			function (key, value, EveryDict) {
+				return A2(predicate, key, value) ? A3(_elm_lang$core$Dict$insert, key, value, EveryDict) : EveryDict;
 			});
-		return A3(_elm_lang$core$Dict$foldl, add, _elm_lang$core$Dict$empty, dictionary);
+		return A3(_elm_lang$core$Dict$foldl, add, _elm_lang$core$Dict$empty, EveryDictionary);
 	});
 var _elm_lang$core$Dict$intersect = F2(
 	function (t1, t2) {
@@ -4152,7 +4152,7 @@ var _elm_lang$core$Dict$intersect = F2(
 			t1);
 	});
 var _elm_lang$core$Dict$partition = F2(
-	function (predicate, dict) {
+	function (predicate, EveryDict) {
 		var add = F3(
 			function (key, value, _p59) {
 				var _p60 = _p59;
@@ -4178,15 +4178,15 @@ var _elm_lang$core$Dict$fromList = function (assocs) {
 	return A3(
 		_elm_lang$core$List$foldl,
 		F2(
-			function (_p63, dict) {
+			function (_p63, EveryDict) {
 				var _p64 = _p63;
-				return A3(_elm_lang$core$Dict$insert, _p64._0, _p64._1, dict);
+				return A3(_elm_lang$core$Dict$insert, _p64._0, _p64._1, EveryDict);
 			}),
 		_elm_lang$core$Dict$empty,
 		assocs);
 };
 var _elm_lang$core$Dict$remove = F2(
-	function (key, dict) {
+	function (key, EveryDict) {
 		return A3(
 			_elm_lang$core$Dict$update,
 			key,
@@ -6595,7 +6595,7 @@ function diffKeyedChildren(aParent, bParent, patches, rootIndex)
 {
 	var localPatches = [];
 
-	var changes = {}; // Dict String Entry
+	var changes = {}; // EveryDict String Entry
 	var inserts = []; // Array { index : Int, entry : Entry }
 	// type Entry = { tag : String, vnode : VNode, index : Int, data : _ }
 

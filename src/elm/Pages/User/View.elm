@@ -3,7 +3,7 @@ module Pages.User.View exposing (..)
 -- import Pages.User.Model as UserModel
 
 import Assets exposing (bgImg, feather)
-import Dict exposing (..)
+import EveryDict exposing (..)
 import GraphCool.Scalar exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -15,7 +15,7 @@ view : Id -> Model -> Html Msg
 view userId model =
     let
         user =
-            Maybe.withDefault initUser <| Dict.get (toString userId) model.users
+            Maybe.withDefault initUser <| EveryDict.get userId model.users
     in
     section [ class "w-100 mw7-l overflow-auto shadow-2-l" ]
         [ div [ class "flex h5 ph3 ph4-m ph5-l pt6 items-center" ]

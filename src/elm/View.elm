@@ -6,7 +6,7 @@ module View exposing (render)
 -- SUBVIEWS --
 -- import Html.Events exposing (..)
 
-import Dict exposing (..)
+import EveryDict exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Nav exposing (..)
@@ -51,7 +51,7 @@ page model =
                 Just chatId ->
                     let
                         chat =
-                            Maybe.withDefault initChat <| Dict.get (toString chatId) model.chats
+                            Maybe.withDefault initChat <| EveryDict.get chatId model.chats
                     in
                     [ Chats.view model
                     , Chat.view chat me.id model
@@ -61,7 +61,7 @@ page model =
             [ User.view userId model ]
 
         GoPool poolId ->
-            case Dict.get (toString poolId) model.pools of
+            case EveryDict.get poolId model.pools of
                 Just pool ->
                     [ Pool.view pool model ]
 

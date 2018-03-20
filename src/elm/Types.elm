@@ -24,7 +24,7 @@ module Types exposing (..)
 -- import Auth0.Auth0 as Auth0
 
 import Auth0.Authentication as Authentication
-import Dict exposing (..)
+import EveryDict exposing (..)
 import GraphCool.Enum.DateState as DateState exposing (DateState)
 import GraphCool.Scalar exposing (..)
 import Graphqelm.Http exposing (Error)
@@ -268,14 +268,14 @@ initMe =
 
 type alias Model =
     { route : Route
-    , hosts : Dict String Host
-    , venues : Dict String Venue
-    , locations : Dict String Location
-    , events : Dict String API
-    , pools : Dict String Pool
-    , messages : Dict String Message
-    , chats : Dict String Chat
-    , users : Dict String User
+    , hosts : EveryDict Id Host
+    , venues : EveryDict Id Venue
+    , locations : EveryDict Id Location
+    , events : EveryDict Id API
+    , pools : EveryDict Id Pool
+    , messages : EveryDict Id Message
+    , chats : EveryDict Id Chat
+    , users : EveryDict Id User
     , me : Maybe Me
     , errors : List String
     , forms : Forms
@@ -288,21 +288,21 @@ emptyModel =
         -- route
         (GoEvents Nothing)
         -- hosts
-        Dict.empty
+        EveryDict.empty
         -- venues
-        Dict.empty
+        EveryDict.empty
         -- locations
-        Dict.empty
+        EveryDict.empty
         -- events
-        Dict.empty
+        EveryDict.empty
         -- pools
-        Dict.empty
+        EveryDict.empty
         -- messages
-        Dict.empty
+        EveryDict.empty
         -- chats
-        Dict.empty
+        EveryDict.empty
         -- users
-        Dict.empty
+        EveryDict.empty
         -- me
         Nothing
         -- errors

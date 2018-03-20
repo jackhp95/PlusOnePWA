@@ -18,7 +18,7 @@ module Pages.Chats.View exposing (..)
 
 import Assets exposing (..)
 import Debug exposing (log)
-import Dict exposing (..)
+import EveryDict exposing (..)
 import GraphCool.Enum.DateState as DateState
 import GraphCool.Scalar exposing (..)
 import Html exposing (..)
@@ -47,7 +47,7 @@ view model =
                     " flex "
 
         allChats =
-            div [ class "flex-shrink-1 flex-grow-0 bg-black-70 overflow-auto" ] (List.map (nameBar model) (Dict.keys chats))
+            div [ class "flex-shrink-1 flex-grow-0 bg-black-70 overflow-auto" ] (List.map (nameBar model) (EveryDict.keys chats))
     in
     section [ class ("animated fadeInUp flex-column items-stretch flex-auto pa0 ma0 measure-ns shadow-2-ns" ++ mobileHide) ]
         [ Assets.banner "chats"
@@ -56,15 +56,15 @@ view model =
 
 
 
--- Ideally, this String value should be an Id value, because that's what it really is, but Dict won't allow for that.
+-- Ideally, this String value should be an Id value, because that's what it really is, but EveryDict won't allow for that.
 -- Perhaps we can look into switching to all-dict, I'm not sure about the performance tho
 
 
-nameBar : Model -> String -> Html Types.Msg
-nameBar model chatKey =
+nameBar : Model -> Id -> Html Types.Msg
+nameBar model chatId =
     let
         chat =
-            case Dict.get chatKey model.chats of
+            case EveryDict.get chatId model.chats of
                 Just chat ->
                     chat
 
@@ -73,7 +73,7 @@ nameBar model chatKey =
                         initChat
 
         pool =
-            case Dict.get (toString chat.pool) model.pools of
+            case EveryDict.get chat.pool model.pools of
                 Just pool ->
                     pool
 
@@ -82,7 +82,7 @@ nameBar model chatKey =
                         initPool
 
         event =
-            case Dict.get (toString (Maybe.withDefault (Id "") pool.event)) model.events of
+            case EveryDict.get (Maybe.withDefault (Id "") pool.event) model.events of
                 Just event ->
                     event
 
@@ -99,7 +99,7 @@ nameBar model chatKey =
                     event.name
 
         initiator =
-            case Dict.get (toString chat.initiated) model.users of
+            case EveryDict.get chat.initiated model.users of
                 Just initiator ->
                     initiator
 
@@ -108,7 +108,7 @@ nameBar model chatKey =
                         initUser
 
         recipient =
-            case Dict.get (toString chat.recipient) model.users of
+            case EveryDict.get chat.recipient model.users of
                 Just recipient ->
                     recipient
 
@@ -117,7 +117,7 @@ nameBar model chatKey =
                         initUser
 
         messages =
-            Maybe.Extra.values <| List.map (\msgId -> Dict.get (toString msgId) model.messages) chat.messages
+            Maybe.Extra.values <| List.map (\msgId -> EveryDict.get msgId model.messages) chat.messages
 
         -- This sorting code is kinda bad, we should fix it.
         mostRecentMessage =
@@ -126,7 +126,7 @@ nameBar model chatKey =
                 |> List.head
 
         ( headMessage, headTime ) =
-            case Dict.get chatKey model.messages of
+            case EveryDict.get chatId model.messages of
                 Just message ->
                     ( message.text, "Draft" )
 
