@@ -4,10 +4,7 @@
 
 module Nav exposing (bar)
 
--- import Auth0.Auth0 as Auth0
-
 import Assets exposing (..)
-import Auth0.Authentication as Authentication
 import Html exposing (..)
 import Html.Attributes exposing (class, style)
 import Html.Events exposing (onClick)

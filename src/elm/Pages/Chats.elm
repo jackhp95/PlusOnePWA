@@ -1,20 +1,4 @@
--- Read more about this program in the official Elm guide:
--- https://guide.elm-lang.org/architecture/effects/web_sockets.html
--- ```Html.map ChatMsg (Chat.extra chat)
--- ```
--- assuming you have something like
--- ```type Msg
---     = ChatMsg Chat.Msg
--- ```
--- You _could_ have all your messages in one file under `type Msg = ...` but if you are breaking things down into pages you should probably have page specific `Msg` types.
--- @Jack H. Peterson You could also make your views message type agnostic. https://medium.com/@matthew.buscemi/high-level-dependency-strategies-in-elm-1135ec877d49
-
-
-module Pages.Chats.View exposing (..)
-
--- import Pages.Chat.Model as ChatModel
--- import Pages.Chat.View exposing (..)
--- import Pages.User.View exposing (userAvi)
+module Pages.Chats exposing (..)
 
 import Assets exposing (..)
 import Debug exposing (log)
@@ -53,11 +37,6 @@ view model =
         [ Assets.banner "chats"
         , allChats
         ]
-
-
-
--- Ideally, this String value should be an Id value, because that's what it really is, but EveryDict won't allow for that.
--- Perhaps we can look into switching to all-dict, I'm not sure about the performance tho
 
 
 nameBar : Model -> Id -> Html Types.Msg
@@ -107,19 +86,9 @@ nameBar model chatId =
                     Debug.log "Chats.nameBar Fucked up at initiator"
                         initUser
 
-        recipient =
-            case EveryDict.get chat.recipient model.users of
-                Just recipient ->
-                    recipient
-
-                Nothing ->
-                    Debug.log "Chats.nameBar Fucked up at recipient"
-                        initUser
-
         messages =
             Maybe.Extra.values <| List.map (\msgId -> EveryDict.get msgId model.messages) chat.messages
 
-        -- This sorting code is kinda bad, we should fix it.
         mostRecentMessage =
             messages
                 |> List.reverse

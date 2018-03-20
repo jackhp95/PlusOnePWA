@@ -9,16 +9,6 @@ module Auth0.Authentication
         , update
         )
 
--- import Debug exposing (log)
--- import GraphCool.Enum.DateState exposing (DateState)
--- import GraphCool.Enum.MessageOrderBy exposing (..)
--- import GraphCool.InputObject as IO exposing (..)
--- import GraphCool.Mutation as Mutation
--- import GraphCool.Object.Location as Location
--- import GraphCool.Object.Venue as Venue
--- import Graphqelm.Document as Document
--- import Pages.Event.Model exposing (Event, Response)
-
 import Auth0.Auth0 as Auth0
 import GraphCool.Object
 import GraphCool.Object.Chat as Chat

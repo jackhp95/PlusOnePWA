@@ -23,12 +23,10 @@ module Types exposing (..)
 -- import Mouse exposing (Position)
 -- import Auth0.Auth0 as Auth0
 
-import Auth0.Authentication as Authentication
 import EveryDict exposing (..)
 import GraphCool.Enum.DateState as DateState exposing (DateState)
 import GraphCool.Scalar exposing (..)
 import Graphqelm.Http exposing (Error)
-import Http exposing (Error)
 import RemoteData exposing (..)
 import SeatGeek.Types as SG
 
@@ -248,24 +246,6 @@ initMe =
     }
 
 
-
--- MODEL --
--- OLD MODEL DO NOT USE
--- type alias Model =
---     { route : Route
---     , chat : Types.Chat
---     , chats : ChatsModel.Chats
---     , events : List EventsModel.EventAPI
---     , pool : PoolModel.PoolModel
---     , client : Client
---     , createEvent : CreateEventModel.CreateEvent
---     , createMessage : CreateMessageModel.CreateMessage
---     , createChat : CreateChatModel.CreateChat
---     , me : UserModel.Me
---     , errors : List String
---     }
-
-
 type alias Model =
     { route : Route
     , hosts : EveryDict Id Host
@@ -322,24 +302,6 @@ initForms =
     Forms initEvent initMe
 
 
-
--- initModel : Maybe Auth0.LoggedInUser -> Model
--- initModel initialAuthUser =
---     Model
---         (GoEvents Nothing)
---         -- (GoChats Nothing)
---         ChatModel.initModel
---         ChatsModel.initModel
---         []
---         PoolModel.initModel
---         initClient
---         EventModel.initModel
---         CreateMessageModel.initModel
---         CreateChatModel.initModel
---         (UserModel.initMe initialAuthUser)
---         []
-
-
 type alias Page =
     { name : String
     , icon : String
@@ -347,37 +309,16 @@ type alias Page =
     }
 
 
-
--- type Route
---     = GoChats (Maybe Types.Chat)
---     | GoUser
---     | GoEvents (Maybe EventsModel.EventAPI)
---     | GoCreateEvent
---     | GoPool
---     | GoEditUser
---     | GoAuth
--- | Pool Pool.Model
--- | NotFound
--- | Events Events.Model
--- | Event Event.Modsel
--- type alias Client =
---     { textAreaHeight : Int
---     }
--- initClient : Client
--- initClient =
---     { textAreaHeight = 10 }
--- MESSAGES --
-
-
 type
     Msg
     -- Route
     = RouteTo Route
+      --Auth
       -- | AuthenticationMsg Authentication.Msg
-      -- | TextAreaResizer Int
       -- SeatGeek
     | GetReply (WebData SG.Reply)
-      -- From TestGraphCool
+      -- Return Everything
+    | ReturnEverything (RemoteData Graphqelm.Http.Error Everything)
       -- Query Many
     | ReturnHosts (RemoteData Graphqelm.Http.Error (List Host))
     | ReturnVenues (RemoteData Graphqelm.Http.Error (List Venue))
@@ -428,31 +369,3 @@ type
     | EventStartDate String
     | EventEndDate String
     | EventSubmit
-
-
-
--- Pool
--- | MouseStart Position
--- | MouseMove Position
--- | MouseEnd Position
--- | ResizePool Size
--- | InitialWindow Size
---   --Temp
--- | CreateEventMsg CreateEventMsg.Msg
--- | EventsMsg EventsMsg.Msg
--- | EditUserMsg EditUserMsg.Msg
--- | UserMsg UserMsg.Msg
--- | UpdateTextInput String
--- | CreateMessageMsg CreateMessageMsg.Msg
--- | CreateChatMsg CreateChatMsg.Msg
--- | ChatMsg ChatMsg.Msg
--- | ChatsMsg ChatsMsg.Msg
---   -- Chat
--- | Input String
--- | NewMessage String
--- | ViewChat Route
---   -- Events
--- | ViewEvent Route
--- | ViewPool Route
--- | UpdateChats Route CreateChatModel.CreateChat
--- | EventPoolMsg EventPoolMsg.Msg

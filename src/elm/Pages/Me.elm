@@ -1,10 +1,6 @@
-module Pages.Me.View exposing (..)
-
--- import Pages.Me.Model as MeModel
+module Pages.Me exposing (..)
 
 import Assets exposing (bgImg, feather)
-import EveryDict exposing (..)
-import GraphCool.Scalar exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)

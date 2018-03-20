@@ -1,8 +1,6 @@
-module Pages.User.View exposing (..)
+module Pages.User exposing (..)
 
--- import Pages.User.Model as UserModel
-
-import Assets exposing (bgImg, feather)
+import Assets exposing (bgImg, feather, stringToEmoji)
 import EveryDict exposing (..)
 import GraphCool.Scalar exposing (..)
 import Html exposing (..)
@@ -92,22 +90,3 @@ userToolsView =
             , div [ class "pa2" ] [ text "log out" ]
             ]
         ]
-
-
-stringToEmoji : String -> String
-stringToEmoji string =
-    case string of
-        "night owl" ->
-            "\x1F989"
-
-        "talkative" ->
-            "🗣️"
-
-        "flirty" ->
-            "😏"
-
-        "funny" ->
-            "\x1F923"
-
-        _ ->
-            "\x1F937"

@@ -1,16 +1,4 @@
--- Read more about this program in the official Elm guide:
--- https://guide.elm-lang.org/architecture/effects/http.html
-
-
-module Pages.Events.View exposing (..)
-
--- import Pages.Event.Model exposing (Event, initEvent)
--- import Pages.Events.Model exposing (EventAPI(GraphCool, SeatGeek))
--- import SeatGeek.Query exposing (composeRequest)
--- import SeatGeek.Decode exposing (decodeReply)
--- import Graphqelm.Document as Document
--- import Http exposing (..)
--- import RemoteData exposing (..)
+module Pages.Events exposing (..)
 
 import Assets exposing (feather)
 import Date exposing (..)
@@ -23,26 +11,6 @@ import Moment exposing (..)
 import SeatGeek.Types as SG
 import Time exposing (Time)
 import Types exposing (..)
-
-
--- HTTP
--- askQuery : SG.Query -> Cmd Msg
--- askQuery query =
---     let
---         url =
---             composeRequest query
---         request =
---             Http.get url decodeReply
---     in
---     Http.send Types.GetReply request
--- VIEW
--- eventAPItoListView : EventAPI -> Html Msg
--- eventAPItoListView api =
---     case api of
---         SeatGeek sgEvent ->
---             seatGeekListView sgEvent
---         GraphCool gcEvent ->
---             graphCoolListView gcEvent
 
 
 view : Types.Model -> Html Msg
@@ -69,27 +37,6 @@ view model =
 
                 _ ->
                     ""
-
-        -- -- Show the reponse of the "allEvents" query
-        -- refineView a =
-        --     let
-        --         sortedEvents =
-        --             apiListSortByDateTime (mergeLists a.events eventsUnlessError)
-        --     in
-        --     div [ class "bg-black-70" ]
-        --         -- (List.map (\ b -> ul[ style [("background", "#000000")]][h4[][text b.name],p[][text (stringDateTime b.startsAt)]]) sortedEvents)
-        --         (List.map graphCoolListView sortedEvents)
-        -- -- Add a function to compare Datetime
-        -- response =
-        --     case events.eventResponse of
-        --         NotAsked ->
-        --             text "Hold up, Lemme Check"
-        --         Loading ->
-        --             text "Gimme a Sec"
-        --         Failure e ->
-        --             text ("Shucks um, " ++ Basics.toString e)
-        --         Success a ->
-        --             refineView a
     in
     section [ class ("animated fadeInUp w-100 w-auto-ns mw6-l overflow-auto z-999 flex-grow-1 shadow-2-l" ++ mobileHide) ]
         [ Html.header [ class "h5 flex flex-column justify-between pa3" ]
@@ -101,30 +48,9 @@ view model =
         ]
 
 
-
--- -- Convert SeatGeek Event into Database Event
--- -- Maybe convert SG.Venue to Database Venue too
--- convertEvent : Event -> SG.Event -> Event
--- convertEvent dbEvent sgEvent =
---     { dbEvent | name = sgEvent.title, id = Id (Basics.toString sgEvent.id), startsAt = DateTime sgEvent.datetime_local }
--- convertList : List SG.Event -> List Event
--- convertList events =
---     List.map (convertEvent initEvent) events
--- -- Merge Lists -- Append SeatGeek events to database event list
--- mergeLists : List Event -> List Event -> List Event
--- mergeLists list1 list2 =
---     List.append list1 list2
--- Sort list by datetime
-
-
 apiListSortByDateTime : List API -> List API
 apiListSortByDateTime apiList =
     List.sortWith compareEventDateTime apiList
-
-
-
--- compareDateTime :
--- Use String.dropLeft, Date.fromString, Date.Extra.compare, List.sortWith
 
 
 compareEventDateTime : API -> API -> Order
@@ -251,12 +177,3 @@ seatGeekListView event =
                 ]
             ]
         ]
-
-
-
--- SUBSCRIPTIONS
-
-
-subscriptions : Sub Msg
-subscriptions =
-    Sub.none

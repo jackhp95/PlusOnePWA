@@ -1,23 +1,17 @@
 module View exposing (render)
 
--- DUCK TAPE --
--- PAGES --
--- SUBVIEWS --
--- SUBVIEWS --
--- import Html.Events exposing (..)
-
 import EveryDict exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Nav exposing (..)
-import Pages.Chat.View as Chat
-import Pages.Chats.View as Chats
-import Pages.CreateEvent.View as CreateEvent
-import Pages.EditMe.View as EditMe
-import Pages.Event.View as Event
-import Pages.Events.View as Events
-import Pages.Pool.View as Pool
-import Pages.User.View as User
+import Pages.Chat as Chat
+import Pages.Chats as Chats
+import Pages.CreateEvent as CreateEvent
+import Pages.EditMe as EditMe
+import Pages.Event as Event
+import Pages.Events as Events
+import Pages.Pool as Pool
+import Pages.User as User
 import Types exposing (..)
 
 

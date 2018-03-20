@@ -13,9 +13,10 @@ maybeEventDate date =
     Result.toMaybe (Date.fromString date)
 
 
-fullDate : Date -> String
-fullDate x =
-    Date.Extra.Format.format Date.Extra.Config.Config_en_us.config "%A, %B %@e, %Y" x
+
+-- fullDate : Date -> String
+-- fullDate x =
+--     Date.Extra.Format.format Date.Extra.Config.Config_en_us.config "%A, %B %@e, %Y" x
 
 
 shortDate : Date -> String
@@ -31,11 +32,6 @@ clockTime x =
 stringDateTime : DateTime -> String
 stringDateTime datetime =
     String.dropRight 1 (String.dropLeft 10 (Basics.toString datetime))
-
-
-defaultDate : Date
-defaultDate =
-    Date.Extra.Create.dateFromFields 1999 Dec 31 23 59 0 0
 
 
 compareDateTime : Date -> Date -> Order
@@ -56,16 +52,6 @@ getTime datetime =
 
         Just dt ->
             clockTime dt
-
-
-getDate : DateTime -> String
-getDate datetime =
-    case maybeEventDate (stringDateTime datetime) of
-        Nothing ->
-            "Unknown date"
-
-        Just dt ->
-            shortDate dt
 
 
 getDateTime : DateTime -> String

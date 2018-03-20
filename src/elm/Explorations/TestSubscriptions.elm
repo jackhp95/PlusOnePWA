@@ -17,10 +17,6 @@ import Graphqelm.Subscription.Protocol as Protocol
 import Html exposing (Html, button, div, fieldset, h1, img, input, label, li, p, pre, text, ul)
 
 
--- import Json.Decode as Decode exposing (..)
--- import Json.Encode as Encode exposing (..)
-
-
 subscriptionDocument : SelectionSet User RootSubscription
 subscriptionDocument =
     Subscription.selection identity

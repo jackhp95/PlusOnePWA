@@ -1,10 +1,5 @@
 module Main exposing (..)
 
--- import GraphCool.Object.Host as Host
--- import GraphCool.Object.Venue as Venue
--- import GraphCool.InputObject exposing (..)
--- import Graphqelm.OptionalArgument exposing (OptionalArgument(Absent, Null, Present))
-
 import GraphCool.Enum.DateState exposing (DateState)
 import GraphCool.Object
 import GraphCool.Object.Chat as Chat

@@ -21,32 +21,9 @@ import RemoteData exposing (..)
 import Types exposing (..)
 
 
-everythingQuery : SelectionSet Everything RootQuery
-everythingQuery =
-    Query.selection Everything
-        |> with (Query.allHosts identity host)
-        |> with (Query.allVenues identity venue)
-        |> with (Query.allLocations identity location)
-        |> with (Query.allEvents identity event)
-        |> with (Query.allPools identity pool)
-        |> with (Query.allMessages identity message)
-        |> with (Query.allChats identity chat)
-        |> with (Query.allUsers identity user)
-        |> with (Query.me me)
-
-
-initQuery : SelectionSet Everything RootQuery
-initQuery =
-    Query.selection Everything
-        |> with (Query.allHosts identity host)
-        |> with (Query.allVenues identity venue)
-        |> with (Query.allLocations identity location)
-        |> with (Query.allEvents identity event)
-        |> with (Query.allPools identity pool)
-        |> with (Query.allMessages identity message)
-        |> with (Query.allChats identity chat)
-        |> with (Query.allUsers identity user)
-        |> with (Query.me me)
+-- -------- --
+-- MUTATION --
+-- -------- --
 
 
 updateUserMutation : SelectionSet (Maybe User) Graphqelm.Operation.RootMutation
@@ -59,6 +36,184 @@ createUserMutation : SelectionSet (Maybe User) Graphqelm.Operation.RootMutation
 createUserMutation =
     Mutation.selection identity
         |> with (Mutation.createUser identity { birthday = DateTime "1969-06-09", name = "elm", authProvider = { auth0 = Present { idToken = "id" }, email = Null } } user)
+
+
+
+-- ----- --
+-- QUERY --
+-- ----- --
+
+
+everythingQuery : SelectionSet Everything RootQuery
+everythingQuery =
+    let
+        -- allMessagesFilter =
+        --     \optionals -> { optionals | filter = Present <| IO.MessageFilter { initMessageFilter | chat = Present <| IO.MessageFilter chatsWithMe } }
+        -- allUsersFilter =
+        --     \optionals -> { optionals | filter = Present <| IO.UserFilter <| userOr [ recipientSomeFilter, initiatedSomeFilter ] }
+        chatsWithMe =
+            \optionals ->
+                { optionals
+                    | filter = Null
+
+                    {- Present <| IO.ChatFilter <| chatOr [ recipientFilter, initiatedFilter ] -}
+                }
+
+        -- userOr argsToOr =
+        --     { initUserFilter | or = Present argsToOr }
+        chatOr argsToOr =
+            \optionals -> { optionals | or = Present argsToOr }
+
+        -- recipientSomeFilter =
+        --     IO.UserFilter { initUserFilter | recipient_some = Present <| IO.UserFilter meIdFilter }
+        -- initiatedSomeFilter =
+        --     IO.UserFilter { initUserFilter | initiated_some = Present <| IO.UserFilter meIdFilter }
+        -- recipientFilter =
+        --     IO.ChatFilter <| \optionals -> { optionals | recipient = Present <| meIdFilter }
+        -- initiatedFilter =
+        --     IO.ChatFilter <| \optionals -> { optionals | initiated = Present <| meIdFilter }
+        -- meIdFilter =
+        --     IO.UserFilter <| \optionals -> { optionals | id = Present <| Id "cjepiz67rcnea01955enpxpdz" }
+    in
+    Query.selection Everything
+        |> with (Query.allHosts identity host)
+        |> with (Query.allVenues identity venue)
+        |> with (Query.allLocations identity location)
+        |> with (Query.allEvents identity event)
+        |> with (Query.allPools identity pool)
+        |> with (Query.allMessages identity message)
+        |> with (Query.allChats chatsWithMe chat)
+        |> with (Query.allUsers identity user)
+        |> with (Query.me me)
+
+
+hostsQuery : (Query.AllHostsOptionalArguments -> Query.AllHostsOptionalArguments) -> SelectionSet (List Host) RootQuery
+hostsQuery optArgs =
+    Query.selection identity
+        |> with (Query.allHosts optArgs host)
+
+
+venuesQuery : (Query.AllVenuesOptionalArguments -> Query.AllVenuesOptionalArguments) -> SelectionSet (List Venue) RootQuery
+venuesQuery optArgs =
+    Query.selection identity
+        |> with (Query.allVenues optArgs venue)
+
+
+locationsQuery : (Query.AllLocationsOptionalArguments -> Query.AllLocationsOptionalArguments) -> SelectionSet (List Location) RootQuery
+locationsQuery optArgs =
+    Query.selection identity
+        |> with (Query.allLocations optArgs location)
+
+
+eventsQuery : (Query.AllEventsOptionalArguments -> Query.AllEventsOptionalArguments) -> SelectionSet (List Event) RootQuery
+eventsQuery optArgs =
+    Query.selection identity
+        |> with (Query.allEvents optArgs event)
+
+
+poolsQuery : (Query.AllPoolsOptionalArguments -> Query.AllPoolsOptionalArguments) -> SelectionSet (List Pool) RootQuery
+poolsQuery optArgs =
+    Query.selection identity
+        |> with (Query.allPools optArgs pool)
+
+
+messagesQuery : (Query.AllMessagesOptionalArguments -> Query.AllMessagesOptionalArguments) -> SelectionSet (List Message) RootQuery
+messagesQuery optArgs =
+    Query.selection identity
+        |> with (Query.allMessages optArgs message)
+
+
+chatsQuery : (Query.AllChatsOptionalArguments -> Query.AllChatsOptionalArguments) -> SelectionSet (List Chat) RootQuery
+chatsQuery optArgs =
+    Query.selection identity
+        |> with (Query.allChats optArgs chat)
+
+
+usersQuery : (Query.AllUsersOptionalArguments -> Query.AllUsersOptionalArguments) -> SelectionSet (List User) RootQuery
+usersQuery optArgs =
+    Query.selection identity
+        |> with (Query.allUsers optArgs user)
+
+
+meQuery : SelectionSet (Maybe Me) RootQuery
+meQuery =
+    Query.selection identity
+        |> with (Query.me me)
+
+
+
+-- -------- --
+-- REQUESTS --
+-- -------- --
+
+
+requestEverything : Cmd Msg
+requestEverything =
+    everythingQuery
+        |> Graphqelm.Http.queryRequest "https://api.graph.cool/simple/v1/PlusOne"
+        |> Graphqelm.Http.send (RemoteData.fromResult >> ReturnEverything)
+
+
+requestHosts : (Query.AllHostsOptionalArguments -> Query.AllHostsOptionalArguments) -> Cmd Msg
+requestHosts optArgs =
+    hostsQuery optArgs
+        |> Graphqelm.Http.queryRequest "https://api.graph.cool/simple/v1/PlusOne"
+        |> Graphqelm.Http.send (RemoteData.fromResult >> ReturnHosts)
+
+
+requestVenues : (Query.AllVenuesOptionalArguments -> Query.AllVenuesOptionalArguments) -> Cmd Msg
+requestVenues optArgs =
+    venuesQuery optArgs
+        |> Graphqelm.Http.queryRequest "https://api.graph.cool/simple/v1/PlusOne"
+        |> Graphqelm.Http.send (RemoteData.fromResult >> ReturnVenues)
+
+
+requestLocations : (Query.AllLocationsOptionalArguments -> Query.AllLocationsOptionalArguments) -> Cmd Msg
+requestLocations optArgs =
+    locationsQuery optArgs
+        |> Graphqelm.Http.queryRequest "https://api.graph.cool/simple/v1/PlusOne"
+        |> Graphqelm.Http.send (RemoteData.fromResult >> ReturnLocations)
+
+
+requestEvents : (Query.AllEventsOptionalArguments -> Query.AllEventsOptionalArguments) -> Cmd Msg
+requestEvents optArgs =
+    eventsQuery optArgs
+        |> Graphqelm.Http.queryRequest "https://api.graph.cool/simple/v1/PlusOne"
+        |> Graphqelm.Http.send (RemoteData.fromResult >> ReturnEvents)
+
+
+requestPools : (Query.AllPoolsOptionalArguments -> Query.AllPoolsOptionalArguments) -> Cmd Msg
+requestPools optArgs =
+    poolsQuery optArgs
+        |> Graphqelm.Http.queryRequest "https://api.graph.cool/simple/v1/PlusOne"
+        |> Graphqelm.Http.send (RemoteData.fromResult >> ReturnPools)
+
+
+requestMessages : (Query.AllMessagesOptionalArguments -> Query.AllMessagesOptionalArguments) -> Cmd Msg
+requestMessages optArgs =
+    messagesQuery optArgs
+        |> Graphqelm.Http.queryRequest "https://api.graph.cool/simple/v1/PlusOne"
+        |> Graphqelm.Http.send (RemoteData.fromResult >> ReturnMessages)
+
+
+requestChats : (Query.AllChatsOptionalArguments -> Query.AllChatsOptionalArguments) -> Cmd Msg
+requestChats optArgs =
+    chatsQuery optArgs
+        |> Graphqelm.Http.queryRequest "https://api.graph.cool/simple/v1/PlusOne"
+        |> Graphqelm.Http.send (RemoteData.fromResult >> ReturnChats)
+
+
+requestUsers : (Query.AllUsersOptionalArguments -> Query.AllUsersOptionalArguments) -> Cmd Msg
+requestUsers optArgs =
+    usersQuery optArgs
+        |> Graphqelm.Http.queryRequest "https://api.graph.cool/simple/v1/PlusOne"
+        |> Graphqelm.Http.send (RemoteData.fromResult >> ReturnUsers)
+
+
+
+-- ----- --
+-- TYPES --
+-- ----- --
 
 
 hostId : SelectionSet Id GraphCool.Object.Host
@@ -239,113 +394,3 @@ me =
         |> with (User.recipient identity chatId |> nonNullOrFail)
         |> with (User.sent identity messageId |> nonNullOrFail)
         |> with User.updatedAt
-
-
-hostsQuery : (Query.AllHostsOptionalArguments -> Query.AllHostsOptionalArguments) -> SelectionSet (List Host) RootQuery
-hostsQuery optArgs =
-    Query.selection identity
-        |> with (Query.allHosts optArgs host)
-
-
-venuesQuery : (Query.AllVenuesOptionalArguments -> Query.AllVenuesOptionalArguments) -> SelectionSet (List Venue) RootQuery
-venuesQuery optArgs =
-    Query.selection identity
-        |> with (Query.allVenues optArgs venue)
-
-
-locationsQuery : (Query.AllLocationsOptionalArguments -> Query.AllLocationsOptionalArguments) -> SelectionSet (List Location) RootQuery
-locationsQuery optArgs =
-    Query.selection identity
-        |> with (Query.allLocations optArgs location)
-
-
-eventsQuery : (Query.AllEventsOptionalArguments -> Query.AllEventsOptionalArguments) -> SelectionSet (List Event) RootQuery
-eventsQuery optArgs =
-    Query.selection identity
-        |> with (Query.allEvents optArgs event)
-
-
-poolsQuery : (Query.AllPoolsOptionalArguments -> Query.AllPoolsOptionalArguments) -> SelectionSet (List Pool) RootQuery
-poolsQuery optArgs =
-    Query.selection identity
-        |> with (Query.allPools optArgs pool)
-
-
-messagesQuery : (Query.AllMessagesOptionalArguments -> Query.AllMessagesOptionalArguments) -> SelectionSet (List Message) RootQuery
-messagesQuery optArgs =
-    Query.selection identity
-        |> with (Query.allMessages optArgs message)
-
-
-chatsQuery : (Query.AllChatsOptionalArguments -> Query.AllChatsOptionalArguments) -> SelectionSet (List Chat) RootQuery
-chatsQuery optArgs =
-    Query.selection identity
-        |> with (Query.allChats optArgs chat)
-
-
-usersQuery : (Query.AllUsersOptionalArguments -> Query.AllUsersOptionalArguments) -> SelectionSet (List User) RootQuery
-usersQuery optArgs =
-    Query.selection identity
-        |> with (Query.allUsers optArgs user)
-
-
-meQuery : SelectionSet (Maybe Me) RootQuery
-meQuery =
-    Query.selection identity
-        |> with (Query.me me)
-
-
-requestHosts : (Query.AllHostsOptionalArguments -> Query.AllHostsOptionalArguments) -> Cmd Msg
-requestHosts optArgs =
-    hostsQuery optArgs
-        |> Graphqelm.Http.queryRequest "https://api.graph.cool/simple/v1/PlusOne"
-        |> Graphqelm.Http.send (RemoteData.fromResult >> ReturnHosts)
-
-
-requestVenues : (Query.AllVenuesOptionalArguments -> Query.AllVenuesOptionalArguments) -> Cmd Msg
-requestVenues optArgs =
-    venuesQuery optArgs
-        |> Graphqelm.Http.queryRequest "https://api.graph.cool/simple/v1/PlusOne"
-        |> Graphqelm.Http.send (RemoteData.fromResult >> ReturnVenues)
-
-
-requestLocations : (Query.AllLocationsOptionalArguments -> Query.AllLocationsOptionalArguments) -> Cmd Msg
-requestLocations optArgs =
-    locationsQuery optArgs
-        |> Graphqelm.Http.queryRequest "https://api.graph.cool/simple/v1/PlusOne"
-        |> Graphqelm.Http.send (RemoteData.fromResult >> ReturnLocations)
-
-
-requestEvents : (Query.AllEventsOptionalArguments -> Query.AllEventsOptionalArguments) -> Cmd Msg
-requestEvents optArgs =
-    eventsQuery optArgs
-        |> Graphqelm.Http.queryRequest "https://api.graph.cool/simple/v1/PlusOne"
-        |> Graphqelm.Http.send (RemoteData.fromResult >> ReturnEvents)
-
-
-requestPools : (Query.AllPoolsOptionalArguments -> Query.AllPoolsOptionalArguments) -> Cmd Msg
-requestPools optArgs =
-    poolsQuery optArgs
-        |> Graphqelm.Http.queryRequest "https://api.graph.cool/simple/v1/PlusOne"
-        |> Graphqelm.Http.send (RemoteData.fromResult >> ReturnPools)
-
-
-requestMessages : (Query.AllMessagesOptionalArguments -> Query.AllMessagesOptionalArguments) -> Cmd Msg
-requestMessages optArgs =
-    messagesQuery optArgs
-        |> Graphqelm.Http.queryRequest "https://api.graph.cool/simple/v1/PlusOne"
-        |> Graphqelm.Http.send (RemoteData.fromResult >> ReturnMessages)
-
-
-requestChats : (Query.AllChatsOptionalArguments -> Query.AllChatsOptionalArguments) -> Cmd Msg
-requestChats optArgs =
-    chatsQuery optArgs
-        |> Graphqelm.Http.queryRequest "https://api.graph.cool/simple/v1/PlusOne"
-        |> Graphqelm.Http.send (RemoteData.fromResult >> ReturnChats)
-
-
-requestUsers : (Query.AllUsersOptionalArguments -> Query.AllUsersOptionalArguments) -> Cmd Msg
-requestUsers optArgs =
-    usersQuery optArgs
-        |> Graphqelm.Http.queryRequest "https://api.graph.cool/simple/v1/PlusOne"
-        |> Graphqelm.Http.send (RemoteData.fromResult >> ReturnUsers)

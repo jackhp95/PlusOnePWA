@@ -1,7 +1,4 @@
-module Pages.Message.View exposing (..)
-
--- import Html.Events exposing (..)
--- import Pages.Message.Messages exposing (..)
+module Pages.Message exposing (..)
 
 import GraphCool.Scalar exposing (..)
 import Html exposing (..)
@@ -10,7 +7,6 @@ import Moment exposing (..)
 import Types exposing (..)
 
 
--- import Pages.Message.Model exposing (..)
 -- VIEW
 
 

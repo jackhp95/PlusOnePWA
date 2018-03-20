@@ -2,16 +2,7 @@
 -- https://guide.elm-lang.org/architecture/effects/http.html
 
 
-module Pages.Event.View exposing (..)
-
--- import Date exposing (..)
--- import Pages.Pool.Model exposing (Pool)
--- import Pages.Event.Model exposing (Event)
--- import Pages.Events.Model exposing (EventAPI, Events)
--- import SeatGeek.Query exposing (composeRequest)
--- import Http exposing (..)
--- import Moment exposing (..)
--- import SeatGeek.Decode exposing (decodeReply)
+module Pages.Event exposing (..)
 
 import Assets exposing (feather)
 import EveryDict exposing (..)
@@ -21,18 +12,6 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import SeatGeek.Types as SG
 import Types exposing (..)
-
-
--- askQuery : SG.Query -> Cmd Msg
--- askQuery query =
---     let
---         url =
---             composeRequest query
---         request =
---             Http.get url decodeReply
---     in
---     Http.send Types.GetReply request
--- VIEW
 
 
 view : Model -> Html Msg

@@ -1,47 +1,5 @@
 module Update exposing (..)
 
--- import Pages.EditUser.Messages as EditUserMsg
--- -- import Pages.User.Model exposing (..)
--- import Pages.EditUser.Messages as EditUserMsg
--- import Pages.Pool.View exposing (determineTubers, getPosition)
--- import Pages.Chat.Update exposing (..)
--- import Pages.Chats.Messages as ChatsMsg
--- import Pages.Chats.Update exposing (..)
--- import Pages.CreateChat.Messages as CreateChatMsg
--- import Pages.CreateChat.Update
--- import Pages.CreateEvent.Update exposing (..)
--- import Pages.CreateMessage.Messages as CreateMessageMsg
--- import Pages.CreateMessage.Update exposing (makeSendRequest)
--- import Pages.EditUser.Update exposing (..)
--- import Pages.Event.Messages as EventMsg
--- import Pages.Event.Update
--- import Pages.Events.Model exposing (EventAPI(GraphCool, SeatGeek))
--- import Pages.Events.Update
--- import Pages.Pool.Model as PoolModel
--- import Pages.User.Model exposing (..)
--- import Pages.User.Update exposing (..)
--- import Auth0.Auth0 as Auth0
--- import Auth0.Authentication as Authentication
--- import SeatGeek.Types as SG
--- import Debug exposing (log)
--- import Navigation as Nav
--- ---------------------------- --
--- PRE FUNCTIONAL IMPORTS ABOVE --
--- ---------------------------- --
--- import GraphCool.Enum.DateState exposing (DateState)
--- import GraphCool.Object.Chat as Chat
--- import GraphCool.Object.Event as Event
--- import GraphCool.Object.Host as Host
--- import GraphCool.Object.Location as Location
--- import GraphCool.Object.Message as Message
--- import GraphCool.Object.Pool as Pool
--- import GraphCool.Object.User as User
--- import GraphCool.Object.Venue as Venue
--- import GraphCool.Query as Query
--- import Graphqelm.Document as Document
--- import Graphqelm.Operation exposing (RootQuery)
--- import GraphCool.InputObject as IO exposing (..)
-
 import EveryDict exposing (..)
 import EveryDictFrom exposing (..)
 import GraphCool.InputObject exposing (..)
@@ -211,6 +169,30 @@ update msg model =
                                     (RemoteData.fromResult >> ReturnMaybeEvent)
                     in
                     ( { model | forms = { forms | event = initEvent } }, sendCreateEventRequest )
+
+        -- Everything
+        ReturnEverything response ->
+            case response of
+                Success x ->
+                    ( { model
+                        | hosts = EveryDict.union (EveryDictFrom.listHost x.hosts) model.hosts
+                        , venues = EveryDict.union (EveryDictFrom.listVenue x.venues) model.venues
+                        , locations = EveryDict.union (EveryDictFrom.listLocation x.locations) model.locations
+                        , events = EveryDict.union (x.events |> List.map (\event -> ( event.id, GraphCool event )) |> EveryDict.fromList) model.events
+                        , pools = EveryDict.union (EveryDictFrom.listPool x.pools) model.pools
+                        , messages = EveryDict.union (EveryDictFrom.listMessage x.messages) model.messages
+                        , chats = EveryDict.union (EveryDictFrom.listChat x.chats) model.chats
+                        , users = EveryDict.union (EveryDictFrom.listUser x.users) model.users
+                        , me = x.me
+                      }
+                    , Cmd.none
+                    )
+
+                Failure y ->
+                    ( { model | errors = toString y :: model.errors }, Cmd.none )
+
+                _ ->
+                    ( { model | errors = "RemoteData is running an update?" :: model.errors }, Cmd.none )
 
         -- MANY
         ReturnHosts response ->
@@ -583,209 +565,3 @@ update msg model =
 --                     Types.Events Nothing
 --     in
 --     ( { model | me = { me | authModel = authModel, user = newUser }, route = resultRoute }, Cmd.map Types.AuthenticationMsg cmd )
--- Types.ChatsMsg chatsMsg ->
---     let
---         ( chatsModel, chatsCmd ) =
---             Pages.Chats.Update.update chatsMsg chats me
---     in
---     ( { model | chats = chatsModel }
---     , Cmd.map Types.ChatsMsg chatsCmd
---     )
--- Types.CreateEventMsg createEventMsg ->
---     let
---         ( createEventModel, createEventCmd ) =
---             Pages.CreateEvent.Update.update createEventMsg model.createEvent
---     in
---     ( { model | createEvent = createEventModel }
---     , Cmd.map Types.CreateEventMsg createEventCmd
---     )
--- Types.UpdateTextInput text ->
---     let
---         ( createMessageModel, createMessageCmd ) =
---             Pages.CreateMessage.Update.update (CreateMessageMsg.ChangeText text) model.createMessage
---     in
---     ( { model | createMessage = createMessageModel }
---     , Cmd.none
---     )
--- Types.CreateMessageMsg createMessageMsg ->
---     let
---         ( createMsgModel, createMessageCmd ) =
---             Pages.CreateMessage.Update.update createMessageMsg model.createMessage
---     in
---     ( { model | createMessage = createMsgModel }
---     , Cmd.map Types.CreateMessageMsg createMessageCmd
---     )
--- Types.CreateChatMsg createChatMsg ->
---     let
---         ( createChatModel, createChatCmd ) =
---             Pages.CreateChat.Update.update createChatMsg model.createChat
---     in
---     ( { model | createChat = createChatModel }
---     , Cmd.map Types.CreateChatMsg createChatCmd
---     )
--- Types.UpdateChats newChatsRoute newChat ->
---     { model
---         | route = newChatsRoute
---         , createChat = newChat
---     }
---         |> update (Types.CreateChatMsg CreateChatMsg.MutateCreateChat)
--- Types.EditUserMsg userMsg ->
---     let
---         ( userModel, userCmd ) =
---             Pages.EditUser.Update.update userMsg me.user me
---     in
---     ( { model | me = { me | user = userModel } }
---     , Cmd.map Types.EditUserMsg userCmd
---     )
--- Types.EventsMsg eventsMsg ->
---     let
---         ( eventsModel, eventsCmd ) =
---             Pages.Events.Update.update eventsMsg model.events me
---     in
---     ( { model | events = eventsModel }
---     , Cmd.map Types.EventsMsg eventsCmd
---     )
--- Types.UserMsg userMsg ->
---     let
---         ( userModel, userCmd ) =
---             Pages.User.Update.update userMsg me.user
---     in
---     ( { model | me = { me | user = userModel } }
---     , Cmd.map Types.UserMsg userCmd
---     )
--- Types.ChatMsg chatMsg ->
---     let
---         ( chatModel, chatCmd ) =
---             Pages.Chat.Update.update chatMsg model.chat me
---     in
---     ( { model | chat = chatModel }
---     , Cmd.map Types.ChatMsg chatCmd
---     )
--- Types.Input newInput ->
---     ( model, Cmd.none )
--- -- ( { model | input = "" }, WebSocket.send echoServer model.input )
--- Types.NewMessage str ->
---     ( model, Cmd.none )
--- Types.ViewChat newRoute ->
---     let
---         newChat =
---             case newRoute of
---                 Types.Chats maybeChat ->
---                     case maybeChat of
---                         Nothing ->
---                             model.chat
---                         Just c ->
---                             c
---                 _ ->
---                     model.chat
---         oldCM =
---             model.createMessage
---         newCM =
---             { oldCM | chatId = newChat.id }
---     in
---     ( { model
---         | route = newRoute
---         , chat = newChat
---         , createMessage = newCM
---       }
---     , Cmd.none
---     )
--- -- EVENTS
--- Types.ViewEvent newEventRoute ->
---     let
---         toPool =
---             case newEventRoute of
---                 Types.Events maybeEvent ->
---                     case maybeEvent of
---                         Nothing ->
---                             model.pool
---                         Just eventAPI ->
---                             case eventAPI of
---                                 SeatGeek sgEvent ->
---                                     model.pool
---                                 GraphCool event ->
---                                     let
---                                         poolModel = model.pool
---                                     in
---                                         { poolModel | pool = event.pool}
---                 _ ->
---                     model.pool
---     in
---     ( { model
---         | route = newEventRoute
---         , pool = toPool
---       }
---     , Cmd.none
---     )
--- Types.ViewPool newPoolRoute ->
---         { model | route = newPoolRoute }
---             |> update (Types.EventPoolMsg EventMsg.AddToPool)
--- Types.EventPoolMsg eventMsg ->
---     let
---         ( updatedPool, updatePoolCmd ) =
---             Pages.Event.Update.update eventMsg model.pool me
---     in
---     ( { model | pool = updatedPool }
---     , Cmd.map Types.EventPoolMsg updatePoolCmd
---     )
--- -- ChatBox Updates
--- Types.TextAreaResizer height ->
---     ( { model
---         | client =
---             { client
---                 | textAreaHeight = height
---             }
---       }
---     , Cmd.none
---     )
--- -- POOL
--- Types.MouseStart xy ->
---     ( { model
---         | pool =
---             { pool
---                 | move = Just (PoolModel.Move xy xy)
---             }
---       }
---     , Cmd.none
---     )
--- Types.MouseMove xy ->
---     ( { model
---         | pool =
---             { pool
---                 | move = Maybe.map (\{ start } -> PoolModel.Move start xy) pool.move
---             }
---       }
---     , Cmd.none
---     )
--- Types.MouseEnd _ ->
---     ( { model
---         | pool =
---             { pool
---                 | position = getPosition pool
---                 , move = Nothing
---             }
---       }
---     , Cmd.none
---     )
--- Types.ResizePool windowSize ->
---     ( { model
---         | pool =
---             { pool
---                 | windowSize = windowSize
---                 , tubers = determineTubers pool windowSize
---             }
---       }
---     , Cmd.none
---     )
--- Types.InitialWindow windowSize ->
---     ( { model
---         | pool =
---             { pool
---                 | windowSize = windowSize
---                 , tubers = determineTubers pool windowSize
---             }
---       }
---     , Cmd.none
---     )
--- Discover ->
---     ( model, SeatGeek.askQuery SG.initQuery )
