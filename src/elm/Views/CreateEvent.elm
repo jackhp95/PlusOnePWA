@@ -1,6 +1,6 @@
-module Pages.CreateEvent exposing (..)
+module Views.CreateEvent exposing (..)
 
-import Assets exposing (banner, feather)
+import Helpers.Assets as Assets exposing (banner, feather)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)

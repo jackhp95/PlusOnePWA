@@ -1,15 +1,14 @@
-module Pages.Events exposing (..)
+module Views.Events exposing (..)
 
-import Assets exposing (feather)
 import Date exposing (..)
 import EveryDict exposing (..)
-import GraphCool.Scalar exposing (..)
+import Helpers.Assets as Assets exposing (feather)
+import Helpers.Compare as Compare exposing (..)
+import Helpers.From as From exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
-import Moment exposing (..)
 import SeatGeek.Types as SG
-import Time exposing (Time)
 import Types exposing (..)
 
 
@@ -50,47 +49,19 @@ view model =
 
 apiListSortByDateTime : List API -> List API
 apiListSortByDateTime apiList =
-    List.sortWith compareEventDateTime apiList
-
-
-compareEventDateTime : API -> API -> Order
-compareEventDateTime api1 api2 =
-    let
-        stringFromDateTime dateTime =
-            case dateTime of
-                DateTime string ->
-                    string
-
-        epoch =
-            Date.fromTime <| Time.second
-
-        dateFromAPI api =
-            case api of
-                SeatGeek event ->
-                    Result.withDefault epoch <| Date.fromString <| event.datetime_local
-
-                GraphCool event ->
-                    Result.withDefault epoch <| Date.fromString <| stringFromDateTime event.startsAt
-
-        date1 =
-            dateFromAPI api1
-
-        date2 =
-            dateFromAPI api2
-    in
-    compareDateTime date1 date2
+    List.sortWith Compare.apiOnDate apiList
 
 
 graphCoolListView : Event -> Html Msg
 graphCoolListView event =
     let
         datetime =
-            case maybeEventDate (stringDateTime event.startsAt) of
-                Nothing ->
+            case Date.fromString (dateTimeToString event.startsAt) of
+                Err _ ->
                     "Unknown DateTime"
 
-                Just dt ->
-                    shortDate dt ++ " • " ++ clockTime dt
+                Ok dt ->
+                    dateToViewShortDate dt ++ " • " ++ dateToViewClockTime dt
 
         atIcon =
             div
@@ -124,12 +95,12 @@ seatGeekListView : SG.Event -> Html Msg
 seatGeekListView event =
     let
         viewTime =
-            case maybeEventDate event.datetime_local of
-                Nothing ->
+            case Date.fromString event.datetime_local of
+                Err _ ->
                     "not sure what time this event is"
 
-                Just x ->
-                    shortDate x ++ " • " ++ clockTime x
+                Ok x ->
+                    dateToViewShortDate x ++ " • " ++ dateToViewClockTime x
 
         atIcon =
             div

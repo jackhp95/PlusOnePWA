@@ -1,20 +1,16 @@
-module Pages.User exposing (..)
+module Views.User exposing (..)
 
-import Assets exposing (bgImg, feather, stringToEmoji)
 import EveryDict exposing (..)
 import GraphCool.Scalar exposing (..)
+import Helpers.Assets as Assets exposing (bgImg, feather, stringToEmoji)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Types exposing (..)
 
 
-view : Id -> Model -> Html Msg
-view userId model =
-    let
-        user =
-            Maybe.withDefault initUser <| EveryDict.get userId model.users
-    in
+view : User -> Model -> Html Msg
+view user model =
     section [ class "w-100 mw7-l overflow-auto shadow-2-l" ]
         [ div [ class "flex h5 ph3 ph4-m ph5-l pt6 items-center" ]
             [ userAvi

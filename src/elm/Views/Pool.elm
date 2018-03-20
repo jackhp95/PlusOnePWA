@@ -1,9 +1,9 @@
-module Pages.Pool exposing (..)
+module Views.Pool exposing (..)
 
-import Assets exposing (bgImg, feather)
 import Debug exposing (log)
 import EveryDict exposing (..)
 import GraphCool.Scalar exposing (..)
+import Helpers.Assets as Assets exposing (bgImg, feather)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)

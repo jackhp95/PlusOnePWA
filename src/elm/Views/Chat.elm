@@ -1,14 +1,14 @@
-module Pages.Chat exposing (..)
+module Views.Chat exposing (..)
 
-import Assets exposing (..)
 import EveryDict exposing (..)
 import GraphCool.Scalar exposing (..)
+import Helpers.Assets as Assets exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Maybe.Extra
-import Pages.Message exposing (..)
 import Types exposing (..)
+import Views.Message exposing (..)
 
 
 -- VIEW
@@ -19,23 +19,9 @@ viewMessage msg =
     div [ class "dib pa2 mv1 mh2 bg-light-blue br3 measure-narrow shadow-1" ] [ text msg ]
 
 
-view : Chat -> Id -> Model -> Html Types.Msg
-view chat meId model =
+view : Chat -> User -> Model -> Html Types.Msg
+view chat with model =
     let
-        with =
-            case meId == chat.initiated of
-                True ->
-                    -- True if Me is the initiator
-                    EveryDict.get chat.recipient model.users
-                        -- Fails if Client can't find User you're chatting with
-                        |> Maybe.withDefault { initUser | name = "Finding User" }
-
-                False ->
-                    -- False if Me is the recipient
-                    EveryDict.get chat.initiated model.users
-                        -- Fails if Client doesn't have the User
-                        |> Maybe.withDefault { initUser | name = "Loading User" }
-
         conversation =
             List.map displayMessage <| Maybe.Extra.values <| List.map (\msgId -> EveryDict.get msgId model.messages) <| chat.messages
     in

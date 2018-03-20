@@ -1295,7 +1295,7 @@ function eqHelp(x, y, depth, stack)
 
 	if (x instanceof Date)
 	{
-		return x.getTime() === y.getTime();
+		return x.dateTimeToViewClockTime() === y.dateTimeToViewClockTime();
 	}
 
 	if (!('ctor' in x))

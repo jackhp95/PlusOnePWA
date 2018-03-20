@@ -1,14 +1,14 @@
 module Update exposing (..)
 
 import EveryDict exposing (..)
-import EveryDictFrom exposing (..)
 import GraphCool.InputObject exposing (..)
 import GraphCool.Mutation as Mutation exposing (..)
 import GraphCool.Scalar exposing (..)
 import Graphqelm.Http exposing (..)
 import Graphqelm.OptionalArgument exposing (OptionalArgument(Absent, Null, Present), fromMaybe)
 import Graphqelm.SelectionSet as SelectionSet exposing (SelectionSet, with)
-import KissDB as DB exposing (..)
+import Helpers.From as From exposing (..)
+import Helpers.KissDB as DB exposing (..)
 import RemoteData exposing (..)
 import Types exposing (..)
 
@@ -59,22 +59,21 @@ update msg model =
                     ( { model | route = newRoute }, Cmd.none )
             in
             case newRoute of
-                GoEvents maybe ->
-                    case maybe of
-                        Nothing ->
-                            basicRoute
-
-                        Just eventId ->
-                            basicRoute
-
-                --     Types.GoAuth ->
-                --         case me of
-                --             Nothing ->
-                --                 ( model, Cmd.map Types.AuthenticationMsg (model.me.authModel.authorize {}) )
-                --             Just x ->
-                --                 ( { model | me = Nothing }, Cmd.map Types.AuthenticationMsg (model.me.authModel.logOut ()) )
-                _ ->
+                GoEvents _ ->
                     basicRoute
+
+                GoAuth ->
+                    ( { model | route = route }, Cmd.none {- AuthToggle Cmd goes here -} )
+
+                _ ->
+                    case me of
+                        Nothing ->
+                            -- Once AuthToggle is implemented, the logic should look like:
+                            -- ( { model | route = route }, Cmd.none {- AuthToggle Cmd goes here -} )
+                            ( { model | route = GoAuth }, Cmd.none {- AuthToggle Cmd goes here -} )
+
+                        Just _ ->
+                            basicRoute
 
         -- ( { model | route = newRoute }
         -- , Nav.newUrl newRoute)
@@ -105,7 +104,7 @@ update msg model =
                     ( { model | forms = { forms | me = { me | birthday = DateTime val } } }, Cmd.none )
 
                 MeSubmit ->
-                    ( model, Cmd.none )
+                    ( model, Cmd.none {- Create/UpdateUser Mutation Cmd goes here -} )
 
                 -- Message
                 MessageText id val ->
@@ -117,7 +116,7 @@ update msg model =
                             ( { model | messages = EveryDict.remove id model.messages }, Cmd.none )
 
                 MessageSend id ->
-                    ( { model | messages = EveryDict.remove id model.messages }, Cmd.none )
+                    ( { model | messages = EveryDict.remove id model.messages }, Cmd.none {- CreateMessage Mutation Cmd goes here -} )
 
                 -- Event
                 EventName val ->
@@ -175,14 +174,14 @@ update msg model =
             case response of
                 Success x ->
                     ( { model
-                        | hosts = EveryDict.union (EveryDictFrom.listHost x.hosts) model.hosts
-                        , venues = EveryDict.union (EveryDictFrom.listVenue x.venues) model.venues
-                        , locations = EveryDict.union (EveryDictFrom.listLocation x.locations) model.locations
+                        | hosts = EveryDict.union (From.listHostToDict x.hosts) model.hosts
+                        , venues = EveryDict.union (From.listVenueToDict x.venues) model.venues
+                        , locations = EveryDict.union (From.listLocationToDict x.locations) model.locations
                         , events = EveryDict.union (x.events |> List.map (\event -> ( event.id, GraphCool event )) |> EveryDict.fromList) model.events
-                        , pools = EveryDict.union (EveryDictFrom.listPool x.pools) model.pools
-                        , messages = EveryDict.union (EveryDictFrom.listMessage x.messages) model.messages
-                        , chats = EveryDict.union (EveryDictFrom.listChat x.chats) model.chats
-                        , users = EveryDict.union (EveryDictFrom.listUser x.users) model.users
+                        , pools = EveryDict.union (From.listPoolToDict x.pools) model.pools
+                        , messages = EveryDict.union (From.listMessageToDict x.messages) model.messages
+                        , chats = EveryDict.union (From.listChatToDict x.chats) model.chats
+                        , users = EveryDict.union (From.listUserToDict x.users) model.users
                         , me = x.me
                       }
                     , Cmd.none
@@ -198,7 +197,7 @@ update msg model =
         ReturnHosts response ->
             case response of
                 Success x ->
-                    ( { model | hosts = EveryDict.union (EveryDictFrom.listHost x) hosts }, Cmd.none )
+                    ( { model | hosts = EveryDict.union (From.listHostToDict x) hosts }, Cmd.none )
 
                 Failure y ->
                     ( { model | errors = toString y :: errors }, Cmd.none )
@@ -209,7 +208,7 @@ update msg model =
         ReturnVenues response ->
             case response of
                 Success x ->
-                    ( { model | venues = EveryDict.union (EveryDictFrom.listVenue x) venues }, Cmd.none )
+                    ( { model | venues = EveryDict.union (From.listVenueToDict x) venues }, Cmd.none )
 
                 Failure y ->
                     ( { model | errors = toString y :: errors }, Cmd.none )
@@ -220,7 +219,7 @@ update msg model =
         ReturnLocations response ->
             case response of
                 Success x ->
-                    ( { model | locations = EveryDict.union (EveryDictFrom.listLocation x) locations }, Cmd.none )
+                    ( { model | locations = EveryDict.union (From.listLocationToDict x) locations }, Cmd.none )
 
                 Failure y ->
                     ( { model | errors = toString y :: errors }, Cmd.none )
@@ -231,7 +230,7 @@ update msg model =
         ReturnEvents response ->
             case response of
                 Success x ->
-                    ( { model | events = EveryDict.union (EveryDictFrom.listEvent x) events }, Cmd.none )
+                    ( { model | events = EveryDict.union (From.listEventToDict x) events }, Cmd.none )
 
                 -- API of GraphCool is hardcoded into listEvent
                 Failure y ->
@@ -243,7 +242,7 @@ update msg model =
         ReturnPools response ->
             case response of
                 Success x ->
-                    ( { model | pools = EveryDict.union (EveryDictFrom.listPool x) pools }, Cmd.none )
+                    ( { model | pools = EveryDict.union (From.listPoolToDict x) pools }, Cmd.none )
 
                 Failure y ->
                     ( { model | errors = toString y :: errors }, Cmd.none )
@@ -254,7 +253,7 @@ update msg model =
         ReturnMessages response ->
             case response of
                 Success x ->
-                    ( { model | messages = EveryDict.union (EveryDictFrom.listMessage x) messages }, Cmd.none )
+                    ( { model | messages = EveryDict.union (From.listMessageToDict x) messages }, Cmd.none )
 
                 Failure y ->
                     ( { model | errors = toString y :: errors }, Cmd.none )
@@ -265,7 +264,7 @@ update msg model =
         ReturnChats response ->
             case response of
                 Success x ->
-                    ( { model | chats = EveryDict.union (EveryDictFrom.listChat x) chats }, Cmd.none )
+                    ( { model | chats = EveryDict.union (From.listChatToDict x) chats }, Cmd.none )
 
                 Failure y ->
                     ( { model | errors = toString y :: errors }, Cmd.none )
@@ -276,7 +275,7 @@ update msg model =
         ReturnUsers response ->
             case response of
                 Success x ->
-                    ( { model | users = EveryDict.union (EveryDictFrom.listUser x) users }, Cmd.none )
+                    ( { model | users = EveryDict.union (From.listUserToDict x) users }, Cmd.none )
 
                 Failure y ->
                     ( { model | errors = toString y :: errors }, Cmd.none )

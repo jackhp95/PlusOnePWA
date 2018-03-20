@@ -1,8 +1,8 @@
 module Main exposing (main)
 
 import Auth0.Auth0 as Auth0
+import Helpers.KissDB as DB exposing (..)
 import Html exposing (..)
-import KissDB as DB exposing (..)
 import SeatGeek.Query
 import SeatGeek.Types as SG
 import Types exposing (..)

@@ -1,15 +1,15 @@
-module Pages.Chats exposing (..)
+module Views.Chats exposing (..)
 
-import Assets exposing (..)
 import Debug exposing (log)
 import EveryDict exposing (..)
 import GraphCool.Enum.DateState as DateState
 import GraphCool.Scalar exposing (..)
+import Helpers.Assets as Assets exposing (..)
+import Helpers.From as From exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Maybe.Extra exposing (..)
-import Moment exposing (..)
 import Types exposing (..)
 
 
@@ -31,11 +31,13 @@ view model =
                     " flex "
 
         allChats =
-            div [ class "flex-shrink-1 flex-grow-0 bg-black-70 overflow-auto" ] (List.map (nameBar model) (EveryDict.keys chats))
+            List.map (nameBar model) (EveryDict.keys chats)
     in
     section [ class ("animated fadeInUp flex-column items-stretch flex-auto pa0 ma0 measure-ns shadow-2-ns" ++ mobileHide) ]
         [ Assets.banner "chats"
-        , allChats
+        , div
+            [ class "flex-shrink-1 flex-grow-0 bg-black-70 overflow-auto" ]
+            allChats
         ]
 
 
@@ -105,7 +107,7 @@ nameBar model chatId =
                             ( "No message yet. Say something.", "" )
 
                         Just message ->
-                            ( message.text, getTime message.createdAt )
+                            ( message.text, dateTimeToViewClockTime message.createdAt )
     in
     div
         [ class "flex items-center z-2 fadeIn animated pa3 grow hover-bg-black-20 lh-title"

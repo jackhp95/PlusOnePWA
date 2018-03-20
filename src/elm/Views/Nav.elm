@@ -2,9 +2,9 @@
 -- https://guide.elm-lang.org/architecture/effects/http.html
 
 
-module Nav exposing (bar)
+module Views.Nav exposing (bar)
 
-import Assets exposing (..)
+import Helpers.Assets as Assets exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (class, style)
 import Html.Events exposing (onClick)

@@ -1,10 +1,10 @@
-module TestKissDB exposing (main)
+module TestHelpers.KissDB exposing (main)
 
 import EveryDict exposing (..)
 import Graphqelm.Document as Document
+import Helpers.KissDB as DB exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import KissDB as DB exposing (..)
 import Types exposing (..)
 import Update exposing (..)
 

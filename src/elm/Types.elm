@@ -1,34 +1,13 @@
 module Types exposing (..)
 
--- Events
--- import Date exposing (Date)
--- import Pages.Chat.Messages as ChatMsg
--- import Pages.Chat.Model as ChatModel
--- import Pages.Chats.Messages as ChatsMsg
--- import Pages.Chats.Model as ChatsModel
--- import Pages.CreateChat.Messages as CreateChatMsg
--- -- import Pages.CreateChat.Model as CreateChatModel
--- import Pages.CreateEvent.Messages as CreateEventMsg
--- import Pages.CreateEvent.Model as CreateEventModel
--- import Pages.CreateMessage.Messages as CreateMessageMsg
--- import Pages.CreateMessage.Model as CreateMessageModel
--- import Pages.EditUser.Messages as EditUserMsg
--- import Pages.Event.Messages as EventPoolMsg
--- import Pages.Event.Model as EventModel
--- import Pages.Events.Messages as EventsMsg
--- import Pages.Events.Model as EventsModel
--- -- import Pages.Pool.Model as PoolModel
--- import Pages.User.Messages as UserMsg
--- -- import Pages.User.Model as UserModel
--- import Mouse exposing (Position)
--- import Auth0.Auth0 as Auth0
-
+import Date exposing (..)
 import EveryDict exposing (..)
 import GraphCool.Enum.DateState as DateState exposing (DateState)
 import GraphCool.Scalar exposing (..)
 import Graphqelm.Http exposing (Error)
 import RemoteData exposing (..)
 import SeatGeek.Types as SG
+import Time exposing (..)
 
 
 type Route
@@ -369,3 +348,14 @@ type
     | EventStartDate String
     | EventEndDate String
     | EventSubmit
+
+
+
+-- ---------- --
+-- Primitives --
+-- ---------- --
+
+
+epoch : Date
+epoch =
+    Date.fromTime <| Time.second

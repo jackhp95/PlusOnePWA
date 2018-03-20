@@ -3,7 +3,7 @@
 -- https://icongr.am/feather
 
 
-module Assets exposing (..)
+module Helpers.Assets exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (class, style)

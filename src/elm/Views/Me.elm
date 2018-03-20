@@ -1,6 +1,6 @@
-module Pages.Me exposing (..)
+module Views.Me exposing (..)
 
-import Assets exposing (bgImg, feather)
+import Helpers.Assets as Assets exposing (bgImg, feather)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)

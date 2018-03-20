@@ -1,4 +1,4 @@
-module KissDB exposing (..)
+module Helpers.KissDB exposing (..)
 
 import GraphCool.Mutation as Mutation
 import GraphCool.Object

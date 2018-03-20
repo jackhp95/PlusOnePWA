@@ -1,9 +1,9 @@
-module Pages.Message exposing (..)
+module Views.Message exposing (..)
 
 import GraphCool.Scalar exposing (..)
+import Helpers.From as From exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Moment exposing (..)
 import Types exposing (..)
 
 
@@ -15,14 +15,14 @@ received ms =
     div [ class "flex flex-auto pb3 pr5 slideInLeft animated" ]
         [ div [ class "measure-narrow bg-blue-50 br2 ph3 pv2" ]
             [ text ms.text ]
-        , p [] [ text (getDateTime ms.createdAt) ]
+        , p [] [ text (dateTimeToViewShortDate ms.createdAt) ]
         ]
 
 
 sent : Message -> Html msg
 sent ms =
     div [ class "flex justify-end flex-auto pb3 pl5 slideInRight animated" ]
-        [ p [] [ text (getDateTime ms.createdAt) ]
+        [ p [] [ text (dateTimeToViewShortDate ms.createdAt) ]
         , div [ class "measure-narrow bg-black-50 br2 ph3 pv2" ]
             [ text ms.text ]
         ]

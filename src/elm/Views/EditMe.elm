@@ -1,4 +1,4 @@
-module Pages.EditMe exposing (..)
+module Views.EditMe exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
