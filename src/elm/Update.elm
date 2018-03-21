@@ -23,8 +23,8 @@ module Update exposing (..)
 import Auth0.Auth0 as Auth0
 import Auth0.Authentication as Authentication
 -- import SeatGeek.Types as SG
--- import Debug exposing (log)
--- import Navigation as Nav
+import Debug exposing (log)
+import Navigation as Nav
 -- -----------------------------
 -- PRE FUNCTIONAL IMPORTS ABOVE
 -- -----------------------------
@@ -55,10 +55,19 @@ import RemoteData exposing (..)
 import Types exposing (..)
 
 
+-- HELPERS
+
+goTo : Model -> Route -> String  -> ( Model, Cmd msg )
+goTo model route url = 
+    ( { model | route = log "Route change accepted: " route }, Nav.newUrl url  )
+
+-- for development purposes - if on then logged in user can only see loggout out stuff until we have a way for them to add their profile data
+authOff : Bool
+authOff = True
+
 -- UPDATE --
 
-
-update : Types.Msg -> Types.Model -> ( Types.Model, Cmd Types.Msg )
+update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     let
         route =
@@ -97,30 +106,82 @@ update msg model =
     case msg of
         AuthenticationMsg authMsg ->
             let
-                ( authModel, cmd ) =
-                    Authentication.update authMsg model.authModel
-                resultRoute =
-                    case authModel.state of
-                        Auth0.LoggedIn _ ->
-                            GoEvents Nothing
-                        Auth0.LoggedOut ->
-                            GoEvents Nothing
+                ( newAuthModel, cmd ) =
+                    Authentication.update (log "AuthMsg" authMsg) model.authModel
+
+                updatedModel = 
+                    { model |  authModel = newAuthModel }
             in
-            ( { model | authModel = authModel, route = resultRoute }, Cmd.map AuthenticationMsg cmd )
+                case newAuthModel.state of
+                Auth0.LoggedOut ->
+                    update (RouteTo (GoEvents Nothing)) updatedModel
+
+                Auth0.LoggedIn loggedInUser ->
+                    case newAuthModel.getUserId  of
+                        -- TODO Where to send people on successful login
+                        Id "3" -> 
+                            update (RouteTo (GoEvents Nothing)) updatedModel
+                        Id "0" -> 
+                            update (RouteTo (GoEvents Nothing)) updatedModel
+                        _ -> 
+                            update (RouteTo (GoEvents Nothing)) updatedModel
+
+        RouteTo GoAuth ->
+            if Authentication.isLoggedIn model.authModel then
+                let
+                    (navChangeModel, navChangeCommand) = goTo model (Types.GoEvents Nothing) "/"
+                in
+                    navChangeModel 
+                    ! [navChangeCommand, Cmd.map AuthenticationMsg (model.authModel.logOut ()) ]
+            else
+                ( model, Cmd.map AuthenticationMsg (model.authModel.authorize {}) )
 
         RouteTo newRoute ->
-            case newRoute of
-                Types.GoAuth ->
-                    case me of
-                        Nothing ->
-                            ( model, Cmd.map Types.AuthenticationMsg (model.authModel.authorize {}) )
-                        Just x ->
-                            ( { model | me = Nothing }, Cmd.map Types.AuthenticationMsg (model.authModel.logOut ()) )
-                _ ->
-            ( { model | route = newRoute }
-            , Cmd.none
-              -- Nav.newUrl (toString newRoute)
-            )
+            let
+                authModel = model.authModel
+
+                -- Log attempted route change to console
+                loggedRoute = log "Route change sought: " newRoute 
+            in
+
+                case (authModel.state, authModel.maybeRetrievedMe) of
+                    -- Logged out - can only see events
+                    (Auth0.LoggedOut , _) ->
+                        goTo model (GoEvents Nothing) "/"
+
+                    -- Logged in with user data - let them go where they like
+                    (Auth0.LoggedIn loggedInUser, Just _ ) -> 
+                        goTo model newRoute (toString newRoute)
+
+                    -- Logged in without user data
+                    -- Can only see events or edit user
+                    (Auth0.LoggedIn loggedInUser, Nothing) ->
+                        let
+                            newModel = 
+                                if (model.me /= Nothing) then 
+                                    model
+                                else 
+                                    -- Initialise user with Auth data
+                                    { model | me =
+                                            Just { initMe 
+                                            | id = authModel.getUserId
+                                            , auth0UserId = Just loggedInUser.idtoken
+                                            , email = Just loggedInUser.profile.email
+                                            , name = loggedInUser.profile.name
+                                            }
+                                    }
+
+                            (limitedRoute, url) = 
+                                case newRoute of
+                                    GoMe me -> 
+                                        (GoMe me, toString(GoMe me))
+                                    _ -> 
+                                        (GoEvents Nothing, "/")
+                        in
+                            if authOff then 
+                                goTo model newRoute (toString newRoute)
+                            else 
+                                goTo newModel limitedRoute url
 
         UpdateValue input ->
             let
@@ -772,3 +833,6 @@ update msg model =
 --     )
 -- Discover ->
 --     ( model, SeatGeek.askQuery SG.initQuery )
+
+
+
