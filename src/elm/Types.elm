@@ -21,7 +21,8 @@ module Types exposing (..)
 -- import Pages.User.Messages as UserMsg
 -- -- import Pages.User.Model as UserModel
 -- import Mouse exposing (Position)
--- import Auth0.Auth0 as Auth0
+import Auth0.Auth0 as Auth0
+import Ports
 
 import Auth0.Authentication as Authentication
 import Dict exposing (..)
@@ -252,11 +253,12 @@ type alias Model =
     , users : Dict String User
     , me : Maybe Me
     , errors : List String
+    , authModel : Authentication.Model
     }
 
 
-emptyModel : Model
-emptyModel =
+emptyModel : Maybe Auth0.LoggedInUser -> Model
+emptyModel initialAuthUser =
     Model
         -- route
         (GoEvents Nothing)
@@ -280,9 +282,11 @@ emptyModel =
         Nothing
         -- errors
         []
+        -- auth model
+        (Authentication.init Ports.auth0authorize Ports.auth0logout initialAuthUser)
 
-
-
+        
+        
 -- initModel : Maybe Auth0.LoggedInUser -> Model
 -- initModel initialAuthUser =
 --     Model
@@ -333,7 +337,7 @@ type
     Msg
     -- Route
     = RouteTo Route
-      -- | AuthenticationMsg Authentication.Msg
+    | AuthenticationMsg Authentication.Msg
       -- | TextAreaResizer Int
       -- SeatGeek
       -- | GetReply (Result Http.Error SG.Reply)

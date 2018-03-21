@@ -20,8 +20,8 @@ module Update exposing (..)
 -- import Pages.Pool.Model as PoolModel
 -- import Pages.User.Model exposing (..)
 -- import Pages.User.Update exposing (..)
--- import Auth0.Auth0 as Auth0
--- import Auth0.Authentication as Authentication
+import Auth0.Auth0 as Auth0
+import Auth0.Authentication as Authentication
 -- import SeatGeek.Types as SG
 -- import Debug exposing (log)
 -- import Navigation as Nav
@@ -95,15 +95,28 @@ update msg model =
             model.errors
     in
     case msg of
+        AuthenticationMsg authMsg ->
+            let
+                ( authModel, cmd ) =
+                    Authentication.update authMsg model.authModel
+                resultRoute =
+                    case authModel.state of
+                        Auth0.LoggedIn _ ->
+                            GoEvents Nothing
+                        Auth0.LoggedOut ->
+                            GoEvents Nothing
+            in
+            ( { model | authModel = authModel, route = resultRoute }, Cmd.map AuthenticationMsg cmd )
+
         RouteTo newRoute ->
-            -- case newRoute of
-            --     Types.GoAuth ->
-            --         case me of
-            --             Nothing ->
-            --                 ( model, Cmd.map Types.AuthenticationMsg (model.me.authModel.authorize {}) )
-            --             Just x ->
-            --                 ( { model | me = Nothing }, Cmd.map Types.AuthenticationMsg (model.me.authModel.logOut ()) )
-            --     _ ->
+            case newRoute of
+                Types.GoAuth ->
+                    case me of
+                        Nothing ->
+                            ( model, Cmd.map Types.AuthenticationMsg (model.authModel.authorize {}) )
+                        Just x ->
+                            ( { model | me = Nothing }, Cmd.map Types.AuthenticationMsg (model.authModel.logOut ()) )
+                _ ->
             ( { model | route = newRoute }
             , Cmd.none
               -- Nav.newUrl (toString newRoute)

@@ -65,9 +65,9 @@ initCmd =
 -- Maybe Auth0.LoggedInUser ->
 
 
-init : ( Model, Cmd Msg )
-init =
-    ( Types.emptyModel, initCmd )
+init : Maybe Auth0.LoggedInUser -> ( Model, Cmd Msg )
+init initialUser =
+    ( Types.emptyModel initialUser, initCmd )
 
 
 
@@ -104,10 +104,9 @@ subscriptions model =
 -- (Maybe Auth0.LoggedInUser)
 
 
-main : Program Never Model Msg
+main : Program (Maybe Auth0.LoggedInUser) Model Msg
 main =
-    Html.program
-        -- WithFlags
+    Html.programWithFlags
         { init = init
         , view = view
         , update = Update.update
