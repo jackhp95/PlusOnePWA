@@ -1,4 +1,4 @@
-module Pages.EditUser.View exposing (..)
+module Pages.EditMe.View exposing (..)
 
 -- import Assets exposing (bgImg, feather)
 -- import GraphCool.Scalar exposing (..)
@@ -19,27 +19,27 @@ import Types exposing (..)
 view : Model -> Html Msg
 view model =
     let
-        user =
-            initUser
+        me =
+            model.forms.me
     in
     div []
         [ text "Hello, World!"
         , text " bye"
         , br [] []
         , text "Name: "
-        , input [ placeholder "name", onInput <| UpdateValue << UserName, value user.name ] []
+        , input [ placeholder "name", onInput <| UpdateValue << MeName, value me.name ] []
         , br [] []
         , text "Full Name: "
-        , input [ placeholder "full name", onInput <| UpdateValue << UserFullName, value (Maybe.withDefault "" user.nameFull) ] []
+        , input [ placeholder "full name", onInput <| UpdateValue << MeNameFull, value (Maybe.withDefault "" me.nameFull) ] []
         , br [] []
         , text "Bio: "
-        , input [ placeholder "bio", onInput <| UpdateValue << UserBio, value (Maybe.withDefault "" user.bio) ] []
+        , input [ placeholder "bio", onInput <| UpdateValue << MeBio, value (Maybe.withDefault "" me.bio) ] []
         , br [] []
         , text "Birthday"
-        , input [ type_ "date", placeholder "birthday", onInput <| UpdateValue << UserBirthday ] []
+        , input [ type_ "date", placeholder "birthday", onInput <| UpdateValue << MeBirthday ] []
         , br [] []
-        , text <| toString <| user.birthday
-        , input [ type_ "Button", onClick <| UpdateValue UserSubmit, value "Save" ] []
+        , text <| toString <| me.birthday
+        , input [ type_ "Button", onClick <| UpdateValue MeSubmit, value "Save" ] []
         ]
 
 

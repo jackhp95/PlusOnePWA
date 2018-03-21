@@ -36,11 +36,11 @@ import SeatGeek.Types as SG
 
 type Route
     = GoChats (Maybe Id)
-    | GoUser (Maybe Id)
+    | GoUser Id
     | GoEvents (Maybe Id)
     | GoCreateEvent
-    | GoPool (Maybe Id)
-    | GoEditUser Id
+    | GoPool Id
+    | GoEditMe
     | GoAuth
     | GoMe Me
 
@@ -71,12 +71,12 @@ type alias Everything =
 type alias Host =
     { createdAt : DateTime
     , description : Maybe String
-    , events : Maybe (List Event)
+    , events : List Id
     , id : Id
     , name : String
     , nameFull : Maybe String
-    , users : Maybe (List Id)
-    , venues : Maybe (List Id)
+    , users : List Id
+    , venues : List Id
     }
 
 
@@ -109,35 +109,25 @@ type alias Event =
     , createdAt : DateTime
     , createdBy : Id
     , endsAt : Maybe DateTime
-    , hosts : Maybe (List Id)
+    , hosts : List Id
     , id : Id
     , name : String
     , nameFull : Maybe String
     , private : Bool
     , startsAt : DateTime
-    , venues : Maybe (List Id)
+    , venues : List Id
     }
-
-
-initEvent : Event
-initEvent =
-    Event initId initDateTime initId Nothing Nothing initId "initEventName" Nothing True initDateTime Nothing
 
 
 type alias Pool =
-    { chats : Maybe (List Id)
+    { chats : List Id
     , event : Maybe Id
     , id : Id
     , seatGeekId : Maybe String
-    , usersAttending : Maybe (List Id)
-    , usersLiked : Maybe (List Id)
-    , usersViewed : Maybe (List Id)
+    , usersAttending : List Id
+    , usersLiked : List Id
+    , usersViewed : List Id
     }
-
-
-initPool : Pool
-initPool =
-    Pool Nothing Nothing initId Nothing Nothing Nothing Nothing
 
 
 type alias Message =
@@ -149,48 +139,33 @@ type alias Message =
     }
 
 
-initMessage : Message
-initMessage =
-    Message initId initDateTime Nothing initId "initMessageText"
-
-
 type alias Chat =
     { canceled : Maybe Id
     , dateState : DateState
     , pool : Id
     , id : Id
     , initiated : Id
-    , messages : Maybe (List Message)
+    , messages : List Id
     , passed : Maybe Id
     , proposed : Maybe Id
     , recipient : Id
     }
 
 
-initChat : Chat
-initChat =
-    Chat Nothing DateState.Active initId initId initId Nothing Nothing Nothing initId
-
-
 type alias User =
     { bio : Maybe String
     , birthday : DateTime
     , createdAt : DateTime
-    , createdEvents : Maybe (List Id)
+    , createdEvents : List Id
     , email : Maybe String
-    , attendingEvent : Maybe (List Id)
-    , likedEvent : Maybe (List Id)
-    , hosts : Maybe (List Id)
+    , attendingEvent : List Id
+    , likedEvent : List Id
+    , hosts : List Id
     , id : Id
     , name : String
     , nameFull : Maybe String
     , updatedAt : DateTime
     }
-
-
-initUser : User
-initUser =
-    User Nothing initDateTime initDateTime Nothing Nothing Nothing Nothing Nothing initId "initUserName" Nothing initDateTime
 
 
 type alias Me =
@@ -198,29 +173,80 @@ type alias Me =
     , bio : Maybe String
     , birthday : DateTime
     , createdAt : DateTime
-    , createdEvents : Maybe (List Id)
-    , datesCanceled : Maybe (List Id)
+    , createdEvents : List Id
+    , datesCanceled : List Id
     , email : Maybe String
-    , attendingEvent : Maybe (List Id)
-    , likedEvent : Maybe (List Id)
-    , viewedEvent : Maybe (List Id)
-    , hosts : Maybe (List Id)
+    , attendingEvent : List Id
+    , likedEvent : List Id
+    , viewedEvent : List Id
+    , hosts : List Id
     , id : Id
-    , initiated : Maybe (List Id)
+    , initiated : List Id
     , name : String
     , nameFull : Maybe String
-    , passed : Maybe (List Id)
+    , passed : List Id
     , password : Maybe String
-    , proposed : Maybe (List Id)
-    , recipient : Maybe (List Id)
-    , sent : Maybe (List Id)
+    , proposed : List Id
+    , recipient : List Id
+    , sent : List Id
     , updatedAt : DateTime
     }
 
 
+type API
+    = GraphCool Event
+    | SeatGeek SG.Event
+
+
+initEvent : Event
+initEvent =
+    Event initId initDateTime initId Nothing [] initId "initEventName" Nothing True initDateTime []
+
+
+initPool : Pool
+initPool =
+    Pool [] Nothing initId Nothing [] [] []
+
+
+initMessage : Message
+initMessage =
+    Message initId initDateTime Nothing initId ""
+
+
+initChat : Chat
+initChat =
+    Chat Nothing DateState.Active initId initId initId [] Nothing Nothing initId
+
+
+initUser : User
+initUser =
+    User Nothing initDateTime initDateTime [] Nothing [] [] [] initId "initUserName" Nothing initDateTime
+
+
 initMe : Me
 initMe =
-    Me Nothing Nothing initDateTime initDateTime Nothing Nothing Nothing Nothing Nothing Nothing Nothing initId Nothing "initMeName" Nothing Nothing Nothing Nothing Nothing Nothing initDateTime
+    { auth0UserId = Nothing
+    , bio = Nothing
+    , birthday = initDateTime
+    , createdAt = initDateTime
+    , createdEvents = []
+    , datesCanceled = []
+    , email = Nothing
+    , attendingEvent = []
+    , likedEvent = []
+    , viewedEvent = []
+    , hosts = []
+    , id = initId
+    , initiated = []
+    , name = "initMe"
+    , nameFull = Nothing
+    , passed = []
+    , password = Nothing
+    , proposed = []
+    , recipient = []
+    , sent = []
+    , updatedAt = initDateTime
+    }
 
 
 
@@ -246,7 +272,7 @@ type alias Model =
     , hosts : Dict String Host
     , venues : Dict String Venue
     , locations : Dict String Location
-    , events : Dict String Event
+    , events : Dict String API
     , pools : Dict String Pool
     , messages : Dict String Message
     , chats : Dict String Chat
@@ -254,6 +280,7 @@ type alias Model =
     , me : Maybe Me
     , errors : List String
     , authModel : Authentication.Model
+    , forms : Forms
     }
 
 
@@ -284,6 +311,19 @@ emptyModel initialAuthUser =
         []
         -- auth model
         (Authentication.init Ports.auth0authorize Ports.auth0logout initialAuthUser)
+        -- forms
+        initForms
+
+
+type alias Forms =
+    { event : Event
+    , me : Me
+    }
+
+
+initForms : Forms
+initForms =
+    Forms initEvent initMe
 
         
         
@@ -340,7 +380,7 @@ type
     | AuthenticationMsg Authentication.Msg
       -- | TextAreaResizer Int
       -- SeatGeek
-      -- | GetReply (Result Http.Error SG.Reply)
+    | GetReply (WebData SG.Reply)
       -- From TestGraphCool
       -- Query Many
     | ReturnHosts (RemoteData Graphqelm.Http.Error (List Host))
@@ -378,11 +418,14 @@ type
 type
     InputValue
     -- User
-    = UserName String
-    | UserFullName String
-    | UserBio String
-    | UserBirthday String
-    | UserSubmit
+    = MeName String
+    | MeNameFull String
+    | MeBio String
+    | MeBirthday String
+    | MeSubmit
+      -- Message
+    | MessageText Id String
+    | MessageSend Id
       -- Event
     | EventName String
     | EventNameFull String

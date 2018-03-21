@@ -4,15 +4,15 @@ module Pages.CreateEvent.View exposing (..)
 -- import Pages.CreateEvent.Messages exposing (..)
 -- import Pages.CreateEvent.Model exposing (..)
 -- import Pages.Events.Model exposing (Events)
+-- import Auth0.Auth0 as Auth0
+-- import Auth0.Authentication as Authentication
+-- import RemoteData exposing (..)
+-- import SeatGeek.Types as SG
 
 import Assets exposing (banner, feather)
-import Auth0.Auth0 as Auth0
-import Auth0.Authentication as Authentication
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
-import RemoteData exposing (..)
-import SeatGeek.Types as SG
 import Types exposing (..)
 
 
@@ -54,12 +54,11 @@ view model =
         --         [ input [ type_ "button" ] [ text "Submit" ]
         --         ]
         -- Show the reponse of the "allEvents" query
-        refineView a =
-            div []
-                [ h3 [] [ text "Events" ]
-                , div [] (List.map (\b -> ul [ style [ ( "background", "#eeeeee" ) ] ] [ h4 [] [ text b.name ], p [] [ text (Basics.toString b.id) ] ]) a.events)
-                ]
-
+        -- refineView a =
+        --     div []
+        --         [ h3 [] [ text "Events" ]
+        --         , div [] (List.map (\b -> ul [ style [ ( "background", "#eeeeee" ) ] ] [ h4 [] [ text b.name ], p [] [ text (Basics.toString b.id) ] ]) a.events)
+        --         ]
         -- submission =
         --     case event.createdEvent of
         --         NotAsked ->
@@ -96,13 +95,5 @@ view model =
                 ]
             , button [ onClick <| UpdateValue EventSubmit ] [ text "Create An Event" ]
             ]
-        , text (toString model.errors)
-        , div [ style [ ( "color", "#000000" ) ] ]
-            [ h1 [] [ text "Submission Response " ]
-            , h2 [] [ text "Raw" ]
-            , Html.text (Basics.toString model.errors)
-            , h2 [] [ text "Refined" ]
-
-            -- , submission
-            ]
+        , text (toString model.forms)
         ]

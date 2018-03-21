@@ -1,5 +1,7 @@
 module SeatGeek.Types exposing (..)
 
+import GraphCool.Scalar exposing (..)
+
 
 type alias SeatGeek =
     { reply : Reply
@@ -53,7 +55,7 @@ type alias Event =
     , score : Float
     , short_title : String
     , venue : Venue
-    , id : Int
+    , id : Id
     , stats : Tickets
     , date_tbd : Bool
     , title : String

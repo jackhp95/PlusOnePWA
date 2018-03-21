@@ -25,10 +25,10 @@ listLocation locations =
         |> Dict.fromList
 
 
-listEvent : List Event -> Dict String Event
+listEvent : List Event -> Dict String API
 listEvent events =
     events
-        |> List.map (\event -> ( toString event.id, event ))
+        |> List.map (\event -> ( toString event.id, GraphCool event ))
         |> Dict.fromList
 
 

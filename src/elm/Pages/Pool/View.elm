@@ -14,83 +14,215 @@ module Pages.Pool.View exposing (..)
 -- import Pages.Pool.Model exposing (Pool)
 -- import Pages.User.Model exposing (UserProfile)
 
+import Assets exposing (bgImg, feather)
+import Dict exposing (..)
 import GraphCool.Scalar exposing (..)
 import Html exposing (..)
-import Html.Events exposing (on, onClick)
-import RemoteData exposing (..)
+import Html.Attributes exposing (..)
+import Html.Events exposing (..)
+import Maybe.Extra exposing (..)
 import Types exposing (..)
 
 
 -- VIEW
 
 
-(=>) =
-    (,)
-
-
-view : Types.Model -> Html Msg
-view model =
+view : Pool -> Model -> Html Msg
+view pool model =
     let
-        pool =
-            initPool
+        chats =
+            model.chats
 
-        -- case model.route of
-        --     Types.GoPool id ->
-        --         Maybe.withDefault initPool <| List.head <| List.filter (id == .id) model.pools
-        --     _ ->
-        --         initPool
-        -- response =
-        --     case pool.attendConfirm of
-        --         NotAsked ->
-        --             text "Hold up, Lemme Check"
-        --         Loading ->
-        --             text "Gimme a Sec"
-        --         Failure e ->
-        --             text ("Shucks um, " ++ Basics.toString e)
-        --         Success a ->
-        --             case a of
-        --                 Nothing ->
-        --                     div [] [ text "Success. No response" ]
-        --                 Just e ->
-        --                     case e.attendingUserName of
-        --                         Nothing ->
-        --                             h4 [] [ text "You now joined the pool, but you need to have a username." ]
-        --                         Just userName ->
-        --                             h4 []
-        --                                 [ text ("Congrats, " ++ userName ++ "! You now joined the pool.") ]
+        mobileHide =
+            case model.route of
+                Types.GoChats (Just _) ->
+                    " dn flex-l"
+
+                _ ->
+                    " flex "
+
+        allChats =
+            div [ class "flex-shrink-1 flex-grow-0 bg-black-70 overflow-auto" ] (List.map (nameBar model) (Dict.keys chats))
     in
-    div []
-        [ -- response,
-          div [] [ showUser initPool initChat initUser, showUser initPool initChat initUser ] -- (List.map (showUser pool.chats (Maybe.withDefault initChat <| List.head model.chats)) (Maybe.withDefault [] pool.pool.attending))
+    section [ class ("animated fadeInUp flex-column items-stretch flex-auto pa0 ma0 measure-ns shadow-2-ns" ++ mobileHide) ]
+        [ Assets.banner "pool"
+        , allChats
         ]
 
 
-showUser : Pool -> Chat -> User -> Html Msg
-showUser pool chat user =
-    if user.id == Id "cjed2224jh6a4019863siiw2e" then
-        text ""
-    else
-        -- let
-        --     newChat =
-        --         { chat
-        --             | poolId = Maybe.withDefault (Id "") pool.event
-        --             , initiatedId = Id "cjed2224jh6a4019863siiw2e"
-        --             , recipientId = user.id
-        --         }
-        -- in
-        div []
-            [ h3 [] [ text user.name ]
-            , p [] [ text ("nameFull: " ++ Maybe.withDefault "NA" user.nameFull) ]
-            , p [] [ text ("bio: " ++ Maybe.withDefault "NA" user.bio) ]
-            , p [] [ text ("id: " ++ Basics.toString user.id) ]
-            , p [] [ text ("birthday: " ++ Basics.toString user.birthday) ]
 
-            -- , button [ onClick (Types.UpdateChats (Route.Chats Nothing) newChat) ] [ text ("Start chatting with " ++ user.name) ]
+-- Ideally, this String value should be an Id value, because that's what it really is, but Dict won't allow for that.
+-- Perhaps we can look into switching to all-dict, I'm not sure about the performance tho
+
+
+nameBar : Model -> String -> Html Types.Msg
+nameBar model chatKey =
+    let
+        chat =
+            case Dict.get chatKey model.chats of
+                Just chat ->
+                    chat
+
+                Nothing ->
+                    Debug.log "Chats.nameBar Fucked up at chat"
+                        initChat
+
+        pool =
+            case Dict.get (toString chat.pool) model.pools of
+                Just pool ->
+                    pool
+
+                Nothing ->
+                    Debug.log "Chats.nameBar Fucked up at pool"
+                        initPool
+
+        event =
+            case Dict.get (toString (Maybe.withDefault (Id "") pool.event)) model.events of
+                Just event ->
+                    event
+
+                Nothing ->
+                    Debug.log "Chats.nameBar Fucked up at event"
+                        (GraphCool initEvent)
+
+        titleOf event =
+            case event of
+                SeatGeek event ->
+                    event.title
+
+                GraphCool event ->
+                    event.name
+
+        initiator =
+            case Dict.get (toString chat.initiated) model.users of
+                Just initiator ->
+                    initiator
+
+                Nothing ->
+                    Debug.log "Chats.nameBar Fucked up at initiator"
+                        initUser
+
+        recipient =
+            case Dict.get (toString chat.recipient) model.users of
+                Just recipient ->
+                    recipient
+
+                Nothing ->
+                    Debug.log "Chats.nameBar Fucked up at recipient"
+                        initUser
+
+        messages =
+            Maybe.Extra.values <| List.map (\msgId -> Dict.get (toString msgId) model.messages) chat.messages
+
+        -- This sorting code is kinda bad, we should fix it.
+        mostRecentMessage =
+            messages
+                |> List.reverse
+                |> List.head
+
+        ( headMessage, headTime ) =
+            case Dict.get chatKey model.messages of
+                Just message ->
+                    ( message.text, "Draft" )
+
+                Nothing ->
+                    case mostRecentMessage of
+                        Nothing ->
+                            ( "No message yet. Say something.", "" )
+
+                        Just message ->
+                            ( message.text, "online" )
+    in
+    div
+        [ class "flex items-center z-2 fadeIn animated pa3 grow hover-bg-black-20 lh-title"
+        , chat.id
+            |> Just
+            |> Types.GoChats
+            |> Types.RouteTo
+            |> onClick
+        ]
+        [ div
+            [ {--bgImg chat.userAvi--}
+              class "pa4 mh2 bg-white br-pill shadow-2 ba cover br-pill"
             ]
+            []
+        , div [ class "flex-auto mh2" ]
+            [ div [ class "flex justify-between" ]
+                [ div [ class "nowrap" ]
+                    [ div [ class "f5 fw6" ] [ text initiator.name ]
+                    , div [ class "f5 fw4 o-60" ]
+                        [ text <| titleOf event ]
+                    ]
+                , div [ class "mh2 self-start f7 tr o-80 flex-shrink-0" ]
+                    [ div [] [ text headTime ] ]
+                ]
+            , div [ class "f6 truncate pt2" ] [ text <| Maybe.withDefault "No Bio Provided" initiator.bio ]
+            ]
+        ]
 
 
 
---     div [ class "overflow-hidden bg-black-80 flex-auto" ]
+-- ---------------------- --
+-- CODE BELOW IS OLD CODE --
+-- ---------------------- --
+-- (=>) =
+--     (,)
+-- -- view : Id -> Types.Model -> Html Msg
+-- -- view poolId model =
+-- --     let
+-- --         pool =
+-- --             Maybe.withDefault initPool <| Dict.get (toString poolId) model.pools
+-- --         -- case model.route of
+--         --     Types.GoPool id ->
+--         --         Maybe.withDefault initPool <| List.head <| List.filter (id == .id) model.pools
+--         --     _ ->
+--         --         initPool
+--         -- response =
+--         --     case pool.attendConfirm of
+--         --         NotAsked ->
+--         --             text "Hold up, Lemme Check"
+--         --         Loading ->
+--         --             text "Gimme a Sec"
+--         --         Failure e ->
+--         --             text ("Shucks um, " ++ Basics.toString e)
+--         --         Success a ->
+--         --             case a of
+--         --                 Nothing ->
+--         --                     div [] [ text "Success. No response" ]
+--         --                 Just e ->
+--         --                     case e.attendingUserName of
+--         --                         Nothing ->
+--         --                             h4 [] [ text "You now joined the pool, but you need to have a username." ]
+--         --                         Just userName ->
+--         --                             h4 []
+--         --                                 [ text ("Congrats, " ++ userName ++ "! You now joined the pool.") ]
+--     in
+--     div []
+--         [ -- response,
+--           div [] [ showUser initPool initChat initUser, showUser initPool initChat initUser ] -- (List.map (showUser pool.chats (Maybe.withDefault initChat <| List.head model.chats)) (Maybe.withDefault [] pool.pool.attending))
+--         ]
+-- showUser : Pool -> Chat -> User -> Html Msg
+-- showUser pool chat user =
+--     if user.id == Id "cjed2224jh6a4019863siiw2e" then
+--         text ""
+--     else
+--         -- let
+--         --     newChat =
+--         --         { chat
+--         --             | poolId = Maybe.withDefault (Id "") pool.event
+--         --             , initiatedId = Id "cjed2224jh6a4019863siiw2e"
+--         --             , recipientId = user.id
+--         --         }
+--         -- in
+--         div []
+--             [ h3 [] [ text user.name ]
+--             , p [] [ text ("nameFull: " ++ Maybe.withDefault "NA" user.nameFull) ]
+--             , p [] [ text ("bio: " ++ Maybe.withDefault "NA" user.bio) ]
+--             , p [] [ text ("id: " ++ Basics.toString user.id) ]
+--             , p [] [ text ("birthday: " ++ Basics.toString user.birthday) ]
+--             -- , button [ onClick (Types.UpdateChats (Route.Chats Nothing) newChat) ] [ text ("Start chatting with " ++ user.name) ]
+--             ]
+-- --     div [ class "overflow-hidden bg-black-80 flex-auto" ]
 --         [ div
 --             [ onMouseDown
 --             , class "flex-auto overflow-hidden"
