@@ -14,11 +14,13 @@ module Main exposing (main)
 -- import Pages.User.Model exposing (..)
 -- import Pages.Chats.Update as ChatsUpdate exposing (makeQueryRequest)
 -- import Pages.Events.Update as EventsUpdate exposing (makeQueryRequest)
+-- import SeatGeek.Query
 -- import Auth0.Authentication as Authentication
 -- import Mouse
 -- import Task exposing (..)
 
 import Auth0.Auth0 as Auth0
+import Auth0.Authentication as Authentication
 import Html exposing (..)
 import KissDB as DB exposing (..)
 import SeatGeek.Query
@@ -26,6 +28,7 @@ import SeatGeek.Types as SG
 import Types exposing (..)
 import Update exposing (..)
 import View exposing (render)
+import Ports
 
 
 -- import Window exposing (size)
@@ -67,9 +70,9 @@ initCmd =
 -- Maybe Auth0.LoggedInUser ->
 
 
-init : ( Model, Cmd Msg )
-init =
-    ( Types.emptyModel, initCmd )
+init : Maybe Auth0.LoggedInUser -> ( Model, Cmd Msg )
+init initialUser =
+    ( Types.emptyModel initialUser, initCmd )
 
 
 
@@ -87,14 +90,10 @@ view model =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.none
-
-
-
--- Sub.batch
---     [ {--Window.resizes ResizePool, mouseMoveSubs model,--}
---       auth0authResult (Authentication.handleAuthResult >> AuthenticationMsg)
---     ]
+    Sub.batch
+    [ {--Window.resizes ResizePool, mouseMoveSubs model,--}
+      Ports.auth0authResult (Authentication.handleAuthResult >> AuthenticationMsg)
+    ]
 -- mouseMoveSubs : Model -> Sub Msg
 -- mouseMoveSubs model =
 --     case model.pool.move of
@@ -106,10 +105,9 @@ subscriptions model =
 -- (Maybe Auth0.LoggedInUser)
 
 
-main : Program Never Model Msg
+main : Program (Maybe Auth0.LoggedInUser) Model Msg
 main =
-    Html.program
-        -- WithFlags
+    Html.programWithFlags
         { init = init
         , view = view
         , update = Update.update

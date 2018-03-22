@@ -43,9 +43,8 @@ type alias Model =
     , logOut : () -> Cmd Msg
     , createUserResponse : SubmitResponseModel
     , getUserId : Id
+    , maybeRetrievedMe: Maybe User
     }
-
-
 init : (Auth0.Options -> Cmd Msg) -> (() -> Cmd Msg) -> Maybe Auth0.LoggedInUser -> Model
 init authorize logOut initialData =
     { state =
@@ -60,6 +59,7 @@ init authorize logOut initialData =
     , logOut = logOut
     , createUserResponse = RemoteData.Loading
     , getUserId = Id "0"
+    , maybeRetrievedMe = Nothing
     }
 
 
@@ -111,8 +111,16 @@ update msg model =
 
                                 Just user ->
                                     user.id
+
+                maybeRetrievedMe = 
+                    case response of
+                        Success maybeUser ->
+                            maybeUser
+                        _ -> 
+                            Nothing
+
             in
-            ( { model | getUserId = responseId }, Cmd.none )
+            ( { model | getUserId = responseId, maybeRetrievedMe = maybeRetrievedMe }, Cmd.none )
 
 
 type alias SubmitResponseModel =
