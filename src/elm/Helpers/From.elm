@@ -175,6 +175,11 @@ stringToDateWithDefault string =
 -- Date --
 
 
+dateToDateTime : Date -> DateTime
+dateToDateTime date =
+    DateTime <| Date.Extra.Format.isoDateString date
+
+
 dateToViewShortDate : Date -> String
 dateToViewShortDate date =
     Date.Extra.Format.format

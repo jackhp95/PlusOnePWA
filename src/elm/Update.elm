@@ -1,8 +1,9 @@
 module Update exposing (..)
 
--- import Auth0.Authentication as Authentication
+-- import Graphqelm.Document as Document exposing (..)
 
 import Auth0.Auth0 as Auth0
+import Date exposing (..)
 import Debug exposing (log)
 import EveryDict exposing (..)
 import GraphCool.InputObject exposing (..)
@@ -224,10 +225,71 @@ update msg model =
                     ( { model | forms = { forms | meForm = { meForm | bio = Just val } } }, Cmd.none )
 
                 MeBirthday val ->
-                    ( { model | forms = { forms | meForm = { meForm | birthday = DateTime val } } }, Cmd.none )
+                    case Date.fromString val of
+                        Ok date ->
+                            ( { model | forms = { forms | meForm = { meForm | birthday = From.dateToDateTime date } } }, Cmd.none )
+
+                        Err error ->
+                            ( { model | errors = error :: errors }, Cmd.none )
 
                 MeSubmit ->
-                    ( model, Cmd.none {- Create/UpdateUser Mutation Cmd goes here -} )
+                    let
+                        meForm =
+                            model.forms.meForm
+
+                        userToken =
+                            case auth.state of
+                                Auth0.LoggedIn user ->
+                                    user.token
+
+                                Auth0.LoggedOut ->
+                                    "For Some reason, we don't have a record of you signing into Auth0"
+
+                        upsertMe =
+                            case maybeMe of
+                                Nothing ->
+                                    Mutation.selection identity
+                                        |> with
+                                            (Mutation.createUser
+                                                (\meOptionals ->
+                                                    { meOptionals
+                                                        | bio = fromMaybe meForm.bio
+                                                        , nameFull = fromMaybe meForm.nameFull
+                                                    }
+                                                )
+                                                { birthday = meForm.birthday
+                                                , name = meForm.name
+                                                , authProvider =
+                                                    { email = Absent
+                                                    , auth0 = Present <| AuthProviderAuth0 userToken
+                                                    }
+                                                }
+                                                DB.me
+                                            )
+
+                                Just me ->
+                                    Mutation.selection identity
+                                        |> with
+                                            (Mutation.updateUser
+                                                (\meOptionals ->
+                                                    { meOptionals
+                                                        | bio = fromMaybe meForm.bio
+                                                        , birthday = Present meForm.birthday
+                                                        , name = Present meForm.name
+                                                        , nameFull = fromMaybe meForm.nameFull
+                                                    }
+                                                )
+                                                { id = me.id }
+                                                DB.me
+                                            )
+
+                        upsertMeRequest =
+                            upsertMe
+                                |> Graphqelm.Http.mutationRequest "https://api.graph.cool/simple/v1/PlusOne"
+                                |> Graphqelm.Http.send
+                                    (RemoteData.fromResult >> ReturnMaybeMe)
+                    in
+                    ( model, upsertMeRequest )
 
                 -- Message
                 MessageRefresh chatId ->
@@ -442,7 +504,22 @@ update msg model =
         ReturnMe response ->
             case response of
                 Success x ->
-                    ( { model | me = RemoteData.toMaybe response }, Cmd.none )
+                    let
+                        forms =
+                            model.forms
+
+                        meForm =
+                            model.forms.meForm
+                    in
+                    ( { model
+                        | me = RemoteData.toMaybe response
+                        , forms =
+                            { forms
+                                | meForm = Maybe.withDefault initMe <| RemoteData.toMaybe response
+                            }
+                      }
+                    , Cmd.none
+                    )
 
                 Failure y ->
                     ( { model | errors = toString y :: errors }, Cmd.none )
@@ -543,8 +620,8 @@ update msg model =
             case response of
                 Success maybe ->
                     case maybe of
-                        Just x ->
-                            ( { model | me = Just x }, Cmd.none )
+                        Just me ->
+                            ( { model | me = Just me, route = GoMe me }, Cmd.none )
 
                         Nothing ->
                             -- This is where we prompt the user to create an account
@@ -560,6 +637,7 @@ update msg model =
                                         Auth0.LoggedIn data ->
                                             { model
                                                 | route = GoEditMe
+                                                , errors = "User data wasn't returned from GraphCool. Maybe you need to create an account?" :: errors
                                                 , forms =
                                                     { forms
                                                         | meForm =
@@ -574,7 +652,7 @@ update msg model =
                                             }
 
                                         Auth0.LoggedOut ->
-                                            { model | route = GoEditMe, errors = "User data wasn't returned?" :: errors }
+                                            { model | route = GoEditMe, errors = "User data wasn't returned from Auth0?" :: errors }
                             in
                             ( modelWithPrefilledDataFromAuth, Cmd.none )
 
