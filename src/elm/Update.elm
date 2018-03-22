@@ -20,11 +20,8 @@ module Update exposing (..)
 -- import Pages.Pool.Model as PoolModel
 -- import Pages.User.Model exposing (..)
 -- import Pages.User.Update exposing (..)
-import Auth0.Auth0 as Auth0
-import Auth0.Authentication as Authentication
 -- import SeatGeek.Types as SG
-import Debug exposing (log)
-import Navigation as Nav
+
 -- ---------------------------- --
 -- PRE FUNCTIONAL IMPORTS ABOVE --
 -- ---------------------------- --
@@ -53,17 +50,20 @@ import Graphqelm.SelectionSet as SelectionSet exposing (SelectionSet, with)
 import KissDB as DB exposing (..)
 import RemoteData exposing (..)
 import Types exposing (..)
-
+import Auth0.Auth0 as Auth0
+import Auth0.Authentication as Authentication
+import Debug exposing (log)
+import Navigation as Nav
 
 -- HELPERS
 
 goTo : Model -> Route -> String  -> ( Model, Cmd msg )
 goTo model route url = 
-    ( { model | route = log "Route change accepted: " route }, Nav.newUrl url  )
+    ( { model | route = log "Route change undertaken: " route }, Nav.newUrl url  )
 
 -- for development purposes - if on then logged in user can only see loggout out stuff until we have a way for them to add their profile data
 authOff : Bool
-authOff = True
+authOff = False
 
 -- UPDATE --
 
@@ -97,6 +97,9 @@ update msg model =
         users =
             model.users
 
+        forms = 
+            model.forms
+
         me =
             model.me
 
@@ -120,7 +123,7 @@ update msg model =
                     case newAuthModel.getUserId  of
                         -- TODO Where to send people on successful login
                         Id "3" -> 
-                            update (RouteTo (GoEvents Nothing)) updatedModel
+                            update (RouteTo route) updatedModel
                         Id "0" -> 
                             update (RouteTo (GoEvents Nothing)) updatedModel
                         _ -> 
@@ -129,10 +132,17 @@ update msg model =
         RouteTo GoAuth ->
             if Authentication.isLoggedIn model.authModel then
                 let
-                    (navChangeModel, navChangeCommand) = goTo model (Types.GoEvents Nothing) "/"
+                    ( newAuthModel, logoutCmd ) =
+                        Authentication.update Authentication.LogOut model.authModel
+
+                    updatedModel = 
+                        { model |  authModel = newAuthModel }
+
+                    (navChangeModel, navChangeCommand) =
+                         goTo updatedModel (Types.GoEvents Nothing) "/"
+
                 in
-                    navChangeModel 
-                    ! [navChangeCommand, Cmd.map AuthenticationMsg (model.authModel.logOut ()) ]
+                    navChangeModel ! [navChangeCommand, Cmd.map AuthenticationMsg logoutCmd ]
             else
                 ( model, Cmd.map AuthenticationMsg (model.authModel.authorize {}) )
 
@@ -144,42 +154,46 @@ update msg model =
                 loggedRoute = log "Route change sought: " newRoute 
             in
 
-                case (authModel.state, authModel.maybeRetrievedMe) of
+                case (authModel.state, model.me) of
                     -- Logged out - can only see events
                     (Auth0.LoggedOut , _) ->
-                        goTo model (GoEvents Nothing) "/"
+                        if authOff then 
+                            goTo model newRoute (toString newRoute)
+                        else 
+                            goTo model (GoEvents Nothing) "/"
 
-                    -- Logged in with user data - let them go where they like
+                    -- Logged in with me data - let them go where they like
                     (Auth0.LoggedIn loggedInUser, Just _ ) -> 
                         goTo model newRoute (toString newRoute)
 
-                    -- Logged in without user data
-                    -- Can only see events or edit user
+                    -- Logged in without me data
+                    -- Go to edit me
                     (Auth0.LoggedIn loggedInUser, Nothing) ->
                         let
+                            -- Initialise user with Auth data
+                            newMe = 
+                                { initMe 
+                                    | id = authModel.getUserId
+                                    , auth0UserId = Just loggedInUser.idtoken
+                                    , email = Just loggedInUser.profile.email
+                                    , name = loggedInUser.profile.name
+                                }  
+
+                            newForms = 
+                                { forms | me = newMe}
+
                             newModel = 
-                                if (model.me == Nothing) then 
-                                    -- Initialise user with Auth data
-                                    { model | me =
-                                            Just { initMe 
-                                            | id = authModel.getUserId
-                                            , auth0UserId = Just loggedInUser.idtoken
-                                            , email = Just loggedInUser.profile.email
-                                            , name = loggedInUser.profile.name
-                                            }
-                                    }
-                                else
-                                    model
+                                { model | forms = newForms}
 
                             (limitedRoute, url) = 
                                 case newRoute of
-                                    GoMe me -> 
-                                        (GoMe me, toString(GoMe me))
+                                    GoEditMe -> 
+                                        (GoEditMe, toString(GoEditMe))
                                     _ -> 
                                         (GoEvents Nothing, "/")
                         in
                             if authOff then 
-                                goTo newModel newRoute (toString newRoute)
+                                goTo model newRoute (toString newRoute)
                             else 
                                 goTo newModel limitedRoute url
 
