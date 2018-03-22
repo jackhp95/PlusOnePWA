@@ -46,34 +46,113 @@ update msg model =
         users =
             model.users
 
-        me =
+        maybeMe =
             model.me
 
         errors =
             model.errors
+
+        maybeMeListId =
+            case maybeMe of
+                Nothing ->
+                    Nothing
+
+                Just me ->
+                    Just [ me.id ]
     in
     case msg of
         RouteTo newRoute ->
             let
                 basicRoute =
                     ( { model | route = newRoute }, Cmd.none )
+
+                goEventUpdate eventId =
+                    case eventId of
+                        Nothing ->
+                            basicRoute
+
+                        Just eventId ->
+                            case EveryDict.get eventId events of
+                                Nothing ->
+                                    basicRoute
+
+                                Just api ->
+                                    case api of
+                                        GraphCool event ->
+                                            basicRoute
+
+                                        SeatGeek event ->
+                                            let
+                                                createSGPool =
+                                                    Mutation.selection identity
+                                                        |> with
+                                                            (Mutation.createPool
+                                                                (\poolOptionals ->
+                                                                    { poolOptionals
+                                                                        | seatGeekId = Present <| From.idToString event.id
+                                                                        , viewedIds = fromMaybe maybeMeListId
+                                                                    }
+                                                                )
+                                                                DB.pool
+                                                            )
+
+                                                createSGPoolRequest =
+                                                    createSGPool
+                                                        |> Graphqelm.Http.mutationRequest "https://api.graph.cool/simple/v1/PlusOne"
+                                                        |> Graphqelm.Http.send
+                                                            (RemoteData.fromResult >> ReturnMaybePool)
+                                            in
+                                            ( { model | route = newRoute }, createSGPoolRequest )
             in
             case newRoute of
-                GoEvents _ ->
-                    basicRoute
+                GoEvents eventId ->
+                    goEventUpdate eventId
 
                 GoAuth ->
                     ( { model | route = route }, Cmd.none {- AuthToggle Cmd goes here -} )
 
                 _ ->
-                    case me of
+                    case maybeMe of
                         Nothing ->
                             -- Once AuthToggle is implemented, the logic should look like:
                             -- ( { model | route = route }, Cmd.none {- AuthToggle Cmd goes here -} )
                             ( { model | route = GoAuth }, Cmd.none {- AuthToggle Cmd goes here -} )
 
-                        Just _ ->
-                            basicRoute
+                        Just me ->
+                            case newRoute of
+                                GoEvents eventId ->
+                                    goEventUpdate eventId
+
+                                GoPool pool ->
+                                    let
+                                        attendingEvent =
+                                            Mutation.selection identity
+                                                |> with
+                                                    (Mutation.addToAttendingEvent
+                                                        { attendingUserId = me.id, attendingEventPoolId = pool.id }
+                                                        SelectionSet.empty
+                                                    )
+
+                                        attendingEventRequest =
+                                            attendingEvent
+                                                |> Graphqelm.Http.mutationRequest "https://api.graph.cool/simple/v1/PlusOne"
+                                                |> Graphqelm.Http.send
+                                                    (RemoteData.fromResult >> ReturnMaybeEmpty)
+                                    in
+                                    ( { model
+                                        | route = newRoute
+                                        , pools =
+                                            EveryDict.insert
+                                                pool.id
+                                                { pool | usersAttending = me.id :: pool.usersAttending }
+                                                pools
+                                        , me = Just { me | attendingEvent = pool.id :: me.attendingEvent }
+                                      }
+                                    , attendingEventRequest
+                                    )
+
+                                _ ->
+                                    basicRoute
 
         -- ( { model | route = newRoute }
         -- , Nav.newUrl newRoute)
@@ -107,16 +186,43 @@ update msg model =
                     ( model, Cmd.none {- Create/UpdateUser Mutation Cmd goes here -} )
 
                 -- Message
-                MessageText id val ->
+                MessageRefresh chatId ->
+                    ( model, DB.requestMessages identity )
+
+                -- Use the ChatId for the key of the message you're composing.
+                -- This allows you to have mutliple different message states, not just one.
+                -- Switching between chats should keep the message you're composing separate with this tactic.
+                MessageText chatId val ->
                     case val == "" of
                         False ->
-                            ( { model | messages = EveryDict.insert id { initMessage | text = val } model.messages }, Cmd.none )
+                            ( { model | messages = EveryDict.insert chatId { initMessage | text = val } model.messages }, Cmd.none )
 
                         True ->
-                            ( { model | messages = EveryDict.remove id model.messages }, Cmd.none )
+                            ( { model | messages = EveryDict.remove chatId model.messages }, Cmd.none )
 
-                MessageSend id ->
-                    ( { model | messages = EveryDict.remove id model.messages }, Cmd.none {- CreateMessage Mutation Cmd goes here -} )
+                MessageSend chatId message ->
+                    let
+                        createMessage =
+                            Mutation.selection identity
+                                |> with
+                                    (Mutation.createMessage
+                                        (\messageOptionals ->
+                                            { messageOptionals
+                                                | chatId = Present chatId
+                                                , fromId = Present me.id
+                                            }
+                                        )
+                                        { text = message.text }
+                                        DB.message
+                                    )
+
+                        createMessageRequest =
+                            createMessage
+                                |> Graphqelm.Http.mutationRequest "https://api.graph.cool/simple/v1/PlusOne"
+                                |> Graphqelm.Http.send
+                                    (RemoteData.fromResult >> ReturnMaybeMessage)
+                    in
+                    ( { model | messages = EveryDict.remove chatId model.messages }, createMessageRequest )
 
                 -- Event
                 EventName val ->
@@ -182,7 +288,12 @@ update msg model =
                         , messages = EveryDict.union (From.listMessageToDict x.messages) model.messages
                         , chats = EveryDict.union (From.listChatToDict x.chats) model.chats
                         , users = EveryDict.union (From.listUserToDict x.users) model.users
-                        , me = x.me
+                        , me =
+                            if x.me == Nothing then
+                                -- Don't overwrite current user if GraphCool returns Nothing instead of Me
+                                maybeMe
+                            else
+                                x.me
                       }
                     , Cmd.none
                     )
@@ -392,7 +503,7 @@ update msg model =
                             ( { model | me = Just x }, Cmd.none )
 
                         Nothing ->
-                            ( { model | me = Nothing }, Cmd.none )
+                            ( { model | errors = toString response :: errors }, Cmd.none )
 
                 Failure y ->
                     ( { model | errors = toString y :: errors }, Cmd.none )
@@ -408,7 +519,7 @@ update msg model =
                             ( { model | hosts = EveryDict.insert x.id x hosts }, Cmd.none )
 
                         Nothing ->
-                            ( model, Cmd.none )
+                            ( { model | errors = toString response :: errors }, Cmd.none )
 
                 Failure y ->
                     ( { model | errors = toString y :: errors }, Cmd.none )
@@ -424,7 +535,7 @@ update msg model =
                             ( { model | venues = EveryDict.insert x.id x venues }, Cmd.none )
 
                         Nothing ->
-                            ( model, Cmd.none )
+                            ( { model | errors = toString response :: errors }, Cmd.none )
 
                 Failure y ->
                     ( { model | errors = toString y :: errors }, Cmd.none )
@@ -440,7 +551,7 @@ update msg model =
                             ( { model | locations = EveryDict.insert x.id x locations }, Cmd.none )
 
                         Nothing ->
-                            ( model, Cmd.none )
+                            ( { model | errors = toString response :: errors }, Cmd.none )
 
                 Failure y ->
                     ( { model | errors = toString y :: errors }, Cmd.none )
@@ -456,7 +567,7 @@ update msg model =
                             ( { model | events = EveryDict.insert x.id (GraphCool x) events }, Cmd.none )
 
                         Nothing ->
-                            ( model, Cmd.none )
+                            ( { model | errors = toString response :: errors }, Cmd.none )
 
                 Failure y ->
                     ( { model | errors = toString y :: errors }, Cmd.none )
@@ -469,10 +580,25 @@ update msg model =
                 Success maybe ->
                     case maybe of
                         Just x ->
-                            ( { model | pools = EveryDict.insert x.id x pools }, Cmd.none )
+                            case x.seatGeekId of
+                                Nothing ->
+                                    ( { model | pools = EveryDict.insert x.id x pools }, Cmd.none )
+
+                                Just eventString ->
+                                    case EveryDict.get (Id eventString) events of
+                                        Nothing ->
+                                            ( { model | pools = EveryDict.insert x.id x pools }, Cmd.none )
+
+                                        Just api ->
+                                            ( { model
+                                                | pools = EveryDict.insert x.id x pools
+                                                , events = EveryDict.insert (Id eventString) api events
+                                              }
+                                            , Cmd.none
+                                            )
 
                         Nothing ->
-                            ( model, Cmd.none )
+                            ( { model | errors = toString response :: errors }, Cmd.none )
 
                 Failure y ->
                     ( { model | errors = toString y :: errors }, Cmd.none )
@@ -488,7 +614,7 @@ update msg model =
                             ( { model | messages = EveryDict.insert x.id x messages }, Cmd.none )
 
                         Nothing ->
-                            ( model, Cmd.none )
+                            ( { model | errors = toString response :: errors }, Cmd.none )
 
                 Failure y ->
                     ( { model | errors = toString y :: errors }, Cmd.none )
@@ -504,7 +630,7 @@ update msg model =
                             ( { model | chats = EveryDict.insert x.id x chats }, Cmd.none )
 
                         Nothing ->
-                            ( model, Cmd.none )
+                            ( { model | errors = toString response :: errors }, Cmd.none )
 
                 Failure y ->
                     ( { model | errors = toString y :: errors }, Cmd.none )
@@ -520,7 +646,18 @@ update msg model =
                             ( { model | users = EveryDict.insert x.id x users }, Cmd.none )
 
                         Nothing ->
-                            ( model, Cmd.none )
+                            ( { model | errors = toString response :: errors }, Cmd.none )
+
+                Failure y ->
+                    ( { model | errors = toString y :: errors }, Cmd.none )
+
+                _ ->
+                    ( { model | errors = "RemoteData is running an update?" :: errors }, Cmd.none )
+
+        ReturnMaybeEmpty response ->
+            case response of
+                Success _ ->
+                    ( model, Cmd.none )
 
                 Failure y ->
                     ( { model | errors = toString y :: errors }, Cmd.none )

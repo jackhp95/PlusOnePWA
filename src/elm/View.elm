@@ -1,6 +1,7 @@
 module View exposing (render)
 
 import EveryDict exposing (..)
+import Helpers.Find as Find exposing (..)
 import Helpers.From as From exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -31,47 +32,35 @@ page : Model -> List (Html Msg)
 page model =
     case model.route of
         GoChats chatId ->
-            case chatId of
+            case model.me of
                 Nothing ->
-                    [ Chats.view model ]
+                    [ The404.view <| "Weird, for some reason, we don't think you're logged in" :: model.errors ]
 
-                Just chatId ->
-                    case model.me of
-                        Just me ->
+                Just me ->
+                    case chatId of
+                        Nothing ->
+                            [ Chats.view me model ]
+
+                        Just chatId ->
                             case EveryDict.get chatId model.chats of
-                                Just chat ->
-                                    if From.idToString me.id == From.idToString chat.initiated then
-                                        -- True if Me is the initiator
-                                        [ Chats.view model
-                                        , Chat.view
-                                            chat
-                                            (EveryDict.get chat.recipient model.users
-                                                -- Fails if Client can't find User you're chatting with
-                                                |> Maybe.withDefault { initUser | name = "Finding User" }
-                                            )
-                                            model
-                                        ]
-                                    else if From.idToString me.id == From.idToString chat.recipient then
-                                        -- False if Me is the recipient
-                                        [ Chats.view model
-                                        , Chat.view
-                                            chat
-                                            (EveryDict.get chat.initiated model.users
-                                                -- Fails if Client doesn't have the User
-                                                |> Maybe.withDefault { initUser | name = "Loading User" }
-                                            )
-                                            model
-                                        ]
-                                    else
-                                        [ The404.view <| "Looks like you're not a part of this conversation?" :: model.errors ]
-
                                 Nothing ->
-                                    [ Chats.view model
-                                    , text "I can't find the chat!"
+                                    [ Chats.view me model
+                                    , The404.view <| "I can't find the chat!" :: model.errors
                                     ]
 
-                        Nothing ->
-                            [ Chats.view model, text "Weird, for some reason, we don't think you're logged in" ]
+                                Just chat ->
+                                    case maybeUserWithChatMeUsers chat me model.users of
+                                        Nothing ->
+                                            [ The404.view <| "I can't find who you're chatting with." :: model.errors ]
+
+                                        Just with ->
+                                            [ Chats.view me model
+                                            , Chat.view
+                                                chat
+                                                with
+                                                me
+                                                model
+                                            ]
 
         GoUser userId ->
             case EveryDict.get userId model.users of
@@ -79,15 +68,10 @@ page model =
                     [ User.view user model ]
 
                 Nothing ->
-                    [ text "I can't find this user!" ]
+                    [ The404.view <| "I can't find this user!" :: model.errors ]
 
-        GoPool poolId ->
-            case EveryDict.get poolId model.pools of
-                Just pool ->
-                    [ Pool.view pool model ]
-
-                Nothing ->
-                    [ text "I can't find the pool!" ]
+        GoPool pool ->
+            [ Pool.view pool model ]
 
         GoEditMe ->
             case model.me of
@@ -95,7 +79,7 @@ page model =
                     [ EditMe.view model ]
 
                 Nothing ->
-                    [ text "Somehow you're not logged in, and you got to this page." ]
+                    [ The404.view <| "Somehow you're not logged in, and you got to this page." :: model.errors ]
 
         GoCreateEvent ->
             [ CreateEvent.view model ]
@@ -113,7 +97,7 @@ page model =
                             ]
 
                         Nothing ->
-                            [ text "I can't find this event!" ]
+                            [ The404.view <| "I can't find this event!" :: model.errors ]
 
         _ ->
             [ The404.view model.errors ]

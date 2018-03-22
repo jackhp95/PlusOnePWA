@@ -16,8 +16,8 @@ import Types exposing (..)
 -- VIEW
 
 
-view : Model -> Html Msg
-view model =
+view : Me -> Model -> Html Msg
+view me model =
     let
         chats =
             model.chats
@@ -31,7 +31,7 @@ view model =
                     " flex "
 
         allChats =
-            List.map (nameBar model) (EveryDict.keys chats)
+            List.map (nameBar model) (List.append me.initiated me.recipient)
     in
     section [ class ("animated fadeInUp flex-column items-stretch flex-auto pa0 ma0 measure-ns shadow-2-ns" ++ mobileHide) ]
         [ Assets.banner "chats"

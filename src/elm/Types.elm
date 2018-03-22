@@ -10,12 +10,47 @@ import SeatGeek.Types as SG
 import Time exposing (..)
 
 
+juan : Me
+juan =
+    { recipient = []
+    , birthday = DateTime "2015-11-22T13:57:31.123Z"
+    , proposed = []
+    , name = "Juan"
+    , updatedAt = DateTime "2018-03-13T10:38:45.000Z"
+    , nameFull = Nothing
+    , email = Just "1@mail.com"
+    , datesCanceled = []
+    , passed = []
+    , attendingEvent = [ Id "cjew55h0ozyaw0129q6xfwdzk" ]
+    , bio = Nothing
+    , likedEvent = []
+    , id = Id "cjepixltacwzz0153vxgep8pb"
+    , hosts = []
+    , createdEvents =
+        [ Id "cjet0q9z1va3k0199pm1lhxyz"
+        , Id "cjet0qbnzvdas0134zkuyyu6e"
+        , Id "cjew55h0ozyav012985mevhky"
+        ]
+    , createdAt = DateTime "2018-03-13T10:38:45.000Z"
+    , initiated =
+        [ Id "cjet60pyy5q8701499ahtb1cp"
+        ]
+    , sent = []
+    , viewedEvent =
+        [ Id "cjet0q9z1va3l0199hpf433hr"
+        , Id "cjet0qbo0vdat0134wd2yvj2a"
+        ]
+    , auth0UserId = Nothing
+    , password = Just "$2a$10$M7mzvYVA9GlDsGYv7fmYYOIeSZQihRNC.HJjHfeqcvquUdY6zyFbW"
+    }
+
+
 type Route
     = GoChats (Maybe Id)
     | GoUser Id
     | GoEvents (Maybe Id)
     | GoCreateEvent
-    | GoPool Id
+    | GoPool Pool
     | GoEditMe
     | GoAuth
     | GoMe Me
@@ -263,7 +298,8 @@ emptyModel =
         -- users
         EveryDict.empty
         -- me
-        Nothing
+        --Nothing
+        (Just juan)
         -- errors
         []
         -- forms
@@ -327,6 +363,8 @@ type
     | ReturnMaybeMessage (RemoteData Graphqelm.Http.Error (Maybe Message))
     | ReturnMaybeChat (RemoteData Graphqelm.Http.Error (Maybe Chat))
     | ReturnMaybeUser (RemoteData Graphqelm.Http.Error (Maybe User))
+      -- Payload
+    | ReturnMaybeEmpty (RemoteData Graphqelm.Http.Error (Maybe ()))
       -- Forms
     | UpdateValue InputValue
 
@@ -340,8 +378,9 @@ type
     | MeBirthday String
     | MeSubmit
       -- Message
+    | MessageRefresh Id
     | MessageText Id String
-    | MessageSend Id
+    | MessageSend Id Message
       -- Event
     | EventName String
     | EventNameFull String

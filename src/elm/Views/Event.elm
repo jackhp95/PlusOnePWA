@@ -6,6 +6,7 @@ module Views.Event exposing (..)
 
 import GraphCool.Scalar exposing (..)
 import Helpers.Assets as Assets exposing (feather, stringToEmoji)
+import Helpers.Find as Find exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
@@ -16,38 +17,41 @@ import Types exposing (..)
 view : API -> Model -> Html Msg
 view api model =
     let
+        maybePool =
+            Find.maybePoolWithAPIPools api model.pools
+
         apiToView =
             case api of
                 SeatGeek event ->
-                    seatGeekView event
+                    seatGeekView event maybePool
 
                 GraphCool event ->
-                    graphCoolView event
+                    graphCoolView event maybePool
     in
     section [ class "overflow-auto w-100 flex-grow-1 animated fadeInLeft mw6-l flex-shrink-0 bg-black-70 shadow-2-l" ]
         apiToView
 
 
-graphCoolView : Event -> List (Html Msg)
-graphCoolView event =
+graphCoolView : Event -> Maybe Pool -> List (Html Msg)
+graphCoolView event maybePool =
     [ -- eventBanner event
       eventName event.name
 
     -- , eventEmojis event
     -- , eventTime event.startsAt
-    , eventPool event.pool
+    , eventPool maybePool
 
     -- , eventPopularity event
     -- , yetToBeAdded
     ]
 
 
-seatGeekView : SG.Event -> List (Html Msg)
-seatGeekView event =
-    [ eventBanner event
+seatGeekView : SG.Event -> Maybe Pool -> List (Html Msg)
+seatGeekView event maybePool =
+    [ eventBanner event maybePool
     , eventTitle event
     , eventEmojis event
-    , eventPool initId
+    , eventPool maybePool
 
     -- , eventTime event.datetime_local
     , eventTickets event
@@ -185,23 +189,29 @@ yetToBeAdded =
         ]
 
 
-eventPool : Id -> Html Msg
-eventPool poolId =
-    div [ class "flex items-center justify-around mh4 pv4 bb b--white-20" ]
-        [ a [ href "Pool.html", class "white link br-pill pa2 mh1 flex items-center mh1 grow" ]
-            [ div [ Assets.feather "info", class "h2 w2 contain bg-center" ] []
-            ]
-        , a
-            [ onClick (Types.RouteTo <| GoPool poolId)
-            , class "white link lg-breathe-50 br1 pa2 mh1 flex items-center mh1 grow"
-            ]
-            [ div [ Assets.feather "life-buoy", class "h2 w2 mh1 contain bg-center" ] []
-            , div [ class "mh2 f4 fw4 ttn" ] [ text "join pool" ]
-            ]
-        , div
-            [ class "mr3 f2" ]
-            [ text "🏊" ]
-        ]
+eventPool : Maybe Pool -> Html Msg
+eventPool maybePool =
+    case maybePool of
+        Nothing ->
+            text ""
+
+        Just pool ->
+            div
+                [ class "flex items-center justify-around mh4 pv4 bb b--white-20" ]
+                [ a [ href "Pool.html", class "white link br-pill pa2 mh1 flex items-center mh1 grow" ]
+                    [ div [ Assets.feather "info", class "h2 w2 contain bg-center" ] []
+                    ]
+                , a
+                    [ onClick (Types.RouteTo <| GoPool pool)
+                    , class "white link lg-breathe-50 br1 pa2 mh1 flex items-center mh1 grow"
+                    ]
+                    [ div [ Assets.feather "life-buoy", class "h2 w2 mh1 contain bg-center" ] []
+                    , div [ class "mh2 f4 fw4 ttn" ] [ text "join pool" ]
+                    ]
+                , div
+                    [ class "mr3 f2" ]
+                    [ text "🏊" ]
+                ]
 
 
 progressBar : Float -> Html msg
@@ -233,30 +243,42 @@ eventEmojis event =
         (List.map toIcon event.taxonomies)
 
 
-eventBanner : SG.Event -> Html Msg
-eventBanner event =
-    case maybeImage event.performers of
-        Nothing ->
-            text ""
+eventBanner : SG.Event -> Maybe Pool -> Html Msg
+eventBanner event maybePool =
+    let
+        bouyView pool =
+            div [ class "pa3 lg-breathe-50 br-pill relative top-2 right-1 flex grow justify-center items-center" ]
+                [ div
+                    [ Assets.feather "life-buoy"
+                    , onClick (Types.RouteTo <| GoPool pool)
+                    , class "h3 w3 contain"
+                    ]
+                    []
+                ]
 
-        Just image ->
+        bannerView img insertedView =
             div
-                [ style [ ( "background-image", "url(" ++ image ++ ")" ) ], class "bg-center cover aspect-ratio aspect-ratio--16x9 bb b--white-20" ]
+                [ style [ ( "background-image", "url(" ++ img ++ ")" ) ], class "bg-center cover aspect-ratio aspect-ratio--16x9 bb b--white-20" ]
                 [ div
                     [ style [ ( "background-image", "linear-gradient( rgba(0,0,0,0.3), transparent)" ) ]
                     , class "aspect-ratio--object cover bg-center flex flex-column items-end justify-between pa3"
                     ]
                     [ Assets.discoverToolsView
-                    , div [ class "pa3 lg-breathe-50 br-pill relative top-2 right-1 flex grow justify-center items-center" ]
-                        [ div
-                            [ Assets.feather "life-buoy"
-                            , onClick (Types.RouteTo <| GoPool initId)
-                            , class "h3 w3 contain"
-                            ]
-                            []
-                        ]
+                    , insertedView
                     ]
                 ]
+    in
+    case maybeImage event.performers of
+        Nothing ->
+            text ""
+
+        Just image ->
+            case maybePool of
+                Nothing ->
+                    bannerView image <| div [] []
+
+                Just pool ->
+                    bannerView image <| bouyView pool
 
 
 maybeImage : List SG.Performer -> Maybe String

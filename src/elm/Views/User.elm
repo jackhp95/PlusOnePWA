@@ -6,6 +6,7 @@ import Helpers.Assets as Assets exposing (bgImg, feather, stringToEmoji)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
+import Maybe.Extra
 import Types exposing (..)
 
 
@@ -21,8 +22,19 @@ view user model =
             [ div [ class "ph3 bg-black-30 w-100" ]
                 [ userToolsView ]
             , userBio user
-            , pastEvents user
+            , startChatting user
+            , attendingEvents user model.events
             ]
+        ]
+
+
+startChatting : User -> Html Msg
+startChatting user =
+    div
+        [ onClick <| RouteTo <| GoEvents Nothing
+        , class "bg-white br1 pa2 mh1 flex items-center mh1"
+        ]
+        [ div [ class "blue-80 mh2 f4 fw4 ttn" ] [ text ("Start chatting with " ++ user.name ++ "!") ]
         ]
 
 
@@ -38,23 +50,33 @@ userAvi =
 
 
 userBio : User -> Html Msg
-userBio me =
-    div [ class "mv0 mh4 ph2 pv4 bb b--white-20" ]
-        [ div [ class "fw7 pv2 f4" ] [ text "bio" ]
-        , div [ class "pv2 lh-copy measure" ] [ text (Maybe.withDefault "" me.bio) ]
-        ]
+userBio user =
+    case user.bio of
+        Nothing ->
+            text ""
+
+        Just bio ->
+            div [ class "mv0 mh4 ph2 pv4 bb b--white-20" ]
+                [ div [ class "fw7 pv2 f4" ] [ text "bio" ]
+                , div [ class "pv2 lh-copy measure" ] [ text bio ]
+                ]
 
 
-pastEvents : User -> Html Msg
-pastEvents me =
+attendingEvents : User -> EveryDict Id API -> Html Msg
+attendingEvents user events =
     let
+        apiToTuple api =
+            case api of
+                SeatGeek event ->
+                    ( event.title, event.venue.name )
+
+                GraphCool event ->
+                    ( event.name, "location" )
+
         prevEvents =
-            [ ( "Kanye West", "Rose Music Hall" )
-            , ( "Chance the Rapper", "The Blue Note" )
-            , ( "LCD Soundsystem", "Jesse Hall" )
-            , ( "Vulfpeck", "Ready room" )
-            , ( "MU Tigers", "Football arena" )
-            ]
+            List.map (\eventId -> EveryDict.get eventId events) user.attendingEvent
+                |> Maybe.Extra.values
+                |> List.map apiToTuple
 
         eventCard ( performer, venue ) =
             td [ class "pr3 pl0 pt0 pb4 bb b--white-20" ]
@@ -64,7 +86,7 @@ pastEvents me =
                 ]
     in
     div [ class "ma0 pt4" ]
-        [ div [ class "fw7 pv2 mh4 f4" ] [ text "previous events" ]
+        [ div [ class "fw7 pv2 mh4 f4" ] [ text "attending events" ]
         , div [ class "mv2 overflow-auto" ]
             [ table [ class "white collapse mh4" ]
                 [ tr []

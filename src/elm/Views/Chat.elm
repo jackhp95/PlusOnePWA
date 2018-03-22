@@ -3,27 +3,26 @@ module Views.Chat exposing (..)
 import EveryDict exposing (..)
 import GraphCool.Scalar exposing (..)
 import Helpers.Assets as Assets exposing (..)
+import Helpers.From as From exposing (..)
+import Helpers.KissDB as DB
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Maybe.Extra
 import Types exposing (..)
-import Views.Message exposing (..)
 
 
 -- VIEW
 
 
-viewMessage : String -> Html msg
-viewMessage msg =
-    div [ class "dib pa2 mv1 mh2 bg-light-blue br3 measure-narrow shadow-1" ] [ text msg ]
-
-
-view : Chat -> User -> Model -> Html Types.Msg
-view chat with model =
+view : Chat -> User -> Me -> Model -> Html Types.Msg
+view chat with me model =
     let
         conversation =
-            List.map displayMessage <| Maybe.Extra.values <| List.map (\msgId -> EveryDict.get msgId model.messages) <| chat.messages
+            chat.messages
+                |> List.map (\messageId -> EveryDict.get messageId model.messages)
+                |> Maybe.Extra.values
+                |> List.map (\message -> displayMessage message me.id)
     in
     div [ class "animated fadeInLeft bg-black-70 flex flex-column flex-auto measure-wide-l pa0 ma0 shadow-2-l" ]
         [ nameBar with
@@ -36,6 +35,31 @@ view chat with model =
 messageBar : Types.Model -> Types.Chat -> Html Types.Msg
 messageBar model chat =
     let
+        maybeMessage =
+            EveryDict.get chat.id model.messages
+
+        submitOrRefresh =
+            case maybeMessage of
+                Nothing ->
+                    div [ class "bg-black-60 pa2 flex-none flex items-center hover-bg-black grow" ]
+                        [ div
+                            [ Assets.feather "refresh-cw"
+                            , class "w2 h2 contain"
+                            , onClick <| UpdateValue <| MessageRefresh chat.id
+                            ]
+                            []
+                        ]
+
+                Just message ->
+                    div [ class "bg-black-60 pa2 flex-none flex items-center hover-bg-blue grow" ]
+                        [ div
+                            [ Assets.feather "chevron-right"
+                            , class "w2 h2 contain"
+                            , onClick <| UpdateValue <| MessageSend chat.id message
+                            ]
+                            []
+                        ]
+
         -- Use the ChatId for the key of the message you're composing.
         -- This allows you to have mutliple different message states, not just one.
         -- Switching between chats should keep the message you're composing separate with this tactic.
@@ -55,14 +79,7 @@ messageBar model chat =
         -- div
         -- , contenteditable True
         -- text composing.text
-        , div [ class "bg-black-60 pa2 flex-none flex items-center hover-bg-blue grow" ]
-            [ div
-                [ Assets.feather "chevron-right"
-                , class "w2 h2 contain"
-                , onClick <| UpdateValue <| MessageSend chat.id
-                ]
-                []
-            ]
+        , submitOrRefresh
         ]
 
 
@@ -90,4 +107,40 @@ nameBar withUser =
         , div [ class "flex flex-auto justify-end items-center" ]
             [ div [ Assets.feather "more-vertical", class "grow pa3 pt2 contain mh2" ] []
             ]
+        ]
+
+
+received : Message -> Html msg
+received message =
+    div [ class "flex flex-auto pb3 pr5 slideInLeft animated" ]
+        [ div [ class "measure-narrow bg-blue-50 br2 ph3 pv2" ]
+            [ text message.text ]
+        , div [] [ text (dateTimeToViewShortDate message.createdAt) ]
+        ]
+
+
+sent : Message -> Html msg
+sent message =
+    div [ class "flex flex-row-reverse flex-auto pb3 pl5 slideInLeft animated" ]
+        [ div [ class "measure-narrow bg-red-50 br2 ph3 pv2" ]
+            [ text message.text ]
+        , div [] [ text (dateTimeToViewShortDate message.createdAt) ]
+        ]
+
+
+displayMessage : Message -> Id -> Html msg
+displayMessage message meId =
+    if Nothing == message.from then
+        toast message.text
+    else if Just meId == message.from then
+        sent message
+    else
+        received message
+
+
+toast : String -> Html msg
+toast newText =
+    div [ class "flex justify-center flex-auto pa4 fadeInUp animated" ]
+        [ div [ class "measure-narrow tc" ]
+            [ text newText ]
         ]

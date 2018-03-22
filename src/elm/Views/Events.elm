@@ -31,7 +31,7 @@ view model =
 
         mobileHide =
             case model.route of
-                Types.GoEvents _ ->
+                Types.GoEvents (Just _) ->
                     " dn db-l "
 
                 _ ->
