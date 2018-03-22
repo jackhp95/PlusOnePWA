@@ -1,15 +1,6 @@
-module Pages.CreateEvent.View exposing (..)
+module Views.CreateEvent exposing (..)
 
--- import Pages.User.Model exposing (Me)
--- import Pages.CreateEvent.Messages exposing (..)
--- import Pages.CreateEvent.Model exposing (..)
--- import Pages.Events.Model exposing (Events)
--- import Auth0.Auth0 as Auth0
--- import Auth0.Authentication as Authentication
--- import RemoteData exposing (..)
--- import SeatGeek.Types as SG
-
-import Assets exposing (banner, feather)
+import Helpers.Assets as Assets exposing (banner, feather)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)

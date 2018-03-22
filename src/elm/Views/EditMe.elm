@@ -1,8 +1,4 @@
-module Pages.EditMe.View exposing (..)
-
--- import Assets exposing (bgImg, feather)
--- import GraphCool.Scalar exposing (..)
--- import Nav exposing (bar)
+module Views.EditMe exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -10,9 +6,6 @@ import Html.Events exposing (..)
 import Types exposing (..)
 
 
--- import Pages.EditUser.Messages exposing (..)
--- import Pages.EditUser.Update exposing (..)
--- import Pages.User.Model as UserModel exposing (..)
 -- VIEW --
 
 
@@ -41,12 +34,3 @@ view model =
         , text <| toString <| me.birthday
         , input [ type_ "Button", onClick <| UpdateValue MeSubmit, value "Save" ] []
         ]
-
-
-
--- genderSelect : (String -> Msg) -> Gender -> Html Msg
--- genderSelect msg currentGender =
---     select [ onInput msg ]
---         [ option [ value "Male" ] [ text "Male" ]
---         , option [ value "Female", selected (toString currentGender == "Female") ] [ text "Female" ]
---         ]

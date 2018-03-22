@@ -3,7 +3,7 @@
 -- https://icongr.am/feather
 
 
-module Assets exposing (..)
+module Helpers.Assets exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (class, style)
@@ -127,89 +127,6 @@ stringToEmoji string =
 
         _ ->
             "\x1F937"
-
-
-
--- GRADIENTS --
-
-
-gradients : List String
-gradients =
-    [ "lg-magenta-red"
-    , "lg-purple-magenta"
-    , "lg-blue-purple"
-    , "lg-teal-blue"
-    , "lg-mint-teal"
-    , "lg-green-mint"
-    , "lg-yellow-green"
-    , "lg-red-yellow"
-    , "lg-magenta-yellow"
-    , "lg-purple-red"
-    , "lg-blue-magenta"
-    , "lg-teal-purple"
-    , "lg-mint-blue"
-    , "lg-green-teal"
-    , "lg-yellow-mint"
-    , "lg-red-green"
-
-    -- , "lg-magenta-green"
-    -- , "lg-purple-yellow"
-    -- , "lg-blue-red"
-    -- , "lg-teal-magenta"
-    -- , "lg-mint-purple"
-    -- , "lg-green-blue"
-    -- , "lg-yellow-teal"
-    -- , "lg-red-mint"
-    -- , "lg-magenta-mint"
-    -- , "lg-purple-green"
-    -- , "lg-blue-yellow"
-    -- , "lg-teal-red"
-    -- , "lg-mint-magenta"
-    -- , "lg-green-purple"
-    -- , "lg-yellow-blue"
-    -- , "lg-red-teal"
-    -- , "lg-magenta-teal"
-    -- , "lg-purple-mint"
-    -- , "lg-blue-green"
-    -- , "lg-teal-yellow"
-    -- , "lg-mint-red"
-    -- , "lg-green-magenta"
-    , "lg-yellow-purple"
-    , "lg-red-blue"
-    , "lg-magenta-blue"
-    , "lg-purple-teal"
-    , "lg-blue-mint"
-    , "lg-teal-green"
-    , "lg-mint-yellow"
-    , "lg-green-red"
-    , "lg-yellow-magenta"
-    , "lg-red-purple"
-    , "lg-magenta-purple"
-    , "lg-purple-blue"
-    , "lg-blue-teal"
-    , "lg-teal-mint"
-    , "lg-mint-green"
-    , "lg-green-yellow"
-    , "lg-yellow-red"
-    , "lg-red-magenta"
-    ]
-
-
-randomGradient : Int -> String
-randomGradient seed =
-    let
-        randomIndex =
-            seed % List.length gradients
-
-        selectedGradient =
-            List.head (List.drop randomIndex gradients)
-    in
-    case selectedGradient of
-        Nothing ->
-            ""
-
-        Just result ->
-            result ++ ""
 
 
 banner : String -> Html msg

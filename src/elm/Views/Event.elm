@@ -2,20 +2,11 @@
 -- https://guide.elm-lang.org/architecture/effects/http.html
 
 
-module Pages.Event.View exposing (..)
+module Views.Event exposing (..)
 
--- import Date exposing (..)
--- import Pages.Pool.Model exposing (Pool)
--- import Pages.Event.Model exposing (Event)
--- import Pages.Events.Model exposing (EventAPI, Events)
--- import SeatGeek.Query exposing (composeRequest)
--- import Http exposing (..)
--- import Moment exposing (..)
--- import SeatGeek.Decode exposing (decodeReply)
-
-import Assets exposing (feather)
-import Dict exposing (..)
 import GraphCool.Scalar exposing (..)
+import Helpers.Assets as Assets exposing (feather, stringToEmoji)
+import Helpers.Find as Find exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
@@ -23,71 +14,44 @@ import SeatGeek.Types as SG
 import Types exposing (..)
 
 
--- askQuery : SG.Query -> Cmd Msg
--- askQuery query =
---     let
---         url =
---             composeRequest query
---         request =
---             Http.get url decodeReply
---     in
---     Http.send Types.GetReply request
--- VIEW
-
-
-view : Model -> Html Msg
-view model =
+view : API -> Model -> Html Msg
+view api model =
     let
-        apiToView api =
+        maybePool =
+            Find.maybePoolWithAPIPools api model.pools
+
+        apiToView =
             case api of
                 SeatGeek event ->
-                    seatGeekView event
+                    seatGeekView event maybePool
 
                 GraphCool event ->
-                    graphCoolView event
-
-        displayEvent =
-            case model.route of
-                GoEvents maybe ->
-                    case maybe of
-                        Just eventId ->
-                            case Dict.get (toString eventId) model.events of
-                                Just api ->
-                                    apiToView api
-
-                                Nothing ->
-                                    [ text "I can't seem to find the event?!?!" ]
-
-                        Nothing ->
-                            [ text "I forgot which event you wanted me to find...awk" ]
-
-                _ ->
-                    [ text "uh, well, it seems you're not actually on this page?" ]
+                    graphCoolView event maybePool
     in
     section [ class "overflow-auto w-100 flex-grow-1 animated fadeInLeft mw6-l flex-shrink-0 bg-black-70 shadow-2-l" ]
-        displayEvent
+        apiToView
 
 
-graphCoolView : Event -> List (Html Msg)
-graphCoolView event =
+graphCoolView : Event -> Maybe Pool -> List (Html Msg)
+graphCoolView event maybePool =
     [ -- eventBanner event
       eventName event.name
 
     -- , eventEmojis event
     -- , eventTime event.startsAt
-    , eventPool event.pool
+    , eventPool maybePool
 
     -- , eventPopularity event
     -- , yetToBeAdded
     ]
 
 
-seatGeekView : SG.Event -> List (Html Msg)
-seatGeekView event =
-    [ eventBanner event
+seatGeekView : SG.Event -> Maybe Pool -> List (Html Msg)
+seatGeekView event maybePool =
+    [ eventBanner event maybePool
     , eventTitle event
     , eventEmojis event
-    , eventPool initId
+    , eventPool maybePool
 
     -- , eventTime event.datetime_local
     , eventTickets event
@@ -161,13 +125,13 @@ eventTickets event =
 --                 Nothing ->
 --                     "Unknown DateTime"
 --                 Just dt ->
---                     shortDate dt
+--                     dateToViewShortDate dt
 --         viewTime =
 --             case maybeEventDate date of
 --                 Nothing ->
 --                     "Unknown DateTime"
 --                 Just dt ->
---                     clockTime dt
+--                     dateToViewClockTime dt
 --         eventDateView =
 --             [ div [ class "fw7 f4 lh-solid pb1" ] [ text viewTime ]
 --             , div [ class "fw4 lh-solid" ] [ text viewDate ]
@@ -179,8 +143,8 @@ eventTickets event =
 --         ]
 
 
-stringDateTime : DateTime -> String
-stringDateTime datetime =
+dateTimeToString : DateTime -> String
+dateTimeToString datetime =
     String.dropRight 1 (String.dropLeft 10 (Basics.toString datetime))
 
 
@@ -211,7 +175,7 @@ yetToBeAdded =
                 Sed ut perspiciatis, unde omnis iste natus error sit voluptatem
                 accusantium doloremque laudantium, totam rem aperiam eaque ipsa,
                 quae ab illo inventore veritatis et quasi architecto beatae vitae
-                dicta sunt, explicabo. Nemo enim ipsam voluptatem, quia voluptas sit,
+                EveryDicta sunt, explicabo. Nemo enim ipsam voluptatem, quia voluptas sit,
                 aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos,
                 qui ratione voluptatem sequi nesciunt, neque porro quisquam est.
                 qui dolorem ipsum, quia dolor sit amet consectetur adipisci.
@@ -225,23 +189,29 @@ yetToBeAdded =
         ]
 
 
-eventPool : Id -> Html Msg
-eventPool poolId =
-    div [ class "flex items-center justify-around mh4 pv4 bb b--white-20" ]
-        [ a [ href "Pool.html", class "white link br-pill pa2 mh1 flex items-center mh1 grow" ]
-            [ div [ Assets.feather "info", class "h2 w2 contain bg-center" ] []
-            ]
-        , a
-            [ onClick (Types.RouteTo <| GoPool poolId)
-            , class "white link lg-breathe-50 br1 pa2 mh1 flex items-center mh1 grow"
-            ]
-            [ div [ Assets.feather "life-buoy", class "h2 w2 mh1 contain bg-center" ] []
-            , div [ class "mh2 f4 fw4 ttn" ] [ text "join pool" ]
-            ]
-        , div
-            [ class "mr3 f2" ]
-            [ text "🏊" ]
-        ]
+eventPool : Maybe Pool -> Html Msg
+eventPool maybePool =
+    case maybePool of
+        Nothing ->
+            text ""
+
+        Just pool ->
+            div
+                [ class "flex items-center justify-around mh4 pv4 bb b--white-20" ]
+                [ a [ href "Pool.html", class "white link br-pill pa2 mh1 flex items-center mh1 grow" ]
+                    [ div [ Assets.feather "info", class "h2 w2 contain bg-center" ] []
+                    ]
+                , a
+                    [ onClick (Types.RouteTo <| GoPool pool)
+                    , class "white link lg-breathe-50 br1 pa2 mh1 flex items-center mh1 grow"
+                    ]
+                    [ div [ Assets.feather "life-buoy", class "h2 w2 mh1 contain bg-center" ] []
+                    , div [ class "mh2 f4 fw4 ttn" ] [ text "join pool" ]
+                    ]
+                , div
+                    [ class "mr3 f2" ]
+                    [ text "🏊" ]
+                ]
 
 
 progressBar : Float -> Html msg
@@ -273,30 +243,42 @@ eventEmojis event =
         (List.map toIcon event.taxonomies)
 
 
-eventBanner : SG.Event -> Html Msg
-eventBanner event =
-    case maybeImage event.performers of
-        Nothing ->
-            text ""
+eventBanner : SG.Event -> Maybe Pool -> Html Msg
+eventBanner event maybePool =
+    let
+        bouyView pool =
+            div [ class "pa3 lg-breathe-50 br-pill relative top-2 right-1 flex grow justify-center items-center" ]
+                [ div
+                    [ Assets.feather "life-buoy"
+                    , onClick (Types.RouteTo <| GoPool pool)
+                    , class "h3 w3 contain"
+                    ]
+                    []
+                ]
 
-        Just image ->
+        bannerView img insertedView =
             div
-                [ style [ ( "background-image", "url(" ++ image ++ ")" ) ], class "bg-center cover aspect-ratio aspect-ratio--16x9 bb b--white-20" ]
+                [ style [ ( "background-image", "url(" ++ img ++ ")" ) ], class "bg-center cover aspect-ratio aspect-ratio--16x9 bb b--white-20" ]
                 [ div
                     [ style [ ( "background-image", "linear-gradient( rgba(0,0,0,0.3), transparent)" ) ]
                     , class "aspect-ratio--object cover bg-center flex flex-column items-end justify-between pa3"
                     ]
                     [ Assets.discoverToolsView
-                    , div [ class "pa3 lg-breathe-50 br-pill relative top-2 right-1 flex grow justify-center items-center" ]
-                        [ div
-                            [ Assets.feather "life-buoy"
-                            , onClick (Types.RouteTo <| GoPool initId)
-                            , class "h3 w3 contain"
-                            ]
-                            []
-                        ]
+                    , insertedView
                     ]
                 ]
+    in
+    case maybeImage event.performers of
+        Nothing ->
+            text ""
+
+        Just image ->
+            case maybePool of
+                Nothing ->
+                    bannerView image <| div [] []
+
+                Just pool ->
+                    bannerView image <| bouyView pool
 
 
 maybeImage : List SG.Performer -> Maybe String
@@ -307,94 +289,3 @@ maybeImage performers =
 
         Nothing ->
             Nothing
-
-
-stringToEmoji : String -> String
-stringToEmoji string =
-    case string of
-        "concert" ->
-            "🎵"
-
-        "music_festival" ->
-            "🎶"
-
-        "sports" ->
-            "🏆"
-
-        "theater" ->
-            "🎭"
-
-        "basketball" ->
-            "🏀"
-
-        "nba" ->
-            "⛹"
-
-        "ncaa_football" ->
-            "👨\x1F3FB\x200D🎓"
-
-        "ncaa_basketball" ->
-            "👨\x1F3FB\x200D🎓"
-
-        "ncaa_womens_basketball" ->
-            "👩\x200D🎓"
-
-        "wnba" ->
-            "⛹️\x200D♀️"
-
-        "family" ->
-            "🚸"
-
-        "broadway_tickets_national" ->
-            "🎟"
-
-        "dance_performance_tour" ->
-            "💃"
-
-        "classical" ->
-            "🎼"
-
-        "classical_orchestral_instrumental" ->
-            "🎻"
-
-        "comedy" ->
-            "\x1F923"
-
-        "hockey" ->
-            "\x1F3D2"
-
-        "fighting" ->
-            "\x1F93C\x200D♂️"
-
-        "soccer" ->
-            "⚽"
-
-        "wrestling" ->
-            "\x1F93C"
-
-        "football" ->
-            "🏈"
-
-        "auto_racing" ->
-            "🏎️"
-
-        "animal_sports" ->
-            "🐾"
-
-        "horse_racing" ->
-            "🏇"
-
-        "rodeo" ->
-            "\x1F920"
-
-        "nfl" ->
-            "🏟️"
-
-        "cirque_du_soleil" ->
-            "\x1F938"
-
-        "classical_opera" ->
-            "🎤"
-
-        _ ->
-            "\x1F937"

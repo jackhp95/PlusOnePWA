@@ -1,23 +1,20 @@
 module TestCreateChat exposing (..)
 
-import RemoteData exposing (..)
-import Graphqelm.Http exposing (..)
-import GraphCool.Object
-import GraphCool.Object.User as User
-import GraphCool.Object.Event as Event
--- import GraphCool.Object.Host as Host
--- import GraphCool.Object.Venue as Venue
-import GraphCool.Object.Chat as Chat
-import GraphCool.Mutation as Mutation
-import GraphCool.Scalar exposing (..)
--- import GraphCool.InputObject exposing (..)
 import GraphCool.Enum.DateState exposing (DateState)
+import GraphCool.Mutation as Mutation
+import GraphCool.Object
+import GraphCool.Object.Chat as Chat
+import GraphCool.Object.Event as Event
+import GraphCool.Object.User as User
+import GraphCool.Scalar exposing (..)
 import Graphqelm.Document as Document
 import Graphqelm.Http exposing (..)
 import Graphqelm.Operation exposing (RootMutation)
 import Graphqelm.OptionalArgument exposing (OptionalArgument(Absent, Null, Present))
 import Graphqelm.SelectionSet exposing (SelectionSet, with)
 import Html exposing (..)
+import RemoteData exposing (..)
+
 
 type alias NewChat =
     { event : Id
@@ -27,30 +24,38 @@ type alias NewChat =
 
 
 mutation : SelectionSet (Maybe NewChat) RootMutation
-mutation = 
-    Mutation.selection identity 
-        |> with (Mutation.createChat
-                    (\optionals -> {optionals 
-                                    | eventId = Present (Id "cjedawr4dj83u0134tp12frhy")
-                                    , initiatedId = Present (Id "cjelx7wg22nqt0129luqv1v7t")
-                                    , recipientId = Present (Id "cjelx7vxz2n6w0199rj4na1a2")})
-                    newChat
+mutation =
+    Mutation.selection identity
+        |> with
+            (Mutation.createChat
+                (\optionals ->
+                    { optionals
+                        | eventId = Present (Id "cjedawr4dj83u0134tp12frhy")
+                        , initiatedId = Present (Id "cjelx7wg22nqt0129luqv1v7t")
+                        , recipientId = Present (Id "cjelx7vxz2n6w0199rj4na1a2")
+                    }
                 )
- 
+                newChat
+            )
+
+
 newChat : SelectionSet NewChat GraphCool.Object.Chat
 newChat =
     Chat.selection NewChat
-        |> with ( Chat.event identity eventId)
-        |> with ( Chat.initiated identity userName)
-        |> with ( Chat.recipient identity userName)
+        |> with (Chat.event identity eventId)
+        |> with (Chat.initiated identity userName)
+        |> with (Chat.recipient identity userName)
+
 
 userName : SelectionSet String GraphCool.Object.User
 userName =
     User.selection identity |> with User.name
 
+
 eventId : SelectionSet Id GraphCool.Object.Event
 eventId =
     Event.selection identity |> with Event.id
+
 
 makeRequest : Cmd Msg
 makeRequest =
@@ -90,17 +95,17 @@ view model =
 
                 Success a ->
                     case a of
-                      Nothing ->
-                        div [][ text "Oops. No response"]
-                      Just c ->
-                        div []
-                        [
-                         div []
-                            [ h5 [] [ text "Successfully create a chat." ]
-                            , div [] [ text ("Initiator: " ++ c.initiated) ]
-                            , div [] [ text ("Recipient: " ++ (Maybe.withDefault "NA" c.recipient)) ]
-                            ]
-                        ]
+                        Nothing ->
+                            div [] [ text "Oops. No response" ]
+
+                        Just c ->
+                            div []
+                                [ div []
+                                    [ h5 [] [ text "Successfully create a chat." ]
+                                    , div [] [ text ("Initiator: " ++ c.initiated) ]
+                                    , div [] [ text ("Recipient: " ++ Maybe.withDefault "NA" c.recipient) ]
+                                    ]
+                                ]
     in
     div []
         [ div []
@@ -120,7 +125,7 @@ view model =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        MutateEvent response->
+        MutateEvent response ->
             ( response, Cmd.none )
 
 

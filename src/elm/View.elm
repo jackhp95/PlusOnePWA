@@ -1,24 +1,21 @@
 module View exposing (render)
 
--- DUCK TAPE --
--- PAGES --
--- SUBVIEWS --
--- SUBVIEWS --
--- import Html.Events exposing (..)
-
-import Dict exposing (..)
+import EveryDict exposing (..)
+import Helpers.Find as Find exposing (..)
+import Helpers.From as From exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Nav exposing (..)
-import Pages.Chat.View as Chat
-import Pages.Chats.View as Chats
-import Pages.CreateEvent.View as CreateEvent
-import Pages.EditMe.View as EditMe
-import Pages.Event.View as Event
-import Pages.Events.View as Events
-import Pages.Pool.View as Pool
-import Pages.User.View as User
 import Types exposing (..)
+import Views.Chat as Chat
+import Views.Chats as Chats
+import Views.CreateEvent as CreateEvent
+import Views.EditMe as EditMe
+import Views.Event as Event
+import Views.Events as Events
+import Views.Nav as Nav exposing (..)
+import Views.Pool as Pool
+import Views.The404 as The404 exposing (..)
+import Views.User as User
 
 
 render : Model -> Html Msg
@@ -33,56 +30,74 @@ render model =
 
 page : Model -> List (Html Msg)
 page model =
-    let
-        me =
-            case model.me of
-                Nothing ->
-                    initMe
-
-                Just me ->
-                    me
-    in
     case model.route of
         GoChats chatId ->
-            case chatId of
+            case model.me of
                 Nothing ->
-                    [ Chats.view model ]
+                    [ The404.view <| "Weird, for some reason, we don't think you're logged in" :: model.errors ]
 
-                Just chatId ->
-                    let
-                        chat =
-                            Maybe.withDefault initChat <| Dict.get (toString chatId) model.chats
-                    in
-                    [ Chats.view model
-                    , Chat.view chat me.id model
-                    ]
+                Just me ->
+                    case chatId of
+                        Nothing ->
+                            [ Chats.view me model ]
+
+                        Just chatId ->
+                            case EveryDict.get chatId model.chats of
+                                Nothing ->
+                                    [ Chats.view me model
+                                    , The404.view <| "I can't find the chat!" :: model.errors
+                                    ]
+
+                                Just chat ->
+                                    case maybeUserWithChatMeUsers chat me model.users of
+                                        Nothing ->
+                                            [ The404.view <| "I can't find who you're chatting with." :: model.errors ]
+
+                                        Just with ->
+                                            [ Chats.view me model
+                                            , Chat.view
+                                                chat
+                                                with
+                                                me
+                                                model
+                                            ]
 
         GoUser userId ->
-            [ User.view userId model ]
-
-        GoPool poolId ->
-            case Dict.get (toString poolId) model.pools of
-                Just pool ->
-                    [ Pool.view pool model ]
+            case EveryDict.get userId model.users of
+                Just user ->
+                    [ User.view user model ]
 
                 Nothing ->
-                    [ text "I can't find the pool!" ]
+                    [ The404.view <| "I can't find this user!" :: model.errors ]
+
+        GoPool pool ->
+            [ Pool.view pool model ]
 
         GoEditMe ->
-            [ EditMe.view model ]
+            case model.me of
+                Just me ->
+                    [ EditMe.view model ]
+
+                Nothing ->
+                    [ The404.view <| "Somehow you're not logged in, and you got to this page." :: model.errors ]
 
         GoCreateEvent ->
             [ CreateEvent.view model ]
 
-        GoEvents event ->
-            case event of
+        GoEvents eventId ->
+            case eventId of
                 Nothing ->
                     [ Events.view model ]
 
-                Just x ->
-                    [ Events.view model
-                    , Event.view model
-                    ]
+                Just eventId ->
+                    case EveryDict.get eventId model.events of
+                        Just event ->
+                            [ Events.view model
+                            , Event.view event model
+                            ]
+
+                        Nothing ->
+                            [ The404.view <| "I can't find this event!" :: model.errors ]
 
         _ ->
-            [ Events.view model ]
+            [ The404.view model.errors ]

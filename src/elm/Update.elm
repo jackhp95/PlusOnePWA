@@ -1,71 +1,44 @@
 module Update exposing (..)
 
--- import Pages.EditUser.Messages as EditUserMsg
--- -- import Pages.User.Model exposing (..)
--- import Pages.EditUser.Messages as EditUserMsg
--- import Pages.Pool.View exposing (determineTubers, getPosition)
--- import Pages.Chat.Update exposing (..)
--- import Pages.Chats.Messages as ChatsMsg
--- import Pages.Chats.Update exposing (..)
--- import Pages.CreateChat.Messages as CreateChatMsg
--- import Pages.CreateChat.Update
--- import Pages.CreateEvent.Update exposing (..)
--- import Pages.CreateMessage.Messages as CreateMessageMsg
--- import Pages.CreateMessage.Update exposing (makeSendRequest)
--- import Pages.EditUser.Update exposing (..)
--- import Pages.Event.Messages as EventMsg
--- import Pages.Event.Update
--- import Pages.Events.Model exposing (EventAPI(GraphCool, SeatGeek))
--- import Pages.Events.Update
--- import Pages.Pool.Model as PoolModel
--- import Pages.User.Model exposing (..)
--- import Pages.User.Update exposing (..)
--- import SeatGeek.Types as SG
+-- import Auth0.Authentication as Authentication
 
--- ---------------------------- --
--- PRE FUNCTIONAL IMPORTS ABOVE --
--- ---------------------------- --
--- import GraphCool.Enum.DateState exposing (DateState)
--- import GraphCool.Object.Chat as Chat
--- import GraphCool.Object.Event as Event
--- import GraphCool.Object.Host as Host
--- import GraphCool.Object.Location as Location
--- import GraphCool.Object.Message as Message
--- import GraphCool.Object.Pool as Pool
--- import GraphCool.Object.User as User
--- import GraphCool.Object.Venue as Venue
--- import GraphCool.Query as Query
--- import Graphqelm.Document as Document
--- import Graphqelm.Operation exposing (RootQuery)
--- import GraphCool.InputObject as IO exposing (..)
-
-import Dict exposing (..)
-import DictFrom exposing (..)
+import Auth0.Auth0 as Auth0
+import Debug exposing (log)
+import EveryDict exposing (..)
 import GraphCool.InputObject exposing (..)
-import GraphCool.Mutation as Mutation exposing (..)
+import GraphCool.Mutation as Mutation
+import GraphCool.Query as Query
 import GraphCool.Scalar exposing (..)
 import Graphqelm.Http exposing (..)
 import Graphqelm.OptionalArgument exposing (OptionalArgument(Absent, Null, Present), fromMaybe)
 import Graphqelm.SelectionSet as SelectionSet exposing (SelectionSet, with)
-import KissDB as DB exposing (..)
+import Helpers.From as From exposing (..)
+import Helpers.KissDB as DB exposing (..)
+import Navigation as Nav
 import RemoteData exposing (..)
 import Types exposing (..)
-import Auth0.Auth0 as Auth0
-import Auth0.Authentication as Authentication
-import Debug exposing (log)
-import Navigation as Nav
+
 
 -- HELPERS
 
-goTo : Model -> Route -> String  -> ( Model, Cmd msg )
-goTo model route url = 
-    ( { model | route = log "Route change undertaken: " route }, Nav.newUrl url  )
+
+goTo : Model -> Route -> String -> ( Model, Cmd msg )
+goTo model route url =
+    ( { model | route = log "Route change undertaken: " route }, Nav.newUrl url )
+
+
 
 -- for development purposes - if on then logged in user can only see loggout out stuff until we have a way for them to add their profile data
+
+
 authOff : Bool
-authOff = False
+authOff =
+    False
+
+
 
 -- UPDATE --
+
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
@@ -97,106 +70,211 @@ update msg model =
         users =
             model.users
 
-        forms = 
+        forms =
             model.forms
 
-        me =
+        maybeMe =
             model.me
 
         errors =
             model.errors
+
+        maybeMeListId =
+            case maybeMe of
+                Nothing ->
+                    Nothing
+
+                Just me ->
+                    Just [ me.id ]
     in
     case msg of
-        AuthenticationMsg authMsg ->
+        DoAuth action ->
             let
-                ( newAuthModel, cmd ) =
-                    Authentication.update (log "AuthMsg" authMsg) model.authModel
+                auth =
+                    model.auth
 
-                updatedModel = 
-                    { model |  authModel = newAuthModel }
+                state =
+                    model.auth.state
             in
-                case newAuthModel.state of
-                Auth0.LoggedOut ->
-                    update (RouteTo (GoEvents Nothing)) updatedModel
+            case action of
+                AuthenticationResult result ->
+                    let
+                        queryUserIdTokenSelect loggedInUser =
+                            Query.selection identity
+                                |> with (Query.user (\optionals -> { optionals | auth0UserId = Present loggedInUser.idtoken }) me)
 
-                Auth0.LoggedIn loggedInUser ->
-                    case newAuthModel.getUserId  of
-                        -- TODO Where to send people on successful login
-                        Id "3" -> 
-                            update (RouteTo route) updatedModel
-                        Id "0" -> 
-                            update (RouteTo (GoEvents Nothing)) updatedModel
-                        _ -> 
-                            update (RouteTo (GoEvents Nothing)) updatedModel
+                        queryUserIdToken loggedInUser =
+                            queryUserIdTokenSelect loggedInUser
+                                |> Graphqelm.Http.queryRequest "https://api.graph.cool/simple/v1/PlusOne"
+                                |> Graphqelm.Http.send (RemoteData.fromResult >> ReturnMaybeMe)
+                    in
+                    case result of
+                        Ok user ->
+                            ( { model | auth = { auth | state = Auth0.LoggedIn user } }, queryUserIdToken user )
 
-        RouteTo GoAuth ->
-            if Authentication.isLoggedIn model.authModel then
-                let
-                    ( newAuthModel, logoutCmd ) =
-                        Authentication.update Authentication.LogOut model.authModel
+                        Err err ->
+                            ( { model | errors = toString err :: errors }, Cmd.none )
 
-                    updatedModel = 
-                        { model |  authModel = newAuthModel }
+                ShowLogIn ->
+                    ( model, model.auth.authorize Auth0.defaultOpts )
 
-                    (navChangeModel, navChangeCommand) =
-                         goTo updatedModel (Types.GoEvents Nothing) "/"
+                LogOut ->
+                    ( { model | auth = { auth | state = Auth0.LoggedOut } }, model.auth.logOut () )
 
-                in
-                    navChangeModel ! [navChangeCommand, Cmd.map AuthenticationMsg logoutCmd ]
-            else
-                ( model, Cmd.map AuthenticationMsg (model.authModel.authorize {}) )
-
+        -- AuthenticationMsg authMsg ->
+        --     let
+        --         ( newAuthModel, cmd ) =
+        --             Authentication.update (log "AuthMsg" authMsg) model.authModel
+        --         updatedModel =
+        --             { model | authModel = newAuthModel }
+        --     in
+        --     case newAuthModel.state of
+        --         Auth0.LoggedOut ->
+        --             update (RouteTo (GoEvents Nothing)) updatedModel
+        --         Auth0.LoggedIn loggedInUser ->
+        --             case newAuthModel.getUserId of
+        --                 -- TODO Where to send people on successful login
+        --                 Id "3" ->
+        --                     update (RouteTo route) updatedModel
+        --                 Id "0" ->
+        --                     update (RouteTo (GoEvents Nothing)) updatedModel
+        --                 _ ->
+        --                     update (RouteTo (GoEvents Nothing)) updatedModel
         RouteTo newRoute ->
             let
-                authModel = model.authModel
-
+                -- authModel =
+                --     model.authModel
                 -- Log attempted route change to console
-                loggedRoute = log "Route change sought: " newRoute 
+                loggedRoute =
+                    log "Route change sought: " newRoute
+
+                --             in
+                --                 case (authModel.state, model.me) of
+                --                     -- Logged out - can only see events
+                --                     (Auth0.LoggedOut , _) ->
+                --                         if authOff then
+                --                             goTo model newRoute (toString newRoute)
+                --                         else
+                --                             goTo model (GoEvents Nothing) "/"
+                --                     -- Logged in with me data - let them go where they like
+                --                     (Auth0.LoggedIn loggedInUser, Just _ ) ->
+                --                         goTo model newRoute (toString newRoute)
+                --                     -- Logged in without me data
+                --                     -- Go to edit me
+                --                     (Auth0.LoggedIn loggedInUser, Nothing) ->
+                --                         let
+                --                             -- Initialise user with Auth data
+                --                             newMe =
+                --                                 { initMe
+                --                                     | id = authModel.getUserId
+                --                                     , auth0UserId = Just loggedInUser.idtoken
+                --                                     , email = Just loggedInUser.profile.email
+                --                                     , name = loggedInUser.profile.name
+                --                                 }
+                --                             newForms =
+                --                                 { forms | me = newMe}
+                --                             newModel =
+                --                                 { model | forms = newForms}
+                --                             (limitedRoute, url) =
+                --                                 case newRoute of
+                --                                     GoEditMe ->
+                --                                         (GoEditMe, toString(GoEditMe))
+                --                                     _ ->
+                --                                         (GoEvents Nothing, "/")
+                --                         in
+                --                             if authOff then
+                --                                 goTo model newRoute (toString newRoute)
+                --                             else
+                --                                 goTo newModel limitedRoute url
+                basicRoute =
+                    ( { model | route = newRoute }, Cmd.none )
+
+                goEventUpdate eventId =
+                    case eventId of
+                        Nothing ->
+                            basicRoute
+
+                        Just eventId ->
+                            case EveryDict.get eventId events of
+                                Nothing ->
+                                    basicRoute
+
+                                Just api ->
+                                    case api of
+                                        GraphCool event ->
+                                            basicRoute
+
+                                        SeatGeek event ->
+                                            let
+                                                createSGPool =
+                                                    Mutation.selection identity
+                                                        |> with
+                                                            (Mutation.createPool
+                                                                (\poolOptionals ->
+                                                                    { poolOptionals
+                                                                        | seatGeekId = Present <| From.idToString event.id
+                                                                        , viewedIds = fromMaybe maybeMeListId
+                                                                    }
+                                                                )
+                                                                DB.pool
+                                                            )
+
+                                                createSGPoolRequest =
+                                                    createSGPool
+                                                        |> Graphqelm.Http.mutationRequest "https://api.graph.cool/simple/v1/PlusOne"
+                                                        |> Graphqelm.Http.send
+                                                            (RemoteData.fromResult >> ReturnMaybePool)
+                                            in
+                                            ( { model | route = newRoute }, createSGPoolRequest )
             in
+            case maybeMe of
+                Nothing ->
+                    case newRoute of
+                        GoEvents eventId ->
+                            goEventUpdate eventId
 
-                case (authModel.state, model.me) of
-                    -- Logged out - can only see events
-                    (Auth0.LoggedOut , _) ->
-                        if authOff then 
-                            goTo model newRoute (toString newRoute)
-                        else 
-                            goTo model (GoEvents Nothing) "/"
+                        _ ->
+                            basicRoute
 
-                    -- Logged in with me data - let them go where they like
-                    (Auth0.LoggedIn loggedInUser, Just _ ) -> 
-                        goTo model newRoute (toString newRoute)
+                Just me ->
+                    case newRoute of
+                        GoEvents eventId ->
+                            goEventUpdate eventId
 
-                    -- Logged in without me data
-                    -- Go to edit me
-                    (Auth0.LoggedIn loggedInUser, Nothing) ->
-                        let
-                            -- Initialise user with Auth data
-                            newMe = 
-                                { initMe 
-                                    | id = authModel.getUserId
-                                    , auth0UserId = Just loggedInUser.idtoken
-                                    , email = Just loggedInUser.profile.email
-                                    , name = loggedInUser.profile.name
-                                }  
+                        GoPool pool ->
+                            let
+                                attendingEvent =
+                                    Mutation.selection identity
+                                        |> with
+                                            (Mutation.addToAttendingEvent
+                                                { attendingUserId = me.id, attendingEventPoolId = pool.id }
+                                                SelectionSet.empty
+                                            )
 
-                            newForms = 
-                                { forms | me = newMe}
+                                attendingEventRequest =
+                                    attendingEvent
+                                        |> Graphqelm.Http.mutationRequest "https://api.graph.cool/simple/v1/PlusOne"
+                                        |> Graphqelm.Http.send
+                                            (RemoteData.fromResult >> ReturnMaybeEmpty)
+                            in
+                            ( { model
+                                | route = newRoute
+                                , pools =
+                                    EveryDict.insert
+                                        pool.id
+                                        { pool | usersAttending = me.id :: pool.usersAttending }
+                                        pools
+                                , me = Just { me | attendingEvent = pool.id :: me.attendingEvent }
+                              }
+                            , attendingEventRequest
+                            )
 
-                            newModel = 
-                                { model | forms = newForms}
+                        _ ->
+                            basicRoute
 
-                            (limitedRoute, url) = 
-                                case newRoute of
-                                    GoEditMe -> 
-                                        (GoEditMe, toString(GoEditMe))
-                                    _ -> 
-                                        (GoEvents Nothing, "/")
-                        in
-                            if authOff then 
-                                goTo model newRoute (toString newRoute)
-                            else 
-                                goTo newModel limitedRoute url
-
+        -- ( { model | route = newRoute }
+        -- , Nav.newUrl newRoute)
+        --)
         UpdateValue input ->
             let
                 forms =
@@ -223,19 +301,46 @@ update msg model =
                     ( { model | forms = { forms | me = { me | birthday = DateTime val } } }, Cmd.none )
 
                 MeSubmit ->
-                    ( model, Cmd.none )
+                    ( model, Cmd.none {- Create/UpdateUser Mutation Cmd goes here -} )
 
                 -- Message
-                MessageText id val ->
+                MessageRefresh chatId ->
+                    ( model, DB.requestMessages identity )
+
+                -- Use the ChatId for the key of the message you're composing.
+                -- This allows you to have mutliple different message states, not just one.
+                -- Switching between chats should keep the message you're composing separate with this tactic.
+                MessageText chatId val ->
                     case val == "" of
                         False ->
-                            ( { model | messages = Dict.insert (toString id) { initMessage | text = val } model.messages }, Cmd.none )
+                            ( { model | messages = EveryDict.insert chatId { initMessage | text = val } model.messages }, Cmd.none )
 
                         True ->
-                            ( { model | messages = Dict.remove (toString id) model.messages }, Cmd.none )
+                            ( { model | messages = EveryDict.remove chatId model.messages }, Cmd.none )
 
-                MessageSend id ->
-                    ( { model | messages = Dict.remove (toString id) model.messages }, Cmd.none )
+                MessageSend chatId message ->
+                    let
+                        createMessage =
+                            Mutation.selection identity
+                                |> with
+                                    (Mutation.createMessage
+                                        (\messageOptionals ->
+                                            { messageOptionals
+                                                | chatId = Present chatId
+                                                , fromId = Present me.id
+                                            }
+                                        )
+                                        { text = message.text }
+                                        DB.message
+                                    )
+
+                        createMessageRequest =
+                            createMessage
+                                |> Graphqelm.Http.mutationRequest "https://api.graph.cool/simple/v1/PlusOne"
+                                |> Graphqelm.Http.send
+                                    (RemoteData.fromResult >> ReturnMaybeMessage)
+                    in
+                    ( { model | messages = EveryDict.remove chatId model.messages }, createMessageRequest )
 
                 -- Event
                 EventName val ->
@@ -288,11 +393,40 @@ update msg model =
                     in
                     ( { model | forms = { forms | event = initEvent } }, sendCreateEventRequest )
 
+        -- Everything
+        ReturnEverything response ->
+            case response of
+                Success x ->
+                    ( { model
+                        | hosts = EveryDict.union (From.listHostToDict x.hosts) model.hosts
+                        , venues = EveryDict.union (From.listVenueToDict x.venues) model.venues
+                        , locations = EveryDict.union (From.listLocationToDict x.locations) model.locations
+                        , events = EveryDict.union (x.events |> List.map (\event -> ( event.id, GraphCool event )) |> EveryDict.fromList) model.events
+                        , pools = EveryDict.union (From.listPoolToDict x.pools) model.pools
+                        , messages = EveryDict.union (From.listMessageToDict x.messages) model.messages
+                        , chats = EveryDict.union (From.listChatToDict x.chats) model.chats
+                        , users = EveryDict.union (From.listUserToDict x.users) model.users
+                        , me =
+                            if x.me == Nothing then
+                                -- Don't overwrite current user if GraphCool returns Nothing instead of Me
+                                maybeMe
+                            else
+                                x.me
+                      }
+                    , Cmd.none
+                    )
+
+                Failure y ->
+                    ( { model | errors = toString y :: model.errors }, Cmd.none )
+
+                _ ->
+                    ( { model | errors = "RemoteData is running an update?" :: model.errors }, Cmd.none )
+
         -- MANY
         ReturnHosts response ->
             case response of
                 Success x ->
-                    ( { model | hosts = Dict.union (DictFrom.listHost x) hosts }, Cmd.none )
+                    ( { model | hosts = EveryDict.union (From.listHostToDict x) hosts }, Cmd.none )
 
                 Failure y ->
                     ( { model | errors = toString y :: errors }, Cmd.none )
@@ -303,7 +437,7 @@ update msg model =
         ReturnVenues response ->
             case response of
                 Success x ->
-                    ( { model | venues = Dict.union (DictFrom.listVenue x) venues }, Cmd.none )
+                    ( { model | venues = EveryDict.union (From.listVenueToDict x) venues }, Cmd.none )
 
                 Failure y ->
                     ( { model | errors = toString y :: errors }, Cmd.none )
@@ -314,7 +448,7 @@ update msg model =
         ReturnLocations response ->
             case response of
                 Success x ->
-                    ( { model | locations = Dict.union (DictFrom.listLocation x) locations }, Cmd.none )
+                    ( { model | locations = EveryDict.union (From.listLocationToDict x) locations }, Cmd.none )
 
                 Failure y ->
                     ( { model | errors = toString y :: errors }, Cmd.none )
@@ -325,7 +459,7 @@ update msg model =
         ReturnEvents response ->
             case response of
                 Success x ->
-                    ( { model | events = Dict.union (DictFrom.listEvent x) events }, Cmd.none )
+                    ( { model | events = EveryDict.union (From.listEventToDict x) events }, Cmd.none )
 
                 -- API of GraphCool is hardcoded into listEvent
                 Failure y ->
@@ -337,7 +471,7 @@ update msg model =
         ReturnPools response ->
             case response of
                 Success x ->
-                    ( { model | pools = Dict.union (DictFrom.listPool x) pools }, Cmd.none )
+                    ( { model | pools = EveryDict.union (From.listPoolToDict x) pools }, Cmd.none )
 
                 Failure y ->
                     ( { model | errors = toString y :: errors }, Cmd.none )
@@ -348,7 +482,7 @@ update msg model =
         ReturnMessages response ->
             case response of
                 Success x ->
-                    ( { model | messages = Dict.union (DictFrom.listMessage x) messages }, Cmd.none )
+                    ( { model | messages = EveryDict.union (From.listMessageToDict x) messages }, Cmd.none )
 
                 Failure y ->
                     ( { model | errors = toString y :: errors }, Cmd.none )
@@ -359,7 +493,7 @@ update msg model =
         ReturnChats response ->
             case response of
                 Success x ->
-                    ( { model | chats = Dict.union (DictFrom.listChat x) chats }, Cmd.none )
+                    ( { model | chats = EveryDict.union (From.listChatToDict x) chats }, Cmd.none )
 
                 Failure y ->
                     ( { model | errors = toString y :: errors }, Cmd.none )
@@ -370,7 +504,7 @@ update msg model =
         ReturnUsers response ->
             case response of
                 Success x ->
-                    ( { model | users = Dict.union (DictFrom.listUser x) users }, Cmd.none )
+                    ( { model | users = EveryDict.union (From.listUserToDict x) users }, Cmd.none )
 
                 Failure y ->
                     ( { model | errors = toString y :: errors }, Cmd.none )
@@ -393,7 +527,7 @@ update msg model =
         ReturnHost response ->
             case response of
                 Success x ->
-                    ( { model | hosts = Dict.insert (toString x.id) x hosts }, Cmd.none )
+                    ( { model | hosts = EveryDict.insert x.id x hosts }, Cmd.none )
 
                 Failure y ->
                     ( { model | errors = toString y :: errors }, Cmd.none )
@@ -404,7 +538,7 @@ update msg model =
         ReturnVenue response ->
             case response of
                 Success x ->
-                    ( { model | venues = Dict.insert (toString x.id) x venues }, Cmd.none )
+                    ( { model | venues = EveryDict.insert x.id x venues }, Cmd.none )
 
                 Failure y ->
                     ( { model | errors = toString y :: errors }, Cmd.none )
@@ -415,7 +549,7 @@ update msg model =
         ReturnLocation response ->
             case response of
                 Success x ->
-                    ( { model | locations = Dict.insert (toString x.id) x locations }, Cmd.none )
+                    ( { model | locations = EveryDict.insert x.id x locations }, Cmd.none )
 
                 Failure y ->
                     ( { model | errors = toString y :: errors }, Cmd.none )
@@ -426,7 +560,7 @@ update msg model =
         ReturnEvent response ->
             case response of
                 Success x ->
-                    ( { model | events = Dict.insert (toString x.id) (GraphCool x) events }, Cmd.none )
+                    ( { model | events = EveryDict.insert x.id (GraphCool x) events }, Cmd.none )
 
                 Failure y ->
                     ( { model | errors = toString y :: errors }, Cmd.none )
@@ -437,7 +571,7 @@ update msg model =
         ReturnPool response ->
             case response of
                 Success x ->
-                    ( { model | pools = Dict.insert (toString x.id) x pools }, Cmd.none )
+                    ( { model | pools = EveryDict.insert x.id x pools }, Cmd.none )
 
                 Failure y ->
                     ( { model | errors = toString y :: errors }, Cmd.none )
@@ -448,7 +582,7 @@ update msg model =
         ReturnMessage response ->
             case response of
                 Success x ->
-                    ( { model | messages = Dict.insert (toString x.id) x messages }, Cmd.none )
+                    ( { model | messages = EveryDict.insert x.id x messages }, Cmd.none )
 
                 Failure y ->
                     ( { model | errors = toString y :: errors }, Cmd.none )
@@ -459,7 +593,7 @@ update msg model =
         ReturnChat response ->
             case response of
                 Success x ->
-                    ( { model | chats = Dict.insert (toString x.id) x chats }, Cmd.none )
+                    ( { model | chats = EveryDict.insert x.id x chats }, Cmd.none )
 
                 Failure y ->
                     ( { model | errors = toString y :: errors }, Cmd.none )
@@ -470,7 +604,7 @@ update msg model =
         ReturnUser response ->
             case response of
                 Success x ->
-                    ( { model | users = Dict.insert (toString x.id) x users }, Cmd.none )
+                    ( { model | users = EveryDict.insert x.id x users }, Cmd.none )
 
                 Failure y ->
                     ( { model | errors = toString y :: errors }, Cmd.none )
@@ -487,7 +621,7 @@ update msg model =
                             ( { model | me = Just x }, Cmd.none )
 
                         Nothing ->
-                            ( { model | me = Nothing }, Cmd.none )
+                            ( { model | errors = toString response :: errors }, Cmd.none )
 
                 Failure y ->
                     ( { model | errors = toString y :: errors }, Cmd.none )
@@ -500,10 +634,10 @@ update msg model =
                 Success maybe ->
                     case maybe of
                         Just x ->
-                            ( { model | hosts = Dict.insert (toString x.id) x hosts }, Cmd.none )
+                            ( { model | hosts = EveryDict.insert x.id x hosts }, Cmd.none )
 
                         Nothing ->
-                            ( model, Cmd.none )
+                            ( { model | errors = toString response :: errors }, Cmd.none )
 
                 Failure y ->
                     ( { model | errors = toString y :: errors }, Cmd.none )
@@ -516,10 +650,10 @@ update msg model =
                 Success maybe ->
                     case maybe of
                         Just x ->
-                            ( { model | venues = Dict.insert (toString x.id) x venues }, Cmd.none )
+                            ( { model | venues = EveryDict.insert x.id x venues }, Cmd.none )
 
                         Nothing ->
-                            ( model, Cmd.none )
+                            ( { model | errors = toString response :: errors }, Cmd.none )
 
                 Failure y ->
                     ( { model | errors = toString y :: errors }, Cmd.none )
@@ -532,10 +666,10 @@ update msg model =
                 Success maybe ->
                     case maybe of
                         Just x ->
-                            ( { model | locations = Dict.insert (toString x.id) x locations }, Cmd.none )
+                            ( { model | locations = EveryDict.insert x.id x locations }, Cmd.none )
 
                         Nothing ->
-                            ( model, Cmd.none )
+                            ( { model | errors = toString response :: errors }, Cmd.none )
 
                 Failure y ->
                     ( { model | errors = toString y :: errors }, Cmd.none )
@@ -548,10 +682,10 @@ update msg model =
                 Success maybe ->
                     case maybe of
                         Just x ->
-                            ( { model | events = Dict.insert (toString x.id) (GraphCool x) events }, Cmd.none )
+                            ( { model | events = EveryDict.insert x.id (GraphCool x) events }, Cmd.none )
 
                         Nothing ->
-                            ( model, Cmd.none )
+                            ( { model | errors = toString response :: errors }, Cmd.none )
 
                 Failure y ->
                     ( { model | errors = toString y :: errors }, Cmd.none )
@@ -564,10 +698,25 @@ update msg model =
                 Success maybe ->
                     case maybe of
                         Just x ->
-                            ( { model | pools = Dict.insert (toString x.id) x pools }, Cmd.none )
+                            case x.seatGeekId of
+                                Nothing ->
+                                    ( { model | pools = EveryDict.insert x.id x pools }, Cmd.none )
+
+                                Just eventString ->
+                                    case EveryDict.get (Id eventString) events of
+                                        Nothing ->
+                                            ( { model | pools = EveryDict.insert x.id x pools }, Cmd.none )
+
+                                        Just api ->
+                                            ( { model
+                                                | pools = EveryDict.insert x.id x pools
+                                                , events = EveryDict.insert (Id eventString) api events
+                                              }
+                                            , Cmd.none
+                                            )
 
                         Nothing ->
-                            ( model, Cmd.none )
+                            ( { model | errors = toString response :: errors }, Cmd.none )
 
                 Failure y ->
                     ( { model | errors = toString y :: errors }, Cmd.none )
@@ -580,10 +729,10 @@ update msg model =
                 Success maybe ->
                     case maybe of
                         Just x ->
-                            ( { model | messages = Dict.insert (toString x.id) x messages }, Cmd.none )
+                            ( { model | messages = EveryDict.insert x.id x messages }, Cmd.none )
 
                         Nothing ->
-                            ( model, Cmd.none )
+                            ( { model | errors = toString response :: errors }, Cmd.none )
 
                 Failure y ->
                     ( { model | errors = toString y :: errors }, Cmd.none )
@@ -596,10 +745,10 @@ update msg model =
                 Success maybe ->
                     case maybe of
                         Just x ->
-                            ( { model | chats = Dict.insert (toString x.id) x chats }, Cmd.none )
+                            ( { model | chats = EveryDict.insert x.id x chats }, Cmd.none )
 
                         Nothing ->
-                            ( model, Cmd.none )
+                            ( { model | errors = toString response :: errors }, Cmd.none )
 
                 Failure y ->
                     ( { model | errors = toString y :: errors }, Cmd.none )
@@ -612,10 +761,21 @@ update msg model =
                 Success maybe ->
                     case maybe of
                         Just x ->
-                            ( { model | users = Dict.insert (toString x.id) x users }, Cmd.none )
+                            ( { model | users = EveryDict.insert x.id x users }, Cmd.none )
 
                         Nothing ->
-                            ( model, Cmd.none )
+                            ( { model | errors = toString response :: errors }, Cmd.none )
+
+                Failure y ->
+                    ( { model | errors = toString y :: errors }, Cmd.none )
+
+                _ ->
+                    ( { model | errors = "RemoteData is running an update?" :: errors }, Cmd.none )
+
+        ReturnMaybeEmpty response ->
+            case response of
+                Success _ ->
+                    ( model, Cmd.none )
 
                 Failure y ->
                     ( { model | errors = toString y :: errors }, Cmd.none )
@@ -630,10 +790,10 @@ update msg model =
                     let
                         listToDict events =
                             events
-                                |> List.map (\event -> ( toString event.id, SeatGeek event ))
-                                |> Dict.fromList
+                                |> List.map (\event -> ( event.id, SeatGeek event ))
+                                |> EveryDict.fromList
                     in
-                    ( { model | events = Dict.union (listToDict reply.events) events }, Cmd.none )
+                    ( { model | events = EveryDict.union (listToDict reply.events) events }, Cmd.none )
 
                 Failure e ->
                     ( { model | errors = toString e :: errors }, Cmd.none )
@@ -659,212 +819,3 @@ update msg model =
 --                     Types.Events Nothing
 --     in
 --     ( { model | me = { me | authModel = authModel, user = newUser }, route = resultRoute }, Cmd.map Types.AuthenticationMsg cmd )
--- Types.ChatsMsg chatsMsg ->
---     let
---         ( chatsModel, chatsCmd ) =
---             Pages.Chats.Update.update chatsMsg chats me
---     in
---     ( { model | chats = chatsModel }
---     , Cmd.map Types.ChatsMsg chatsCmd
---     )
--- Types.CreateEventMsg createEventMsg ->
---     let
---         ( createEventModel, createEventCmd ) =
---             Pages.CreateEvent.Update.update createEventMsg model.createEvent
---     in
---     ( { model | createEvent = createEventModel }
---     , Cmd.map Types.CreateEventMsg createEventCmd
---     )
--- Types.UpdateTextInput text ->
---     let
---         ( createMessageModel, createMessageCmd ) =
---             Pages.CreateMessage.Update.update (CreateMessageMsg.ChangeText text) model.createMessage
---     in
---     ( { model | createMessage = createMessageModel }
---     , Cmd.none
---     )
--- Types.CreateMessageMsg createMessageMsg ->
---     let
---         ( createMsgModel, createMessageCmd ) =
---             Pages.CreateMessage.Update.update createMessageMsg model.createMessage
---     in
---     ( { model | createMessage = createMsgModel }
---     , Cmd.map Types.CreateMessageMsg createMessageCmd
---     )
--- Types.CreateChatMsg createChatMsg ->
---     let
---         ( createChatModel, createChatCmd ) =
---             Pages.CreateChat.Update.update createChatMsg model.createChat
---     in
---     ( { model | createChat = createChatModel }
---     , Cmd.map Types.CreateChatMsg createChatCmd
---     )
--- Types.UpdateChats newChatsRoute newChat ->
---     { model
---         | route = newChatsRoute
---         , createChat = newChat
---     }
---         |> update (Types.CreateChatMsg CreateChatMsg.MutateCreateChat)
--- Types.EditUserMsg userMsg ->
---     let
---         ( userModel, userCmd ) =
---             Pages.EditUser.Update.update userMsg me.user me
---     in
---     ( { model | me = { me | user = userModel } }
---     , Cmd.map Types.EditUserMsg userCmd
---     )
--- Types.EventsMsg eventsMsg ->
---     let
---         ( eventsModel, eventsCmd ) =
---             Pages.Events.Update.update eventsMsg model.events me
---     in
---     ( { model | events = eventsModel }
---     , Cmd.map Types.EventsMsg eventsCmd
---     )
--- Types.UserMsg userMsg ->
---     let
---         ( userModel, userCmd ) =
---             Pages.User.Update.update userMsg me.user
---     in
---     ( { model | me = { me | user = userModel } }
---     , Cmd.map Types.UserMsg userCmd
---     )
--- Types.ChatMsg chatMsg ->
---     let
---         ( chatModel, chatCmd ) =
---             Pages.Chat.Update.update chatMsg model.chat me
---     in
---     ( { model | chat = chatModel }
---     , Cmd.map Types.ChatMsg chatCmd
---     )
--- Types.Input newInput ->
---     ( model, Cmd.none )
--- -- ( { model | input = "" }, WebSocket.send echoServer model.input )
--- Types.NewMessage str ->
---     ( model, Cmd.none )
--- Types.ViewChat newRoute ->
---     let
---         newChat =
---             case newRoute of
---                 Types.Chats maybeChat ->
---                     case maybeChat of
---                         Nothing ->
---                             model.chat
---                         Just c ->
---                             c
---                 _ ->
---                     model.chat
---         oldCM =
---             model.createMessage
---         newCM =
---             { oldCM | chatId = newChat.id }
---     in
---     ( { model
---         | route = newRoute
---         , chat = newChat
---         , createMessage = newCM
---       }
---     , Cmd.none
---     )
--- -- EVENTS
--- Types.ViewEvent newEventRoute ->
---     let
---         toPool =
---             case newEventRoute of
---                 Types.Events maybeEvent ->
---                     case maybeEvent of
---                         Nothing ->
---                             model.pool
---                         Just eventAPI ->
---                             case eventAPI of
---                                 SeatGeek sgEvent ->
---                                     model.pool
---                                 GraphCool event ->
---                                     let
---                                         poolModel = model.pool
---                                     in
---                                         { poolModel | pool = event.pool}
---                 _ ->
---                     model.pool
---     in
---     ( { model
---         | route = newEventRoute
---         , pool = toPool
---       }
---     , Cmd.none
---     )
--- Types.ViewPool newPoolRoute ->
---         { model | route = newPoolRoute }
---             |> update (Types.EventPoolMsg EventMsg.AddToPool)
--- Types.EventPoolMsg eventMsg ->
---     let
---         ( updatedPool, updatePoolCmd ) =
---             Pages.Event.Update.update eventMsg model.pool me
---     in
---     ( { model | pool = updatedPool }
---     , Cmd.map Types.EventPoolMsg updatePoolCmd
---     )
--- -- ChatBox Updates
--- Types.TextAreaResizer height ->
---     ( { model
---         | client =
---             { client
---                 | textAreaHeight = height
---             }
---       }
---     , Cmd.none
---     )
--- -- POOL
--- Types.MouseStart xy ->
---     ( { model
---         | pool =
---             { pool
---                 | move = Just (PoolModel.Move xy xy)
---             }
---       }
---     , Cmd.none
---     )
--- Types.MouseMove xy ->
---     ( { model
---         | pool =
---             { pool
---                 | move = Maybe.map (\{ start } -> PoolModel.Move start xy) pool.move
---             }
---       }
---     , Cmd.none
---     )
--- Types.MouseEnd _ ->
---     ( { model
---         | pool =
---             { pool
---                 | position = getPosition pool
---                 , move = Nothing
---             }
---       }
---     , Cmd.none
---     )
--- Types.ResizePool windowSize ->
---     ( { model
---         | pool =
---             { pool
---                 | windowSize = windowSize
---                 , tubers = determineTubers pool windowSize
---             }
---       }
---     , Cmd.none
---     )
--- Types.InitialWindow windowSize ->
---     ( { model
---         | pool =
---             { pool
---                 | windowSize = windowSize
---                 , tubers = determineTubers pool windowSize
---             }
---       }
---     , Cmd.none
---     )
--- Discover ->
---     ( model, SeatGeek.askQuery SG.initQuery )
-
-
-

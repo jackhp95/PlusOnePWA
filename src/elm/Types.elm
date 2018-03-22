@@ -1,37 +1,50 @@
 module Types exposing (..)
 
--- Events
--- import Date exposing (Date)
--- import Pages.Chat.Messages as ChatMsg
--- import Pages.Chat.Model as ChatModel
--- import Pages.Chats.Messages as ChatsMsg
--- import Pages.Chats.Model as ChatsModel
--- import Pages.CreateChat.Messages as CreateChatMsg
--- -- import Pages.CreateChat.Model as CreateChatModel
--- import Pages.CreateEvent.Messages as CreateEventMsg
--- import Pages.CreateEvent.Model as CreateEventModel
--- import Pages.CreateMessage.Messages as CreateMessageMsg
--- import Pages.CreateMessage.Model as CreateMessageModel
--- import Pages.EditUser.Messages as EditUserMsg
--- import Pages.Event.Messages as EventPoolMsg
--- import Pages.Event.Model as EventModel
--- import Pages.Events.Messages as EventsMsg
--- import Pages.Events.Model as EventsModel
--- -- import Pages.Pool.Model as PoolModel
--- import Pages.User.Messages as UserMsg
--- -- import Pages.User.Model as UserModel
--- import Mouse exposing (Position)
 import Auth0.Auth0 as Auth0
-import Ports
-
-import Auth0.Authentication as Authentication
-import Dict exposing (..)
+import Date exposing (..)
+import EveryDict exposing (..)
 import GraphCool.Enum.DateState as DateState exposing (DateState)
 import GraphCool.Scalar exposing (..)
 import Graphqelm.Http exposing (Error)
-import Http exposing (Error)
+import Ports
 import RemoteData exposing (..)
 import SeatGeek.Types as SG
+import Time exposing (..)
+
+
+juan : Me
+juan =
+    { recipient = []
+    , birthday = DateTime "2015-11-22T13:57:31.123Z"
+    , proposed = []
+    , name = "Juan"
+    , updatedAt = DateTime "2018-03-13T10:38:45.000Z"
+    , nameFull = Nothing
+    , email = Just "1@mail.com"
+    , datesCanceled = []
+    , passed = []
+    , attendingEvent = [ Id "cjew55h0ozyaw0129q6xfwdzk" ]
+    , bio = Nothing
+    , likedEvent = []
+    , id = Id "cjepixltacwzz0153vxgep8pb"
+    , hosts = []
+    , createdEvents =
+        [ Id "cjet0q9z1va3k0199pm1lhxyz"
+        , Id "cjet0qbnzvdas0134zkuyyu6e"
+        , Id "cjew55h0ozyav012985mevhky"
+        ]
+    , createdAt = DateTime "2018-03-13T10:38:45.000Z"
+    , initiated =
+        [ Id "cjet60pyy5q8701499ahtb1cp"
+        ]
+    , sent = []
+    , viewedEvent =
+        [ Id "cjet0q9z1va3l0199hpf433hr"
+        , Id "cjet0qbo0vdat0134wd2yvj2a"
+        ]
+    , auth0UserId = Nothing
+    , password = Just "$2a$10$M7mzvYVA9GlDsGYv7fmYYOIeSZQihRNC.HJjHfeqcvquUdY6zyFbW"
+    }
 
 
 type Route
@@ -39,9 +52,8 @@ type Route
     | GoUser Id
     | GoEvents (Maybe Id)
     | GoCreateEvent
-    | GoPool Id
+    | GoPool Pool
     | GoEditMe
-    | GoAuth
     | GoMe Me
 
 
@@ -193,6 +205,20 @@ type alias Me =
     }
 
 
+type alias Auth =
+    { state : Auth0.AuthenticationState
+    , authorize : Auth0.Options -> Cmd Msg
+    , logOut : () -> Cmd Msg
+    , getUserId : Id
+    }
+
+
+type alias Forms =
+    { event : Event
+    , me : Me
+    }
+
+
 type API
     = GraphCool Event
     | SeatGeek SG.Event
@@ -249,38 +275,40 @@ initMe =
     }
 
 
+initAuth : (Auth0.Options -> Cmd Msg) -> (() -> Cmd Msg) -> Maybe Auth0.LoggedInUser -> Auth
+initAuth authorize logOut initialData =
+    { state =
+        case initialData of
+            Just user ->
+                Auth0.LoggedIn user
 
--- MODEL --
--- OLD MODEL DO NOT USE
--- type alias Model =
---     { route : Route
---     , chat : Types.Chat
---     , chats : ChatsModel.Chats
---     , events : List EventsModel.EventAPI
---     , pool : PoolModel.PoolModel
---     , client : Client
---     , createEvent : CreateEventModel.CreateEvent
---     , createMessage : CreateMessageModel.CreateMessage
---     , createChat : CreateChatModel.CreateChat
---     , me : UserModel.Me
---     , errors : List String
---     }
+            Nothing ->
+                Auth0.LoggedOut
+    , authorize = authorize
+    , logOut = logOut
+    , getUserId = Id "0"
+    }
+
+
+initForms : Forms
+initForms =
+    Forms initEvent initMe
 
 
 type alias Model =
     { route : Route
-    , hosts : Dict String Host
-    , venues : Dict String Venue
-    , locations : Dict String Location
-    , events : Dict String API
-    , pools : Dict String Pool
-    , messages : Dict String Message
-    , chats : Dict String Chat
-    , users : Dict String User
+    , hosts : EveryDict Id Host
+    , venues : EveryDict Id Venue
+    , locations : EveryDict Id Location
+    , events : EveryDict Id API
+    , pools : EveryDict Id Pool
+    , messages : EveryDict Id Message
+    , chats : EveryDict Id Chat
+    , users : EveryDict Id User
     , me : Maybe Me
-    , errors : List String
-    , authModel : Authentication.Model
+    , auth : Auth
     , forms : Forms
+    , errors : List String
     }
 
 
@@ -290,98 +318,49 @@ emptyModel initialAuthUser =
         -- route
         (GoEvents Nothing)
         -- hosts
-        Dict.empty
+        EveryDict.empty
         -- venues
-        Dict.empty
+        EveryDict.empty
         -- locations
-        Dict.empty
+        EveryDict.empty
         -- events
-        Dict.empty
+        EveryDict.empty
         -- pools
-        Dict.empty
+        EveryDict.empty
         -- messages
-        Dict.empty
+        EveryDict.empty
         -- chats
-        Dict.empty
+        EveryDict.empty
         -- users
-        Dict.empty
+        EveryDict.empty
         -- me
         Nothing
-        -- errors
-        []
+        -- (Just juan)
         -- auth model
-        (Authentication.init Ports.auth0authorize Ports.auth0logout initialAuthUser)
+        (initAuth Ports.auth0authorize Ports.auth0logout initialAuthUser)
         -- forms
         initForms
-
-
-type alias Forms =
-    { event : Event
-    , me : Me
-    }
-
-
-initForms : Forms
-initForms =
-    Forms initEvent initMe
-
-        
-        
--- initModel : Maybe Auth0.LoggedInUser -> Model
--- initModel initialAuthUser =
---     Model
---         (GoEvents Nothing)
---         -- (GoChats Nothing)
---         ChatModel.initModel
---         ChatsModel.initModel
---         []
---         PoolModel.initModel
---         initClient
---         EventModel.initModel
---         CreateMessageModel.initModel
---         CreateChatModel.initModel
---         (UserModel.initMe initialAuthUser)
---         []
+        -- errors
+        []
 
 
 type alias Page =
     { name : String
     , icon : String
-    , route : Route
+    , route : Msg
     }
-
-
-
--- type Route
---     = GoChats (Maybe Types.Chat)
---     | GoUser
---     | GoEvents (Maybe EventsModel.EventAPI)
---     | GoCreateEvent
---     | GoPool
---     | GoEditUser
---     | GoAuth
--- | Pool Pool.Model
--- | NotFound
--- | Events Events.Model
--- | Event Event.Modsel
--- type alias Client =
---     { textAreaHeight : Int
---     }
--- initClient : Client
--- initClient =
---     { textAreaHeight = 10 }
--- MESSAGES --
 
 
 type
     Msg
     -- Route
     = RouteTo Route
-    | AuthenticationMsg Authentication.Msg
-      -- | TextAreaResizer Int
+      -- Auth
+    | DoAuth AuthAction
       -- SeatGeek
     | GetReply (WebData SG.Reply)
-      -- From TestGraphCool
+      -- Return Everything
+    | ReturnEverything (RemoteData Graphqelm.Http.Error Everything)
       -- Query Many
     | ReturnHosts (RemoteData Graphqelm.Http.Error (List Host))
     | ReturnVenues (RemoteData Graphqelm.Http.Error (List Venue))
@@ -411,8 +390,16 @@ type
     | ReturnMaybeMessage (RemoteData Graphqelm.Http.Error (Maybe Message))
     | ReturnMaybeChat (RemoteData Graphqelm.Http.Error (Maybe Chat))
     | ReturnMaybeUser (RemoteData Graphqelm.Http.Error (Maybe User))
+      -- Payload
+    | ReturnMaybeEmpty (RemoteData Graphqelm.Http.Error (Maybe ()))
       -- Forms
     | UpdateValue InputValue
+
+
+type AuthAction
+    = AuthenticationResult Auth0.AuthenticationResult
+    | ShowLogIn
+    | LogOut
 
 
 type
@@ -424,8 +411,9 @@ type
     | MeBirthday String
     | MeSubmit
       -- Message
+    | MessageRefresh Id
     | MessageText Id String
-    | MessageSend Id
+    | MessageSend Id Message
       -- Event
     | EventName String
     | EventNameFull String
@@ -435,28 +423,11 @@ type
 
 
 
--- Pool
--- | MouseStart Position
--- | MouseMove Position
--- | MouseEnd Position
--- | ResizePool Size
--- | InitialWindow Size
---   --Temp
--- | CreateEventMsg CreateEventMsg.Msg
--- | EventsMsg EventsMsg.Msg
--- | EditUserMsg EditUserMsg.Msg
--- | UserMsg UserMsg.Msg
--- | UpdateTextInput String
--- | CreateMessageMsg CreateMessageMsg.Msg
--- | CreateChatMsg CreateChatMsg.Msg
--- | ChatMsg ChatMsg.Msg
--- | ChatsMsg ChatsMsg.Msg
---   -- Chat
--- | Input String
--- | NewMessage String
--- | ViewChat Route
---   -- Events
--- | ViewEvent Route
--- | ViewPool Route
--- | UpdateChats Route CreateChatModel.CreateChat
--- | EventPoolMsg EventPoolMsg.Msg
+-- ---------- --
+-- Primitives --
+-- ---------- --
+
+
+epoch : Date
+epoch =
+    Date.fromTime <| Time.second

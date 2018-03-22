@@ -4,20 +4,25 @@
 
 module SeatGeek.Decode exposing (..)
 
+-- import Html exposing (..)
+-- import Html.Attributes exposing (..)
+-- import Html.Events exposing (..)
+
 import GraphCool.Scalar exposing (..)
-import Html exposing (..)
-import Html.Attributes exposing (..)
-import Html.Events exposing (..)
 import Json.Decode exposing (..)
 import Json.Decode.Extra exposing ((|:))
 import SeatGeek.Types as SG
-import Types
 
 
+-- import Types
+
+
+(:=) : String -> Decoder a -> Decoder a
 (:=) =
     Json.Decode.field
 
 
+(?) : a -> Maybe a -> a
 (?) =
     Maybe.withDefault
 
