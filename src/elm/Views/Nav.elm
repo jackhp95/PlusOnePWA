@@ -22,9 +22,9 @@ selections =
             Page x y z
     in
     List.map makePage
-        [ ( "discover", "compass", RouteTo <| GoEvents Nothing )
-        , ( "add", "plus-square", RouteTo <| GoCreateEvent )
-        , ( "chats", "message-square", RouteTo <| GoChats Nothing )
+        [ ( "discover", "compass", GoEvents Nothing )
+        , ( "add", "plus-square", GoCreateEvent )
+        , ( "chats", "message-square", GoChats Nothing )
         ]
 
 
@@ -43,15 +43,15 @@ bar model =
         userTab =
             case model.me of
                 Just me ->
-                    tab <| Page me.name "user" <| RouteTo <| GoMe me
+                    tab <| Page me.name "user" <| GoMe me
 
                 Nothing ->
                     case model.auth.state of
                         Auth0.LoggedOut ->
-                            tab <| Page "login" "user" <| DoAuth ShowLogIn
+                            tab <| Page "login" "user" <| GoEditMe
 
                         Auth0.LoggedIn _ ->
-                            tab <| Page "create profile" "user" <| RouteTo GoEditMe
+                            tab <| Page "create profile" "user" <| GoEditMe
 
         -- Just user ->
         --     li
@@ -105,7 +105,7 @@ tab x =
         route =
             x.route
     in
-    li [ class "flex flex-column-l flex-row-m flex-column-reverse items-stretch hide-child ph3-l glow w-20 w-auto-ns", onClick route ]
+    li [ class "flex flex-column-l flex-row-m flex-column-reverse items-stretch hide-child ph3-l glow w-20 w-auto-ns", onClick <| RouteTo route ]
         [ span [ class "grow flex-auto flex flex-column flex-row-ns items-center pv3-ns pv2 pv4-l ph2-l mv1-m pl3-m pr4-m w-auto-ns" ]
             [ div [ class "mr3-ns mr0 mb1 mb0-ns pa2-ns pl3 pt3 pr2 pb2 contain", Assets.feather icon ] []
             , text name

@@ -74,12 +74,7 @@ page model =
             [ Pool.view pool model ]
 
         GoEditMe ->
-            case model.me of
-                Just me ->
-                    [ EditMe.view model ]
-
-                Nothing ->
-                    [ The404.view <| "Somehow you're not logged in, and you got to this page." :: model.errors ]
+            [ EditMe.view model ]
 
         GoCreateEvent ->
             [ CreateEvent.view model ]

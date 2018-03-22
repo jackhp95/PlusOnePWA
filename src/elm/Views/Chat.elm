@@ -16,7 +16,7 @@ import Types exposing (..)
 -- VIEW
 
 
-view : Chat -> User -> Me -> Model -> Html Types.Msg
+view : Chat -> User -> Me -> Model -> Html Msg
 view chat with me model =
     let
         conversation =
@@ -29,12 +29,12 @@ view chat with me model =
         [ nameBar with
         , section [ class "flex-auto lh-copy overflow-auto ph3 pt5 z-1 inner-shadow-1" ]
             (toast ("conversation initiated by " ++ with.name) :: conversation)
-        , messageBar model chat
+        , messageBar me.id chat model
         ]
 
 
-messageBar : Types.Model -> Types.Chat -> Html Types.Msg
-messageBar model chat =
+messageBar : Id -> Chat -> Model -> Html Msg
+messageBar meId chat model =
     let
         maybeMessage =
             EveryDict.get chat.id model.messages
@@ -56,7 +56,7 @@ messageBar model chat =
                         [ div
                             [ Assets.feather "chevron-right"
                             , class "w2 h2 contain"
-                            , onClick <| UpdateValue <| MessageSend chat.id message
+                            , onClick <| UpdateValue <| MessageSend chat.id meId message
                             ]
                             []
                         ]
@@ -84,14 +84,14 @@ messageBar model chat =
         ]
 
 
-nameBar : User -> Html Types.Msg
+nameBar : User -> Html Msg
 nameBar withUser =
     div [ class "bg-black-90 flex items-stretch absolute w-100 measure-wide-l z-2 h3 fadeIn animated" ]
         [ div
             [ class "flex items-center grow"
             , withUser.id
-                |> Types.GoUser
-                |> Types.RouteTo
+                |> GoUser
+                |> RouteTo
                 |> onClick
             ]
             [ div [ class "bounceIn animated h3 ph3 pt3 overflow-visible" ]

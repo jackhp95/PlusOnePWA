@@ -76,6 +76,9 @@ update msg model =
         maybeMe =
             model.me
 
+        auth =
+            model.auth
+
         errors =
             model.errors
 
@@ -88,104 +91,8 @@ update msg model =
                     Just [ me.id ]
     in
     case msg of
-        DoAuth action ->
-            let
-                auth =
-                    model.auth
-
-                state =
-                    model.auth.state
-            in
-            case action of
-                AuthenticationResult result ->
-                    let
-                        queryUserIdTokenSelect loggedInUser =
-                            Query.selection identity
-                                |> with (Query.user (\optionals -> { optionals | auth0UserId = Present loggedInUser.idtoken }) me)
-
-                        queryUserIdToken loggedInUser =
-                            queryUserIdTokenSelect loggedInUser
-                                |> Graphqelm.Http.queryRequest "https://api.graph.cool/simple/v1/PlusOne"
-                                |> Graphqelm.Http.send (RemoteData.fromResult >> ReturnMaybeMe)
-                    in
-                    case result of
-                        Ok user ->
-                            ( { model | auth = { auth | state = Auth0.LoggedIn user } }, queryUserIdToken user )
-
-                        Err err ->
-                            ( { model | errors = toString err :: errors }, Cmd.none )
-
-                ShowLogIn ->
-                    ( model, model.auth.authorize Auth0.defaultOpts )
-
-                LogOut ->
-                    ( { model | auth = { auth | state = Auth0.LoggedOut } }, model.auth.logOut () )
-
-        -- AuthenticationMsg authMsg ->
-        --     let
-        --         ( newAuthModel, cmd ) =
-        --             Authentication.update (log "AuthMsg" authMsg) model.authModel
-        --         updatedModel =
-        --             { model | authModel = newAuthModel }
-        --     in
-        --     case newAuthModel.state of
-        --         Auth0.LoggedOut ->
-        --             update (RouteTo (GoEvents Nothing)) updatedModel
-        --         Auth0.LoggedIn loggedInUser ->
-        --             case newAuthModel.getUserId of
-        --                 -- TODO Where to send people on successful login
-        --                 Id "3" ->
-        --                     update (RouteTo route) updatedModel
-        --                 Id "0" ->
-        --                     update (RouteTo (GoEvents Nothing)) updatedModel
-        --                 _ ->
-        --                     update (RouteTo (GoEvents Nothing)) updatedModel
         RouteTo newRoute ->
             let
-                -- authModel =
-                --     model.authModel
-                -- Log attempted route change to console
-                loggedRoute =
-                    log "Route change sought: " newRoute
-
-                --             in
-                --                 case (authModel.state, model.me) of
-                --                     -- Logged out - can only see events
-                --                     (Auth0.LoggedOut , _) ->
-                --                         if authOff then
-                --                             goTo model newRoute (toString newRoute)
-                --                         else
-                --                             goTo model (GoEvents Nothing) "/"
-                --                     -- Logged in with me data - let them go where they like
-                --                     (Auth0.LoggedIn loggedInUser, Just _ ) ->
-                --                         goTo model newRoute (toString newRoute)
-                --                     -- Logged in without me data
-                --                     -- Go to edit me
-                --                     (Auth0.LoggedIn loggedInUser, Nothing) ->
-                --                         let
-                --                             -- Initialise user with Auth data
-                --                             newMe =
-                --                                 { initMe
-                --                                     | id = authModel.getUserId
-                --                                     , auth0UserId = Just loggedInUser.idtoken
-                --                                     , email = Just loggedInUser.profile.email
-                --                                     , name = loggedInUser.profile.name
-                --                                 }
-                --                             newForms =
-                --                                 { forms | me = newMe}
-                --                             newModel =
-                --                                 { model | forms = newForms}
-                --                             (limitedRoute, url) =
-                --                                 case newRoute of
-                --                                     GoEditMe ->
-                --                                         (GoEditMe, toString(GoEditMe))
-                --                                     _ ->
-                --                                         (GoEvents Nothing, "/")
-                --                         in
-                --                             if authOff then
-                --                                 goTo model newRoute (toString newRoute)
-                --                             else
-                --                                 goTo newModel limitedRoute url
                 basicRoute =
                     ( { model | route = newRoute }, Cmd.none )
 
@@ -196,9 +103,6 @@ update msg model =
 
                         Just eventId ->
                             case EveryDict.get eventId events of
-                                Nothing ->
-                                    basicRoute
-
                                 Just api ->
                                     case api of
                                         GraphCool event ->
@@ -224,8 +128,19 @@ update msg model =
                                                         |> Graphqelm.Http.mutationRequest "https://api.graph.cool/simple/v1/PlusOne"
                                                         |> Graphqelm.Http.send
                                                             (RemoteData.fromResult >> ReturnMaybePool)
+
+                                                createSeatGeekPoolIfMissing =
+                                                    case EveryDict.get event.id pools of
+                                                        Nothing ->
+                                                            createSGPoolRequest
+
+                                                        Just _ ->
+                                                            Cmd.none
                                             in
-                                            ( { model | route = newRoute }, createSGPoolRequest )
+                                            ( { model | route = newRoute }, createSeatGeekPoolIfMissing )
+
+                                _ ->
+                                    basicRoute
             in
             case maybeMe of
                 Nothing ->
@@ -234,10 +149,21 @@ update msg model =
                             goEventUpdate eventId
 
                         _ ->
-                            basicRoute
+                            case model.auth.state of
+                                Auth0.LoggedIn data ->
+                                    ( { model | route = GoEditMe }, Cmd.none )
 
+                                Auth0.LoggedOut ->
+                                    -- The logic resting above is for the places users can go without auth.
+                                    -- THIS IS HOW A USER IS ROUTED TO LOG IN IF THEY ARE NOT CURRENTLY LOGGED IN
+                                    ( model, model.auth.authorize Auth0.defaultOpts )
+
+                -- The logic below is the places users can go when authenticated.
                 Just me ->
                     case newRoute of
+                        GoLogOut ->
+                            ( { model | auth = { auth | state = Auth0.LoggedOut }, me = Nothing }, model.auth.logOut () )
+
                         GoEvents eventId ->
                             goEventUpdate eventId
 
@@ -280,25 +206,25 @@ update msg model =
                 forms =
                     model.forms
 
-                event =
-                    forms.event
+                eventForm =
+                    forms.eventForm
 
-                me =
-                    forms.me
+                meForm =
+                    forms.meForm
             in
             case input of
                 -- Me
                 MeName val ->
-                    ( { model | forms = { forms | me = { me | name = val } } }, Cmd.none )
+                    ( { model | forms = { forms | meForm = { meForm | name = val } } }, Cmd.none )
 
                 MeNameFull val ->
-                    ( { model | forms = { forms | me = { me | nameFull = Just val } } }, Cmd.none )
+                    ( { model | forms = { forms | meForm = { meForm | nameFull = Just val } } }, Cmd.none )
 
                 MeBio val ->
-                    ( { model | forms = { forms | me = { me | bio = Just val } } }, Cmd.none )
+                    ( { model | forms = { forms | meForm = { meForm | bio = Just val } } }, Cmd.none )
 
                 MeBirthday val ->
-                    ( { model | forms = { forms | me = { me | birthday = DateTime val } } }, Cmd.none )
+                    ( { model | forms = { forms | meForm = { meForm | birthday = DateTime val } } }, Cmd.none )
 
                 MeSubmit ->
                     ( model, Cmd.none {- Create/UpdateUser Mutation Cmd goes here -} )
@@ -318,7 +244,7 @@ update msg model =
                         True ->
                             ( { model | messages = EveryDict.remove chatId model.messages }, Cmd.none )
 
-                MessageSend chatId message ->
+                MessageSend chatId meId message ->
                     let
                         createMessage =
                             Mutation.selection identity
@@ -327,7 +253,7 @@ update msg model =
                                         (\messageOptionals ->
                                             { messageOptionals
                                                 | chatId = Present chatId
-                                                , fromId = Present me.id
+                                                , fromId = Present meId
                                             }
                                         )
                                         { text = message.text }
@@ -344,16 +270,16 @@ update msg model =
 
                 -- Event
                 EventName val ->
-                    ( { model | forms = { forms | event = { event | name = val } } }, Cmd.none )
+                    ( { model | forms = { forms | eventForm = { eventForm | name = val } } }, Cmd.none )
 
                 EventNameFull val ->
-                    ( { model | forms = { forms | event = { event | nameFull = Just val } } }, Cmd.none )
+                    ( { model | forms = { forms | eventForm = { eventForm | nameFull = Just val } } }, Cmd.none )
 
                 EventStartDate val ->
-                    ( { model | forms = { forms | event = { event | startsAt = DateTime val } } }, Cmd.none )
+                    ( { model | forms = { forms | eventForm = { eventForm | startsAt = DateTime val } } }, Cmd.none )
 
                 EventEndDate val ->
-                    ( { model | forms = { forms | event = { event | endsAt = Just <| DateTime val } } }, Cmd.none )
+                    ( { model | forms = { forms | eventForm = { eventForm | endsAt = Just <| DateTime val } } }, Cmd.none )
 
                 EventSubmit ->
                     let
@@ -363,9 +289,9 @@ update msg model =
                                     (Mutation.createEvent
                                         (\eventOptionals ->
                                             { eventOptionals
-                                                | endsAt = fromMaybe event.endsAt
-                                                , nameFull = fromMaybe event.nameFull
-                                                , private = Present event.private
+                                                | endsAt = fromMaybe eventForm.endsAt
+                                                , nameFull = fromMaybe eventForm.nameFull
+                                                , private = Present eventForm.private
                                                 , createdById = Present <| Id "cjepixltacwzz0153vxgep8pb"
                                                 , pool =
                                                     Present <|
@@ -381,7 +307,7 @@ update msg model =
                                                 , venuesIds = Absent
                                             }
                                         )
-                                        { name = event.name, startsAt = event.startsAt }
+                                        { name = eventForm.name, startsAt = eventForm.startsAt }
                                         DB.event
                                     )
 
@@ -391,7 +317,7 @@ update msg model =
                                 |> Graphqelm.Http.send
                                     (RemoteData.fromResult >> ReturnMaybeEvent)
                     in
-                    ( { model | forms = { forms | event = initEvent } }, sendCreateEventRequest )
+                    ( { model | forms = { forms | eventForm = initEvent } }, sendCreateEventRequest )
 
         -- Everything
         ReturnEverything response ->
@@ -621,7 +547,36 @@ update msg model =
                             ( { model | me = Just x }, Cmd.none )
 
                         Nothing ->
-                            ( { model | errors = toString response :: errors }, Cmd.none )
+                            -- This is where we prompt the user to create an account
+                            -- If the query failed, this means the user likely doesn't exist.
+                            -- We create a NEW account here so existing users aren't prompted
+                            -- to needlessly create another account.
+                            let
+                                meForm =
+                                    model.forms.meForm
+
+                                modelWithPrefilledDataFromAuth =
+                                    case model.auth.state of
+                                        Auth0.LoggedIn data ->
+                                            { model
+                                                | route = GoEditMe
+                                                , forms =
+                                                    { forms
+                                                        | meForm =
+                                                            { meForm
+                                                                | name = data.profile.given_name
+                                                                , email = Just data.profile.email
+                                                                , nameFull = Just data.profile.name
+
+                                                                -- , picture =
+                                                            }
+                                                    }
+                                            }
+
+                                        Auth0.LoggedOut ->
+                                            { model | route = GoEditMe, errors = "User data wasn't returned?" :: errors }
+                            in
+                            ( modelWithPrefilledDataFromAuth, Cmd.none )
 
                 Failure y ->
                     ( { model | errors = toString y :: errors }, Cmd.none )
@@ -800,6 +755,31 @@ update msg model =
 
                 _ ->
                     ( { model | errors = "RemoteData is running an update?" :: errors }, Cmd.none )
+
+        -- Authentication
+        ReturnAuth result ->
+            let
+                auth =
+                    model.auth
+
+                state =
+                    model.auth.state
+
+                queryUserIdTokenSelect loggedInUser =
+                    Query.selection identity
+                        |> with (Query.user (\optionals -> { optionals | auth0UserId = Present loggedInUser.idtoken }) me)
+
+                queryUserIdToken loggedInUser =
+                    queryUserIdTokenSelect loggedInUser
+                        |> Graphqelm.Http.queryRequest "https://api.graph.cool/simple/v1/PlusOne"
+                        |> Graphqelm.Http.send (RemoteData.fromResult >> ReturnMaybeMe)
+            in
+            case result of
+                Ok user ->
+                    ( { model | auth = { auth | state = Auth0.LoggedIn user } }, queryUserIdToken user )
+
+                Err err ->
+                    ( { model | errors = toString err :: errors }, Cmd.none )
 
 
 

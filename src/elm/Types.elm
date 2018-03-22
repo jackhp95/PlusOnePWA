@@ -55,6 +55,7 @@ type Route
     | GoPool Pool
     | GoEditMe
     | GoMe Me
+    | GoLogOut
 
 
 initId : Id
@@ -214,8 +215,8 @@ type alias Auth =
 
 
 type alias Forms =
-    { event : Event
-    , me : Me
+    { eventForm : Event
+    , meForm : Me
     }
 
 
@@ -347,7 +348,7 @@ emptyModel initialAuthUser =
 type alias Page =
     { name : String
     , icon : String
-    , route : Msg
+    , route : Route
     }
 
 
@@ -355,8 +356,6 @@ type
     Msg
     -- Route
     = RouteTo Route
-      -- Auth
-    | DoAuth AuthAction
       -- SeatGeek
     | GetReply (WebData SG.Reply)
       -- Return Everything
@@ -394,12 +393,8 @@ type
     | ReturnMaybeEmpty (RemoteData Graphqelm.Http.Error (Maybe ()))
       -- Forms
     | UpdateValue InputValue
-
-
-type AuthAction
-    = AuthenticationResult Auth0.AuthenticationResult
-    | ShowLogIn
-    | LogOut
+      -- Auth
+    | ReturnAuth Auth0.AuthenticationResult
 
 
 type
@@ -413,7 +408,7 @@ type
       -- Message
     | MessageRefresh Id
     | MessageText Id String
-    | MessageSend Id Message
+    | MessageSend {- chat -} Id {- me -} Id Message
       -- Event
     | EventName String
     | EventNameFull String

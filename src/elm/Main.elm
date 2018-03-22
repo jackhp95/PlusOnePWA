@@ -44,12 +44,12 @@ view model =
 subscriptions : Model -> Sub Msg
 subscriptions model =
     let
-        handleAuthResult : Auth0.RawAuthenticationResult -> AuthAction
+        handleAuthResult : Auth0.RawAuthenticationResult -> Msg
         handleAuthResult =
-            Auth0.mapResult >> AuthenticationResult
+            Auth0.mapResult >> ReturnAuth
     in
     Sub.batch
-        [ Ports.auth0authResult (handleAuthResult >> DoAuth) ]
+        [ Ports.auth0authResult handleAuthResult ]
 
 
 

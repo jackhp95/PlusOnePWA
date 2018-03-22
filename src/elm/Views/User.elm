@@ -103,7 +103,11 @@ userToolsView =
             [ div [ Assets.feather "share", class "contain bg-center grow pt3 pb2 pl3 pr2" ] []
             , div [ class "pa2" ] [ text "share" ]
             ]
-        , div [ class "animated bounceIn pointer hover-bg-black-50 br-2 pa3 flex items-center", onClick (DoAuth LogOut) ]
+        , div
+            [ class "animated bounceIn pointer hover-bg-black-50 br-2 pa3 flex items-center"
+
+            -- , onClick
+            ]
             [ div [ Assets.feather "log-out", class "contain bg-center grow pt3 pb2 pl3 pr2" ] []
             , div [ class "pa2" ] [ text "log out" ]
             ]
