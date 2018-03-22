@@ -3,14 +3,12 @@ module Main exposing (main)
 import Auth0.Auth0 as Auth0
 import Helpers.KissDB as DB exposing (..)
 import Html exposing (..)
+import Ports
 import SeatGeek.Query
 import SeatGeek.Types as SG
 import Types exposing (..)
 import Update exposing (..)
 import View exposing (render)
-
-
--- import Window exposing (size)
 
 
 initCmd : Cmd Msg
@@ -23,12 +21,11 @@ initCmd =
 
 
 -- INIT --
--- Maybe Auth0.LoggedInUser ->
 
 
-init : ( Model, Cmd Msg )
-init =
-    ( Types.emptyModel, initCmd )
+init : Maybe Auth0.LoggedInUser -> ( Model, Cmd Msg )
+init initialUser =
+    ( Types.emptyModel initialUser, initCmd )
 
 
 
@@ -46,22 +43,22 @@ view model =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.none
+    let
+        handleAuthResult : Auth0.RawAuthenticationResult -> AuthAction
+        handleAuthResult =
+            Auth0.mapResult >> AuthenticationResult
+    in
+    Sub.batch
+        [ Ports.auth0authResult (handleAuthResult >> DoAuth) ]
 
 
 
--- Sub.batch
---     [ {--Window.resizes ResizePool, mouseMoveSubs model,--}
---       auth0authResult (Authentication.handleAuthResult >> AuthenticationMsg)
---     ]
 -- MAIN --
--- (Maybe Auth0.LoggedInUser)
 
 
-main : Program Never Model Msg
+main : Program (Maybe Auth0.LoggedInUser) Model Msg
 main =
-    Html.program
-        -- WithFlags
+    Html.programWithFlags
         { init = init
         , view = view
         , update = Update.update

@@ -1,10 +1,11 @@
 module Views.Chat exposing (..)
 
+-- import Helpers.KissDB as DB
+
 import EveryDict exposing (..)
 import GraphCool.Scalar exposing (..)
 import Helpers.Assets as Assets exposing (..)
 import Helpers.From as From exposing (..)
-import Helpers.KissDB as DB
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)

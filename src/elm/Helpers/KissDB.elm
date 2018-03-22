@@ -1,8 +1,9 @@
 module Helpers.KissDB exposing (..)
 
+-- import GraphCool.Object.AddToAttendingEventPayload as AddToAttendingEventPayload
+
 import GraphCool.Mutation as Mutation
 import GraphCool.Object
-import GraphCool.Object.AddToAttendingEventPayload as AddToAttendingEventPayload
 import GraphCool.Object.Chat as Chat
 import GraphCool.Object.Event as Event
 import GraphCool.Object.Host as Host

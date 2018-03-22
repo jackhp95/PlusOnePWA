@@ -1,22 +1,46 @@
 module Update exposing (..)
 
+-- import Auth0.Authentication as Authentication
+
+import Auth0.Auth0 as Auth0
+import Debug exposing (log)
 import EveryDict exposing (..)
 import GraphCool.InputObject exposing (..)
-import GraphCool.Mutation as Mutation exposing (..)
+import GraphCool.Mutation as Mutation
+import GraphCool.Query as Query
 import GraphCool.Scalar exposing (..)
 import Graphqelm.Http exposing (..)
 import Graphqelm.OptionalArgument exposing (OptionalArgument(Absent, Null, Present), fromMaybe)
 import Graphqelm.SelectionSet as SelectionSet exposing (SelectionSet, with)
 import Helpers.From as From exposing (..)
 import Helpers.KissDB as DB exposing (..)
+import Navigation as Nav
 import RemoteData exposing (..)
 import Types exposing (..)
+
+
+-- HELPERS
+
+
+goTo : Model -> Route -> String -> ( Model, Cmd msg )
+goTo model route url =
+    ( { model | route = log "Route change undertaken: " route }, Nav.newUrl url )
+
+
+
+-- for development purposes - if on then logged in user can only see loggout out stuff until we have a way for them to add their profile data
+
+
+authOff : Bool
+authOff =
+    False
+
 
 
 -- UPDATE --
 
 
-update : Types.Msg -> Types.Model -> ( Types.Model, Cmd Types.Msg )
+update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     let
         route =
@@ -46,6 +70,9 @@ update msg model =
         users =
             model.users
 
+        forms =
+            model.forms
+
         maybeMe =
             model.me
 
@@ -61,8 +88,104 @@ update msg model =
                     Just [ me.id ]
     in
     case msg of
+        DoAuth action ->
+            let
+                auth =
+                    model.auth
+
+                state =
+                    model.auth.state
+            in
+            case action of
+                AuthenticationResult result ->
+                    let
+                        queryUserIdTokenSelect loggedInUser =
+                            Query.selection identity
+                                |> with (Query.user (\optionals -> { optionals | auth0UserId = Present loggedInUser.idtoken }) me)
+
+                        queryUserIdToken loggedInUser =
+                            queryUserIdTokenSelect loggedInUser
+                                |> Graphqelm.Http.queryRequest "https://api.graph.cool/simple/v1/PlusOne"
+                                |> Graphqelm.Http.send (RemoteData.fromResult >> ReturnMaybeMe)
+                    in
+                    case result of
+                        Ok user ->
+                            ( { model | auth = { auth | state = Auth0.LoggedIn user } }, queryUserIdToken user )
+
+                        Err err ->
+                            ( { model | errors = toString err :: errors }, Cmd.none )
+
+                ShowLogIn ->
+                    ( model, model.auth.authorize Auth0.defaultOpts )
+
+                LogOut ->
+                    ( { model | auth = { auth | state = Auth0.LoggedOut } }, model.auth.logOut () )
+
+        -- AuthenticationMsg authMsg ->
+        --     let
+        --         ( newAuthModel, cmd ) =
+        --             Authentication.update (log "AuthMsg" authMsg) model.authModel
+        --         updatedModel =
+        --             { model | authModel = newAuthModel }
+        --     in
+        --     case newAuthModel.state of
+        --         Auth0.LoggedOut ->
+        --             update (RouteTo (GoEvents Nothing)) updatedModel
+        --         Auth0.LoggedIn loggedInUser ->
+        --             case newAuthModel.getUserId of
+        --                 -- TODO Where to send people on successful login
+        --                 Id "3" ->
+        --                     update (RouteTo route) updatedModel
+        --                 Id "0" ->
+        --                     update (RouteTo (GoEvents Nothing)) updatedModel
+        --                 _ ->
+        --                     update (RouteTo (GoEvents Nothing)) updatedModel
         RouteTo newRoute ->
             let
+                -- authModel =
+                --     model.authModel
+                -- Log attempted route change to console
+                loggedRoute =
+                    log "Route change sought: " newRoute
+
+                --             in
+                --                 case (authModel.state, model.me) of
+                --                     -- Logged out - can only see events
+                --                     (Auth0.LoggedOut , _) ->
+                --                         if authOff then
+                --                             goTo model newRoute (toString newRoute)
+                --                         else
+                --                             goTo model (GoEvents Nothing) "/"
+                --                     -- Logged in with me data - let them go where they like
+                --                     (Auth0.LoggedIn loggedInUser, Just _ ) ->
+                --                         goTo model newRoute (toString newRoute)
+                --                     -- Logged in without me data
+                --                     -- Go to edit me
+                --                     (Auth0.LoggedIn loggedInUser, Nothing) ->
+                --                         let
+                --                             -- Initialise user with Auth data
+                --                             newMe =
+                --                                 { initMe
+                --                                     | id = authModel.getUserId
+                --                                     , auth0UserId = Just loggedInUser.idtoken
+                --                                     , email = Just loggedInUser.profile.email
+                --                                     , name = loggedInUser.profile.name
+                --                                 }
+                --                             newForms =
+                --                                 { forms | me = newMe}
+                --                             newModel =
+                --                                 { model | forms = newForms}
+                --                             (limitedRoute, url) =
+                --                                 case newRoute of
+                --                                     GoEditMe ->
+                --                                         (GoEditMe, toString(GoEditMe))
+                --                                     _ ->
+                --                                         (GoEvents Nothing, "/")
+                --                         in
+                --                             if authOff then
+                --                                 goTo model newRoute (toString newRoute)
+                --                             else
+                --                                 goTo newModel limitedRoute url
                 basicRoute =
                     ( { model | route = newRoute }, Cmd.none )
 
@@ -104,55 +227,50 @@ update msg model =
                                             in
                                             ( { model | route = newRoute }, createSGPoolRequest )
             in
-            case newRoute of
-                GoEvents eventId ->
-                    goEventUpdate eventId
+            case maybeMe of
+                Nothing ->
+                    case newRoute of
+                        GoEvents eventId ->
+                            goEventUpdate eventId
 
-                GoAuth ->
-                    ( { model | route = route }, Cmd.none {- AuthToggle Cmd goes here -} )
+                        _ ->
+                            basicRoute
 
-                _ ->
-                    case maybeMe of
-                        Nothing ->
-                            -- Once AuthToggle is implemented, the logic should look like:
-                            -- ( { model | route = route }, Cmd.none {- AuthToggle Cmd goes here -} )
-                            ( { model | route = GoAuth }, Cmd.none {- AuthToggle Cmd goes here -} )
+                Just me ->
+                    case newRoute of
+                        GoEvents eventId ->
+                            goEventUpdate eventId
 
-                        Just me ->
-                            case newRoute of
-                                GoEvents eventId ->
-                                    goEventUpdate eventId
+                        GoPool pool ->
+                            let
+                                attendingEvent =
+                                    Mutation.selection identity
+                                        |> with
+                                            (Mutation.addToAttendingEvent
+                                                { attendingUserId = me.id, attendingEventPoolId = pool.id }
+                                                SelectionSet.empty
+                                            )
 
-                                GoPool pool ->
-                                    let
-                                        attendingEvent =
-                                            Mutation.selection identity
-                                                |> with
-                                                    (Mutation.addToAttendingEvent
-                                                        { attendingUserId = me.id, attendingEventPoolId = pool.id }
-                                                        SelectionSet.empty
-                                                    )
+                                attendingEventRequest =
+                                    attendingEvent
+                                        |> Graphqelm.Http.mutationRequest "https://api.graph.cool/simple/v1/PlusOne"
+                                        |> Graphqelm.Http.send
+                                            (RemoteData.fromResult >> ReturnMaybeEmpty)
+                            in
+                            ( { model
+                                | route = newRoute
+                                , pools =
+                                    EveryDict.insert
+                                        pool.id
+                                        { pool | usersAttending = me.id :: pool.usersAttending }
+                                        pools
+                                , me = Just { me | attendingEvent = pool.id :: me.attendingEvent }
+                              }
+                            , attendingEventRequest
+                            )
 
-                                        attendingEventRequest =
-                                            attendingEvent
-                                                |> Graphqelm.Http.mutationRequest "https://api.graph.cool/simple/v1/PlusOne"
-                                                |> Graphqelm.Http.send
-                                                    (RemoteData.fromResult >> ReturnMaybeEmpty)
-                                    in
-                                    ( { model
-                                        | route = newRoute
-                                        , pools =
-                                            EveryDict.insert
-                                                pool.id
-                                                { pool | usersAttending = me.id :: pool.usersAttending }
-                                                pools
-                                        , me = Just { me | attendingEvent = pool.id :: me.attendingEvent }
-                                      }
-                                    , attendingEventRequest
-                                    )
-
-                                _ ->
-                                    basicRoute
+                        _ ->
+                            basicRoute
 
         -- ( { model | route = newRoute }
         -- , Nav.newUrl newRoute)

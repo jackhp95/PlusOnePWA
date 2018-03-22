@@ -1,10 +1,12 @@
 module Types exposing (..)
 
+import Auth0.Auth0 as Auth0
 import Date exposing (..)
 import EveryDict exposing (..)
 import GraphCool.Enum.DateState as DateState exposing (DateState)
 import GraphCool.Scalar exposing (..)
 import Graphqelm.Http exposing (Error)
+import Ports
 import RemoteData exposing (..)
 import SeatGeek.Types as SG
 import Time exposing (..)
@@ -52,7 +54,6 @@ type Route
     | GoCreateEvent
     | GoPool Pool
     | GoEditMe
-    | GoAuth
     | GoMe Me
 
 
@@ -204,6 +205,20 @@ type alias Me =
     }
 
 
+type alias Auth =
+    { state : Auth0.AuthenticationState
+    , authorize : Auth0.Options -> Cmd Msg
+    , logOut : () -> Cmd Msg
+    , getUserId : Id
+    }
+
+
+type alias Forms =
+    { event : Event
+    , me : Me
+    }
+
+
 type API
     = GraphCool Event
     | SeatGeek SG.Event
@@ -260,6 +275,26 @@ initMe =
     }
 
 
+initAuth : (Auth0.Options -> Cmd Msg) -> (() -> Cmd Msg) -> Maybe Auth0.LoggedInUser -> Auth
+initAuth authorize logOut initialData =
+    { state =
+        case initialData of
+            Just user ->
+                Auth0.LoggedIn user
+
+            Nothing ->
+                Auth0.LoggedOut
+    , authorize = authorize
+    , logOut = logOut
+    , getUserId = Id "0"
+    }
+
+
+initForms : Forms
+initForms =
+    Forms initEvent initMe
+
+
 type alias Model =
     { route : Route
     , hosts : EveryDict Id Host
@@ -271,13 +306,14 @@ type alias Model =
     , chats : EveryDict Id Chat
     , users : EveryDict Id User
     , me : Maybe Me
-    , errors : List String
+    , auth : Auth
     , forms : Forms
+    , errors : List String
     }
 
 
-emptyModel : Model
-emptyModel =
+emptyModel : Maybe Auth0.LoggedInUser -> Model
+emptyModel initialAuthUser =
     Model
         -- route
         (GoEvents Nothing)
@@ -298,29 +334,20 @@ emptyModel =
         -- users
         EveryDict.empty
         -- me
-        --Nothing
-        (Just juan)
-        -- errors
-        []
+        Nothing
+        -- (Just juan)
+        -- auth model
+        (initAuth Ports.auth0authorize Ports.auth0logout initialAuthUser)
         -- forms
         initForms
-
-
-type alias Forms =
-    { event : Event
-    , me : Me
-    }
-
-
-initForms : Forms
-initForms =
-    Forms initEvent initMe
+        -- errors
+        []
 
 
 type alias Page =
     { name : String
     , icon : String
-    , route : Route
+    , route : Msg
     }
 
 
@@ -328,8 +355,8 @@ type
     Msg
     -- Route
     = RouteTo Route
-      --Auth
-      -- | AuthenticationMsg Authentication.Msg
+      -- Auth
+    | DoAuth AuthAction
       -- SeatGeek
     | GetReply (WebData SG.Reply)
       -- Return Everything
@@ -367,6 +394,12 @@ type
     | ReturnMaybeEmpty (RemoteData Graphqelm.Http.Error (Maybe ()))
       -- Forms
     | UpdateValue InputValue
+
+
+type AuthAction
+    = AuthenticationResult Auth0.AuthenticationResult
+    | ShowLogIn
+    | LogOut
 
 
 type

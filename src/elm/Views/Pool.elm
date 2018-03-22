@@ -1,13 +1,14 @@
 module Views.Pool exposing (..)
 
-import Debug exposing (log)
+-- import Debug exposing (log)
+-- import GraphCool.Scalar exposing (..)
+-- import Maybe.Extra exposing (..)
+
 import EveryDict exposing (..)
-import GraphCool.Scalar exposing (..)
 import Helpers.Assets as Assets exposing (bgImg, feather)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
-import Maybe.Extra exposing (..)
 import Types exposing (..)
 
 

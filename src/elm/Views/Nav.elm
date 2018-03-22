@@ -4,6 +4,9 @@
 
 module Views.Nav exposing (bar)
 
+-- import Auth0.Authentication as Authentication
+
+import Auth0.Auth0 as Auth0
 import Helpers.Assets as Assets exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (class, style)
@@ -19,9 +22,9 @@ selections =
             Page x y z
     in
     List.map makePage
-        [ ( "discover", "compass", Types.GoEvents Nothing )
-        , ( "add", "plus-square", Types.GoCreateEvent )
-        , ( "chats", "message-square", Types.GoChats Nothing )
+        [ ( "discover", "compass", RouteTo <| GoEvents Nothing )
+        , ( "add", "plus-square", RouteTo <| GoCreateEvent )
+        , ( "chats", "message-square", RouteTo <| GoChats Nothing )
         ]
 
 
@@ -37,15 +40,23 @@ bar model =
                 , div [ class "b--white ba child" ] []
                 ]
 
-        userTab model =
-            -- case Nothing of
-            --     Nothing ->
-            tab <| Page "login" "user" Types.GoAuth
+        userTab =
+            case model.me of
+                Just me ->
+                    tab <| Page me.name "user" <| RouteTo <| GoMe me
+
+                Nothing ->
+                    case model.auth.state of
+                        Auth0.LoggedOut ->
+                            tab <| Page "login" "user" <| DoAuth ShowLogIn
+
+                        Auth0.LoggedIn _ ->
+                            tab <| Page "create profile" "user" <| RouteTo GoEditMe
 
         -- Just user ->
         --     li
         --         [ class "flex flex-column-l flex-row-m flex-column-reverse items-stretch hide-child ph3-l glow w-20 w-auto-ns"
-        --         , onClick (RouteTo Types.GoUser)
+        --         , onClick (RouteTo GoUser)
         --         ]
         --         [ span [ class "grow flex-auto flex flex-column flex-row-ns items-center pv3-ns pv2 pv4-l ph2-l mv1-m pl3-m pr4-m w-auto-ns" ]
         --             [ div [ class "br-pill mr3-ns mr0 mb1 mb0-ns pa2-ns pl3 pt3 pr2 pb2 contain", bgImg user.picture ] []
@@ -57,7 +68,7 @@ bar model =
     nav [ class "f5-ns f7 fw4 flex-none pv3-m ph4-l pa0 z-max flex flex-column-l bg-black-40" ]
         [ ul [ class "flex flex-column-m list ma0 pa0 overflow-visible-ns overflow-hidden w-100 w-auto-ns" ] <|
             List.concat
-                [ [ home ], [ mobileBack ], List.map tab selections, [ userTab model ] ]
+                [ [ home ], [ mobileBack ], List.map tab selections, [ userTab ] ]
         ]
 
 
@@ -66,7 +77,7 @@ home =
     div [ class "dn flex-auto-l flex-ns items-center justify-center-m" ]
         [ div
             [ class "grow-large flex flex-column-m ph4-l pa3-m"
-            , Types.GoEvents Nothing
+            , GoEvents Nothing
                 |> RouteTo
                 |> onClick
             ]
@@ -94,7 +105,7 @@ tab x =
         route =
             x.route
     in
-    li [ class "flex flex-column-l flex-row-m flex-column-reverse items-stretch hide-child ph3-l glow w-20 w-auto-ns", onClick (RouteTo route) ]
+    li [ class "flex flex-column-l flex-row-m flex-column-reverse items-stretch hide-child ph3-l glow w-20 w-auto-ns", onClick route ]
         [ span [ class "grow flex-auto flex flex-column flex-row-ns items-center pv3-ns pv2 pv4-l ph2-l mv1-m pl3-m pr4-m w-auto-ns" ]
             [ div [ class "mr3-ns mr0 mb1 mb0-ns pa2-ns pl3 pt3 pr2 pb2 contain", Assets.feather icon ] []
             , text name
