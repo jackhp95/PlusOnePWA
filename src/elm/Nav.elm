@@ -41,11 +41,21 @@ bar model =
                 ]
 
         userTab model =
-            -- case Nothing of
-            --     Nothing ->
-            tab <| Page "login" "user" Types.GoAuth
+            let
+                (logDisplay, route) = 
+                    case (Authentication.isLoggedIn model.authModel
+                        , model.me) of
+                    (False, _) -> 
+                        ("login", GoAuth)
+                    (True, Nothing) -> 
+                        -- Me details are needed
+                        ("me", GoEditMe)
+                    (True, Just me) ->
+                        ("Logout", GoAuth)
+            in
+                tab <| Page logDisplay "user" route
 
-        -- Just user ->
+       -- Just user ->
         --     li
         --         [ class "flex flex-column-l flex-row-m flex-column-reverse items-stretch hide-child ph3-l glow w-20 w-auto-ns"
         --         , onClick (RouteTo Types.GoUser)
@@ -55,7 +65,7 @@ bar model =
         --             , text user.family_name
         --             ]
         --         , div [ class "b--white ba child" ] []
-        --         ]
+        --         ]     
     in
     nav [ class "f5-ns f7 fw4 flex-none pv3-m ph4-l pa0 z-max flex flex-column-l bg-black-40" ]
         [ ul [ class "flex flex-column-m list ma0 pa0 overflow-visible-ns overflow-hidden w-100 w-auto-ns" ] <|
