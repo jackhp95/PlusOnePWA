@@ -10,6 +10,7 @@ import Views.Chat as Chat
 import Views.Chats as Chats
 import Views.CreateEvent as CreateEvent
 import Views.EditMe as EditMe
+import Views.Me as Me
 import Views.Event as Event
 import Views.Events as Events
 import Views.Nav as Nav exposing (..)
@@ -72,6 +73,9 @@ page model =
 
         GoPool pool ->
             [ Pool.view pool model ]
+
+        GoMe me -> 
+            [ Me.view me ]
 
         GoEditMe ->
             [ EditMe.view model ]
