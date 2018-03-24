@@ -163,7 +163,7 @@ update msg model =
                 Just me ->
                     case newRoute of
                         GoLogOut ->
-                            ( { model | auth = { auth | state = Auth0.LoggedOut }, me = Nothing }, model.auth.logOut () )
+                            ( { model | auth = { auth | state = Auth0.LoggedOut }, me = Nothing, route = GoEvents Nothing }, model.auth.logOut () )
 
                         GoEvents eventId ->
                             goEventUpdate eventId

@@ -7,12 +7,8 @@ import Html.Events exposing (..)
 import Types exposing (..)
 
 
-view : Model -> Html Msg
-view model =
-    let
-        me =
-            model.me
-    in
+view : Me -> Html Msg
+view me =
     section [ class "w-100 mw7-l overflow-auto shadow-2-l" ]
         [ div [ class "flex h5 ph3 ph4-m ph5-l pt6 items-center" ]
             [ meAvi
@@ -83,7 +79,7 @@ meToolsView =
             [ div [ Assets.feather "edit", class "contain bg-center grow pt3 pb2 pl3 pr2" ] []
             , div [ class "pa2" ] [ text "edit" ]
             ]
-        , div [ class "animated bounceIn pointer hover-bg-black-50 br-2 pa3 flex items-center", onClick (Types.RouteTo GoAuth) ]
+        , div [ class "animated bounceIn pointer hover-bg-black-50 br-2 pa3 flex items-center", onClick (Types.RouteTo GoLogOut) ]
             [ div [ Assets.feather "log-out", class "contain bg-center grow pt3 pb2 pl3 pr2" ] []
             , div [ class "pa2" ] [ text "log out" ]
             ]
